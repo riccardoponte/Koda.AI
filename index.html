@@ -103,6 +103,7 @@
         #app-container { height: 100vh; display: flex; flex-direction: column; }
         #main-content { flex: 1; overflow-y: auto; padding-bottom: var(--bottom-nav-height); }
         .top-bar { padding: 16px; display: flex; align-items: center; gap: 16px; position: sticky; top: 0; background: linear-gradient(to bottom, rgba(18,18,18,1) 70%, rgba(18,18,18,0)); z-index: 10; }
+        #logout-btn { margin-left: auto; flex-shrink: 0; }
         .user-avatar { width: 32px; height: 32px; border-radius: 50%; background-color: var(--spotify-accent); display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 16px; }
         .page-title { font-size: 22px; font-weight: 700; flex-grow: 1; }
         .filters-container { padding: 8px 16px; position: sticky; top: 64px; background-color: var(--spotify-bg); z-index: 9; }
@@ -226,7 +227,45 @@
     
     <div id="modal-container"></div>
 
-    <script>
+    <script type="module">
+    // --- FIREBASE IMPORTS ---
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
+    import { 
+        getAuth, 
+        createUserWithEmailAndPassword, 
+        signInWithEmailAndPassword, 
+        sendPasswordResetEmail,
+        onAuthStateChanged,
+        signOut
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { 
+        getFirestore,
+        doc,
+        setDoc,
+        getDoc,
+        updateDoc,
+        arrayUnion,
+        arrayRemove
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    // --- FIREBASE CONFIG ---
+    const firebaseConfig = {
+      apiKey: "AIzaSyDLouTZcRN28riyxBY06XYkWCsGkYbYm-o",
+      authDomain: "n8n-riccardo-29-aprile.firebaseapp.com",
+      projectId: "n8n-riccardo-29-aprile",
+      storageBucket: "n8n-riccardo-29-aprile.firebasestorage.app",
+      messagingSenderId: "785683001992",
+      appId: "1:785683001992:web:d24e375041fb7c0f18653d",
+      measurementId: "G-B78J4HK2NX"
+    };
+
+    // --- FIREBASE INITIALIZATION ---
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
     document.addEventListener('DOMContentLoaded', () => {
 
         // --- DATABASE PERSONALIZZATO ---
@@ -274,7 +313,7 @@
             .filter(c => c !== 'Global') // Rimuove la categoria "Global" dai filtri
             .map(c => ({ name: c, flag: { 'USA': '🇺🇸', 'Cina': '🇨🇳', 'Europe': '🇪🇺' }[c] || '🏳️' }));
 
-        let currentUser = { name: '', favorites: ['tool-001', 'tool-019', 'tool-026', 'tool-021'] };
+        let currentUser = {}; // Sarà popolato da Firebase
         let currentView = 'home';
         let activeFilter = 'All';
         let exploreFilter = { type: null, value: null };
@@ -284,7 +323,6 @@
             bottomNav: document.getElementById('bottom-nav'), 
             modalContainer: document.getElementById('modal-container'),
             appContainer: document.getElementById('app-container'),
-            // Auth elements
             authOverlay: document.getElementById('auth-overlay'),
             authCards: document.querySelectorAll('.auth-card'),
             authLinks: document.querySelectorAll('.auth-switch-link, .forgot-password-link'),
@@ -295,10 +333,10 @@
         
         // --- FUNZIONI DI RENDERIZZAZIONE ---
         const createGridCard = (tool) => `<div class="tool-card-grid" data-id="${tool.id}"><div class="logo-container"><img src="${tool.logoUrl}" class="tool-logo" alt="${tool.name}" loading="lazy"></div><div class="tool-name">${tool.name}</div></div>`;
-        const createListCard = (tool) => `<div class="tool-card-list" data-id="${tool.id}"><div class="logo-container"><img src="${tool.logoUrl}" class="tool-logo" alt="${tool.name}" loading="lazy"></div><div class="info"><div class="tool-name">${tool.name}</div><div class="tool-subtext">${tool.category}</div></div><div class="favorite-icon" data-id="${tool.id}">♥</div></div>`;
+        const createListCard = (tool) => `<div class="tool-card-list" data-id="${tool.id}"><div class="logo-container"><img src="${tool.logoUrl}" class="tool-logo" alt="${tool.name}" loading="lazy"></div><div class="info"><div class="tool-name">${tool.name}</div><div class="tool-subtext">${tool.category}</div></div><div class="favorite-icon" data-id="${tool.id}">${currentUser.favorites.includes(tool.id) ? '♥' : '♡'}</div></div>`;
         const createCategoryCard = (category) => {
             const toolForLogo = aiToolsData.find(t=>t.category===category.name);
-            if (!toolForLogo) return ''; // Non mostrare la categoria se non ci sono tool
+            if (!toolForLogo) return '';
             return `<div class="category-card" style="background-color: ${category.color};" data-filter-type="category" data-filter-value="${category.name}"><h3>${category.name}</h3><div class="logo-container"><img src="${toolForLogo.logoUrl}" class="tool-logo" loading="lazy"></div></div>`;
         };
         const createCountryCard = (country) => `<div class="category-card" style="background-color: #333;" data-filter-type="country" data-filter-value="${country.name}"><h3 style="font-size: 24px;">${country.flag} ${country.name}</h3></div>`;
@@ -327,7 +365,7 @@
             const modalHTML = `
                 <div id="detail-modal" class="modal-overlay visible">
                     <div class="modal-content">
-                        <button class="modal-close-btn" data-action="close-modal">&times;</button>
+                        <button class="modal-close-btn" data-action="close-modal">×</button>
                         <div id="detail-content">
                              <h2>${tool.name}</h2>
                              <p>${tool.description}</p>
@@ -348,20 +386,46 @@
         };
         
         const closeModal = () => el.modalContainer.innerHTML = '';
-        const toggleFavorite = (toolId) => {
-            const index = currentUser.favorites.indexOf(toolId);
-            if (index > -1) currentUser.favorites.splice(index, 1);
-            else currentUser.favorites.push(toolId);
+        const toggleFavorite = async (toolId) => {
+            if (!currentUser || !currentUser.uid) {
+                alert("Devi effettuare l'accesso per gestire i preferiti.");
+                return;
+            }
+
+            const userDocRef = doc(db, "users", currentUser.uid);
+            const isFavorited = currentUser.favorites.includes(toolId);
+
+            try {
+                if (isFavorited) {
+                    await updateDoc(userDocRef, { favorites: arrayRemove(toolId) });
+                    currentUser.favorites = currentUser.favorites.filter(id => id !== toolId);
+                } else {
+                    await updateDoc(userDocRef, { favorites: arrayUnion(toolId) });
+                    currentUser.favorites.push(toolId);
+                }
+            } catch (error) {
+                console.error("Errore nell'aggiornamento dei preferiti:", error);
+                alert("Impossibile aggiornare i preferiti. Riprova.");
+                return;
+            }
             
-            if (document.getElementById('detail-modal')) openDetailModal(toolId);
-            else renderView();
+            if (document.getElementById('detail-modal')) {
+                openDetailModal(toolId);
+            } else {
+                renderView();
+            }
         };
         
         const renderView = () => {
             el.mainContent.innerHTML = '';
             
             const userInitial = currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U';
-            const topBarHTML = `<div class="top-bar"><div class="user-avatar">${userInitial}</div><h1 class="page-title">${{home: 'Home', explore: 'Cerca', favorites: 'La tua libreria'}[currentView]}</h1></div>`;
+            const topBarHTML = `
+                <div class="top-bar">
+                    <div class="user-avatar">${userInitial}</div>
+                    <h1 class="page-title">${{home: 'Home', explore: 'Cerca', favorites: 'La tua libreria'}[currentView]}</h1>
+                    <button id="logout-btn" class="pill-btn">Logout</button>
+                </div>`;
             el.mainContent.insertAdjacentHTML('beforeend', topBarHTML);
             
             const contentArea = document.createElement('div');
@@ -373,7 +437,6 @@
             } else if (currentView === 'explore') {
                 if (!exploreFilter.type) {
                     el.mainContent.insertAdjacentHTML('beforeend', `<div class="search-bar-container"><input type="text" id="search-input" placeholder="Cerca strumenti, categorie..."></div>`);
-                    // The initial content of the search page is rendered here. Search results are handled by the 'input' event listener.
                     contentArea.innerHTML = `<div class="section-title">Sfoglia tutto</div><div class="category-grid">${categories.map(createCategoryCard).join('')}</div>
                                                <div class="section-title" style="margin-top: 30px;">Sfoglia per Origine</div><div class="category-grid">${countries.map(createCountryCard).join('')}</div>`;
                 } else {
@@ -382,17 +445,17 @@
                     contentArea.innerHTML = `<div class="back-button" data-action="back-to-explore">‹ Torna a Cerca</div><h2 class="section-title">${title}</h2><div class="list-container">${filteredTools.map(createListCard).join('')}</div>`;
                 }
             } else if (currentView === 'favorites') {
-                const availableCategoriesInFavorites = [...new Set(aiToolsData.filter(t => currentUser.favorites.includes(t.id)).map(t => t.category))];
+                const favoriteToolsData = aiToolsData.filter(t => currentUser.favorites.includes(t.id));
+                const availableCategoriesInFavorites = [...new Set(favoriteToolsData.map(t => t.category))];
                 const filterPills = ['All', ...availableCategoriesInFavorites];
                 const filtersHTML = `<div class="filters-container"><div class="filter-pills">${filterPills.map(f => `<button class="pill-btn ${activeFilter === f ? 'active' : ''}" data-filter="${f}">${f === 'All' ? 'Tutti' : f}</button>`).join('')}</div></div>`;
                 el.mainContent.insertAdjacentHTML('beforeend', filtersHTML);
 
-                let favoriteTools = aiToolsData.filter(t => currentUser.favorites.includes(t.id));
-                if(activeFilter !== 'All') favoriteTools = favoriteTools.filter(t => t.category === activeFilter);
+                let favoriteTools = activeFilter === 'All' ? favoriteToolsData : favoriteToolsData.filter(t => t.category === activeFilter);
                 
                 contentArea.innerHTML = favoriteTools.length > 0
                     ? `<div class="list-container">${favoriteTools.map(createListCard).join('')}</div>`
-                    : `<div id="empty-state">Nessun preferito in questa categoria.</div>`;
+                    : `<div id="empty-state">Nessun preferito trovato.</div>`;
             }
             
             el.mainContent.appendChild(contentArea);
@@ -416,14 +479,22 @@
         el.mainContent.addEventListener('click', (e) => {
             const card = e.target.closest('.tool-card-grid, .tool-card-list');
             const favoriteIcon = e.target.closest('.favorite-icon');
-            const pillButton = e.target.closest('.pill-btn');
+            const pillButton = e.target.closest('.pill-btn:not(#logout-btn)');
             const filterCard = e.target.closest('[data-filter-type]');
             const backButton = e.target.closest('[data-action="back-to-explore"]');
+            const logoutButton = e.target.closest('#logout-btn');
 
-            if (favoriteIcon) { e.stopPropagation(); toggleFavorite(favoriteIcon.dataset.id); } 
-            else if (card) { openDetailModal(card.dataset.id); } 
-            else if (pillButton) { activeFilter = pillButton.dataset.filter; renderView(); } 
-            else if (filterCard) {
+            if (logoutButton) {
+                signOut(auth).catch(error => console.error("Logout Error:", error));
+            } else if (favoriteIcon) { 
+                e.stopPropagation(); 
+                toggleFavorite(favoriteIcon.dataset.id); 
+            } else if (card) { 
+                openDetailModal(card.dataset.id); 
+            } else if (pillButton) { 
+                activeFilter = pillButton.dataset.filter; 
+                renderView(); 
+            } else if (filterCard) {
                 exploreFilter.type = filterCard.dataset.filterType;
                 exploreFilter.value = filterCard.dataset.filterValue;
                 renderView();
@@ -433,7 +504,6 @@
             }
         });
 
-        // Listener delegato per la ricerca, risolve il problema della perdita di focus
         el.mainContent.addEventListener('input', e => {
             if (e.target.id === 'search-input') {
                 const searchTerm = e.target.value.toLowerCase();
@@ -473,16 +543,38 @@
             document.getElementById(cardId).classList.remove('hidden');
         };
         
-        const initializeApp = (email) => {
-            currentUser.name = email;
+        const showAuthScreen = () => {
+            el.appContainer.style.display = 'none';
+            el.authOverlay.style.display = 'flex';
+            el.authOverlay.classList.remove('hidden');
+            showAuthCard('login-card');
+        };
+
+        const initializeAppWithUser = async (user) => {
+            const userDocRef = doc(db, "users", user.uid);
+            const userDocSnap = await getDoc(userDocRef);
+
+            if (userDocSnap.exists()) {
+                currentUser = { ...userDocSnap.data(), uid: user.uid, name: user.email };
+            } else {
+                await setDoc(userDocRef, { email: user.email, favorites: [] });
+                currentUser = { uid: user.uid, name: user.email, favorites: [] };
+            }
+            
             el.authOverlay.classList.add('hidden');
-            el.authOverlay.addEventListener('transitionend', () => {
-                el.authOverlay.style.display = 'none';
-            }, { once: true });
+            el.authOverlay.addEventListener('transitionend', () => el.authOverlay.style.display = 'none', { once: true });
             
             el.appContainer.style.display = 'flex';
-            renderView(); // First render after login
+            renderView();
         };
+
+        onAuthStateChanged(auth, user => {
+            if (user) {
+                initializeAppWithUser(user);
+            } else {
+                showAuthScreen();
+            }
+        });
 
         el.authLinks.forEach(link => {
             link.addEventListener('click', (e) => {
@@ -494,40 +586,49 @@
             });
         });
 
-        el.registerBtn.addEventListener('click', () => {
+        el.registerBtn.addEventListener('click', async () => {
             const email = document.getElementById('register-email').value;
             const password = document.getElementById('register-password').value;
-            if (!email.includes('@')) {
-                alert('Per favore, inserisci un indirizzo email valido.');
+            if (!email.includes('@') || password.length < 6) {
+                alert('Email non valida o password troppo corta (minimo 6 caratteri).');
                 return;
             }
-            if (password.length < 6) {
-                alert('La password deve contenere almeno 6 caratteri.');
-                return;
+            try {
+                await createUserWithEmailAndPassword(auth, email, password);
+                // onAuthStateChanged gestirà il resto
+            } catch (error) {
+                alert(`Errore di registrazione: ${error.message}`);
             }
-            alert('Registrazione completata con successo!');
-            initializeApp(email);
         });
 
-        el.loginBtn.addEventListener('click', () => {
+        el.loginBtn.addEventListener('click', async () => {
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
             if (!email || !password) {
-                alert('Per favore, inserisci email e password.');
+                alert('Inserisci email e password.');
                 return;
             }
-            alert('Login effettuato con successo!');
-            initializeApp(email);
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                 // onAuthStateChanged gestirà il resto
+            } catch (error) {
+                alert(`Errore di accesso: ${error.message}`);
+            }
         });
 
-        el.forgotBtn.addEventListener('click', () => {
+        el.forgotBtn.addEventListener('click', async () => {
             const email = document.getElementById('forgot-email').value;
             if (!email.includes('@')) {
-                alert('Per favore, inserisci un indirizzo email valido.');
+                alert('Inserisci un indirizzo email valido.');
                 return;
             }
-            alert(`Se l'utente esiste, un link per il reset è stato inviato a ${email}.`);
-            showAuthCard('login-card');
+            try {
+                await sendPasswordResetEmail(auth, email);
+                alert(`Se l'utente esiste, un link per il reset è stato inviato a ${email}.`);
+                showAuthCard('login-card');
+            } catch (error) {
+                alert(`Errore: ${error.message}`);
+            }
         });
 
     });
