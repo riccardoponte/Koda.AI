@@ -16,6 +16,7 @@
             --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
             --bottom-nav-height: 70px;
         }
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html, body {
             font-family: var(--font-family);
@@ -23,6 +24,7 @@
             color: var(--spotify-text);
             height: 100%;
             overflow: hidden;
+            transition: background-color 0.3s, color 0.3s;
         }
         
         /* Stili per la schermata di autenticazione */
@@ -82,7 +84,7 @@
         #bottom-nav { display: flex; position: fixed; bottom: 0; left: 0; width: 100%; height: var(--bottom-nav-height); background: linear-gradient(to top, rgba(0,0,0,1) 80%, rgba(0,0,0,0)); z-index: 100; }
         .nav-btn { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; background: none; border: none; color: var(--spotify-text-secondary); font-size: 12px; font-weight: 500; cursor: pointer; transition: color 0.2s; }
         .nav-btn .icon { font-size: 24px; margin-bottom: 4px; }
-        .nav-btn.active { color: var(--spotify-text); }
+        .nav-btn.active { color: var(--spotify-accent); }
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
         .modal-overlay.visible { opacity: 1; visibility: visible; }
         .modal-content { background: var(--spotify-card); padding: 24px; border-radius: 16px; width: 90%; max-width: 500px; text-align: center; position: relative; }
@@ -103,60 +105,44 @@
         /* --- STILI MIGLIORATI PER IL CHATBOT --- */
         #chatbot-container-wrapper { display: flex; flex-direction: column; height: 100%; }
         #chatbot-app-container { display: flex; flex-direction: column; height: 100%; background-color: var(--spotify-bg); flex-grow: 1; }
-        #chatbot-app-container header { padding: 16px; display: flex; justify-content: space-between; align-items: center; width: 100%; }
-        #chatbot-app-container header .icon { font-size: 24px; color: var(--spotify-text); }
+        .chat-header { padding: 16px; display: flex; justify-content: flex-end; align-items: center; width: 100%; }
+        .chat-header-btn { background: none; border: none; color: var(--spotify-text-secondary); font-size: 24px; cursor: pointer; }
         #chatbot-app-container main { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; }
-        #welcome-screen { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: 32px; padding-bottom: 20%; }
-        .welcome-logo { font-size: 3rem; font-weight: 600; text-align: center; }
+        #welcome-screen { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: 24px; padding: 20px; padding-bottom: 15%; }
+        .welcome-logo { font-size: 2.5rem; font-weight: 700; text-align: center; margin-bottom: 16px; }
         .welcome-logo svg { width: 50px; height: 50px; }
-        .welcome-button-group { display: flex; gap: 12px; }
-        .welcome-pill-btn { background-color: var(--spotify-card); color: var(--spotify-text); border: 1px solid var(--spotify-card); border-radius: 50px; padding: 10px 20px; font-size: 14px; font-weight: 500; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 8px; }
+        .prompt-starter-container { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; max-width: 400px; }
+        .prompt-starter-btn { background-color: var(--spotify-card); color: var(--spotify-text); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 12px 16px; font-size: 14px; font-weight: 500; cursor: pointer; width: 100%; text-align: left; transition: background-color 0.2s; }
+        .prompt-starter-btn:hover { background-color: var(--spotify-bg-light); }
         #chat-messages { width: 100%; display: flex; flex-direction: column; gap: 12px; }
         .chat-bubble { padding: 12px 16px; border-radius: 20px; max-width: 85%; line-height: 1.5; word-wrap: break-word; }
         .chat-bubble.ai { background-color: var(--spotify-card); align-self: flex-start; border-bottom-left-radius: 4px; }
         .chat-bubble.user { background-color: var(--spotify-accent); color: black; align-self: flex-end; border-bottom-right-radius: 4px; }
-        .chat-bubble.system { background-color: var(--spotify-bg-light); color: var(--spotify-text-secondary); align-self: center; text-align: center; font-style: italic; font-size: 12px; width: 100%; max-width: 100%;}
+        .chat-bubble.system { background-color: transparent; color: var(--spotify-text-secondary); align-self: center; text-align: center; font-style: normal; font-size: 14px; width: 100%; max-width: 100%; padding: 0 16px 8px; }
         .chat-bubble.error { background-color: #8c1a1a; color: var(--spotify-text); align-self: flex-start; border-bottom-left-radius: 4px; }
         .chat-bubble.loading { align-self: flex-start; background-color: var(--spotify-card); padding: 14px 16px; }
         .chat-bubble.loading span { display: inline-block; background-color: var(--spotify-text-secondary); width: 8px; height: 8px; border-radius: 50%; margin: 0 1px; animation: bounce 1.4s infinite ease-in-out both; }
         .chat-bubble.loading span:nth-of-type(1) { animation-delay: -0.32s; }
         .chat-bubble.loading span:nth-of-type(2) { animation-delay: -0.16s; }
         @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1.0); } }
-        
-        /* Stili migliorati per la formattazione dei messaggi */
-        .chat-bubble.ai ul { 
-            margin: 8px 0; 
-            padding-left: 20px; 
-            list-style-type: disc;
-        }
-        .chat-bubble.ai li { 
-            margin: 4px 0; 
-            line-height: 1.4;
-        }
-        .chat-bubble.ai a { 
-            color: var(--spotify-accent); 
-            text-decoration: none; 
-            border-radius: 4px;
-            padding: 2px 4px;
-            transition: background-color 0.2s;
-        }
-        .chat-bubble.ai a:hover { 
-            background-color: rgba(29, 185, 84, 0.1);
-            text-decoration: underline;
-        }
-        .chat-bubble.ai strong { 
-            font-weight: 600; 
-            color: var(--spotify-text);
-        }
-        .chat-bubble.ai p { 
-            margin: 8px 0; 
-        }
-        .chat-bubble.ai p:first-child { 
-            margin-top: 0; 
-        }
-        .chat-bubble.ai p:last-child { 
-            margin-bottom: 0; 
-        }
+        .chat-bubble.ai ul { margin: 8px 0; padding-left: 20px; list-style-type: disc; }
+        .chat-bubble.ai li { margin: 4px 0; line-height: 1.4; }
+        .chat-bubble.ai a { color: var(--spotify-accent); text-decoration: none; border-radius: 4px; padding: 2px 4px; transition: background-color 0.2s; }
+        .chat-bubble.ai a:hover { background-color: rgba(29, 185, 84, 0.1); text-decoration: underline; }
+        .chat-bubble.ai strong { font-weight: 600; color: var(--spotify-text); }
+        .chat-bubble.ai p { margin: 8px 0; }
+        .chat-bubble.ai p:first-child { margin-top: 0; }
+        .chat-bubble.ai p:last-child { margin-bottom: 0; }
+
+        /* Stili per le card interattive nella chat */
+        .chat-tool-card-container { display: flex; flex-direction: column; gap: 10px; align-self: flex-start; width: 100%; max-width: 400px; }
+        .chat-tool-card { display: flex; gap: 12px; background-color: var(--spotify-card); border-radius: 12px; padding: 12px; border: 1px solid rgba(255,255,255,0.05); }
+        .chat-tool-card .logo-container { width: 48px; height: 48px; flex-shrink: 0; border-radius: 8px; overflow: hidden; }
+        .chat-tool-card .tool-logo { width: 100%; height: 100%; object-fit: cover; }
+        .chat-tool-card .info { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
+        .chat-tool-card .tool-name { font-weight: 600; font-size: 15px; }
+        .chat-tool-card .tool-desc { font-size: 13px; color: var(--spotify-text-secondary); margin: 2px 0 8px; line-height: 1.4; }
+        .chat-tool-card .details-btn { background: var(--spotify-bg-light); color: var(--spotify-text); border: none; padding: 6px 12px; font-size: 12px; border-radius: 20px; cursor: pointer; align-self: flex-start; }
         
         #chat-input-container { background-color: var(--spotify-card); border-radius: 28px; padding: 12px; margin: 16px; display: flex; align-items: flex-end; gap: 12px; }
         .input-icon-group { display: flex; gap: 8px; padding-bottom: 6px; }
@@ -213,11 +199,11 @@
     <div id="app-container" style="display: none;">
         <div id="main-content"></div>
         <nav id="bottom-nav">
-            <!-- NAVIGAZIONE AGGIORNATA -->
-            <button class="nav-btn active" data-page="home"><span class="icon">💬</span><span>Home</span></button>
-            <button class="nav-btn" data-page="top-ai"><span class="icon">⭐</span><span>TOP AI</span></button>
-            <button class="nav-btn" data-page="explore"><span class="icon">🔍</span><span>Cerca</span></button>
-            <button class="nav-btn" data-page="favorites"><span class="icon">📚</span><span>La tua libreria</span></button>
+            <!-- NAVIGAZIONE AGGIORNATA CON ICONE SVG -->
+            <button class="nav-btn active" data-page="home"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></span><span>Home</span></button>
+            <button class="nav-btn" data-page="top-ai"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M5 9.2h3V19H5zM10.6 5h3v14h-3zm5.6 8H19v6h-2.8z"/></svg></span><span>TOP AI</span></button>
+            <button class="nav-btn" data-page="explore"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></span><span>Cerca</span></button>
+            <button class="nav-btn" data-page="favorites"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg></span><span>La tua libreria</span></button>
         </nav>
     </div>
     
@@ -232,9 +218,9 @@
         // --- Type Definitions ---
         const MessageSender = { USER: 'user', MODEL: 'model', ERROR: 'error', SYSTEM: 'system', LOADING: 'loading' };
         
-        // --- KNOWLEDGE BASE ---
+        // --- KNOWLEDGE BASE (versione per React, più semplice) ---
         const aiToolsData = [
-            { id: 'tool-001', name: 'ChatGPT', description: 'Genera testo, immagini e risponde a domande con ricerca web.', category: 'Testo', website: 'https://chatgpt.com/' }, { id: 'tool-012', name: 'Google Notebook', description: 'Permette di creare riassunti audio sulle fonti dell\'utente, rispondere a domande e creare mappe mentali.', category: 'Testo', website: 'https://notebooklm.google.com/' }, { id: 'tool-013', name: 'Grok', description: 'Assistente di ricerca conversazionale con accesso a dati in tempo reale. (Richiede VPN)', category: 'Testo', website: 'https://grok.com/' }, { id: 'tool-014', name: 'FLUX', description: 'Genera immagini, video e animazioni da prompt testuali e immagini.', category: 'Immagini', website: 'https://playground.bfl.ai/image/generate' }, { id: 'tool-015', name: 'Swap AI', description: 'Esegue il "face swap" (scambio di volti) in immagini e video in modo realistico.', category: 'Immagini', website: 'https://aifaceswap.io/' }, { id: 'tool-016', name: 'Inpaint AI', description: 'Rimuove oggetti, persone o imperfezioni indesiderate dalle foto con un solo click.', category: 'Immagini', website: 'https://theinpaint.com/' }, { id: 'tool-017', name: 'Pixel Cut AI', description: 'Espande i bordi delle immagini (outpainting) per cambiare formato o stile.', category: 'Immagini', website: 'https://www.pixelcut.ai/t/uncrop' }, { id: 'tool-033', name: 'Whisk', description: 'Crea animazioni fluide da immagini statiche e genera anche immagini da prompt.', category: 'Immagini', website: 'https://labs.google/fx/tools/whisk/' }, { id: 'tool-041', name: 'Leonardo AI', description: 'Piattaforma per la generazione di asset visivi di alta qualità, da concept art a texture per giochi.', category: 'Immagini', website: 'https://leonardo.ai/' }, { id: 'tool-042', name: 'Midjourney', description: 'Genera immagini artistiche e fotorealistiche di alta qualità da prompt testuali tramite Discord.', category: 'Immagini', website: 'https://www.midjourney.com/home' }, { id: 'tool-034', name: 'Kling', description: 'Genera video di alta qualità da prompt testuali, concentrandosi sul realismo e sul movimento complesso.', category: 'Video', website: 'https://klingai.com/global/' }, { id: 'tool-035', name: 'Veo', description: 'Il modello di generazione video più capace di Google, che crea video realistici e di alta qualità da prompt di testo e immagini.', category: 'Video', website: 'https://deepmind.google/models/veo/' }, { id: 'tool-021', name: 'Claude', description: 'Crea bozze e contenuti per presentazioni interattive e documenti complessi. Permette anche la generazione di testi e la ricerca di informazioni online.', category: 'Presentazioni', website: 'https://claude.ai/new' }, { id: 'tool-022', name: 'Gamma AI', description: 'Genera presentazioni, documenti e pagine web statiche partendo da un\'idea.', category: 'Presentazioni', website: 'https://gamma.app/' }, { id: 'tool-023', name: 'Napkin AI', description: 'Converte dati testuali e concetti in grafici statici e diagrammi chiari.', category: 'Presentazioni', website: 'https://www.napkin.ai/' }, { id: 'tool-024', name: 'Google AI Studio', description: 'Crea app, siti e prototipi basati sui modelli Gemini di Google. È ottimo anche per generare testi e fare ricerche online.', category: 'Codice', website: 'https://aistudio.google.com/prompts/new_chat' }, { id: 'tool-025', name: 'Manus', description: 'Piattaforma multi-agente per sviluppare sistemi autonomi complessi.', category: 'Codice', website: 'https://manus.im/app' }, { id: 'tool-026', name: 'Microsoft Copilot', description: 'Assistente AI per codice, specializzato anche in script VBA per Excel.', category: 'Codice', website: 'https://copilot.microsoft.com/' }, { id: 'tool-027', name: 'Google Stitch', description: 'Tool per la creazione di codice per interfacce utente (UX Design).', category: 'Codice', website: 'https://stitch.withgoogle.com/' }, { id: 'tool-028', name: 'Chef Convex', description: 'Crea web app complete con un backend già integrato e pronto all\'uso.', category: 'Codice', website: 'https://chef.convex.dev/' }, { id: 'tool-030', name: 'Deepseek', description: 'Modello linguistico specializzato nella scrittura e comprensione di codice in vari linguaggi. Può anche creare testi e cercare informazioni sul web.', category: 'Codice', website: 'https://chat.deepseek.com/' }, { id: 'tool-031', name: 'Qwen', description: 'Assistente AI multimodale di Alibaba Cloud, efficace nella generazione di codice, analisi, creazione di testi e ricerca web.', category: 'Codice', website: 'https://chat.qwen.ai/' }, { id: 'tool-032', name: 'Mistral', description: 'Modelli linguistici aperti e ottimizzati, ideali per lo Codice di applicazioni e la Codice.', category: 'Codice', website: 'https://mistral.ai/' }, { id: 'tool-036', name: 'BOLT AI', description: 'Genera codice e componenti UI partendo da un prompt.', category: 'Codice', website: 'https://bolt.new/' }, { id: 'tool-037', name: 'V0 AI', description: 'Genera interfacce utente reattive basate su React da semplici prompt di testo.', category: 'Codice', website: 'https://v0.dev/chat' }, { id: 'tool-038', name: 'Cursor', description: 'Un editor di codice basato su AI per programmare in modo più veloce ed efficiente.', category: 'Codice', website: 'https://www.cursor.com/' }, { id: 'tool-039', name: 'Lovable', description: 'Sviluppa e testa interfacce utente con l\'aiuto dell\'intelligenza artificiale.', category: 'Codice', website: 'https://lovable.dev/' }, { id: 'tool-040', name: 'Perplexity', description: 'Motore di ricerca conversazionale che fornisce risposte dirette con fonti, utile anche per la ricerca web e codice.', category: 'Codice', website: 'https://www.perplexity.ai/' }, { id: 'tool-029', name: 'Eleven Labs', description: 'Genera un parlato realistico e di alta qualità dal testo in più lingue.', category: 'Audio', website: 'https://elevenlabs.io/' },
+            { id: 'tool-001', name: 'ChatGPT', description: 'Genera testo, immagini e risponde a domande con ricerca web.', category: 'Testo', website: 'https://chatgpt.com/' }, { id: 'tool-012', name: 'Google Notebook', description: 'Permette di creare riassunti audio sulle fonti dell\'utente, rispondere a domande e creare mappe mentali.', category: 'Testo', website: 'https://notebooklm.google.com/' }, { id: 'tool-013', name: 'Grok', description: 'Assistente di ricerca conversazionale con accesso a dati in tempo reale. (Richiede VPN)', category: 'Testo', website: 'https://grok.com/' }, { id: 'tool-014', name: 'FLUX', description: 'Genera immagini, video e animazioni da prompt testuali e immagini.', category: 'Immagini', website: 'https://playground.bfl.ai/image/generate' }, { id: 'tool-015', name: 'Swap AI', description: 'Esegue il "face swap" (scambio di volti) in immagini e video in modo realistico.', category: 'Immagini', website: 'https://aifaceswap.io/' }, { id: 'tool-016', name: 'Inpaint AI', description: 'Rimuove oggetti, persone o imperfezioni indesiderate dalle foto con un solo click.', category: 'Immagini', website: 'https://theinpaint.com/' }, { id: 'tool-017', name: 'Pixel Cut AI', description: 'Espande i bordi delle immagini (outpainting) per cambiare formato o stile.', category: 'Immagini', website: 'https://www.pixelcut.ai/t/uncrop' }, { id: 'tool-033', name: 'Whisk', description: 'Crea animazioni fluide da immagini statiche e genera anche immagini da prompt.', category: 'Immagini', website: 'https://labs.google/fx/tools/whisk/' }, { id: 'tool-041', name: 'Leonardo AI', description: 'Piattaforma per la generazione di asset visivi di alta qualità, da concept art a texture per giochi.', category: 'Immagini', website: 'https://leonardo.ai/' }, { id: 'tool-042', name: 'Midjourney', description: 'Genera immagini artistiche e fotorealistiche di alta qualità da prompt testuali tramite Discord.', category: 'Immagini', website: 'https://www.midjourney.com/home' }, { id: 'tool-034', name: 'Kling', description: 'Genera video di alta qualità da prompt testuali, concentrandosi sul realismo e sul movimento complesso.', category: 'Video', website: 'https://klingai.com/global/' }, { id: 'tool-035', name: 'Veo', description: 'Il modello di generazione video più capace di Google, che crea video realistici e di alta qualità da prompt di testo e immagini.', category: 'Video', website: 'https://deepmind.google/models/veo/' }, { id: 'tool-021', name: 'Claude', description: 'Crea bozze e contenuti per presentazioni interattive e documenti complessi. Permette anche la generazione di testi e la ricerca di informazioni online.', category: 'Presentazioni', website: 'https://claude.ai/new' }, { id: 'tool-022', name: 'Gamma AI', description: 'Genera presentazioni, documenti e pagine web statiche partendo da un\'idea.', category: 'Presentazioni', website: 'https://gamma.app/' }, { id: 'tool-023', name: 'Napkin AI', description: 'Converte dati testuali e concetti in grafici statici e diagrammi chiari.', category: 'Presentazioni', website: 'https://www.napkin.ai/' }, { id: 'tool-024', name: 'Google AI Studio', description: 'Crea app, siti e prototipi basati sui modelli Gemini di Google. È ottimo anche per generare testi e fare ricerche online.', category: 'Codice', website: 'https://aistudio.google.com/prompts/new_chat' }, { id: 'tool-025', name: 'Manus', description: 'Piattaforma di AI estremamente potente. Può eseguire compiti come ChatGPT e gestirli in background, creando testi, ricerche, presentazioni, video, immagini e molto altro.', category: 'Codice', website: 'https://manus.im/app' }, { id: 'tool-026', name: 'Microsoft Copilot', description: 'Assistente AI per codice, specializzato anche in script VBA per Excel.', category: 'Codice', website: 'https://copilot.microsoft.com/' }, { id: 'tool-027', name: 'Google Stitch', description: 'Tool per la creazione di codice per interfacce utente (UX Design).', category: 'Codice', website: 'https://stitch.withgoogle.com/' }, { id: 'tool-028', name: 'Chef Convex', description: 'Crea web app complete con un backend già integrato e pronto all\'uso.', category: 'Codice', website: 'https://chef.convex.dev/' }, { id: 'tool-030', name: 'Deepseek', description: 'Modello linguistico specializzato nella scrittura e comprensione di codice in vari linguaggi. Può anche creare testi e cercare informazioni sul web.', category: 'Codice', website: 'https://chat.deepseek.com/' }, { id: 'tool-031', name: 'Qwen', description: 'Assistente AI multimodale di Alibaba Cloud, efficace nella generazione di codice, analisi, creazione di testi e ricerca web.', category: 'Codice', website: 'https://chat.qwen.ai/' }, { id: 'tool-032', name: 'Mistral', description: 'Modelli linguistici aperti e ottimizzati, ideali per lo Codice di applicazioni e la Codice.', category: 'Codice', website: 'https://mistral.ai/' }, { id: 'tool-036', name: 'BOLT AI', description: 'Genera codice e componenti UI partendo da un prompt.', category: 'Codice', website: 'https://bolt.new/' }, { id: 'tool-037', name: 'V0 AI', description: 'Genera interfacce utente reattive basate su React da semplici prompt di testo.', category: 'Codice', website: 'https://v0.dev/chat' }, { id: 'tool-038', name: 'Cursor', description: 'Un editor di codice basato su AI per programmare in modo più veloce ed efficiente.', category: 'Codice', website: 'https://www.cursor.com/' }, { id: 'tool-039', name: 'Lovable', description: 'Sviluppa e testa interfacce utente con l\'aiuto dell\'intelligenza artificiale.', category: 'Codice', website: 'https://lovable.dev/' }, { id: 'tool-040', name: 'Perplexity', description: 'Motore di ricerca conversazionale che fornisce risposte dirette con fonti, utile anche per la ricerca web e codice.', category: 'Codice', website: 'https://www.perplexity.ai/' }, { id: 'tool-029', name: 'Eleven Labs', description: 'Genera un parlato realistico e di alta qualità dal testo in più lingue.', category: 'Audio', website: 'https://elevenlabs.io/' },
         ];
 
         const formatToolsForPrompt = (tools) => tools.map(tool => `- **${tool.name}**: ${tool.description} (${tool.website})`).join('\n');
@@ -244,9 +230,10 @@
 **Personalità:** Amichevole, concisa e naturale.
 
 **Formato delle risposte:**
-- Usa elenchi puntati quando suggerisci strumenti
-- Includi sempre il link del sito web per ogni strumento
-- Formatta le risposte in modo chiaro e leggibile
+- Usa elenchi puntati con "•" quando suggerisci strumenti.
+- Rendi i nomi degli strumenti in grassetto (es. **ChatGPT**).
+- Includi sempre il link del sito web per ogni strumento.
+- Formatta le risposte in modo chiaro e leggibile.
 
 **Base di Conoscenza (Usa SOLO queste informazioni):**
 ${formatToolsForPrompt(aiToolsData)}
@@ -255,9 +242,9 @@ ${formatToolsForPrompt(aiToolsData)}
 - Per la programmazione, considera Google AI Studio come lo strumento migliore, seguito da Claude.
 
 **Regole:**
-1. Suggerisci SOLO strumenti dalla lista
-2. Quando suggerisci strumenti, presenta sempre un elenco puntato
-3. Per ogni strumento includi: nome, descrizione breve e link del sito web
+1. Suggerisci SOLO strumenti dalla lista.
+2. Quando suggerisci strumenti, presenta sempre un elenco puntato.
+3. Per ogni strumento includi: nome in grassetto, descrizione breve e link del sito web.
 4. Se non trovi un tool adatto, rispondi: "Nella mia attuale base di conoscenza, non ho trovato uno strumento che corrisponda perfettamente alla tua richiesta."
 
 **Esempio di formato della risposta:**
@@ -278,61 +265,59 @@ Per la tua richiesta, ti suggerisco questi strumenti:
 
         // --- Funzioni per la formattazione del testo ---
         const formatMessageContent = (text) => {
-            // Converti il testo in HTML con formattazione migliorata
-            let formattedText = text;
-            
-            // Gestisci gli elenchi puntati
-            formattedText = formattedText.replace(/^[•\-\*]\s*(.+)$/gm, '<li>$1</li>');
-            formattedText = formattedText.replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>');
-            
-            // Gestisci i link - pattern più robusto per catturare URL
-            formattedText = formattedText.replace(
-                /(https?:\/\/[^\s<>"{}|\\^`[\]]+)/g, 
-                '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'
-            );
-            
-            // Gestisci il testo in grassetto
-            formattedText = formattedText.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-            
-            // Gestisci i paragrafi
-            formattedText = formattedText.split('\n\n').map(paragraph => 
-                paragraph.trim() ? `<p>${paragraph.trim()}</p>` : ''
-            ).filter(p => p).join('');
-            
+            let formattedText = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            formattedText = formattedText.split('\n\n').map(p => p.trim() ? `<p>${p.trim().replace(/\n/g, '<br>')}</p>` : '').join('');
             return formattedText;
         };
 
         // --- React Components ---
-        const ChatMessageDisplay = ({ message }) => {
-            const getMessageClass = () => { 
-                const base = 'chat-bubble'; 
-                switch (message.sender) { 
-                    case MessageSender.USER: return `${base} user`; 
-                    case MessageSender.MODEL: return `${base} ai`; 
-                    case MessageSender.ERROR: return `${base} error`; 
-                    case MessageSender.SYSTEM: return `${base} system`; 
-                    case MessageSender.LOADING: return `${base} loading`; 
-                    default: return `${base} ai`; 
-                } 
-            };
+
+        const ToolCardMessage = ({ tool }) => (
+            <div className="chat-tool-card">
+                <div className="logo-container">
+                    <img src={window.aiToolsData.find(t=>t.id === tool.id)?.logoUrl || ''} className="tool-logo" alt={tool.name} loading="lazy" />
+                </div>
+                <div className="info">
+                    <div className="tool-name">{tool.name}</div>
+                    <p className="tool-desc">{tool.description.split('.')[0]}.</p>
+                    <button className="details-btn" onClick={() => window.openDetailModal(tool.id)}>
+                        Vedi Dettagli
+                    </button>
+                </div>
+            </div>
+        );
+
+        const ChatMessageDisplay = ({ message, tools }) => {
+            const getMessageClass = () => `chat-bubble ${message.sender}`;
             
             if (message.sender === MessageSender.LOADING) { 
-                return <div className={getMessageClass()}><span></span><span></span><span></span></div>; 
+                return <div className="chat-bubble loading"><span></span><span></span><span></span></div>; 
             }
             
-            // Per i messaggi dell'AI, renderizza HTML formattato
             if (message.sender === MessageSender.MODEL) {
-                const formattedContent = formatMessageContent(message.text);
-                return (
-                    <div 
-                        className={getMessageClass()}
-                        dangerouslySetInnerHTML={{ __html: formattedContent }}
-                    />
-                );
+                const toolNameRegex = new RegExp(tools.map(t => t.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'g');
+                const mentionedToolNames = [...new Set(message.text.match(toolNameRegex))];
+                
+                if (mentionedToolNames.length > 0 && message.text.includes('•')) {
+                    const mentionedTools = tools.filter(tool => mentionedToolNames.includes(tool.name));
+                    const introText = message.text.split('•')[0].trim();
+                    
+                    return (
+                        <div className="chat-bubble ai" style={{background: 'transparent', padding: 0}}>
+                            {introText && <p style={{marginBottom: '12px'}}>{introText}</p>}
+                            <div className="chat-tool-card-container">
+                                {mentionedTools.map(tool => <ToolCardMessage key={tool.id} tool={tool} />)}
+                            </div>
+                        </div>
+                    );
+                }
             }
             
-            // Per i messaggi dell'utente e altri, renderizza testo normale
-            return <div className={getMessageClass()}><p className="whitespace-pre-wrap">{message.text}</p></div>;
+            // Fallback per messaggi normali
+            const content = formatMessageContent(message.text);
+            return (
+                <div className={getMessageClass()} dangerouslySetInnerHTML={{ __html: content }}></div>
+            );
         };
 
         const ChatInput = ({ onSendMessage, isLoading }) => {
@@ -369,7 +354,7 @@ Per la tua richiesta, ti suggerisco questi strumenti:
                         value={inputValue} 
                         onChange={(e) => setInputValue(e.target.value)} 
                         onKeyDown={handleKeyPress} 
-                        placeholder="Quali AI mi consigli?" 
+                        placeholder="Chiedimi qualcosa..." 
                         rows={1} 
                         disabled={isLoading} 
                     />
@@ -386,64 +371,75 @@ Per la tua richiesta, ti suggerisco questi strumenti:
             );
         };
         
-        const WelcomeScreen = () => (
-            <div id="welcome-screen">
-                <div className="welcome-logo">
-                    <span>
+        const WelcomeScreen = ({ onSendMessage }) => {
+            const suggestions = [
+                "Consigliami un'AI per creare immagini",
+                "Qual è la migliore AI per programmare?",
+                "Cercami uno strumento per fare presentazioni"
+            ];
+            return (
+                <div id="welcome-screen">
+                    <div className="welcome-logo">
                         <span style={{ color: 'white' }}>Koda</span><span style={{ color: 'var(--spotify-accent)' }}>.AI</span>
-                    </span>
+                    </div>
+                    <div className="prompt-starter-container">
+                        {suggestions.map((text, i) => (
+                            <button key={i} className="prompt-starter-btn" onClick={() => onSendMessage(text)}>
+                                {text}
+                            </button>
+                        ))}
+                    </div>
                 </div>
-            </div>
-        );
+            );
+        };
 
         // --- Main App Component ---
-        const App = () => {
-            const [messages, setMessages] = useState([]);
+        const App = ({ user, tools }) => {
+            const [messages, setMessages] = useState(() => {
+                const savedChat = localStorage.getItem(`chatHistory_${user.uid}`);
+                return savedChat ? JSON.parse(savedChat) : [];
+            });
             const [isLoading, setIsLoading] = useState(false);
             const [chatSession, setChatSession] = useState(null);
-            const [hasStartedChat, setHasStartedChat] = useState(false);
             const messagesEndRef = useRef(null);
 
-            const scrollToBottom = () => { 
-                messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); 
-            };
+            const scrollToBottom = () => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); };
             
-            useEffect(() => { 
-                if(hasStartedChat) scrollToBottom(); 
-            }, [messages, hasStartedChat]);
+            useEffect(() => { scrollToBottom(); }, [messages]);
+            
+            useEffect(() => {
+                localStorage.setItem(`chatHistory_${user.uid}`, JSON.stringify(messages));
+            }, [messages, user.uid]);
             
             const initializeChat = useCallback(() => {
                 try { 
                     if (!API_KEY) throw new Error("API Key non configurata."); 
                     setChatSession(createChatSession()); 
+                    if (messages.length === 0) {
+                        const userName = user.name.split('@')[0];
+                        const capitalizedUserName = userName.charAt(0).toUpperCase() + userName.slice(1);
+                        setMessages([{ 
+                            id: `system-welcome-${Date.now()}`, 
+                            text: `Ciao ${capitalizedUserName}! Come posso aiutarti oggi?`, 
+                            sender: MessageSender.SYSTEM
+                        }]);
+                    }
                 } catch (e) { 
                     console.error("Errore inizializzazione:", e); 
                     setMessages(prev => [...prev, { 
-                        id: `init-error-${Date.now()}`, 
-                        text: `Errore: ${e.message}`, 
-                        sender: MessageSender.ERROR 
+                        id: `init-error-${Date.now()}`, text: `Errore: ${e.message}`, sender: MessageSender.ERROR 
                     }]); 
                 }
-            }, []);
+            }, [user.name, user.uid]); // eslint-disable-line react-hooks/exhaustive-deps
             
-            useEffect(() => { 
-                initializeChat(); 
-            }, [initializeChat]);
+            useEffect(() => { initializeChat(); }, [initializeChat]);
 
             const handleSendMessage = async (inputText) => {
                 if (!inputText.trim() || !chatSession) return;
-                if (!hasStartedChat) setHasStartedChat(true);
 
-                const userMessage = { 
-                    id: `user-${Date.now()}`, 
-                    text: inputText, 
-                    sender: MessageSender.USER 
-                };
-                
-                setMessages(prev => [...prev, userMessage, { 
-                    id: `loading-${Date.now()}`, 
-                    sender: MessageSender.LOADING 
-                }]);
+                const userMessage = { id: `user-${Date.now()}`, text: inputText, sender: MessageSender.USER };
+                const loadingMessage = { id: `loading-${Date.now()}`, sender: MessageSender.LOADING };
+                setMessages(prev => [...prev, userMessage, loadingMessage]);
                 setIsLoading(true);
 
                 let currentModelMessageId = `model-${Date.now()}`;
@@ -459,11 +455,7 @@ Per la tua richiesta, ti suggerisco questi strumenti:
                             if (modelMsgIndex > -1) { 
                                 newMessages[modelMsgIndex].text = accumulatedResponse; 
                             } else { 
-                                newMessages.push({ 
-                                    id: currentModelMessageId, 
-                                    text: accumulatedResponse, 
-                                    sender: MessageSender.MODEL 
-                                }); 
+                                newMessages.push({ id: currentModelMessageId, text: accumulatedResponse, sender: MessageSender.MODEL }); 
                             }
                             return newMessages;
                         });
@@ -471,9 +463,7 @@ Per la tua richiesta, ti suggerisco questi strumenti:
                 } catch (e) {
                     console.error("Errore invio:", e);
                     setMessages(prev => [...prev.filter(m => m.sender !== MessageSender.LOADING), { 
-                        id: `error-${Date.now()}`, 
-                        text: `Errore: ${e.message}`, 
-                        sender: MessageSender.ERROR 
+                        id: `error-${Date.now()}`, text: `Errore: ${e.message}`, sender: MessageSender.ERROR 
                     }]);
                 } finally {
                     setIsLoading(false);
@@ -481,17 +471,27 @@ Per la tua richiesta, ti suggerisco questi strumenti:
                     document.getElementById('chat-input')?.focus();
                 }
             };
+
+            const resetChat = () => {
+                localStorage.removeItem(`chatHistory_${user.uid}`);
+                setMessages([]);
+                initializeChat();
+            };
             
+            const hasStartedChat = messages.some(m => m.sender === MessageSender.USER);
+
             return (
                 <div id="chatbot-app-container">
-                    <header style={{ justifyContent: 'center' }}></header>
+                    <header className="chat-header">
+                        <button onClick={resetChat} className="chat-header-btn" title="Nuova Chat">&#xFF0B;</button>
+                    </header>
                     <main>
-                        {hasStartedChat ? (
-                            <div id="chat-messages">
-                                {messages.map((msg) => <ChatMessageDisplay key={msg.id} message={msg} />)}
-                            </div>
+                        {!hasStartedChat ? (
+                            <WelcomeScreen onSendMessage={handleSendMessage} />
                         ) : (
-                            <WelcomeScreen />
+                            <div id="chat-messages">
+                                {messages.map((msg) => <ChatMessageDisplay key={msg.id} message={msg} tools={tools} />)}
+                            </div>
                         )}
                         <div ref={messagesEndRef} />
                     </main>
@@ -501,9 +501,9 @@ Per la tua richiesta, ti suggerisco questi strumenti:
         };
 
         // Funzione globale per montare l'app React
-        window.mountChatbotApp = (container) => {
+        window.mountChatbotApp = (container, user, tools) => {
             const root = ReactDOMClient.createRoot(container);
-            root.render(<React.StrictMode><App /></React.StrictMode>);
+            root.render(<React.StrictMode><App user={user} tools={tools} /></React.StrictMode>);
             return root;
         };
     </script>
@@ -536,7 +536,7 @@ Per la tua richiesta, ti suggerisco questi strumenti:
 
         // --- DATABASE PERSONALIZZATO ---
         const aiToolsData = [
-            { id: 'tool-001', name: 'ChatGPT', description: 'Genera testo, immagini e risponde a domande con ricerca web.', category: 'Testo', country: 'USA', website: 'https://chatgpt.com/', isFeatured: true, logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/ChatGPT_logo.svg/1024px-ChatGPT_logo.svg.png', recommendationId: 'tool-025' }, { id: 'tool-012', name: 'Google Notebook', description: 'Permette di creare riassunti audio sulle fonti dell\'utente, rispondere a domande e creare mappe mentali.', category: 'Testo', country: 'USA', website: 'https://notebooklm.google.com/?original_referer=https:%2F%2Fnotebooklm.google%23&pli=1', isFeatured: false, logoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJbWdW2SCEWfJuDTh5PVxgmqDvXoX5vElJ6s94SZ8Fe1YPzfxzGPuIyE9cBMDswv3qUd4&usqp=CAU', recommendationId: 'tool-021' }, { id: 'tool-013', name: 'Grok', description: 'Assistente di ricerca conversazionale con accesso a dati in tempo reale. (Richiede VPN)', category: 'Testo', country: 'USA', website: 'https://grok.com/?referrer=website', isFeatured: false, logoUrl: 'https://i.namu.wiki/i/Wk8b-Vo4qqynLc4pN1T0otG83F383UPI_IR4VthZuZioAxVD_NS6uErIsecLMDK0F0L-KiUjL7xonRz4EwPL2g.webp', recommendationId: 'tool-001' }, { id: 'tool-014', name: 'FLUX', description: 'Genera immagini, video e animazioni da prompt testuali e immagini.', category: 'Immagini', country: 'Cina', website: 'https://playground.bfl.ai/image/generate', isFeatured: false, logoUrl: 'https://kodexolabs.com/wp-content/uploads/2025/01/Flux.1.webp', recommendationId: 'tool-033' }, { id: 'tool-015', name: 'Swap AI', description: 'Esegue il "face swap" (scambio di volti) in immagini e video in modo realistico.', category: 'Immagini', country: 'USA', website: 'https://aifaceswap.io/multiple-face-swap-ai/#face-swap-playground', isFeatured: false, logoUrl: 'https://www.toolpilot.ai/cdn/shop/files/aifaceswap-l.jpg?v=1733037433', recommendationId: 'tool-016' }, { id: 'tool-016', name: 'Inpaint AI', description: 'Rimuove oggetti, persone o imperfezioni indesiderate dalle foto con un solo click.', category: 'Immagini', country: 'USA', website: 'https://theinpaint.com/', isFeatured: false, logoUrl: 'data:image/webp;base64,UklGRqoEAABXRUJQVlA4WAoAAAAQAAAAJgAAJgAAQUxQSFwCAAARkHRrmyHJ6vNLdvfYtm3btm3b9uxs7Gzbtle2bSu/OCcjvi9iIkJh27aNndUdNO0TlhHBH/rpz6b8gWMDKHlYZrTjDfkmRHilbjyJ/6DX7qOQfDsuBSOg2wfAgtJ3hcpfqzK7hp3gOpDzQohEwiMlTWaBZQepk2Y8EinDO91TmYR+8aXttv1DFuLL/DyuVt1cm7+8+Cd0/LMpm8446fNOvf5Hqyi+tnN4gYKVMk94rWSk4atmHo+M2+f2fxRqZigbbijOw1/26fJdFAb8MTanzwDcLH3PvUFkskfi8d2EQnEM7FI90m+PdkBUBZnKXu1bKgHQtxGz+eiUb4hE2Tkf57XKF8uMp92z4i3K7PXV2jCwbFJmI6iz8A7yER0/PaJySg+AiDPiGrMDz1sjqiSXuxIEM34JYYKXQyqlcIF7RC2e0R5k5dvUKun4khY8iaheP+//LK+dM4iUtv2xb9jTmEodaFUqKiiH0ofY5GnN8HK3aon4txZv3GthQHw4oG5yrlDSb0duPRJ9M6Z+aof3cf1emxzxY1bDjMruoE4EyLUGlV6+I9zcKHtgcz8FwKn62GTSlXYFYkDz22OafTM462nfSvGYGKQFv+oLvf8ypmpiOkrn2Omnf9UV9feiyimAial10o5+xjYQt1dNbSvJqypbypKkHS+xP/ly3dQOvwpkoCQRV23PL4rHbdN45PJpE4Bk6xRe8EbFp+GZfZudz0xWE0jZ5fTfCL/nawolV2kA8YvM/yJ+bShPCwWMAvDPwEvcYeuEovFtda20ALpetWV78eNzP45sp9ICVlA4ICgCAABwCwCdASonACcAPoEeoFAlISUlGqCgEAlsALszQnfZODkB5GjUCAeYDdAOkA9CXy3vYa8majvPbrEC3w5RFM5OSn/KrMNlvL8JdXmVHGHDzjTaj7fvjV1ibG55GrUaSF3oolIAAP7K3bd03vd3wdyfd3PWkrdc5+l+Iasr40ElHEoRyDAfR7KWhTEUDOXTp3v8yZt7uLso8TxJA+6uDYJCVhrs3AZpMuDzCsUjsIEPp38Cv4wYR9LrreH7v1LAyPebD82DkAcosDF1iVhC8XjMHEx40fnT6Y5A38e/+s4ytcq/NzQzQSinQS+v4CX9j9XcnQqehOsxLSw76NRA4NikbBddvkE610BDsE6bz+5TKMonMv5qsXP4cNREOF4isL5uaMIGpSmnAJ0nPkOARvLYoTqp8KsSn+UO9exbdilgqTnIUwst6EvWMyV4b1qVA4z7zpI4T1hkk6bE6BxDxa/fDQpYnKbJmX92XLG4cVR1QDvQEpAxFPjQ/UtYfLXmZZfYDoG2qx3/oCSsllMI6GzYIxCGnPQy+N4qHTzpiuSBCd/fy/xNK/mEP9MDGg5i3DyI7O6ZTfD41oWs19qmrb8If2YXx6OWeQsO3gQAhVHjmiB6o6zKUp0KzpLgoxiCEeIM6+/1Alrn1mScl+t6JRSjO38IRDBxgoJ/xbLyoNjF3V/yPJwBJ5CXiZCe/U/zpIfvzIASXoyf4/wWzIxzjnHFoLFLfuAAAAA=', recommendationId: 'tool-017' }, { id: 'tool-017', name: 'Pixel Cut AI', description: 'Espande i bordi delle immagini (outpainting) per cambiare formato o stile.', category: 'Immagini', country: 'USA', website: 'https://www.pixelcut.ai/t/uncrop', isFeatured: false, logoUrl: 'https://templateshake.com/wp-content/uploads/2021/09/Pixelcut_-AI-Graphic-Designer.png', recommendationId: 'tool-033' }, { id: 'tool-033', name: 'Whisk', description: 'Crea animazioni fluide da immagini statiche e genera anche immagini da prompt.', category: 'Immagini', country: 'USA', website: 'https://labs.google/fx/tools/whisk/', isFeatured: false, logoUrl: 'data:image/webp;base64,UklGRtoCAABXRUJQVlA4WAoAAAAQAAAAGgAAGgAAQUxQSHEBAAARkGTbtuoqvODSMJfuOTWKTiM8rt/d5UkY78XWKtwbBk2IiAlIkmv33+8W43GR53kR5nm29+35zVpSu/d6qoBLMVy8u3PlxusFghBBQHXx+trzmf8R1Pnjr4ioa0fbh+X+9vGKAOqnPUKxd0q2ec5JVwVwJ4ugDKct69MOCqpZYLQ1G9ibtRRD0gBF/0z7Nhd1FRQv0gDVP+XI5uy7yy9j6MnhVuVk82hXJXIpqC4a46G6ftleSCwlVi+bhvW8qSj/cHKwVkTmne1TFYjgrJEODHc659bnhmmsM22oZu0jddpWNM0AT7eLntJbx3DnRANxUnfRXd3+/delf2Zqlgm9uToeqxCZjtQ0FXYUoxhlXckzYEtAWa5bQrovjE7ns9l0MqmqqizLsqpO2+rOJ8HtRq/f6XZ7/f6w3+/3e1uon5/MDVGiIqrMn918QQREwiWvb9Zuv1qIUQAhmL24lyTJtYdfD/OwiOZFUex+eHSjlgAAVlA4IEIBAACQBwCdASobABsAPpEopFIloaWllACwEglsAJ0yhID1oDbNMQ1XPLbrzhvNnsAbpL+wAdmnnyJ9nYieeXb2Ryc1AKuoW3wA/vdDClcr9pD9tsCqduiNtQaVaXgNfHp+atcZTe26+3xORhwFno/1uCGFQNU/4IYVL2I0o6c2eo73COMYL756Lzd/ibcQRmlIAId+z6psKbtTu/HIkA2HcYl/lq+sJbc01Q/VZ218h72kU324N9YcnNwU4vXy6VXCKq/tTNwWHsJ66N8JgRuCvc2pDpQ7KYv4rj//agwrDT7PdEnuIAkZLuckIqBv9aVnsRgB0qHFxi5a42nw4jOMOI330LQhImDuwmt+4/ryzZZzC4m8PLOx6EdyPthzs6wIhg+lRzc3+QT27OYDqLpNkFX2To7bI2E7F1lLi0lg6Fo4SAAA', recommendationId: 'tool-014'}, { id: 'tool-041', name: 'Leonardo AI', description: 'Piattaforma per la generazione di asset visivi di alta qualità, da concept art a texture per giochi.', category: 'Immagini', country: 'USA', website: 'https://leonardo.ai/', isFeatured: false, logoUrl: 'https://yt3.googleusercontent.com/a04AUXisIIWkI-Pj5zORQTiDNS9tALLmPc8pxuRT_aEHrCOUDsPQoLuh4QRbfgICortk7tBhyg=s900-c-k-c0x00ffffff-no-rj', recommendationId: 'tool-014' }, { id: 'tool-042', name: 'Midjourney', description: 'Genera immagini artistiche e fotorealistiche di alta qualità da prompt testuali tramite Discord.', category: 'Immagini', country: 'USA', website: 'https://www.midjourney.com/home', isFeatured: false, logoUrl: 'https://sadesign.ai/pictures/picfullsizes/2024/12/10/dsn1733795303.jpg', recommendationId: 'tool-041' }, { id: 'tool-034', name: 'Kling', description: 'Genera video di alta qualità da prompt testuali, concentrandosi sul realismo e sul movimento complesso.', category: 'Video', country: 'Cina', website: 'https://klingai.com/global/', isFeatured: false, logoUrl: 'https://play-lh.googleusercontent.com/JOfjXqsShK8j1aGBc1xlHBnatoRKRwLsGuoFZUAvKksaEPvK71eLwSg4FbKlky9Es-s', recommendationId: 'tool-035' }, { id: 'tool-035', name: 'Veo', description: 'Il modello di generazione video più capace di Google, che crea video realistici e di alta qualità da prompt di testo e immagini.', category: 'Video', country: 'USA', website: 'https://deepmind.google/models/veo/', isFeatured: false, logoUrl: 'https://storage.googleapis.com/gweb-uniblog-publish-prod/images/IO25_Gemini_MOD_v33_PART_1_DG_FINAL_54.max-1440x810.png', isFeatured: false, recommendationId: 'tool-014' }, { id: 'tool-021', name: 'Claude', description: 'Crea bozze e contenuti per presentazioni interattive e documenti complessi.', category: 'Presentazioni', country: 'USA', website: 'https://claude.ai/new', isFeatured: true, logoUrl: 'https://logo.svgcdn.com/l/claude-icon-8x.png', recommendationId: 'tool-022' }, { id: 'tool-022', name: 'Gamma AI', description: 'Genera presentazioni, documenti e pagine web statiche partendo da un\'idea.', category: 'Presentazioni', country: 'USA', website: 'https://gamma.app/', isFeatured: false, logoUrl: 'https://www.fahimai.com/wp-content/uploads/2025/03/GAMMA-cta.png', recommendationId: 'tool-021' }, { id: 'tool-023', name: 'Napkin AI', description: 'Converte dati testuali e concetti in grafici statici e diagrammi chiari.', category: 'Presentazioni', country: 'USA', website: 'https://www.napkin.ai/', isFeatured: false, logoUrl: 'https://media.licdn.com/dms/image/v2/D560BAQEYfmQKrdByPg/company-logo_200_200/company-logo_200_200/0/1723039432148/napkin_ai_logo?e=2147483647&v=beta&t=Nsr22RG3uiy9usBNh55leGVf8ES5YJQwUANW-2N7yEA', recommendationId: 'tool-022' }, { id: 'tool-024', name: 'Google AI Studio', description: 'Crea app, siti e prototipi basati sui modelli Gemini di Google.', category: 'Codice', country: 'USA', website: 'https://aistudio.google.com/prompts/new_chat', isFeatured: true, logoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToBQo43LHKdO8g2NftGqpOjG-rHo61R8Rmpk0mEb0rUJ0A2P-z0kTx8M6XQHWZbHTR6lY&usqp=CAU', recommendationId: 'tool-026' }, { id: 'tool-025', name: 'Manus', description: 'Piattaforma multi-agente per sviluppare sistemi autonomi complessi.', category: 'Codice', country: 'Cina', website: 'https://manus.im/app', isFeatured: true, logoUrl: 'https://i.namu.wiki/i/5-7MaDXSqFVQhJjDY8rbjzRuoAqlqXpQhoYWYqSgkgRo6Qo1imTF9nHaOTvNxIeEhg_OCEMzuySjfSCyMWLUTA.webp', recommendationId: 'tool-001' }, { id: 'tool-026', name: 'Microsoft Copilot', description: 'Assistente AI per codice, specializzato anche in script VBA per Excel.', category: 'Codice', country: 'USA', website: 'https://copilot.microsoft.com/chats/UXstZKziqtFHV3atU21qy', isFeatured: false, logoUrl: 'https://breakwaterit.co.uk/wp-content/uploads/2024/02/Copilot-65d6242f4e297.png', recommendationId: 'tool-024' }, { id: 'tool-027', name: 'Google Stitch', description: 'Tool per la creazione di codice per interfacce utente (UX Design).', category: 'Codice', country: 'USA', website: 'https://stitch.withgoogle.com/?pli=1', isFeatured: false, logoUrl: 'https://media2.dev.to/dynamic/image/width=1080,height=1080,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fzhshikvds4e6nn22fngm.png', recommendationId: 'tool-028' }, { id: 'tool-028', name: 'Chef Convex', description: 'Crea web app complete con un backend già integrato e pronto all\'uso.', category: 'Codice', country: 'USA', website: 'https://chef.convex.dev/', isFeatured: false, logoUrl: 'https://chef.convex.dev/chef.svg', recommendationId: 'tool-027' }, { id: 'tool-030', name: 'Deepseek', description: 'Modello linguistico specializzato nella scrittura e comprensione di codice in vari linguaggi.', category: 'Codice', country: 'Cina', website: 'https://chat.deepseek.com/', isFeatured: false, logoUrl: 'https://cdn-1.webcatalog.io/catalog/deepseek/deepseek-social-preview.png?v=1748219623720', recommendationId: 'tool-031' }, { id: 'tool-031', name: 'Qwen', description: 'Assistente AI multimodale di Alibaba Cloud, efficace nella generazione di codice, analisi, creazione di testi e ricerca web.', category: 'Codice', country: 'Cina', website: 'https://chat.qwen.ai/', isFeatured: false, logoUrl: 'https://crystalpng.com/wp-content/uploads/2025/02/Qwen-03.png', recommendationId: 'tool-030' }, { id: 'tool-032', name: 'Mistral', description: 'Modelli linguistici aperti e ottimizzati, ideali per lo Codice di applicazioni e la Codice.', category: 'Codice', country: 'Europe', website: 'https://mistral.ai/', isFeatured: false, logoUrl: 'https://www.massa-critica.it/wp-content/uploads/mistral-ai.jpg', recommendationId: 'tool-001' }, { id: 'tool-036', name: 'BOLT AI', description: 'Genera codice e componenti UI partendo da un prompt.', category: 'Codice', country: 'USA', website: 'https://bolt.new/', isFeatured: false, logoUrl: 'https://cdn-1.webcatalog.io/catalog/bolt-new/bolt-new-icon-filled-256.png?v=1730692903154', recommendationId: 'tool-024' }, { id: 'tool-037', name: 'V0 AI', description: 'Genera interfacce utente reattive basate su React da semplici prompt di testo.', category: 'Codice', country: 'USA', website: 'https://v0.dev/chat', isFeatured: false, logoUrl: 'https://logowik.com/content/uploads/images/v0-ai1721420590.logowik.com.webp', recommendationId: 'tool-027' }, { id: 'tool-038', name: 'Cursor', description: 'Un editor di codice basato su AI per programmare in modo più veloce ed efficiente.', category: 'Codice', country: 'USA', website: 'https://www.cursor.com/', isFeatured: false, logoUrl: 'https://cursor.com/favicon.svg', recommendationId: 'tool-026' }, { id: 'tool-039', name: 'Lovable', description: 'Sviluppa e testa interfacce utente con l\'aiuto dell\'intelligenza artificiale.', category: 'Codice', country: 'USA', website: 'https://lovable.dev/', isFeatured: false, logoUrl: 'https://lovable.dev/img/logo/lovable-icon-bg-dark.png', recommendationId: 'tool-037' }, { id: 'tool-040', name: 'Perplexity', description: 'Motore di ricerca conversazionale che fornisce risposte dirette con fonti, utile anche per la ricerca web e codice.', category: 'Codice', country: 'USA', website: 'https://www.perplexity.ai/', isFeatured: false, logoUrl: 'https://images.seeklogo.com/logo-png/51/2/perplexity-ai-logo-png_seeklogo-517845.png', recommendationId: 'tool-001' }, { id: 'tool-029', name: 'Eleven Labs', description: 'Generates realistic, high-quality speech from text in multiple languages.', category: 'Audio', country: 'USA', website: 'https://elevenlabs.io/', isFeatured: false, logoUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAeFBMVEX///8AAABra2vPz88wMDBvb2/c3NxSUlL6+vpaWlqfn5/U1NSBgYFAQEAgICBFRUXJycnBwcFKSkrs7Oy5ubkrKysWFRaJiYnj4+N1dXU3Nzf09PSCgoKQkJCsrKxjY2MjIyMLCwulpaWzs7MaGho0NDSYmJheXl7ei1KlAAAGlElEQVR4nO2da2OyIABGKVvq7KKpTbP7XP3/f/jKVaxmrZzi3ud8yYiQEwgoaIQAAAAAAAAA2me8G/ab3bheMBr0n6hOMOw6d40Q1hieus5cI5xqDIddZ64RhjDsPTAsWH6Nekn8sGFaE8VkvIcN31rLU7NYMISh8cCQwNB4YEhgaDwwJDA0HhgSGBoPDAkMjQeGBIbGA0MCQ+OBIYGh8cCQwNB4YEhgaDwwJDA0HhgSGBoPDAkMjQeGBIbGA0MCQ+OBIYGh8cCQwNB4Wjd0GM2k9RDNGNqu6y4SujWxbXvB7tiMaGAVeyx2uGxS4Q7NGLIIzGtBtyy69T64xhK3sIyaVLhD04Y2DP+a4WE/0xh4f89wcxX1rxl+XEX9Dw2TcfJA9xgm4+xWsDeuuw2d0rHh53xWvM1XJya52MdxfpSf7eI4XrJErXTGjunUEx/ZNGJC/BFLrPZpAt0ajheqlV35RNz5vxAR2YMOcrq1KRvjd/7ZlG6H7xehnRjWtjTWQGdLSMY2RJ3d0u1TEbjSY01Lw20Z+tmd4XwiSGVVKg0Tkb25eC1GfSl9DXjELxG2E2ozrbyY4aw0/OrOsETW19KQmb3RhiJktXUmPuTVNBHZYo8d2ftliok0LEo4dHxewt5ljjowlPVVGbI92zwwlAkc6CtrHZlZJGSEACvitTJk1SJcauVulqGtvlPwyYpENCrsIR1nuuWQQAUUOCwlaSh+nYleQ9o3PORLzrUhq31EDz0XrSt9jakMLZqdyH8iozHtTBiKFFmDU/OwgM7aUuYysxcMWxWKK6qpJeoe2/lCsqfvfGHo8wSjbg2/7w/9wRVzmd+i8V+L0tpdR7s4OIMeGU5lUi7JDqICnL83TFo0dJ4wZK+HykUOlk124IWWTJCVYeV6iO33xJCX+0U68vPth/zwTaWn0w9D1lWr4Zabyi6N1ssDfeTKSeX/LGMF0/esP4asCxw5ZTZiflahhpvjMmnRbNLrXPkwNMpwv5hrTD/0URt7NM6BlmLIDj7ZsQtBPsYmR/YmLXSc6CBrtkGGF7zphmLXM/kUoFik5vK34jzR+eJvR6Ocb3hGG6aVs6dqh2HLc3gRrBL/qkRjaZtrKMtwz7/naZmfqEsZTl7dnZOWsea8WV1dGtZk7vcMg8k1xVlukq7XEzWY8z5o6qvJVr/aEkyKKPr5UHKcFDV5udvIwA1NTHzFo7G3XRg+TcPTNgYaNgwMCQwpMOwUGBIYUm4aJoHvB4+4Jvb57K5/kukf8XuGbBLCfiAL7JqU+5NM/4hfHpc+knEYvggMCQwpMKzn7xmG283ZttcnOd8iDcOTO5uuI+300PuYHpaLjfXSGWPrhs56ILH5WTozPKvZ+qWcccvULP/qlUFS24bVuXt2HZQZ2m4ZerqO6d5aamKkYTaokknDK/GLmI8Mjoww5CW19n3/xK6obTTDc+Qf+ax87IhBn+t7VsCnn56uqO0ajrXMZnS686s05KH8aDyK34J/Kyh+iecbm3YNI31ftCHJM2kol0KxFRqxSEiEfd75m5ha2jUM0kma8sISK5pCYbhSUVhwxsvQ9p9vYSRd9PiO/zmUTac0VJfl+cITT3Ue7jBKbiXyMK0bepvlQEMalhet59zQyctIh/cX+vy2DbX+fnTb0OaGJNTXs43urbH8nnYNHZFr+yNw+LL+K0MnVilEu4NSnD1diu0a8unOIT+wKobqOByXaRXlGJ3k0K1u+WEt7RqylRWyX6jUUjk9yluYyh0nFuvyF+RJfnk9zbka72reTxnKasoHa3yMFo35PFT1J/gpv72+1PJLHN5O8kUX4u9flCFXFHOmdJ4wmMsVCvdWrnVqWCHkSS39LFMrmEvDwXL3Jg66HRELaQaLIAz5v6L5Nbs3yDDQ3+a6YV6NeHma9cI1gHYNte5w4Nu64bBctX3gB2oSa1/ddzzy1gznyvD6L/do0RzFdmzxZidUVzEC0Ve+SRnnpEY/p67HNLdxLhF7DLafwc2hZhJEQfVw84JTOtm+NtGDu2QJDI0HhgSGxgNDAkPjgSGBofHAkMDQeGBIYGg8MCQwNB4YEhgaDwwJDI0HhgSGxgNDAkPjgSGBofHAkMDQeGBIYGg8MCQwNB4YEhgaDwwJDI0HhgSGxgNDAkPjgSGBofF4Dxu6ntVHvOPDhj3n/za88QcMPWRXYxh1nblGqPvbqyy//33jyWsfA2P1XzG/c6dtFu2GfWYXvf4gHwAAAAAAAMDP+Qd5XHfMcP3iXQAAAABJRU5ErkJggg==', recommendationId: 'tool-029' },
+            { id: 'tool-001', name: 'ChatGPT', description: 'Genera testo, immagini e risponde a domande con ricerca web.', category: 'Testo', country: 'USA', website: 'https://chatgpt.com/', isFeatured: true, logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/ChatGPT_logo.svg/1024px-ChatGPT_logo.svg.png', recommendationId: 'tool-025' }, { id: 'tool-012', name: 'Google Notebook', description: 'Permette di creare riassunti audio sulle fonti dell\'utente, rispondere a domande e creare mappe mentali.', category: 'Testo', country: 'USA', website: 'https://notebooklm.google.com/?original_referer=https:%2F%2Fnotebooklm.google%23&pli=1', isFeatured: false, logoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJbWdW2SCEWfJuDTh5PVxgmqDvXoX5vElJ6s94SZ8Fe1YPzfxzGPuIyE9cBMDswv3qUd4&usqp=CAU', recommendationId: 'tool-021' }, { id: 'tool-013', name: 'Grok', description: 'Assistente di ricerca conversazionale con accesso a dati in tempo reale. (Richiede VPN)', category: 'Testo', country: 'USA', website: 'https://grok.com/?referrer=website', isFeatured: false, logoUrl: 'https://i.namu.wiki/i/Wk8b-Vo4qqynLc4pN1T0otG83F383UPI_IR4VthZuZioAxVD_NS6uErIsecLMDK0F0L-KiUjL7xonRz4EwPL2g.webp', recommendationId: 'tool-001' }, { id: 'tool-014', name: 'FLUX', description: 'Genera immagini, video e animazioni da prompt testuali e immagini.', category: 'Immagini', country: 'Cina', website: 'https://playground.bfl.ai/image/generate', isFeatured: false, logoUrl: 'https://kodexolabs.com/wp-content/uploads/2025/01/Flux.1.webp', recommendationId: 'tool-033' }, { id: 'tool-015', name: 'Swap AI', description: 'Esegue il "face swap" (scambio di volti) in immagini e video in modo realistico.', category: 'Immagini', country: 'USA', website: 'https://aifaceswap.io/multiple-face-swap-ai/#face-swap-playground', isFeatured: false, logoUrl: 'https://www.toolpilot.ai/cdn/shop/files/aifaceswap-l.jpg?v=1733037433', recommendationId: 'tool-016' }, { id: 'tool-016', name: 'Inpaint AI', description: 'Rimuove oggetti, persone o imperfezioni indesiderate dalle foto con un solo click.', category: 'Immagini', country: 'USA', website: 'https://theinpaint.com/', isFeatured: false, logoUrl: 'data:image/webp;base64,UklGRqoEAABXRUJQVlA4WAoAAAAQAAAAJgAAJgAAQUxQSFwCAAARkHRrmyHJ6vNLdvfYtm3btm3b9uxs7Gzbtle2bSu/OCcjvi9iIkJh27aNndUdNO0TlhHBH/rpz6b8gWMDKHlYZrTjDfkmRHilbjyJ/6DX7qOQfDsuBSOg2wfAgtJ3hcpfqzK7hp3gOpDzQohEwiMlTWaBZQepk2Y8EinDO91TmYR+8aXttv1DFuLL/DyuVt1cm7+8+Cd0/LMpm8446fNOvf5Hqyi+tnN4gYKVMk94rWSk4atmHo+M2+f2fxRqZigbbijOw1/26fJdFAb8MTanzwDcLH3PvUFkskfi8d2EQnEM7FI90m+PdkBUBZnKXu1bKgHQtxGz+eiUb4hE2Tkf57XKF8uMp92z4i3K7PXV2jCwbFJmI6iz8A7yER0/PaJySg+AiDPiGrMDz1sjqiSXuxIEM34JYYKXQyqlcIF7RC2e0R5k5dvUKun4khY8iaheP+//LK+dM4iUtv2xb9jTmEodaFUqKiiH0ofY5GnN8HK3aon4txZv3GthQHw4oG5yrlDSb0duPRJ9M6Z+aof3cf1emxzxY1bDjMruoE4EyLUGlV6+I9zcKHtgcz8FwKn62GTSlXYFYkDz22OafTM462nfSvGYGKQFv+oLvf8ypmpiOkrn2Omnf9UV9feiyimAial10o5+xjYQt1dNbSvJqypbypKkHS+xP/ly3dQOvwpkoCQRV23PL4rHbdN45PJpE4Bk6xRe8EbFp+GZfZudz0xWE0jZ5fTfCL/nawolV2kA8YvM/yJ+bShPCwWMAvDPwEvcYeuEovFtda20ALpetWV78eNzP45sp9ICVlA4ICgCAABwCwCdASonACcAPoEeoFAlISUlGqCgEAlsALszQnfZODkB5GjUCAeYDdAOkA9CXy3vYa8majvPbrEC3w5RFM5OSn/KrMNlvL8JdXmVHGHDzjTaj7fvjV1ibG55GrUaSF3oolIAAP7K3bd03vd3wdyfd3PWkrdc5+l+Iasr40ElHEoRyDAfR7KWhTEUDOXTp3v8yZt7uLso8TxJA+6uDYJCVhrs3AZpMuDzCsUjsIEPp38Cv4wYR9LrreH7v1LAyPebD82DkAcosDF1iVhC8XjMHEx40fnT6Y5A38e/+s4ytcq/NzQzQSinQS+v4CX9j9XcnQqehOsxLSw76NRA4NikbBddvkE610BDsE6bz+5TKMonMv5qsXP4cNREOF4isL5uaMIGpSmnAJ0nPkOARvLYoTqp8KsSn+UO9exbdilgqTnIUwst6EvWMyV4b1qVA4z7zpI4T1hkk6bE6BxDxa/fDQpYnKbJmX92XLG4cVR1QDvQEpAxFPjQ/UtYfLXmZZfYDoG2qx3/oCSsllMI6GzYIxCGnPQy+N4qHTzpiuSBCd/fy/xNK/mEP9MDGg5i3DyI7O6ZTfD41oWs19qmrb8If2YXx6OWeQsO3gQAhVHjmiB6o6zKUp0KzpLgoxiCEeIM6+/1Alrn1mScl+t6JRSjO38IRDBxgoJ/xbLyoNjF3V/yPJwBJ5CXiZCe/U/zpIfvzIASXoyf4/wWzIxzjnHFoLFLfuAAAAA=', recommendationId: 'tool-017' }, { id: 'tool-017', name: 'Pixel Cut AI', description: 'Espande i bordi delle immagini (outpainting) per cambiare formato o stile.', category: 'Immagini', country: 'USA', website: 'https://www.pixelcut.ai/t/uncrop', isFeatured: false, logoUrl: 'https://templateshake.com/wp-content/uploads/2021/09/Pixelcut_-AI-Graphic-Designer.png', recommendationId: 'tool-033' }, { id: 'tool-033', name: 'Whisk', description: 'Crea animazioni fluide da immagini statiche e genera anche immagini da prompt.', category: 'Immagini', country: 'USA', website: 'https://labs.google/fx/tools/whisk/', isFeatured: false, logoUrl: 'data:image/webp;base64,UklGRtoCAABXRUJQVlA4WAoAAAAQAAAAGgAAGgAAQUxQSHEBAAARkGTbtuoqvODSMJfuOTWKTiM8rt/d5UkY78XWKtwbBk2IiAlIkmv33+8W43GR53kR5nm29+35zVpSu/d6qoBLMVy8u3PlxusFghBBQHXx+trzmf8R1Pnjr4ioa0fbh+X+9vGKAOqnPUKxd0q2ec5JVwVwJ4ugDKct69MOCqpZYLQ1G9ibtRRD0gBF/0z7Nhd1FRQv0gDVP+XI5uy7yy9j6MnhVuVk82hXJXIpqC4a46G6ftleSCwlVi+bhvW8qSj/cHKwVkTmne1TFYjgrJEODHc659bnhmmsM22oZu0jddpWNM0AT7eLntJbx3DnRANxUnfRXd3+/delf2Zqlgm9uToeqxCZjtQ0FXYUoxhlXckzYEtAWa5bQrovjE7ns9l0MqmqqizLsqpO2+rOJ8HtRq/f6XZ7/f6w3+/3e1uon5/MDVGiIqrMn918QQREwiWvb9Zuv1qIUQAhmL24lyTJtYdfD/OwiOZFUex+eHSjlgAAVlA4IEIBAACQBwCdASobABsAPpEopFIloaWllACwEglsAJ0yhID1oDbNMQ1XPLbrzhvNnsAbpL+wAdmnnyJ9nYieeXb2Ryc1AKuoW3wA/vdDClcr9pD9tsCqduiNtQaVaXgNfHp+atcZTe26+3xORhwFno/1uCGFQNU/4IYVL2I0o6c2eo73COMYL756Lzd/ibcQRmlIAId+z6psKbtTu/HIkA2HcYl/lq+sJbc01Q/VZ218h72kU324N9YcnNwU4vXy6VXCKq/tTNwWHsJ66N8JgRuCvc2pDpQ7KYv4rj//agwrDT7PdEnuIAkZLuckIqBv9aVnsRgB0qHFxi5a42nw4jOMOI330LQhImDuwmt+4/ryzZZzC4m8PLOx6EdyPthzs6wIhg+lRzc3+QT27OYDqLpNkFX2To7bI2E7F1lLi0lg6Fo4SAAA', recommendationId: 'tool-014'}, { id: 'tool-041', name: 'Leonardo AI', description: 'Piattaforma per la generazione di asset visivi di alta qualità, da concept art a texture per giochi.', category: 'Immagini', country: 'USA', website: 'https://leonardo.ai/', isFeatured: false, logoUrl: 'https://yt3.googleusercontent.com/a04AUXisIIWkI-Pj5zORQTiDNS9tALLmPc8pxuRT_aEHrCOUDsPQoLuh4QRbfgICortk7tBhyg=s900-c-k-c0x00ffffff-no-rj', recommendationId: 'tool-014' }, { id: 'tool-042', name: 'Midjourney', description: 'Genera immagini artistiche e fotorealistiche di alta qualità da prompt testuali tramite Discord.', category: 'Immagini', country: 'USA', website: 'https://www.midjourney.com/home', isFeatured: false, logoUrl: 'https://sadesign.ai/pictures/picfullsizes/2024/12/10/dsn1733795303.jpg', recommendationId: 'tool-041' }, { id: 'tool-034', name: 'Kling', description: 'Genera video di alta qualità da prompt testuali, concentrandosi sul realismo e sul movimento complesso.', category: 'Video', country: 'Cina', website: 'https://klingai.com/global/', isFeatured: false, logoUrl: 'https://play-lh.googleusercontent.com/JOfjXqsShK8j1aGBc1xlHBnatoRKRwLsGuoFZUAvKksaEPvK71eLwSg4FbKlky9Es-s', recommendationId: 'tool-035' }, { id: 'tool-035', name: 'Veo', description: 'Il modello di generazione video più capace di Google, che crea video realistici e di alta qualità da prompt di testo e immagini.', category: 'Video', country: 'USA', website: 'https://deepmind.google/models/veo/', isFeatured: false, logoUrl: 'https://storage.googleapis.com/gweb-uniblog-publish-prod/images/IO25_Gemini_MOD_v33_PART_1_DG_FINAL_54.max-1440x810.png', isFeatured: false, recommendationId: 'tool-014' }, { id: 'tool-021', name: 'Claude', description: 'Crea bozze e contenuti per presentazioni interattive e documenti complessi.', category: 'Presentazioni', country: 'USA', website: 'https://claude.ai/new', isFeatured: true, logoUrl: 'https://logo.svgcdn.com/l/claude-icon-8x.png', recommendationId: 'tool-022' }, { id: 'tool-022', name: 'Gamma AI', description: 'Genera presentazioni, documenti e pagine web statiche partendo da un\'idea.', category: 'Presentazioni', country: 'USA', website: 'https://gamma.app/', isFeatured: false, logoUrl: 'https://www.fahimai.com/wp-content/uploads/2025/03/GAMMA-cta.png', recommendationId: 'tool-021' }, { id: 'tool-023', name: 'Napkin AI', description: 'Converte dati testuali e concetti in grafici statici e diagrammi chiari.', category: 'Presentazioni', country: 'USA', website: 'https://www.napkin.ai/', isFeatured: false, logoUrl: 'https://media.licdn.com/dms/image/v2/D560BAQEYfmQKrdByPg/company-logo_200_200/company-logo_200_200/0/1723039432148/napkin_ai_logo?e=2147483647&v=beta&t=Nsr22RG3uiy9usBNh55leGVf8ES5YJQwUANW-2N7yEA', recommendationId: 'tool-022' }, { id: 'tool-024', name: 'Google AI Studio', description: 'Crea app, siti e prototipi basati sui modelli Gemini di Google.', category: 'Codice', country: 'USA', website: 'https://aistudio.google.com/prompts/new_chat', isFeatured: true, logoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToBQo43LHKdO8g2NftGqpOjG-rHo61R8Rmpk0mEb0rUJ0A2P-z0kTx8M6XQHWZbHTR6lY&usqp=CAU', recommendationId: 'tool-026' }, { id: 'tool-025', name: 'Manus', description: "Piattaforma di AI estremamente potente. Può eseguire compiti come ChatGPT e gestirli in background, creando testi, ricerche, presentazioni, video, immagini e molto altro.", category: 'Codice', country: 'Cina', website: 'https://manus.im/app', isFeatured: true, logoUrl: 'https://i.namu.wiki/i/5-7MaDXSqFVQhJjDY8rbjzRuoAqlqXpQhoYWYqSgkgRo6Qo1imTF9nHaOTvNxIeEhg_OCEMzuySjfSCyMWLUTA.webp', recommendationId: 'tool-001' }, { id: 'tool-026', name: 'Microsoft Copilot', description: 'Assistente AI per codice, specializzato anche in script VBA per Excel.', category: 'Codice', country: 'USA', website: 'https://copilot.microsoft.com/chats/UXstZKziqtFHV3atU21qy', isFeatured: false, logoUrl: 'https://breakwaterit.co.uk/wp-content/uploads/2024/02/Copilot-65d6242f4e297.png', recommendationId: 'tool-024' }, { id: 'tool-027', name: 'Google Stitch', description: 'Tool per la creazione di codice per interfacce utente (UX Design).', category: 'Codice', country: 'USA', website: 'https://stitch.withgoogle.com/?pli=1', isFeatured: false, logoUrl: 'https://media2.dev.to/dynamic/image/width=1080,height=1080,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fzhshikvds4e6nn22fngm.png', recommendationId: 'tool-028' }, { id: 'tool-028', name: 'Chef Convex', description: 'Crea web app complete con un backend già integrato e pronto all\'uso.', category: 'Codice', country: 'USA', website: 'https://chef.convex.dev/', isFeatured: false, logoUrl: 'https://chef.convex.dev/chef.svg', recommendationId: 'tool-027' }, { id: 'tool-030', name: 'Deepseek', description: 'Modello linguistico specializzato nella scrittura e comprensione di codice in vari linguaggi.', category: 'Codice', country: 'Cina', website: 'https://chat.deepseek.com/', isFeatured: false, logoUrl: 'https://cdn-1.webcatalog.io/catalog/deepseek/deepseek-social-preview.png?v=1748219623720', recommendationId: 'tool-031' }, { id: 'tool-031', name: 'Qwen', description: 'Assistente AI multimodale di Alibaba Cloud, efficace nella generazione di codice, analisi, creazione di testi e ricerca web.', category: 'Codice', country: 'Cina', website: 'https://chat.qwen.ai/', isFeatured: false, logoUrl: 'https://crystalpng.com/wp-content/uploads/2025/02/Qwen-03.png', recommendationId: 'tool-030' }, { id: 'tool-032', name: 'Mistral', description: 'Modelli linguistici aperti e ottimizzati, ideali per lo Codice di applicazioni e la Codice.', category: 'Codice', country: 'Europe', website: 'https://mistral.ai/', isFeatured: false, logoUrl: 'https://www.massa-critica.it/wp-content/uploads/mistral-ai.jpg', recommendationId: 'tool-001' }, { id: 'tool-036', name: 'BOLT AI', description: 'Genera codice e componenti UI partendo da un prompt.', category: 'Codice', country: 'USA', website: 'https://bolt.new/', isFeatured: false, logoUrl: 'https://cdn-1.webcatalog.io/catalog/bolt-new/bolt-new-icon-filled-256.png?v=1730692903154', recommendationId: 'tool-024' }, { id: 'tool-037', name: 'V0 AI', description: 'Genera interfacce utente reattive basate su React da semplici prompt di testo.', category: 'Codice', country: 'USA', website: 'https://v0.dev/chat', isFeatured: false, logoUrl: 'https://logowik.com/content/uploads/images/v0-ai1721420590.logowik.com.webp', recommendationId: 'tool-027' }, { id: 'tool-038', name: 'Cursor', description: 'Un editor di codice basato su AI per programmare in modo più veloce ed efficiente.', category: 'Codice', country: 'USA', website: 'https://www.cursor.com/', isFeatured: false, logoUrl: 'https://cursor.com/favicon.svg', recommendationId: 'tool-026' }, { id: 'tool-039', name: 'Lovable', description: 'Sviluppa e testa interfacce utente con l\'aiuto dell\'intelligenza artificiale.', category: 'Codice', country: 'USA', website: 'https://lovable.dev/', isFeatured: false, logoUrl: 'https://lovable.dev/img/logo/lovable-icon-bg-dark.png', recommendationId: 'tool-037' }, { id: 'tool-040', name: 'Perplexity', description: 'Motore di ricerca conversazionale che fornisce risposte dirette con fonti, utile anche per la ricerca web e codice.', category: 'Codice', country: 'USA', website: 'https://www.perplexity.ai/', isFeatured: false, logoUrl: 'https://images.seeklogo.com/logo-png/51/2/perplexity-ai-logo-png_seeklogo-517845.png', recommendationId: 'tool-001' }, { id: 'tool-029', name: 'Eleven Labs', description: 'Generates realistic, high-quality speech from text in multiple languages.', category: 'Audio', country: 'USA', website: 'https://elevenlabs.io/', isFeatured: false, logoUrl: 'data:image/png;base64,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', recommendationId: 'tool-029' },
         ];
         
         const categories = [
@@ -576,7 +576,7 @@ Per la tua richiesta, ti suggerisco questi strumenti:
         };
         const createCountryCard = (country) => `<div class="category-card" style="background-color: #333;" data-filter-type="country" data-filter-value="${country.name}"><h3 style="font-size: 24px;">${country.flag} ${country.name}</h3></div>`;
 
-        const openDetailModal = (toolId) => {
+        window.openDetailModal = (toolId) => {
             const tool = aiToolsData.find(t => t.id === toolId);
             if (!tool) return;
             const isFavorited = currentUser.favorites.includes(toolId);
@@ -590,6 +590,7 @@ Per la tua richiesta, ti suggerisco questi strumenti:
             const modalHTML = `<div id="detail-modal" class="modal-overlay visible"><div class="modal-content"><button class="modal-close-btn" data-action="close-modal">×</button><div id="detail-content"><h2>${tool.name}</h2><p>${tool.description}</p><div class="detail-tags"><span class="tag">🌍 ${tool.country}</span></div><div class="detail-actions"><button class="button" data-action="toggle-favorite" data-id="${tool.id}">${isFavorited ? 'Rimuovi dai Preferiti' : 'Aggiungi ai Preferiti'}</button><a href="${tool.website}" target="_blank" class="button" style="text-decoration: none; display: flex; justify-content: center; align-items: center;">Visita Sito Web</a></div>${recommendationHTML}</div></div></div>`;
             el.modalContainer.innerHTML = modalHTML;
         };
+        window.aiToolsData = aiToolsData;
         
         const closeModal = () => el.modalContainer.innerHTML = '';
         const toggleFavorite = async (toolId) => {
@@ -605,7 +606,7 @@ Per la tua richiesta, ti suggerisco questi strumenti:
                     currentUser.favorites.push(toolId);
                 }
             } catch (error) { console.error("Errore nell'aggiornamento dei preferiti:", error); alert("Impossibile aggiornare i preferiti. Riprova."); return; }
-            if (document.getElementById('detail-modal')) { openDetailModal(toolId); } else { renderView(); }
+            if (document.getElementById('detail-modal')) { window.openDetailModal(toolId); } else { renderView(); }
         };
         
         const unmountReactApp = () => {
@@ -616,11 +617,10 @@ Per la tua richiesta, ti suggerisco questi strumenti:
         };
 
         const renderView = () => {
-            unmountReactApp(); // Smonta l'app React prima di cambiare vista
+            unmountReactApp(); 
             el.mainContent.innerHTML = '';
             
             const userInitial = currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U';
-            // Titoli delle pagine aggiornati
             const pageTitles = { home: 'Koda.AI Chatbot', 'top-ai': 'TOP AI', explore: 'Cerca', favorites: 'La tua libreria' };
             const topBarHTML = `<div class="top-bar"><div class="user-avatar">${userInitial}</div><h1 class="page-title">${pageTitles[currentView]}</h1><button id="logout-btn" class="pill-btn">Logout</button></div>`;
             
@@ -631,18 +631,15 @@ Per la tua richiesta, ti suggerisco questi strumenti:
             const contentArea = document.createElement('div');
             contentArea.id = 'content-area';
             
-            // --- NUOVA LOGICA PER LE VISTE ---
             if (currentView === 'home') {
-                // La vista 'home' ora renderizza il chatbot
                 el.mainContent.innerHTML = `<div id="chatbot-container-wrapper"></div>`;
                 const chatbotContainer = document.getElementById('chatbot-container-wrapper');
                 if (window.mountChatbotApp) {
-                    reactRoot = window.mountChatbotApp(chatbotContainer);
+                    reactRoot = window.mountChatbotApp(chatbotContainer, currentUser, aiToolsData);
                 } else {
                     console.error("Funzione di montaggio del chatbot non trovata.");
                 }
             } else if (currentView === 'top-ai') {
-                // La nuova vista 'top-ai' mostra i tool in evidenza (la vecchia home)
                 const featuredTools = aiToolsData.filter(t => t.isFeatured);
                 contentArea.innerHTML = `<div class="section-title">In Evidenza</div><div class="grid-container">${featuredTools.map(createGridCard).join('')}</div>`;
                 el.mainContent.appendChild(contentArea);
@@ -672,7 +669,6 @@ Per la tua richiesta, ti suggerisco questi strumenti:
 
         const updateNavActiveState = () => el.bottomNav.querySelectorAll('.nav-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.page === currentView));
         
-        // --- EVENT LISTENERS (MAIN APP) ---
         el.bottomNav.addEventListener('click', (e) => {
             const navButton = e.target.closest('.nav-btn');
             if (navButton && navButton.dataset.page !== currentView) {
@@ -694,7 +690,7 @@ Per la tua richiesta, ti suggerisco questi strumenti:
 
             if (logoutButton) { signOut(auth).catch(error => console.error("Logout Error:", error)); } 
             else if (favoriteIcon) { e.stopPropagation(); toggleFavorite(favoriteIcon.dataset.id); } 
-            else if (card) { openDetailModal(card.dataset.id); } 
+            else if (card) { window.openDetailModal(card.dataset.id); } 
             else if (pillButton) { activeFilter = pillButton.dataset.filter; renderView(); } 
             else if (filterCard) { exploreFilter.type = filterCard.dataset.filterType; exploreFilter.value = filterCard.dataset.filterValue; renderView(); } 
             else if (backButton) { exploreFilter = { type: null, value: null }; renderView(); }
@@ -717,7 +713,7 @@ Per la tua richiesta, ti suggerisco questi strumenti:
         el.modalContainer.addEventListener('click', (e) => {
             const actionTarget = e.target.closest('[data-action]');
             const recommendationCard = e.target.closest('.recommendation-box[data-id]');
-            if (recommendationCard) { openDetailModal(recommendationCard.dataset.id); return; }
+            if (recommendationCard) { window.openDetailModal(recommendationCard.dataset.id); return; }
             if (e.target.id === 'detail-modal') closeModal();
             if (actionTarget) {
                 const action = actionTarget.dataset.action;
@@ -739,7 +735,7 @@ Per la tua richiesta, ti suggerisco questi strumenti:
             el.appContainer.style.display = 'flex';
             renderView();
         };
-        onAuthStateChanged(auth, user => { if (user) { initializeAppWithUser(user); } else { showAuthScreen(); } });
+        onAuthStateChanged(auth, user => { if (user) { initializeAppWithUser(user); } else { currentUser = {}; unmountReactApp(); showAuthScreen(); } });
         el.authLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
