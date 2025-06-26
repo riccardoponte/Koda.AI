@@ -29,11 +29,12 @@
         
         /* Stili per la schermata di autenticazione */
         #auth-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--spotify-bg); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2000; transition: opacity 0.5s, visibility 0.5s; padding: 20px;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--spotify-bg); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 2000; transition: opacity 0.5s, visibility 0.5s; padding: 20px;
         }
         #auth-overlay.hidden { opacity: 0; visibility: hidden; }
         .auth-logo { width: 80px; height: 80px; margin-bottom: 24px; fill: var(--spotify-accent); }
-        .auth-card { background: var(--spotify-card); padding: 32px 24px; border-radius: 16px; width: 100%; max-width: 400px; text-align: center; }
+        .auth-card { background: var(--spotify-card); padding: 32px 24px; border-radius: 16px; width: 100%; max-width: 400px; text-align: center; position: relative; }
+        .auth-close-btn { position: absolute; top: 8px; left: 12px; background: none; border: none; color: var(--spotify-text-secondary); font-size: 28px; cursor: pointer; line-height: 1; }
         .auth-card h2 { font-size: 24px; margin-bottom: 24px; }
         .auth-card .input-group { margin-bottom: 16px; text-align: left; }
         .auth-card label { display: block; font-weight: 500; margin-bottom: 8px; font-size: 14px; }
@@ -101,12 +102,19 @@
         .recommendation-logo { width: 40px; height: 40px; border-radius: 4px; object-fit: cover; flex-shrink: 0; }
         .recommendation-text { font-size: 14px; color: var(--spotify-text-secondary); text-align: left; }
         .recommendation-text strong { color: var(--spotify-text); display: block; }
+        .auth-prompt-card { background-color: var(--spotify-card); border-radius: 12px; padding: 24px; text-align: center; margin: 20px auto; max-width: 90%; }
+        .auth-prompt-card h3 { font-size: 20px; margin-bottom: 12px; }
+        .auth-prompt-card p { color: var(--spotify-text-secondary); margin-bottom: 24px; line-height: 1.5; }
+        .auth-prompt-actions { display: flex; flex-direction: column; gap: 12px; align-items: center; }
+        .auth-prompt-actions .button { width: 100%; }
+        .auth-prompt-actions .pill-btn { background-color: transparent; border: 1px solid var(--spotify-text-secondary); width: 100%; padding: 14px; }
 
-        /* --- STILI MIGLIORATI PER IL CHATBOT --- */
-        #chatbot-container-wrapper { display: flex; flex-direction: column; height: 100%; }
+        /* --- STILI MIGLIORATI E NUOVI PER IL CHATBOT --- */
+        #chatbot-container-wrapper { display: flex; flex-direction: column; height: 100%; position: relative; overflow: hidden; }
         #chatbot-app-container { display: flex; flex-direction: column; height: 100%; background-color: var(--spotify-bg); flex-grow: 1; }
-        .chat-header { padding: 16px; display: flex; justify-content: flex-end; align-items: center; width: 100%; }
-        .chat-header-btn { background: none; border: none; color: var(--spotify-text-secondary); font-size: 24px; cursor: pointer; }
+        .chat-header { padding: 16px; display: flex; align-items: center; width: 100%; z-index: 2; }
+        .chat-header-btn { background: none; border: none; color: var(--spotify-text-secondary); font-size: 24px; cursor: pointer; padding: 8px; }
+        #menu-toggle-btn { margin-right: auto; }
         #chatbot-app-container main { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; }
         #welcome-screen { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: 24px; padding: 20px; padding-bottom: 15%; }
         .welcome-logo { font-size: 2.5rem; font-weight: 700; text-align: center; margin-bottom: 16px; }
@@ -133,8 +141,6 @@
         .chat-bubble.ai p { margin: 8px 0; }
         .chat-bubble.ai p:first-child { margin-top: 0; }
         .chat-bubble.ai p:last-child { margin-bottom: 0; }
-
-        /* Stili per le card interattive nella chat */
         .chat-tool-card-container { display: flex; flex-direction: column; gap: 10px; align-self: flex-start; width: 100%; max-width: 400px; }
         .chat-tool-card { display: flex; gap: 12px; background-color: var(--spotify-card); border-radius: 12px; padding: 12px; border: 1px solid rgba(255,255,255,0.05); }
         .chat-tool-card .logo-container { width: 48px; height: 48px; flex-shrink: 0; border-radius: 8px; overflow: hidden; }
@@ -143,7 +149,6 @@
         .chat-tool-card .tool-name { font-weight: 600; font-size: 15px; }
         .chat-tool-card .tool-desc { font-size: 13px; color: var(--spotify-text-secondary); margin: 2px 0 8px; line-height: 1.4; }
         .chat-tool-card .details-btn { background: var(--spotify-bg-light); color: var(--spotify-text); border: none; padding: 6px 12px; font-size: 12px; border-radius: 20px; cursor: pointer; align-self: flex-start; }
-        
         #chat-input-container { background-color: var(--spotify-card); border-radius: 28px; padding: 12px; margin: 16px; display: flex; align-items: flex-end; gap: 12px; }
         .input-icon-group { display: flex; gap: 8px; padding-bottom: 6px; }
         .input-icon-btn { background-color: var(--spotify-bg-light); border: none; width: 32px; height: 32px; border-radius: 50%; color: var(--spotify-text-secondary); display: flex; align-items: center; justify-content: center; font-size: 16px; }
@@ -153,6 +158,20 @@
         #chat-send-btn { background-color: var(--spotify-bg-light); border: none; border-radius: 50%; width: 40px; height: 40px; flex-shrink: 0; display: flex; justify-content: center; align-items: center; color: var(--spotify-text); font-size: 20px; cursor: pointer; transition: transform 0.2s, background-color 0.2s; align-self: flex-end; }
         #chat-send-btn:disabled { background-color: var(--spotify-bg); cursor: not-allowed; color: var(--spotify-text-secondary); }
         #chat-send-btn:not(:disabled):active { transform: scale(0.9); }
+        
+        /* NUOVI STILI PER IL MENU LATERALE */
+        #side-menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1500; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
+        #side-menu-overlay.visible { opacity: 1; visibility: visible; }
+        #side-menu { position: fixed; top: 0; left: 0; width: 80%; max-width: 320px; height: 100%; background-color: var(--spotify-bg-light); z-index: 1501; transform: translateX(-100%); transition: transform 0.3s ease-out; display: flex; flex-direction: column; padding: 16px; }
+        #side-menu.visible { transform: translateX(0); }
+        .menu-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--spotify-card); }
+        .menu-header h3 { font-size: 18px; }
+        .new-chat-btn { background-color: var(--spotify-card); color: var(--spotify-text); border: none; border-radius: 8px; padding: 10px 14px; font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color 0.2s; }
+        .conversation-list { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+        .conversation-list::-webkit-scrollbar { display: none; }
+        .conversation-item { background: none; border: none; color: var(--spotify-text-secondary); text-align: left; padding: 12px; border-radius: 8px; font-size: 14px; cursor: pointer; transition: background-color 0.2s, color 0.2s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .conversation-item.active, .conversation-item:hover { background-color: var(--spotify-card); color: var(--spotify-text); }
+
     </style>
     <!-- SCRIPT AGGIUNTI PER REACT E BABEL -->
     <script type="importmap">
@@ -169,11 +188,12 @@
 <body>
 
     <div id="auth-overlay">
-        <svg class="auth-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="50" cy="50" r="48" stroke="currentColor" stroke-width="4" fill="none"/>
-            <text x="50" y="62" font-size="40" font-weight="bold" text-anchor="middle" fill="currentColor">AI</text>
-        </svg>
         <div id="register-card" class="auth-card">
+            <button class="auth-close-btn" data-action="close-auth">×</button>
+            <svg class="auth-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="48" stroke="currentColor" stroke-width="4" fill="none"/>
+                <text x="50" y="62" font-size="40" font-weight="bold" text-anchor="middle" fill="currentColor">AI</text>
+            </svg>
             <h2>Crea il tuo Account</h2>
             <div class="input-group"><label for="register-email">Email</label><input type="email" id="register-email" placeholder="nome@esempio.com"></div>
             <div class="input-group"><label for="register-password">Password</label><input type="password" id="register-password" placeholder="Minimo 6 caratteri"></div>
@@ -181,6 +201,11 @@
             <div class="auth-links"><a class="auth-switch-link" data-action="show-login">Hai già un account? Accedi</a></div>
         </div>
         <div id="login-card" class="auth-card hidden">
+             <button class="auth-close-btn" data-action="close-auth">×</button>
+            <svg class="auth-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="48" stroke="currentColor" stroke-width="4" fill="none"/>
+                <text x="50" y="62" font-size="40" font-weight="bold" text-anchor="middle" fill="currentColor">AI</text>
+            </svg>
             <h2>Accedi</h2>
             <div class="input-group"><label for="login-email">Email</label><input type="email" id="login-email" placeholder="nome@esempio.com"></div>
             <div class="input-group"><label for="login-password">Password</label><input type="password" id="login-password" placeholder="La tua password"></div>
@@ -188,6 +213,11 @@
             <div class="auth-links"><a class="auth-switch-link" data-action="show-register">Non hai un account? Registrati</a><a class="forgot-password-link" data-action="show-forgot">Password dimenticata?</a></div>
         </div>
         <div id="forgot-password-card" class="auth-card hidden">
+             <button class="auth-close-btn" data-action="close-auth">×</button>
+            <svg class="auth-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="48" stroke="currentColor" stroke-width="4" fill="none"/>
+                <text x="50" y="62" font-size="40" font-weight="bold" text-anchor="middle" fill="currentColor">AI</text>
+            </svg>
             <h2>Reimposta Password</h2>
             <p style="color: var(--spotify-text-secondary); font-size: 14px; margin-bottom: 20px;">Inserisci la tua email e ti invieremo un link per reimpostare la password.</p>
             <div class="input-group"><label for="forgot-email">Email</label><input type="email" id="forgot-email" placeholder="nome@esempio.com"></div>
@@ -196,7 +226,20 @@
         </div>
     </div>
 
-    <div id="app-container" style="display: none;">
+    <!-- NUOVO: Menu Laterale per la cronologia delle chat -->
+    <div id="side-menu-overlay" class="hidden">
+        <div id="side-menu" class="hidden">
+            <div class="menu-header">
+                <h3>Cronologia</h3>
+                <button class="new-chat-btn" data-action="new-chat">Nuova Chat</button>
+            </div>
+            <div id="conversation-list-container" class="conversation-list">
+                <!-- Le conversazioni verranno popolate da JS -->
+            </div>
+        </div>
+    </div>
+
+    <div id="app-container">
         <div id="main-content"></div>
         <nav id="bottom-nav">
             <!-- NAVIGAZIONE AGGIORNATA CON ICONE SVG -->
@@ -375,7 +418,7 @@ Per la tua richiesta, ti suggerisco questi strumenti:
             const suggestions = [
                 "Consigliami un'AI per creare immagini",
                 "Qual è la migliore AI per programmare?",
-                "Cercami uno strumento per fare presentazioni"
+                "Quali sono le migliori AI del momento?"
             ];
             return (
                 <div id="welcome-screen">
@@ -394,43 +437,28 @@ Per la tua richiesta, ti suggerisco questi strumenti:
         };
 
         // --- Main App Component ---
-        const App = ({ user, tools }) => {
-            const [messages, setMessages] = useState(() => {
-                const savedChat = localStorage.getItem(`chatHistory_${user.uid}`);
-                return savedChat ? JSON.parse(savedChat) : [];
-            });
+        const App = ({ tools, initialConversations, initialActiveId, onConversationsChange }) => {
+            const [conversations, setConversations] = useState(initialConversations);
+            const [activeConversationId, setActiveConversationId] = useState(initialActiveId);
             const [isLoading, setIsLoading] = useState(false);
             const [chatSession, setChatSession] = useState(null);
             const messagesEndRef = useRef(null);
 
-            const scrollToBottom = () => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); };
-            
-            useEffect(() => { scrollToBottom(); }, [messages]);
-            
-            useEffect(() => {
-                localStorage.setItem(`chatHistory_${user.uid}`, JSON.stringify(messages));
-            }, [messages, user.uid]);
-            
+            const activeConversation = conversations[activeConversationId] || { messages: [] };
+            const messages = activeConversation.messages;
+
+            useEffect(() => { onConversationsChange(conversations); }, [conversations, onConversationsChange]);
+            useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
+
             const initializeChat = useCallback(() => {
                 try { 
                     if (!API_KEY) throw new Error("API Key non configurata."); 
                     setChatSession(createChatSession()); 
-                    if (messages.length === 0) {
-                        const userName = user.name.split('@')[0];
-                        const capitalizedUserName = userName.charAt(0).toUpperCase() + userName.slice(1);
-                        setMessages([{ 
-                            id: `system-welcome-${Date.now()}`, 
-                            text: `Ciao ${capitalizedUserName}! Come posso aiutarti oggi?`, 
-                            sender: MessageSender.SYSTEM
-                        }]);
-                    }
                 } catch (e) { 
                     console.error("Errore inizializzazione:", e); 
-                    setMessages(prev => [...prev, { 
-                        id: `init-error-${Date.now()}`, text: `Errore: ${e.message}`, sender: MessageSender.ERROR 
-                    }]); 
+                    // Potresti voler gestire l'errore in un messaggio di sistema
                 }
-            }, [user.name, user.uid]); // eslint-disable-line react-hooks/exhaustive-deps
+            }, []);
             
             useEffect(() => { initializeChat(); }, [initializeChat]);
 
@@ -439,7 +467,18 @@ Per la tua richiesta, ti suggerisco questi strumenti:
 
                 const userMessage = { id: `user-${Date.now()}`, text: inputText, sender: MessageSender.USER };
                 const loadingMessage = { id: `loading-${Date.now()}`, sender: MessageSender.LOADING };
-                setMessages(prev => [...prev, userMessage, loadingMessage]);
+                
+                const isNewChat = messages.length === 0;
+
+                setConversations(prev => ({
+                    ...prev,
+                    [activeConversationId]: {
+                        ...prev[activeConversationId],
+                        title: isNewChat ? (inputText.substring(0, 30) + (inputText.length > 30 ? '...' : '')) : prev[activeConversationId].title,
+                        messages: [...(prev[activeConversationId]?.messages || []), userMessage, loadingMessage]
+                    }
+                }));
+
                 setIsLoading(true);
 
                 let currentModelMessageId = `model-${Date.now()}`;
@@ -449,33 +488,45 @@ Per la tua richiesta, ti suggerisco questi strumenti:
                     const stream = sendMessageStream(chatSession, inputText);
                     for await (const chunk of stream) {
                         accumulatedResponse += chunk;
-                        setMessages(prev => {
-                            const newMessages = [...prev.filter(m => m.sender !== MessageSender.LOADING)];
-                            const modelMsgIndex = newMessages.findIndex(m => m.id === currentModelMessageId);
-                            if (modelMsgIndex > -1) { 
-                                newMessages[modelMsgIndex].text = accumulatedResponse; 
-                            } else { 
-                                newMessages.push({ id: currentModelMessageId, text: accumulatedResponse, sender: MessageSender.MODEL }); 
+                        setConversations(prev => {
+                            const currentMessages = prev[activeConversationId].messages.filter(m => m.sender !== MessageSender.LOADING);
+                            const modelMsgIndex = currentMessages.findIndex(m => m.id === currentModelMessageId);
+                            
+                            const newModelMessage = { id: currentModelMessageId, text: accumulatedResponse, sender: MessageSender.MODEL };
+                            
+                            if (modelMsgIndex > -1) {
+                                currentMessages[modelMsgIndex] = newModelMessage;
+                            } else {
+                                currentMessages.push(newModelMessage);
                             }
-                            return newMessages;
+                            
+                            return {
+                                ...prev,
+                                [activeConversationId]: { ...prev[activeConversationId], messages: currentMessages }
+                            };
                         });
                     }
                 } catch (e) {
                     console.error("Errore invio:", e);
-                    setMessages(prev => [...prev.filter(m => m.sender !== MessageSender.LOADING), { 
-                        id: `error-${Date.now()}`, text: `Errore: ${e.message}`, sender: MessageSender.ERROR 
-                    }]);
+                    const errorMessage = { id: `error-${Date.now()}`, text: `Errore: ${e.message}`, sender: MessageSender.ERROR };
+                    setConversations(prev => ({
+                       ...prev,
+                       [activeConversationId]: {
+                           ...prev[activeConversationId],
+                           messages: prev[activeConversationId].messages.filter(m => m.sender !== MessageSender.LOADING).concat(errorMessage)
+                       }
+                    }));
                 } finally {
                     setIsLoading(false);
-                    setMessages(prev => prev.filter(m => m.sender !== MessageSender.LOADING));
+                    setConversations(prev => ({
+                        ...prev,
+                        [activeConversationId]: {
+                            ...prev[activeConversationId],
+                            messages: prev[activeConversationId].messages.filter(m => m.sender !== MessageSender.LOADING)
+                        }
+                    }));
                     document.getElementById('chat-input')?.focus();
                 }
-            };
-
-            const resetChat = () => {
-                localStorage.removeItem(`chatHistory_${user.uid}`);
-                setMessages([]);
-                initializeChat();
             };
             
             const hasStartedChat = messages.some(m => m.sender === MessageSender.USER);
@@ -483,7 +534,9 @@ Per la tua richiesta, ti suggerisco questi strumenti:
             return (
                 <div id="chatbot-app-container">
                     <header className="chat-header">
-                        <button onClick={resetChat} className="chat-header-btn" title="Nuova Chat">&#xFF0B;</button>
+                        <button id="menu-toggle-btn" className="chat-header-btn" title="Cronologia Chat">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+                        </button>
                     </header>
                     <main>
                         {!hasStartedChat ? (
@@ -501,9 +554,9 @@ Per la tua richiesta, ti suggerisco questi strumenti:
         };
 
         // Funzione globale per montare l'app React
-        window.mountChatbotApp = (container, user, tools) => {
+        window.mountChatbotApp = (container, props) => {
             const root = ReactDOMClient.createRoot(container);
-            root.render(<React.StrictMode><App user={user} tools={tools} /></React.StrictMode>);
+            root.render(<React.StrictMode><App {...props} /></React.StrictMode>);
             return root;
         };
     </script>
@@ -548,10 +601,13 @@ Per la tua richiesta, ti suggerisco questi strumenti:
             .map(c => ({ name: c, flag: { 'USA': '🇺🇸', 'Cina': '🇨🇳', 'Europe': '🇪🇺' }[c] || '🏳️' }));
 
         let currentUser = {};
-        let currentView = 'home'; // La vista di default è ora la home (chatbot)
+        let currentView = 'home';
         let activeFilter = 'All';
         let exploreFilter = { type: null, value: null };
-        let reactRoot = null; // Variabile per gestire l'istanza di React
+        let reactRoot = null;
+        // NUOVO: gestione stato conversazioni
+        let conversations = {};
+        let activeConversationId = null;
 
         const el = { 
             mainContent: document.getElementById('main-content'), 
@@ -563,12 +619,51 @@ Per la tua richiesta, ti suggerisco questi strumenti:
             authLinks: document.querySelectorAll('.auth-switch-link, .forgot-password-link'),
             registerBtn: document.getElementById('register-btn'),
             loginBtn: document.getElementById('login-btn'),
-            forgotBtn: document.getElementById('forgot-btn')
+            forgotBtn: document.getElementById('forgot-btn'),
+            sideMenuOverlay: document.getElementById('side-menu-overlay'),
+            sideMenu: document.getElementById('side-menu'),
+            conversationListContainer: document.getElementById('conversation-list-container'),
+        };
+        
+        // --- FUNZIONI DI GESTIONE CHAT HISTORY ---
+        
+        const getStorageKey = () => `conversations_${currentUser.uid || 'guest'}`;
+
+        const loadConversations = () => {
+            const saved = localStorage.getItem(getStorageKey());
+            conversations = saved ? JSON.parse(saved) : {};
+            const savedActiveId = localStorage.getItem(`activeConversationId_${currentUser.uid || 'guest'}`);
+            activeConversationId = savedActiveId && conversations[savedActiveId] ? savedActiveId : null;
+
+            if (Object.keys(conversations).length === 0 || !activeConversationId) {
+                startNewChat(false); // Non rimontare l'app, solo preparare lo stato
+            }
+        };
+
+        const saveConversations = (newConversations) => {
+            conversations = newConversations;
+            localStorage.setItem(getStorageKey(), JSON.stringify(conversations));
+        };
+
+        const saveActiveConversationId = () => {
+             localStorage.setItem(`activeConversationId_${currentUser.uid || 'guest'}`, activeConversationId);
+        }
+
+        const startNewChat = (remountApp = true) => {
+            const newId = `chat-${Date.now()}`;
+            conversations[newId] = { id: newId, title: "Nuova Chat", messages: [], timestamp: Date.now() };
+            activeConversationId = newId;
+            saveConversations(conversations);
+            saveActiveConversationId();
+            if (remountApp) {
+                renderView(); // Rimonta l'app per mostrare la nuova chat
+            }
+            toggleSideMenu(false);
         };
         
         // --- FUNZIONI DI RENDERIZZAZIONE ---
         const createGridCard = (tool) => `<div class="tool-card-grid" data-id="${tool.id}"><div class="logo-container"><img src="${tool.logoUrl}" class="tool-logo" alt="${tool.name}" loading="lazy"></div><div class="tool-name">${tool.name}</div></div>`;
-        const createListCard = (tool) => `<div class="tool-card-list" data-id="${tool.id}"><div class="logo-container"><img src="${tool.logoUrl}" class="tool-logo" alt="${tool.name}" loading="lazy"></div><div class="info"><div class="tool-name">${tool.name}</div><div class="tool-subtext">${tool.category}</div></div><div class="favorite-icon" data-id="${tool.id}">${currentUser.favorites.includes(tool.id) ? '♥' : '♡'}</div></div>`;
+        const createListCard = (tool) => `<div class="tool-card-list" data-id="${tool.id}"><div class="logo-container"><img src="${tool.logoUrl}" class="tool-logo" alt="${tool.name}" loading="lazy"></div><div class="info"><div class="tool-name">${tool.name}</div><div class="tool-subtext">${tool.category}</div></div><div class="favorite-icon" data-id="${tool.id}">${currentUser.uid && currentUser.favorites.includes(tool.id) ? '♥' : '♡'}</div></div>`;
         const createCategoryCard = (category) => {
             const toolForLogo = aiToolsData.find(t=>t.category===category.name);
             if (!toolForLogo) return '';
@@ -579,7 +674,7 @@ Per la tua richiesta, ti suggerisco questi strumenti:
         window.openDetailModal = (toolId) => {
             const tool = aiToolsData.find(t => t.id === toolId);
             if (!tool) return;
-            const isFavorited = currentUser.favorites.includes(toolId);
+            const isFavorited = currentUser.uid && currentUser.favorites.includes(toolId);
             let recommendationHTML = '';
             if (tool.recommendationId) {
                 const recommendedTool = aiToolsData.find(t => t.id === tool.recommendationId);
@@ -594,7 +689,7 @@ Per la tua richiesta, ti suggerisco questi strumenti:
         
         const closeModal = () => el.modalContainer.innerHTML = '';
         const toggleFavorite = async (toolId) => {
-            if (!currentUser || !currentUser.uid) { alert("Devi effettuare l'accesso per gestire i preferiti."); return; }
+            if (!currentUser || !currentUser.uid) { triggerAuthFlow(); return; }
             const userDocRef = doc(db, "users", currentUser.uid);
             const isFavorited = currentUser.favorites.includes(toolId);
             try {
@@ -616,13 +711,34 @@ Per la tua richiesta, ti suggerisco questi strumenti:
             }
         };
 
+        const renderSideMenu = () => {
+            const sortedConversations = Object.values(conversations).sort((a, b) => b.timestamp - a.timestamp);
+            el.conversationListContainer.innerHTML = sortedConversations.map(conv => `
+                <button class="conversation-item ${conv.id === activeConversationId ? 'active' : ''}" data-id="${conv.id}">
+                    ${conv.title}
+                </button>
+            `).join('');
+        };
+
+        const toggleSideMenu = (show) => {
+            if (show) {
+                renderSideMenu();
+                el.sideMenuOverlay.classList.add('visible');
+                el.sideMenu.classList.add('visible');
+            } else {
+                el.sideMenuOverlay.classList.remove('visible');
+                el.sideMenu.classList.remove('visible');
+            }
+        };
+
         const renderView = () => {
             unmountReactApp(); 
             el.mainContent.innerHTML = '';
             
-            const userInitial = currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U';
+            const isGuest = !currentUser.uid;
+            const userInitial = isGuest ? '?' : (currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U');
             const pageTitles = { home: 'Koda.AI Chatbot', 'top-ai': 'TOP AI', explore: 'Cerca', favorites: 'La tua libreria' };
-            const topBarHTML = `<div class="top-bar"><div class="user-avatar">${userInitial}</div><h1 class="page-title">${pageTitles[currentView]}</h1><button id="logout-btn" class="pill-btn">Logout</button></div>`;
+            const topBarHTML = `<div class="top-bar"><div class="user-avatar">${userInitial}</div><h1 class="page-title">${pageTitles[currentView]}</h1>${!isGuest ? '<button id="logout-btn" class="pill-btn">Logout</button>' : ''}</div>`;
             
             if (currentView !== 'home') {
                 el.mainContent.insertAdjacentHTML('beforeend', topBarHTML);
@@ -635,7 +751,18 @@ Per la tua richiesta, ti suggerisco questi strumenti:
                 el.mainContent.innerHTML = `<div id="chatbot-container-wrapper"></div>`;
                 const chatbotContainer = document.getElementById('chatbot-container-wrapper');
                 if (window.mountChatbotApp) {
-                    reactRoot = window.mountChatbotApp(chatbotContainer, currentUser, aiToolsData);
+                    reactRoot = window.mountChatbotApp(chatbotContainer, {
+                        tools: aiToolsData,
+                        initialConversations: conversations,
+                        initialActiveId: activeConversationId,
+                        onConversationsChange: (newConvos) => {
+                            saveConversations(newConvos);
+                            // Se il titolo è cambiato, aggiorna il menu laterale al prossimo rendering
+                            if(el.sideMenu.classList.contains('visible')) {
+                                renderSideMenu();
+                            }
+                        }
+                    });
                 } else {
                     console.error("Funzione di montaggio del chatbot non trovata.");
                 }
@@ -654,13 +781,26 @@ Per la tua richiesta, ti suggerisco questi strumenti:
                 }
                 el.mainContent.appendChild(contentArea);
             } else if (currentView === 'favorites') {
-                const favoriteToolsData = aiToolsData.filter(t => currentUser.favorites.includes(t.id));
-                const availableCategoriesInFavorites = [...new Set(favoriteToolsData.map(t => t.category))];
-                const filterPills = ['All', ...availableCategoriesInFavorites];
-                const filtersHTML = `<div class="filters-container"><div class="filter-pills">${filterPills.map(f => `<button class="pill-btn ${activeFilter === f ? 'active' : ''}" data-filter="${f}">${f === 'All' ? 'Tutti' : f}</button>`).join('')}</div></div>`;
-                el.mainContent.insertAdjacentHTML('beforeend', filtersHTML);
-                let favoriteTools = activeFilter === 'All' ? favoriteToolsData : favoriteToolsData.filter(t => t.category === activeFilter);
-                contentArea.innerHTML = favoriteTools.length > 0 ? `<div class="list-container">${favoriteTools.map(createListCard).join('')}</div>` : `<div id="empty-state">Nessun preferito trovato.</div>`;
+                if (isGuest) {
+                    contentArea.innerHTML = `
+                        <div class="auth-prompt-card">
+                            <h3>Salva i tuoi preferiti</h3>
+                            <p>Accedi o registrati per salvare i preferiti.</p>
+                            <div class="auth-prompt-actions">
+                                <button class="button" data-action="prompt-login">Accedi</button>
+                                <button class="pill-btn" data-action="prompt-register">Registrati</button>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    const favoriteToolsData = aiToolsData.filter(t => currentUser.favorites.includes(t.id));
+                    const availableCategoriesInFavorites = [...new Set(favoriteToolsData.map(t => t.category))];
+                    const filterPills = ['All', ...availableCategoriesInFavorites];
+                    const filtersHTML = `<div class="filters-container"><div class="filter-pills">${filterPills.map(f => `<button class="pill-btn ${activeFilter === f ? 'active' : ''}" data-filter="${f}">${f === 'All' ? 'Tutti' : f}</button>`).join('')}</div></div>`;
+                    el.mainContent.insertAdjacentHTML('beforeend', filtersHTML);
+                    let favoriteTools = activeFilter === 'All' ? favoriteToolsData : favoriteToolsData.filter(t => t.category === activeFilter);
+                    contentArea.innerHTML = favoriteTools.length > 0 ? `<div class="list-container">${favoriteTools.map(createListCard).join('')}</div>` : `<div id="empty-state">Nessun preferito trovato. Aggiungine qualcuno!</div>`;
+                }
                 el.mainContent.appendChild(contentArea);
             }
             
@@ -681,19 +821,54 @@ Per la tua richiesta, ti suggerisco questi strumenti:
         });
         
         el.mainContent.addEventListener('click', (e) => {
+            const actionButton = e.target.closest('[data-action]');
             const card = e.target.closest('.tool-card-grid, .tool-card-list');
             const favoriteIcon = e.target.closest('.favorite-icon');
             const pillButton = e.target.closest('.pill-btn:not(#logout-btn)');
             const filterCard = e.target.closest('[data-filter-type]');
-            const backButton = e.target.closest('[data-action="back-to-explore"]');
             const logoutButton = e.target.closest('#logout-btn');
+            const menuToggle = e.target.closest('#menu-toggle-btn');
+
+            if (menuToggle) { toggleSideMenu(true); return; }
+
+            if (actionButton) {
+                const action = actionButton.dataset.action;
+                if (action === 'prompt-login') { triggerAuthFlow('login-card'); return; }
+                if (action === 'prompt-register') { triggerAuthFlow('register-card'); return; }
+                if (action === 'back-to-explore') { exploreFilter = { type: null, value: null }; renderView(); return; }
+            }
 
             if (logoutButton) { signOut(auth).catch(error => console.error("Logout Error:", error)); } 
             else if (favoriteIcon) { e.stopPropagation(); toggleFavorite(favoriteIcon.dataset.id); } 
             else if (card) { window.openDetailModal(card.dataset.id); } 
             else if (pillButton) { activeFilter = pillButton.dataset.filter; renderView(); } 
-            else if (filterCard) { exploreFilter.type = filterCard.dataset.filterType; exploreFilter.value = filterCard.dataset.filterValue; renderView(); } 
-            else if (backButton) { exploreFilter = { type: null, value: null }; renderView(); }
+            else if (filterCard) { exploreFilter.type = filterCard.dataset.filterType; exploreFilter.value = filterCard.dataset.filterValue; renderView(); }
+        });
+
+        el.sideMenuOverlay.addEventListener('click', (e) => {
+            const conversationItem = e.target.closest('.conversation-item');
+            const newChatButton = e.target.closest('.new-chat-btn');
+            
+            if (newChatButton) {
+                startNewChat();
+                return;
+            }
+
+            if (conversationItem) {
+                const newActiveId = conversationItem.dataset.id;
+                if (newActiveId !== activeConversationId) {
+                    activeConversationId = newActiveId;
+                    saveActiveConversationId();
+                    renderView(); // Rimonta l'app con la nuova chat attiva
+                }
+                toggleSideMenu(false);
+                return;
+            }
+
+            // Chiudi se si clicca sull'overlay ma non sul menu
+            if (e.target.id === 'side-menu-overlay') {
+                toggleSideMenu(false);
+            }
         });
 
         el.mainContent.addEventListener('input', e => {
@@ -724,18 +899,67 @@ Per la tua richiesta, ti suggerisco questi strumenti:
 
         // --- AUTHENTICATION LOGIC ---
         const showAuthCard = (cardId) => { el.authCards.forEach(card => card.classList.add('hidden')); document.getElementById(cardId).classList.remove('hidden'); };
-        const showAuthScreen = () => { el.appContainer.style.display = 'none'; el.authOverlay.style.display = 'flex'; el.authOverlay.classList.remove('hidden'); showAuthCard('login-card'); };
+        
+        const triggerAuthFlow = (card = 'login-card') => {
+            el.appContainer.style.display = 'none';
+            el.authOverlay.style.display = 'flex';
+            el.authOverlay.classList.remove('hidden');
+            showAuthCard(card);
+        };
+        
+        const closeAuthAndReturnToApp = () => {
+            el.authOverlay.classList.add('hidden');
+            el.authOverlay.addEventListener('transitionend', () => el.authOverlay.style.display = 'none', { once: true });
+            el.appContainer.style.display = 'flex';
+        };
+        
+        const initializeAppForGuest = () => {
+            currentUser = { uid: null, name: 'Guest', favorites: [] };
+            loadConversations();
+            unmountReactApp();
+            el.appContainer.style.display = 'flex';
+            el.authOverlay.style.display = 'none';
+            renderView();
+        };
+
         const initializeAppWithUser = async (user) => {
             const userDocRef = doc(db, "users", user.uid);
             const userDocSnap = await getDoc(userDocRef);
             if (userDocSnap.exists()) { currentUser = { ...userDocSnap.data(), uid: user.uid, name: user.email }; } 
             else { await setDoc(userDocRef, { email: user.email, favorites: [] }); currentUser = { uid: user.uid, name: user.email, favorites: [] }; }
+            
+            loadConversations();
+            
             el.authOverlay.classList.add('hidden');
             el.authOverlay.addEventListener('transitionend', () => el.authOverlay.style.display = 'none', { once: true });
             el.appContainer.style.display = 'flex';
             renderView();
         };
-        onAuthStateChanged(auth, user => { if (user) { initializeAppWithUser(user); } else { currentUser = {}; unmountReactApp(); showAuthScreen(); } });
+
+        // FIX AVVIO: Mostra subito l'interfaccia guest, poi aggiorna con l'utente se loggato.
+        initializeAppForGuest(); 
+        onAuthStateChanged(auth, user => {
+            if (user) {
+                // Se l'utente è diverso da quello attuale (cioè era guest o un altro utente)
+                if (user.uid !== currentUser.uid) {
+                    initializeAppWithUser(user);
+                }
+            } else {
+                // Se non c'è utente e lo stato attuale non è già guest
+                if (currentUser.uid) {
+                    initializeAppForGuest();
+                }
+            }
+        });
+        
+        el.authOverlay.addEventListener('click', (e) => {
+            const target = e.target.closest('[data-action]');
+            if (!target) return;
+            
+            const action = target.dataset.action;
+            if (action === 'close-auth') closeAuthAndReturnToApp();
+        });
+
         el.authLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
