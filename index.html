@@ -16,6 +16,15 @@
             --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
             --bottom-nav-height: 70px;
         }
+        
+        /* NUOVO: Stili per la modalità Giorno (Light Mode) */
+        body.light-mode {
+            --spotify-bg: #ffffff;
+            --spotify-bg-light: #f5f5f5;
+            --spotify-card: #e9e9e9;
+            --spotify-text: #121212;
+            --spotify-text-secondary: #535353;
+        }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html, body {
@@ -38,7 +47,7 @@
         .auth-card h2 { font-size: 24px; margin-bottom: 24px; }
         .auth-card .input-group { margin-bottom: 16px; text-align: left; }
         .auth-card label { display: block; font-weight: 500; margin-bottom: 8px; font-size: 14px; }
-        .auth-card input { width: 100%; padding: 14px 16px; font-size: 16px; background-color: var(--spotify-bg-light); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: var(--spotify-text); }
+        .auth-card input { width: 100%; padding: 14px 16px; font-size: 16px; background-color: var(--spotify-bg-light); border: 1px solid rgba(128,128,128,0.2); border-radius: 8px; color: var(--spotify-text); }
         .auth-card input::placeholder { color: #888; }
         .auth-card .button { width: 100%; margin-top: 16px; }
         .auth-links { margin-top: 24px; }
@@ -49,15 +58,21 @@
         
         #app-container { height: 100vh; display: flex; flex-direction: column; }
         #main-content { flex: 1; overflow-y: auto; padding-bottom: var(--bottom-nav-height); }
-        .top-bar { padding: 16px; display: flex; align-items: center; gap: 16px; position: sticky; top: 0; background: linear-gradient(to bottom, rgba(18,18,18,1) 70%, rgba(18,18,18,0)); z-index: 10; }
-        #logout-btn { margin-left: auto; flex-shrink: 0; }
-        .user-avatar { width: 32px; height: 32px; border-radius: 50%; background-color: var(--spotify-accent); display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 16px; cursor: pointer; object-fit: cover; }
+        .top-bar { padding: 16px; display: flex; align-items: center; gap: 8px; position: sticky; top: 0; background: linear-gradient(to bottom, var(--spotify-bg) 70%, transparent); z-index: 10; }
         .page-title { font-size: 22px; font-weight: 700; flex-grow: 1; }
+        #global-controls { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+        .global-btn { background: none; border: none; color: var(--spotify-text); font-size: 24px; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; }
+        #lang-toggle-btn { font-size: 14px; font-weight: bold; background: var(--spotify-card); border-radius: 50px; padding: 6px 10px; }
+        .user-avatar { width: 32px; height: 32px; border-radius: 50%; background-color: var(--spotify-accent); display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 16px; cursor: pointer; object-fit: cover; color: black; }
+
+
         .filters-container { padding: 8px 16px; position: sticky; top: 64px; background-color: var(--spotify-bg); z-index: 9; }
         .filter-pills { display: flex; gap: 8px; overflow-x: auto; -ms-overflow-style: none; scrollbar-width: none; }
         .filter-pills::-webkit-scrollbar { display: none; }
-        .pill-btn { background-color: var(--spotify-card); color: var(--spotify-text); border: 1px solid rgba(255,255,255,0.1); border-radius: 50px; padding: 8px 16px; font-size: 14px; font-weight: 500; cursor: pointer; white-space: nowrap; transition: background-color 0.2s, color 0.2s; }
-        .pill-btn.active { background-color: var(--spotify-text); color: black; font-weight: bold; }
+        .pill-btn { background-color: var(--spotify-card); color: var(--spotify-text); border: 1px solid rgba(128,128,128,0.2); border-radius: 50px; padding: 8px 16px; font-size: 14px; font-weight: 500; cursor: pointer; white-space: nowrap; transition: background-color 0.2s, color 0.2s; }
+        .pill-btn.active { background-color: var(--spotify-text); color: var(--spotify-bg); font-weight: bold; }
+        body.light-mode .pill-btn.active { color: var(--spotify-bg); background-color: #333; }
+        
         #content-area { padding: 16px; }
         .section-title { font-size: 22px; font-weight: 700; margin-bottom: 20px; }
         .grid-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
@@ -75,30 +90,34 @@
         .tool-card-list .favorite-icon { font-size: 22px; color: var(--spotify-accent); margin-left: auto; padding: 10px; cursor: pointer; }
         .category-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 30px; }
         .category-card { position: relative; padding: 12px; border-radius: 8px; font-size: 18px; font-weight: 700; overflow: hidden; aspect-ratio: 1.5 / 1; cursor: pointer; }
-        .category-card h3 { position: relative; z-index: 2; }
+        .category-card h3 { position: relative; z-index: 2; color: #fff; }
         .category-card .logo-container { position: absolute; bottom: -10px; right: -20px; width: 80px; height: 80px; transform: rotate(25deg); z-index: 1; border-radius: 8px; background-color: rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .category-card .tool-logo { width: 100%; height: 100%; object-fit: cover; }
         .search-bar-container { padding: 0 16px 16px; }
-        #search-input { width: 100%; padding: 14px 16px; font-size: 16px; background-color: var(--spotify-text); border: none; border-radius: 8px; color: black; }
-        #search-input::placeholder { color: #535353; }
+        #search-input { width: 100%; padding: 14px 16px; font-size: 16px; background-color: var(--spotify-card); border: none; border-radius: 8px; color: var(--spotify-text); }
+        #search-input::placeholder { color: var(--spotify-text-secondary); }
+        body.light-mode #search-input { background-color: var(--spotify-card); color: var(--spotify-text); }
+        body.light-mode #search-input::placeholder { color: var(--spotify-text-secondary); }
+
         #empty-state { text-align: center; color: var(--spotify-text-secondary); padding: 40px; }
-        #bottom-nav { display: flex; position: fixed; bottom: 0; left: 0; width: 100%; height: var(--bottom-nav-height); background: linear-gradient(to top, rgba(0,0,0,1) 80%, rgba(0,0,0,0)); z-index: 100; }
+        #bottom-nav { display: flex; position: fixed; bottom: 0; left: 0; width: 100%; height: var(--bottom-nav-height); background: linear-gradient(to top, var(--spotify-bg) 80%, transparent); z-index: 100; border-top: 1px solid var(--spotify-card); }
         .nav-btn { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; background: none; border: none; color: var(--spotify-text-secondary); font-size: 12px; font-weight: 500; cursor: pointer; transition: color 0.2s; }
         .nav-btn .icon { font-size: 24px; margin-bottom: 4px; }
         .nav-btn.active { color: var(--spotify-accent); }
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
+        body.light-mode .modal-overlay { background: rgba(255, 255, 255, 0.6); }
         .modal-overlay.visible { opacity: 1; visibility: visible; }
         .modal-content { background: var(--spotify-card); padding: 24px; border-radius: 16px; width: 90%; max-width: 500px; text-align: center; position: relative; }
         .modal-close-btn { position: absolute; top: 15px; right: 15px; background: none; border: none; color: var(--spotify-text-secondary); font-size: 28px; cursor: pointer; }
-        .button { background-color: var(--spotify-accent); color: black; border: none; padding: 15px 30px; border-radius: 50px; font-size: 16px; font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
+        .button { background-color: var(--spotify-accent); color: #000; border: none; padding: 15px 30px; border-radius: 50px; font-size: 16px; font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
         #detail-content h2 { font-size: 24px; margin-bottom: 8px; }
         #detail-content p { color: var(--spotify-text-secondary); margin-bottom: 24px; line-height: 1.5; }
         #detail-content .detail-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 24px; }
         #detail-content .tag { background-color: var(--spotify-bg-light); padding: 6px 12px; border-radius: 20px; font-size: 12px; }
         #detail-content .detail-actions { display: flex; flex-direction: column; gap: 12px; }
         .back-button { font-size: 16px; font-weight: bold; color: var(--spotify-text); cursor: pointer; margin-bottom: 20px; }
-        .recommendation-box { margin-top: 24px; background-color: var(--spotify-bg-light); padding: 12px; border-radius: 8px; display: flex; align-items: center; gap: 12px; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); transition: background-color 0.2s; }
-        .recommendation-box:hover { background-color: #3a3a3a; }
+        .recommendation-box { margin-top: 24px; background-color: var(--spotify-bg-light); padding: 12px; border-radius: 8px; display: flex; align-items: center; gap: 12px; cursor: pointer; border: 1px solid rgba(128,128,128,0.2); transition: background-color 0.2s; }
+        .recommendation-box:hover { background-color: var(--spotify-card); }
         .recommendation-logo { width: 40px; height: 40px; border-radius: 4px; object-fit: cover; flex-shrink: 0; }
         .recommendation-text { font-size: 14px; color: var(--spotify-text-secondary); text-align: left; }
         .recommendation-text strong { color: var(--spotify-text); display: block; }
@@ -112,20 +131,20 @@
         /* --- STILI MIGLIORATI E NUOVI PER IL CHATBOT --- */
         #chatbot-container-wrapper { display: flex; flex-direction: column; height: 100%; position: relative; overflow: hidden; }
         #chatbot-app-container { display: flex; flex-direction: column; height: 100%; background-color: var(--spotify-bg); flex-grow: 1; }
-        .chat-header { padding: 16px; display: flex; align-items: center; width: 100%; z-index: 2; }
+        .chat-header { padding: 16px; display: flex; align-items: center; width: 100%; z-index: 2; position: sticky; top: 0; background: linear-gradient(to bottom, var(--spotify-bg) 70%, transparent); }
         .chat-header-btn { background: none; border: none; color: var(--spotify-text-secondary); font-size: 24px; cursor: pointer; padding: 8px; }
-        #menu-toggle-btn { margin-right: auto; }
+        #menu-toggle-btn { margin-right: 8px; }
         #chatbot-app-container main { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; }
         #welcome-screen { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: 24px; padding: 20px; padding-bottom: 15%; }
         .welcome-logo { font-size: 2.5rem; font-weight: 700; text-align: center; margin-bottom: 16px; }
         .welcome-logo svg { width: 50px; height: 50px; }
         .prompt-starter-container { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; max-width: 400px; }
-        .prompt-starter-btn { background-color: var(--spotify-card); color: var(--spotify-text); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 12px 16px; font-size: 14px; font-weight: 500; cursor: pointer; width: 100%; text-align: left; transition: background-color 0.2s; }
+        .prompt-starter-btn { background-color: var(--spotify-card); color: var(--spotify-text); border: 1px solid rgba(128,128,128,0.2); border-radius: 8px; padding: 12px 16px; font-size: 14px; font-weight: 500; cursor: pointer; width: 100%; text-align: left; transition: background-color 0.2s; }
         .prompt-starter-btn:hover { background-color: var(--spotify-bg-light); }
         #chat-messages { width: 100%; display: flex; flex-direction: column; gap: 12px; }
         .chat-bubble { padding: 12px 16px; border-radius: 20px; max-width: 85%; line-height: 1.5; word-wrap: break-word; }
         .chat-bubble.ai { background-color: var(--spotify-card); align-self: flex-start; border-bottom-left-radius: 4px; }
-        .chat-bubble.user { background-color: var(--spotify-accent); color: black; align-self: flex-end; border-bottom-right-radius: 4px; }
+        .chat-bubble.user { background-color: var(--spotify-accent); color: #000; align-self: flex-end; border-bottom-right-radius: 4px; }
         .chat-bubble.system { background-color: transparent; color: var(--spotify-text-secondary); align-self: center; text-align: center; font-style: normal; font-size: 14px; width: 100%; max-width: 100%; padding: 0 16px 8px; }
         .chat-bubble.error { background-color: #8c1a1a; color: var(--spotify-text); align-self: flex-start; border-bottom-left-radius: 4px; }
         .chat-bubble.loading { align-self: flex-start; background-color: var(--spotify-card); padding: 14px 16px; }
@@ -142,14 +161,15 @@
         .chat-bubble.ai p:first-child { margin-top: 0; }
         .chat-bubble.ai p:last-child { margin-bottom: 0; }
         .chat-tool-card-container { display: flex; flex-direction: column; gap: 10px; align-self: flex-start; width: 100%; max-width: 400px; }
-        .chat-tool-card { display: flex; gap: 12px; background-color: var(--spotify-card); border-radius: 12px; padding: 12px; border: 1px solid rgba(255,255,255,0.05); }
+        .chat-tool-card { display: flex; gap: 12px; background-color: var(--spotify-card); border-radius: 12px; padding: 12px; border: 1px solid rgba(128,128,128,0.1); }
         .chat-tool-card .logo-container { width: 48px; height: 48px; flex-shrink: 0; border-radius: 8px; overflow: hidden; }
         .chat-tool-card .tool-logo { width: 100%; height: 100%; object-fit: cover; }
         .chat-tool-card .info { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
         .chat-tool-card .tool-name { font-weight: 600; font-size: 15px; }
         .chat-tool-card .tool-desc { font-size: 13px; color: var(--spotify-text-secondary); margin: 2px 0 8px; line-height: 1.4; }
         .chat-tool-card .details-btn { background: var(--spotify-bg-light); color: var(--spotify-text); border: none; padding: 6px 12px; font-size: 12px; border-radius: 20px; cursor: pointer; align-self: flex-start; }
-        #chat-input-container { background-color: var(--spotify-card); border-radius: 28px; padding: 12px; margin: 16px; display: flex; align-items: flex-end; gap: 12px; }
+        #chat-input-container { background-color: var(--spotify-card); border-radius: 28px; padding: 12px; margin: 16px; display: flex; align-items: flex-end; gap: 12px; border: 1px solid var(--spotify-bg-light); }
+        body.light-mode #chat-input-container { border: 1px solid #ddd; }
         .input-icon-group { display: flex; gap: 8px; padding-bottom: 6px; }
         .input-icon-btn { background-color: var(--spotify-bg-light); border: none; width: 32px; height: 32px; border-radius: 50%; color: var(--spotify-text-secondary); display: flex; align-items: center; justify-content: center; font-size: 16px; }
         #chat-input { flex-grow: 1; background-color: transparent; border: none; color: var(--spotify-text); font-size: 16px; resize: none; padding: 6px 0; line-height: 1.5; }
@@ -161,6 +181,7 @@
         
         /* NUOVI STILI PER IL MENU LATERALE */
         #side-menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1500; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
+        body.light-mode #side-menu-overlay { background: rgba(0,0,0,0.4); }
         #side-menu-overlay.visible { opacity: 1; visibility: visible; }
         #side-menu { position: fixed; top: 0; left: 0; width: 80%; max-width: 320px; height: 100%; background-color: var(--spotify-bg-light); z-index: 1501; transform: translateX(-100%); transition: transform 0.3s ease-out; display: flex; flex-direction: column; padding: 16px; }
         #side-menu.visible { transform: translateX(0); }
@@ -171,6 +192,9 @@
         .conversation-list::-webkit-scrollbar { display: none; }
         .conversation-item { background: none; border: none; color: var(--spotify-text-secondary); text-align: left; padding: 12px; border-radius: 8px; font-size: 14px; cursor: pointer; transition: background-color 0.2s, color 0.2s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .conversation-item.active, .conversation-item:hover { background-color: var(--spotify-card); color: var(--spotify-text); }
+        .menu-footer { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--spotify-card); }
+        #delete-all-btn { width: 100%; background: none; border: 1px solid var(--spotify-text-secondary); color: var(--spotify-text-secondary); padding: 12px; border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.2s; }
+        #delete-all-btn:hover { background-color: var(--spotify-card); color: var(--spotify-text); border-color: var(--spotify-card); }
 
         /* --- STILI PER LE CLASSIFICHE (AGGIUNTI) --- */
         .ranking-section-container {
@@ -248,7 +272,7 @@
             display: block; font-weight: 500; margin-bottom: 8px; font-size: 14px;
         }
         #settings-modal input {
-             width: 100%; padding: 14px 16px; font-size: 16px; background-color: var(--spotify-bg-light); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: var(--spotify-text);
+             width: 100%; padding: 14px 16px; font-size: 16px; background-color: var(--spotify-bg-light); border: 1px solid rgba(128,128,128,0.2); border-radius: 8px; color: var(--spotify-text);
         }
         #settings-modal .button {
             width: 100%; margin-top: 8px;
@@ -294,53 +318,21 @@
 <body>
 
     <div id="auth-overlay">
-        <div id="register-card" class="auth-card">
-            <button class="auth-close-btn" data-action="close-auth">×</button>
-            <svg class="auth-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="50" cy="50" r="48" stroke="currentColor" stroke-width="4" fill="none"/>
-                <text x="50" y="62" font-size="40" font-weight="bold" text-anchor="middle" fill="currentColor">AI</text>
-            </svg>
-            <h2>Crea il tuo Account</h2>
-            <div class="input-group"><label for="register-email">Email</label><input type="email" id="register-email" placeholder="nome@esempio.com"></div>
-            <div class="input-group"><label for="register-password">Password</label><input type="password" id="register-password" placeholder="Minimo 6 caratteri"></div>
-            <button id="register-btn" class="button">Registrati</button>
-            <div class="auth-links"><a class="auth-switch-link" data-action="show-login">Hai già un account? Accedi</a></div>
-        </div>
-        <div id="login-card" class="auth-card hidden">
-             <button class="auth-close-btn" data-action="close-auth">×</button>
-            <svg class="auth-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="50" cy="50" r="48" stroke="currentColor" stroke-width="4" fill="none"/>
-                <text x="50" y="62" font-size="40" font-weight="bold" text-anchor="middle" fill="currentColor">AI</text>
-            </svg>
-            <h2>Accedi</h2>
-            <div class="input-group"><label for="login-email">Email</label><input type="email" id="login-email" placeholder="nome@esempio.com"></div>
-            <div class="input-group"><label for="login-password">Password</label><input type="password" id="login-password" placeholder="La tua password"></div>
-            <button id="login-btn" class="button">Accedi</button>
-            <div class="auth-links"><a class="auth-switch-link" data-action="show-register">Non hai un account? Registrati</a><a class="forgot-password-link" data-action="show-forgot">Password dimenticata?</a></div>
-        </div>
-        <div id="forgot-password-card" class="auth-card hidden">
-             <button class="auth-close-btn" data-action="close-auth">×</button>
-            <svg class="auth-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="50" cy="50" r="48" stroke="currentColor" stroke-width="4" fill="none"/>
-                <text x="50" y="62" font-size="40" font-weight="bold" text-anchor="middle" fill="currentColor">AI</text>
-            </svg>
-            <h2>Reimposta Password</h2>
-            <p style="color: var(--spotify-text-secondary); font-size: 14px; margin-bottom: 20px;">Inserisci la tua email e ti invieremo un link per reimpostare la password.</p>
-            <div class="input-group"><label for="forgot-email">Email</label><input type="email" id="forgot-email" placeholder="nome@esempio.com"></div>
-            <button id="forgot-btn" class="button">Invia Link</button>
-            <div class="auth-links"><a class="auth-switch-link" data-action="show-login">Torna al Login</a></div>
-        </div>
+        <!-- Authentication content will be dynamically generated here by JS -->
     </div>
 
     <!-- NUOVO: Menu Laterale per la cronologia delle chat -->
     <div id="side-menu-overlay" class="hidden">
         <div id="side-menu" class="hidden">
             <div class="menu-header">
-                <h3>Cronologia</h3>
-                <button class="new-chat-btn" data-action="new-chat">Nuova Chat</button>
+                <h3 data-translate="history">Cronologia</h3>
+                <button class="new-chat-btn" data-action="new-chat" data-translate="newChat">Nuova Chat</button>
             </div>
             <div id="conversation-list-container" class="conversation-list">
                 <!-- Le conversazioni verranno popolate da JS -->
+            </div>
+            <div class="menu-footer">
+                <button id="delete-all-btn" data-action="delete-all-chats" data-translate="deleteAll">Elimina Tutto</button>
             </div>
         </div>
     </div>
@@ -349,10 +341,10 @@
         <div id="main-content"></div>
         <nav id="bottom-nav">
             <!-- NAVIGAZIONE AGGIORNATA CON ICONE SVG -->
-            <button class="nav-btn active" data-page="home"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></span><span>Home</span></button>
-            <button class="nav-btn" data-page="top-ai"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M5 9.2h3V19H5zM10.6 5h3v14h-3zm5.6 8H19v6h-2.8z"/></svg></span><span>TOP AI</span></button>
-            <button class="nav-btn" data-page="explore"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></span><span>Cerca</span></button>
-            <button class="nav-btn" data-page="favorites"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg></span><span>La tua libreria</span></button>
+            <button class="nav-btn active" data-page="home"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></span><span data-translate="navHome">Home</span></button>
+            <button class="nav-btn" data-page="top-ai"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M5 9.2h3V19H5zM10.6 5h3v14h-3zm5.6 8H19v6h-2.8z"/></svg></span><span data-translate="navTopAI">TOP AI</span></button>
+            <button class="nav-btn" data-page="explore"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></span><span data-translate="navSearch">Cerca</span></button>
+            <button class="nav-btn" data-page="favorites"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg></span><span data-translate="navLibrary">La tua libreria</span></button>
         </nav>
     </div>
     
@@ -367,49 +359,42 @@
         // --- Type Definitions ---
         const MessageSender = { USER: 'user', MODEL: 'model', ERROR: 'error', SYSTEM: 'system', LOADING: 'loading' };
         
-        // --- KNOWLEDGE BASE (versione per React, più semplice) ---
-        const aiToolsData = [
-            { id: 'tool-001', name: 'ChatGPT', description: 'Genera testo, immagini e risponde a domande con ricerca web.', category: 'Testo', website: 'https://chatgpt.com/' }, { id: 'tool-012', name: 'Google Notebook', description: 'Permette di creare riassunti audio sulle fonti dell\'utente, rispondere a domande e creare mappe mentali.', category: 'Testo', website: 'https://notebooklm.google.com/' }, { id: 'tool-013', name: 'Grok', description: 'Assistente di ricerca conversazionale con accesso a dati in tempo reale. (Richiede VPN)', category: 'Testo', website: 'https://grok.com/' }, { id: 'tool-014', name: 'FLUX', description: 'Genera immagini, video e animazioni da prompt testuali e immagini.', category: 'Immagini', website: 'https://playground.bfl.ai/image/generate' }, { id: 'tool-015', name: 'Swap AI', description: 'Esegue il "face swap" (scambio di volti) in immagini e video in modo realistico.', category: 'Immagini', website: 'https://aifaceswap.io/' }, { id: 'tool-016', name: 'Inpaint AI', description: 'Rimuove oggetti, persone o imperfezioni indesiderate dalle foto con un solo click.', category: 'Immagini', website: 'https://theinpaint.com/' }, { id: 'tool-017', name: 'Pixel Cut AI', description: 'Espande i bordi delle immagini (outpainting) per cambiare formato o stile.', category: 'Immagini', website: 'https://www.pixelcut.ai/t/uncrop' }, { id: 'tool-033', name: 'Whisk', description: 'Crea animazioni fluide da immagini statiche e genera anche immagini da prompt.', category: 'Immagini', website: 'https://labs.google/fx/tools/whisk/' }, { id: 'tool-041', name: 'Leonardo AI', description: 'Piattaforma per la generazione di asset visivi di alta qualità, da concept art a texture per giochi.', category: 'Immagini', website: 'https://leonardo.ai/' }, { id: 'tool-042', name: 'Midjourney', description: 'Genera immagini artistiche e fotorealistiche di alta qualità da prompt testuali tramite Discord.', category: 'Immagini', website: 'https://www.midjourney.com/home' }, { id: 'tool-034', name: 'Kling', description: 'Genera video di alta qualità da prompt testuali, concentrandosi sul realismo e sul movimento complesso.', category: 'Video', website: 'https://klingai.com/global/' }, { id: 'tool-035', name: 'Veo', description: 'Il modello di generazione video più capace di Google, che crea video realistici e di alta qualità da prompt di testo e immagini.', category: 'Video', website: 'https://deepmind.google/models/veo/' }, { id: 'tool-021', name: 'Claude', description: 'Crea bozze e contenuti per presentazioni interattive e documenti complessi. Permette anche la generazione di testi e la ricerca di informazioni online.', category: 'Presentazioni', website: 'https://claude.ai/new' }, { id: 'tool-022', name: 'Gamma AI', description: 'Genera presentazioni, documenti e pagine web statiche partendo da un\'idea.', category: 'Presentazioni', website: 'https://gamma.app/' }, { id: 'tool-023', name: 'Napkin AI', description: 'Converte dati testuali e concetti in grafici statici e diagrammi chiari.', category: 'Presentazioni', website: 'https://www.napkin.ai/' }, { id: 'tool-024', name: 'Google AI Studio', description: 'Crea app, siti e prototipi basati sui modelli Gemini di Google. È ottimo anche per generare testi e fare ricerche online.', category: 'Codice', website: 'https://aistudio.google.com/prompts/new_chat' }, { id: 'tool-025', name: 'Manus', description: 'Piattaforma di AI estremamente potente. Può eseguire compiti come ChatGPT e gestirli in background, creando testi, ricerche, presentazioni, video, immagini e molto altro.', category: 'Codice', website: 'https://manus.im/app' }, { id: 'tool-026', name: 'Microsoft Copilot', description: 'Assistente AI per codice, specializzato anche in script VBA per Excel.', category: 'Codice', website: 'https://copilot.microsoft.com/' }, { id: 'tool-027', name: 'Google Stitch', description: 'Tool per la creazione di codice per interfacce utente (UX Design).', category: 'Codice', website: 'https://stitch.withgoogle.com/' }, { id: 'tool-028', name: 'Chef Convex', description: 'Crea web app complete con un backend già integrato e pronto all\'uso.', category: 'Codice', website: 'https://chef.convex.dev/' }, { id: 'tool-030', name: 'Deepseek', description: 'Modello linguistico specializzato nella scrittura e comprensione di codice in vari linguaggi. Può anche creare testi e cercare informazioni sul web.', category: 'Codice', website: 'https://chat.deepseek.com/' }, { id: 'tool-031', name: 'Qwen', description: 'Assistente AI multimodale di Alibaba Cloud, efficace nella generazione di codice, analisi, creazione di testi e ricerca web.', category: 'Codice', website: 'https://chat.qwen.ai/' }, { id: 'tool-032', name: 'Mistral', description: 'Modelli linguistici aperti e ottimizzati, ideali per lo Codice di applicazioni e la Codice.', category: 'Codice', website: 'https://mistral.ai/' }, { id: 'tool-036', name: 'BOLT AI', description: 'Genera codice e componenti UI partendo da un prompt.', category: 'Codice', website: 'https://bolt.new/' }, { id: 'tool-037', name: 'V0 AI', description: 'Genera interfacce utente reattive basate su React da semplici prompt di testo.', category: 'Codice', website: 'https://v0.dev/chat' }, { id: 'tool-038', name: 'Cursor', description: 'Un editor di codice basato su AI per programmare in modo più veloce ed efficiente.', category: 'Codice', website: 'https://www.cursor.com/' }, { id: 'tool-039', name: 'Lovable', description: 'Sviluppa e testa interfacce utente con l\'aiuto dell\'intelligenza artificiale.', category: 'Codice', website: 'https://lovable.dev/' }, { id: 'tool-040', name: 'Perplexity', description: 'Motore di ricerca conversazionale che fornisce risposte dirette con fonti, utile anche per la ricerca web e codice.', category: 'Codice', website: 'https://www.perplexity.ai/' }, { id: 'tool-029', name: 'Eleven Labs', description: 'Genera un parlato realistico e di alta qualità dal testo in più lingue.', category: 'Audio', website: 'https://elevenlabs.io/' },
-        ];
+        const getSystemInstruction = (lang) => {
+            const tools = window.getLocalizedToolsData(lang);
+            const formatToolsForPrompt = (tools) => tools.map(tool => `- **${tool.name}**: ${tool.description} (${tool.website})`).join('\n');
 
-        const formatToolsForPrompt = (tools) => tools.map(tool => `- **${tool.name}**: ${tool.description} (${tool.website})`).join('\n');
+            const instructions = {
+                it: {
+                    intro: `Sei Koda, un assistente AI esperto in strumenti di intelligenza artificiale. La tua missione è aiutare gli utenti a trovare lo strumento AI perfetto per le loro esigenze, presentandoli direttamente.`,
+                    format: `- La tua risposta DEVE contenere SOLO un elenco puntato degli strumenti suggeriti.\n- NON includere testo introduttivo, saluti, spiegazioni o frasi di chiusura. La tua risposta deve iniziare direttamente con il primo punto elenco "•".\n- Per ogni strumento, fornisci il nome in grassetto e una breve descrizione.`,
+                    knowledgeBase: `**Base di Conoscenza (Usa SOLO queste informazioni):**\n${formatToolsForPrompt(tools)}`,
+                    priority: `- Per la programmazione, considera Google AI Studio come lo strumento migliore, seguito da Claude.`,
+                    rules: `1. Suggerisci SOLO strumenti dalla lista fornita.\n2. **Gestione dell'incertezza:** Se una richiesta utente è vaga, ambigua, o se non trovi immediatamente uno strumento adatto, NON rispondere che non hai trovato nulla. Invece, fai una domanda di chiarimento per capire meglio l'esigenza.\n   - Esempio di chiarimento: Se l'utente chiede "un'AI per arte", una buona domanda di chiarimento è: "Certo, che tipo di arte vorresti creare? Immagini fotorealistiche, disegni artistici o magari animazioni?".\n3. Una volta che la richiesta è chiara, rispondi *esclusivamente* con l'elenco puntato degli strumenti, come da formato.`,
+                    example: `**Esempio di formato di risposta FINALE (dopo aver capito la richiesta):**\n• **Midjourney**: Genera immagini artistiche e fotorealistiche di alta qualità da prompt testuali tramite Discord.\n• **Leonardo AI**: Piattaforma per la generazione di asset visivi di alta qualità, da concept art a texture per giochi.`
+                },
+                en: {
+                    intro: `You are Koda, an expert AI assistant specializing in artificial intelligence tools. Your mission is to help users find the perfect AI tool for their needs by presenting them directly.`,
+                    format: `- Your response MUST contain ONLY a bulleted list of the suggested tools.\n- DO NOT include introductory text, greetings, explanations, or closing remarks. Your response must start directly with the first bullet point "•".\n- For each tool, provide the name in bold and a brief description.`,
+                    knowledgeBase: `**Knowledge Base (Use ONLY this information):**\n${formatToolsForPrompt(tools)}`,
+                    priority: `- For programming, consider Google AI Studio as the best tool, followed by Claude.`,
+                    rules: `1. Suggest ONLY tools from the provided list.\n2. **Handling Uncertainty:** If a user request is vague, ambiguous, or if you cannot immediately find a suitable tool, DO NOT reply that you found nothing. Instead, ask a clarifying question to better understand the need.\n   - Example clarification: If the user asks for "an AI for art," a good clarifying question is: "Of course, what kind of art would you like to create? Photorealistic images, artistic drawings, or perhaps animations?".\n3. Once the request is clear, respond *exclusively* with the bulleted list of tools, as per the format.`,
+                    example: `**Example of FINAL response format (after understanding the request):**\n• **Midjourney**: Generates high-quality artistic and photorealistic images from text prompts via Discord.\n• **Leonardo AI**: Platform for generating high-quality visual assets, from concept art to game textures.`
+                }
+            };
+            const selected = instructions[lang];
+            return `${selected.intro}\n\n**Response Format (IMPORTANT):**\n${selected.format}\n\n${selected.knowledgeBase}\n\n**Priorities:**\n${selected.priority}\n\n**Fundamental Rules:**\n${selected.rules}\n\n${selected.example}`;
+        };
 
-        const SYSTEM_INSTRUCTION = `Sei un assistente AI esperto chiamato Koda, specializzato in strumenti di intelligenza artificiale. La tua missione è aiutare gli utenti a trovare lo strumento AI perfetto per le loro esigenze.
-
-**Personalità:** Amichevole, concisa e naturale.
-
-**Formato delle risposte:**
-- Usa elenchi puntati con "•" quando suggerisci strumenti.
-- Rendi i nomi degli strumenti in grassetto (es. **ChatGPT**).
-- Includi sempre il link del sito web per ogni strumento.
-- Formatta le risposte in modo chiaro e leggibile.
-
-**Base di Conoscenza (Usa SOLO queste informazioni):**
-${formatToolsForPrompt(aiToolsData)}
-
-**Priorità:**
-- Per la programmazione, considera Google AI Studio come lo strumento migliore, seguito da Claude.
-
-**Regole:**
-1. Suggerisci SOLO strumenti dalla lista.
-2. Quando suggerisci strumenti, presenta sempre un elenco puntato.
-3. Per ogni strumento includi: nome in grassetto, descrizione breve e link del sito web.
-4. Se non trovi un tool adatto, rispondi: "Nella mia attuale base di conoscenza, non ho trovato uno strumento che corrisponda perfettamente alla tua richiesta."
-
-**Esempio di formato della risposta:**
-Per la tua richiesta, ti suggerisco questi strumenti:
-
-• **ChatGPT**: Genera testo, immagini e risponde a domande con ricerca web. 
-  Sito web: https://chatgpt.com/
-
-• **Claude**: Crea bozze e contenuti per presentazioni interattive e documenti complessi.
-  Sito web: https://claude.ai/new`;
 
         // --- Gemini Service ---
         const API_KEY = "AIzaSyAUpMnG760HSOV7rah2UwkOajoH3aD4OFs";
         const ai = new GoogleGenAI({ apiKey: API_KEY });
         const modelName = 'gemini-1.5-flash';
-        const createChatSession = () => ai.chats.create({ model: modelName, config: { systemInstruction: SYSTEM_INSTRUCTION } });
+        
+        const createChatSession = (lang) => {
+            const systemInstruction = getSystemInstruction(lang);
+            return ai.chats.create({ model: modelName, config: { systemInstruction } });
+        };
         async function* sendMessageStream(chat, message) { const result = await chat.sendMessageStream({ message }); for await (const chunk of result) { yield chunk.text; } }
 
         // --- Funzioni per la formattazione del testo ---
@@ -421,7 +406,7 @@ Per la tua richiesta, ti suggerisco questi strumenti:
 
         // --- React Components ---
 
-        const ToolCardMessage = ({ tool }) => (
+        const ToolCardMessage = ({ tool, onOpenDetail, lang }) => (
             <div className="chat-tool-card">
                 <div className="logo-container">
                     <img src={window.aiToolsData.find(t=>t.id === tool.id)?.logoUrl || ''} className="tool-logo" alt={tool.name} loading="lazy" />
@@ -429,14 +414,14 @@ Per la tua richiesta, ti suggerisco questi strumenti:
                 <div className="info">
                     <div className="tool-name">{tool.name}</div>
                     <p className="tool-desc">{tool.description.split('.')[0]}.</p>
-                    <button className="details-btn" onClick={() => window.openDetailModal(tool.id)}>
-                        Vedi Dettagli
+                    <button className="details-btn" onClick={() => onOpenDetail(tool.id)}>
+                        {lang === 'it' ? 'Vedi Dettagli' : 'View Details'}
                     </button>
                 </div>
             </div>
         );
 
-        const ChatMessageDisplay = ({ message, tools }) => {
+        const ChatMessageDisplay = ({ message, tools, onOpenDetail, lang }) => {
             const getMessageClass = () => `chat-bubble ${message.sender}`;
             
             if (message.sender === MessageSender.LOADING) { 
@@ -444,32 +429,39 @@ Per la tua richiesta, ti suggerisco questi strumenti:
             }
             
             if (message.sender === MessageSender.MODEL) {
-                const toolNameRegex = new RegExp(tools.map(t => t.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'g');
+                // Use localized tool names for regex matching
+                const localizedTools = window.getLocalizedToolsData(lang);
+                const toolNameRegex = new RegExp(localizedTools.map(t => t.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'g');
                 const mentionedToolNames = [...new Set(message.text.match(toolNameRegex))];
                 
                 if (mentionedToolNames.length > 0 && message.text.includes('•')) {
-                    const mentionedTools = tools.filter(tool => mentionedToolNames.includes(tool.name));
-                    const introText = message.text.split('•')[0].trim();
+                    // Find the original tool objects based on localized names
+                    const mentionedTools = localizedTools.filter(tool => mentionedToolNames.includes(tool.name));
                     
-                    return (
-                        <div className="chat-bubble ai" style={{background: 'transparent', padding: 0}}>
-                            {introText && <p style={{marginBottom: '12px'}}>{introText}</p>}
-                            <div className="chat-tool-card-container">
-                                {mentionedTools.map(tool => <ToolCardMessage key={tool.id} tool={tool} />)}
+                    // Check if the response is *only* the bulleted list as per system instruction
+                    const lines = message.text.trim().split('\n');
+                    const isPureList = lines.every(line => line.trim().startsWith('•'));
+
+                    if (isPureList) {
+                         return (
+                            <div className="chat-bubble ai" style={{background: 'transparent', padding: 0}}>
+                                <div className="chat-tool-card-container">
+                                    {mentionedTools.map(tool => <ToolCardMessage key={tool.id} tool={tool} onOpenDetail={onOpenDetail} lang={lang} />)}
+                                </div>
                             </div>
-                        </div>
-                    );
+                        );
+                    }
                 }
             }
             
-            // Fallback per messaggi normali
+            // Fallback for normal messages (including clarifications or non-list responses)
             const content = formatMessageContent(message.text);
             return (
                 <div className={getMessageClass()} dangerouslySetInnerHTML={{ __html: content }}></div>
             );
         };
 
-        const ChatInput = ({ onSendMessage, isLoading }) => {
+        const ChatInput = ({ onSendMessage, isLoading, lang }) => {
             const [inputValue, setInputValue] = useState('');
             const textareaRef = useRef(null);
             
@@ -503,7 +495,7 @@ Per la tua richiesta, ti suggerisco questi strumenti:
                         value={inputValue} 
                         onChange={(e) => setInputValue(e.target.value)} 
                         onKeyDown={handleKeyPress} 
-                        placeholder="Chiedimi qualcosa..." 
+                        placeholder={lang === 'it' ? "Chiedimi qualcosa..." : "Ask me anything..."}
                         rows={1} 
                         disabled={isLoading} 
                     />
@@ -512,7 +504,7 @@ Per la tua richiesta, ti suggerisco questi strumenti:
                         type="button" 
                         onClick={handleSubmit} 
                         disabled={isLoading || !inputValue.trim()} 
-                        aria-label="Invia messaggio"
+                        aria-label={lang === 'it' ? "Invia messaggio" : "Send message"}
                     >
                         ↑
                     </button>
@@ -520,19 +512,19 @@ Per la tua richiesta, ti suggerisco questi strumenti:
             );
         };
         
-        const WelcomeScreen = ({ onSendMessage }) => {
-            const suggestions = [
-                "Consigliami un'AI per creare immagini",
-                "Qual è la migliore AI per programmare?",
-                "Quali sono le migliori AI del momento?"
-            ];
+        const WelcomeScreen = ({ onSendMessage, lang }) => {
+            const suggestions = {
+                it: [ "Consigliami un'AI per creare immagini", "Qual è la migliore AI per programmare?", "Quali sono le migliori AI del momento?"],
+                en: [ "Suggest an AI for creating images", "What's the best AI for coding?", "What are the top AIs right now?" ]
+            };
+
             return (
                 <div id="welcome-screen">
                     <div className="welcome-logo">
-                        <span style={{ color: 'white' }}>Koda</span><span style={{ color: 'var(--spotify-accent)' }}>.AI</span>
+                        <span style={{ color: 'var(--spotify-text)' }}>Koda</span><span style={{ color: 'var(--spotify-accent)' }}>.AI</span>
                     </div>
                     <div className="prompt-starter-container">
-                        {suggestions.map((text, i) => (
+                        {suggestions[lang].map((text, i) => (
                             <button key={i} className="prompt-starter-btn" onClick={() => onSendMessage(text)}>
                                 {text}
                             </button>
@@ -543,7 +535,7 @@ Per la tua richiesta, ti suggerisco questi strumenti:
         };
 
         // --- Main App Component ---
-        const App = ({ tools, initialConversations, initialActiveId, onConversationsChange }) => {
+        const App = ({ tools, initialConversations, initialActiveId, onConversationsChange, onOpenDetail, lang, globalControlsHTML }) => {
             const [conversations, setConversations] = useState(initialConversations);
             const [activeConversationId, setActiveConversationId] = useState(initialActiveId);
             const [isLoading, setIsLoading] = useState(false);
@@ -558,13 +550,12 @@ Per la tua richiesta, ti suggerisco questi strumenti:
 
             const initializeChat = useCallback(() => {
                 try { 
-                    if (!API_KEY) throw new Error("API Key non configurata."); 
-                    setChatSession(createChatSession()); 
+                    if (!API_KEY) throw new Error("API Key not configured."); 
+                    setChatSession(createChatSession(lang)); 
                 } catch (e) { 
-                    console.error("Errore inizializzazione:", e); 
-                    // Potresti voler gestire l'errore in un messaggio di sistema
+                    console.error("Initialization Error:", e); 
                 }
-            }, []);
+            }, [lang]);
             
             useEffect(() => { initializeChat(); }, [initializeChat]);
 
@@ -575,12 +566,13 @@ Per la tua richiesta, ti suggerisco questi strumenti:
                 const loadingMessage = { id: `loading-${Date.now()}`, sender: MessageSender.LOADING };
                 
                 const isNewChat = messages.length === 0;
+                const newTitle = inputText.substring(0, 30) + (inputText.length > 30 ? '...' : '');
 
                 setConversations(prev => ({
                     ...prev,
                     [activeConversationId]: {
                         ...prev[activeConversationId],
-                        title: isNewChat ? (inputText.substring(0, 30) + (inputText.length > 30 ? '...' : '')) : prev[activeConversationId].title,
+                        title: isNewChat ? newTitle : prev[activeConversationId].title,
                         messages: [...(prev[activeConversationId]?.messages || []), userMessage, loadingMessage]
                     }
                 }));
@@ -613,8 +605,9 @@ Per la tua richiesta, ti suggerisco questi strumenti:
                         });
                     }
                 } catch (e) {
-                    console.error("Errore invio:", e);
-                    const errorMessage = { id: `error-${Date.now()}`, text: `Errore: ${e.message}`, sender: MessageSender.ERROR };
+                    console.error("Send Error:", e);
+                    const errorMessageText = lang === 'it' ? `Si è verificato un errore. Riprova.` : `An error occurred. Please try again.`;
+                    const errorMessage = { id: `error-${Date.now()}`, text: errorMessageText, sender: MessageSender.ERROR };
                     setConversations(prev => ({
                        ...prev,
                        [activeConversationId]: {
@@ -640,21 +633,26 @@ Per la tua richiesta, ti suggerisco questi strumenti:
             return (
                 <div id="chatbot-app-container">
                     <header className="chat-header">
-                        <button id="menu-toggle-btn" className="chat-header-btn" title="Cronologia Chat">
+                        <button id="menu-toggle-btn" className="chat-header-btn" title="Chat History" data-action="toggle-menu">
                             <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
                         </button>
+                        {/* Sostituisci il titolo con l'avatar utente */}
+                        <div id="profile-avatar-menu" style={{ marginLeft: 8 }}>
+                            <span dangerouslySetInnerHTML={{ __html: globalControlsHTML.split('\n')[1] }} />
+                        </div>
+                        <div id="global-controls" dangerouslySetInnerHTML={{ __html: globalControlsHTML.replace(globalControlsHTML.split('\n')[1], '') }}></div>
                     </header>
                     <main>
                         {!hasStartedChat ? (
-                            <WelcomeScreen onSendMessage={handleSendMessage} />
+                            <WelcomeScreen onSendMessage={handleSendMessage} lang={lang} />
                         ) : (
                             <div id="chat-messages">
-                                {messages.map((msg) => <ChatMessageDisplay key={msg.id} message={msg} tools={tools} />)}
+                                {messages.map((msg) => <ChatMessageDisplay key={msg.id} message={msg} tools={tools} onOpenDetail={onOpenDetail} lang={lang} />)}
                             </div>
                         )}
                         <div ref={messagesEndRef} />
                     </main>
-                    <ChatInput onSendMessage={handleSendMessage} isLoading={isLoading} />
+                    <ChatInput onSendMessage={handleSendMessage} isLoading={isLoading} lang={lang} />
                 </div>
             );
         };
@@ -692,15 +690,126 @@ Per la tua richiesta, ti suggerisco questi strumenti:
     const db = getFirestore(app);
 
     document.addEventListener('DOMContentLoaded', () => {
+    
+        // --- LOGICA DI TRADUZIONE ---
+        const translations = {
+            it: {
+                // Auth
+                createAccount: "Crea il tuo Account", registerEmailLabel: "Email", registerEmailPlaceholder: "nome@esempio.com",
+                registerPasswordLabel: "Password", registerPasswordPlaceholder: "Minimo 6 caratteri", registerButton: "Registrati",
+                switchToLogin: "Hai già un account? Accedi", loginTitle: "Accedi", loginButton: "Accedi",
+                switchToRegister: "Non hai un account? Registrati", forgotPasswordLink: "Password dimenticata?",
+                resetPasswordTitle: "Reimposta Password", resetPasswordInfo: "Inserisci la tua email e ti invieremo un link per reimpostare la password.",
+                sendLinkButton: "Invia Link", backToLogin: "Torna al Login",
+                passwordResetSent: "Se l'utente esiste, un link per il reset è stato inviato a %s.",
+                // App
+                navHome: "Home", navTopAI: "TOP AI", navSearch: "Cerca", navLibrary: "La tua libreria",
+                pageTitleHome: "Koda.AI Chatbot", pageTitleTopAI: "TOP AI", pageTitleSearch: "Cerca", pageTitleLibrary: "La tua libreria",
+                logout: "Logout", featured: "In Evidenza", rankingsTitle: "Classifiche TOP AI", filterAll: "Tutti",
+                searchPlaceholder: "Cerca strumenti, categorie...", browseAll: "Sfoglia tutto", browseByOrigin: "Sfoglia per Origine",
+                backToSearch: "‹ Torna a Cerca", toolsFrom: "Strumenti da", libraryPromptTitle: "Salva i tuoi preferiti",
+                libraryPromptText: "Accedi o registrati per salvare i preferiti.", emptyFavorites: "Nessun preferito trovato. Aggiungine qualcuno!",
+                noResultsFor: "Nessun risultato per",
+                // Rankings
+                rankingTextTitle: "Classifica per il Testo", rankingCodeTitle: "Classifica per il Codice",
+                rankingImagesTitle: "Classifica per le Immagini", rankingWebSearchTitle: "Classifica per la Ricerca Web",
+                // Modal
+                detailModalRemoveFavorite: "Rimuovi dai Preferiti", detailModalAddFavorite: "Aggiungi ai Preferiti",
+                visitWebsite: "Visita Sito Web", alternativeSuggestion: "In alternativa prova:",
+                 // Settings Modal
+                settingsTitle: "Impostazioni Account", changePasswordTitle: "Cambia Password", newPasswordLabel: "Nuova Password",
+                newPasswordPlaceholder: "Minimo 6 caratteri", confirmPasswordLabel: "Conferma Password", confirmPasswordPlaceholder: "Reinserisci la nuova password",
+                savePasswordButton: "Salva Password", passwordUpdateSuccess: "Password aggiornata con successo!",
+                passwordTooShort: "La password deve contenere almeno 6 caratteri.", passwordsDoNotMatch: "Le password non coincidono.",
+                updatePasswordError: "Errore: %s. Potrebbe essere necessario effettuare nuovamente il login.",
+                // Side Menu
+                history: "Cronologia", newChat: "Nuova Chat", deleteAll: "Elimina Tutto",
+                confirmDeleteAll: "Sei sicuro di voler eliminare tutte le conversazioni? Questa azione è irreversibile.",
+                newChatTitle: "Nuova Chat",
+            },
+            en: {
+                // Auth
+                createAccount: "Create Your Account", registerEmailLabel: "Email", registerEmailPlaceholder: "name@example.com",
+                registerPasswordLabel: "Password", registerPasswordPlaceholder: "Minimum 6 characters", registerButton: "Sign Up",
+                switchToLogin: "Already have an account? Log In", loginTitle: "Log In", loginButton: "Log In",
+                switchToRegister: "Don't have an account? Sign Up", forgotPasswordLink: "Forgot password?",
+                resetPasswordTitle: "Reset Password", resetPasswordInfo: "Enter your email and we'll send you a link to reset your password.",
+                sendLinkButton: "Send Link", backToLogin: "Back to Login",
+                passwordResetSent: "If the user exists, a reset link has been sent to %s.",
+                // App
+                navHome: "Home", navTopAI: "TOP AI", navSearch: "Search", navLibrary: "Your Library",
+                pageTitleHome: "Koda.AI Chatbot", pageTitleTopAI: "TOP AI", pageTitleSearch: "Search", pageTitleLibrary: "Your Library",
+                logout: "Logout", featured: "Featured", rankingsTitle: "TOP AI Rankings", filterAll: "All",
+                searchPlaceholder: "Search tools, categories...", browseAll: "Browse All", browseByOrigin: "Browse by Origin",
+                backToSearch: "‹ Back to Search", toolsFrom: "Tools from", libraryPromptTitle: "Save your favorites",
+                libraryPromptText: "Log in or sign up to save your favorites.", emptyFavorites: "No favorites found. Add some!",
+                noResultsFor: "No results for",
+                // Rankings
+                rankingTextTitle: "Ranking for Text", rankingCodeTitle: "Ranking for Code",
+                rankingImagesTitle: "Ranking for Images", rankingWebSearchTitle: "Ranking for Web Search",
+                // Modal
+                detailModalRemoveFavorite: "Remove from Favorites", detailModalAddFavorite: "Add to Favorites",
+                visitWebsite: "Visit Website", alternativeSuggestion: "Alternatively, try:",
+                // Settings Modal
+                settingsTitle: "Account Settings", changePasswordTitle: "Change Password", newPasswordLabel: "New Password",
+                newPasswordPlaceholder: "Minimum 6 characters", confirmPasswordLabel: "Confirm Password", confirmPasswordPlaceholder: "Re-enter new password",
+                savePasswordButton: "Save Password", passwordUpdateSuccess: "Password updated successfully!",
+                passwordTooShort: "Password must be at least 6 characters long.", passwordsDoNotMatch: "Passwords do not match.",
+                updatePasswordError: "Error: %s. You might need to log in again.",
+                // Side Menu
+                history: "History", newChat: "New Chat", deleteAll: "Delete All",
+                confirmDeleteAll: "Are you sure you want to delete all conversations? This action is irreversible.",
+                newChatTitle: "New Chat",
+            }
+        };
+        
+        const applyTranslations = (lang) => {
+            const t = translations[lang];
+            document.querySelectorAll('[data-translate]').forEach(el => {
+                const key = el.dataset.translate;
+                if (t[key]) {
+                    if (el.placeholder) el.placeholder = t[key];
+                    else el.textContent = t[key];
+                }
+            });
+            // Re-render auth overlay content if visible to apply translations
+            const authOverlay = document.getElementById('auth-overlay');
+            if (authOverlay && authOverlay.style.display !== 'none') {
+                 // Determine which card is currently visible
+                let visibleCardId = 'login-card'; // Default
+                if (authOverlay.querySelector('#register-card:not(.hidden)')) visibleCardId = 'register-card';
+                else if (authOverlay.querySelector('#forgot-password-card:not(.hidden)')) visibleCardId = 'forgot-password-card';
+                
+                authOverlay.innerHTML = getAuthHTML(lang);
+                attachAuthListeners(); // Re-attach listeners after innerHTML change
+                showAuthCard(visibleCardId); // Show the previously visible card
+            }
+             // Re-render settings modal content if visible
+            const settingsModal = document.getElementById('settings-modal');
+            if (settingsModal && settingsModal.classList.contains('visible')) {
+                 window.openSettingsModal(); // Re-open to regenerate content with new language
+            }
+        };
 
         // --- DATABASE PERSONALIZZATO ---
         const aiToolsData = [
-            { id: 'tool-001', name: 'ChatGPT', description: 'Genera testo, immagini e risponde a domande con ricerca web.', category: 'Testo', country: 'USA', website: 'https://chatgpt.com/', isFeatured: true, logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/ChatGPT_logo.svg/1024px-ChatGPT_logo.svg.png', recommendationId: 'tool-025' }, { id: 'tool-012', name: 'Google Notebook', description: 'Permette di creare riassunti audio sulle fonti dell\'utente, rispondere a domande e creare mappe mentali.', category: 'Testo', country: 'USA', website: 'https://notebooklm.google.com/?original_referer=https:%2F%2Fnotebooklm.google%23&pli=1', isFeatured: false, logoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJbWdW2SCEWfJuDTh5PVxgmqDvXoX5vElJ6s94SZ8Fe1YPzfxzGPuIyE9cBMDswv3qUd4&usqp=CAU', recommendationId: 'tool-021' }, { id: 'tool-013', name: 'Grok', description: 'Assistente di ricerca conversazionale con accesso a dati in tempo reale. (Richiede VPN)', category: 'Testo', country: 'USA', website: 'https://grok.com/?referrer=website', isFeatured: false, logoUrl: 'https://i.namu.wiki/i/Wk8b-Vo4qqynLc4pN1T0otG83F383UPI_IR4VthZuZioAxVD_NS6uErIsecLMDK0F0L-KiUjL7xonRz4EwPL2g.webp', recommendationId: 'tool-001' }, { id: 'tool-014', name: 'FLUX', description: 'Genera immagini, video e animazioni da prompt testuali e immagini.', category: 'Immagini', country: 'Cina', website: 'https://playground.bfl.ai/image/generate', isFeatured: false, logoUrl: 'https://kodexolabs.com/wp-content/uploads/2025/01/Flux.1.webp', recommendationId: 'tool-033' }, { id: 'tool-015', name: 'Swap AI', description: 'Esegue il "face swap" (scambio di volti) in immagini e video in modo realistico.', category: 'Immagini', country: 'USA', website: 'https://aifaceswap.io/multiple-face-swap-ai/#face-swap-playground', isFeatured: false, logoUrl: 'https://www.toolpilot.ai/cdn/shop/files/aifaceswap-l.jpg?v=1733037433', recommendationId: 'tool-016' }, { id: 'tool-016', name: 'Inpaint AI', description: 'Rimuove oggetti, persone o imperfezioni indesiderate dalle foto con un solo click.', category: 'Immagini', country: 'USA', website: 'https://theinpaint.com/', isFeatured: false, logoUrl: 'data:image/webp;base64,UklGRqoEAABXRUJQVlA4WAoAAAAQAAAAJgAAJgAAQUxQSFwCAAARkHRrmyHJ6vNLdvfYtm3btm3b9uxs7Gzbtle2bSu/OCcjvi9iIkJh27aNndUdNO0TlhHBH/rpz6b8gWMDKHlYZrTjDfkmRHilbjyJ/6DX7qOQfDsuBSOg2wfAgtJ3hcpfqzK7hp3gOpDzQohEwiMlTWaBZQepk2Y8EinDO91TmYR+8aXttv1DFuLL/DyuVt1cm7+8+Cd0/LMpm8446fNOvf5Hqyi+tnN4gYKVMk94rWSk4atmHo+M2+f2fxRqZigbbijOw1/26fJdFAb8MTanzwDcLH3PvUFkskfi8d2EQnEM7FI90m+PdkBUBZnKXu1bKgHQtxGz+eiUb4hE2Tkf57XKF8uMp92z4i3K7PXV2jCwbFJmI6iz8A7yER0/PaJySg+AiDPiGrMDz1sjqiSXuxIEM34JYYKXQyqlcIF7RC2e0R5k5dvUKun4khY8iaheP+//LK+dM4iUtv2xb9jTmEodaFUqKiiH0ofY5GnN8HK3aon4txZv3GthQHw4oG5yrlDSb0duPRJ9M6Z+aof3cf1emxzxY1bDjMruoE4EyLUGlV6+I9zcKHtgcz8FwKn62GTSlXYFYkDz22OafTM462nfSvGYGKQFv+oLvf8ypmpiOkrn2Omnf9UV9feiyimAial10o5+xjYQt1dNbSvJqypbypKkHS+xP/ly3dQOvwpkoCQRV23PL4rHbdN45PJpE4Bk6xRe8EbFp+GZfZudz0xWE0jZ5fTfCL/nawolV2kA8YvM/yJ+bShPCwWMAvDPwEvcYeuEovFtda20ALpetWV78eNzP45sp9ICVlA4ICgCAABwCwCdASonACcAPoEeoFAlISUlGqCgEAlsALszQnfZODkB5GjUCAeYDdAOkA9CXy3vYa8majvPbrEC3w5RFM5OSn/KrMNlvL8JdXmVHGHDzjTaj7fvjV1ibG55GrUaSF3oolIAAP7K3bd03vd3wdyfd3PWkrdc5+l+Iasr40ElHEoRyDAfR7KWhTEUDOXTp3v8yZt7uLso8TxJA+6uDYJCVhrs3AZpMuDzCsUjsIEPp38Cv4wYR9LrreH7v1LAyPebD82DkAcosDF1iVhC8XjMHEx40fnT6Y5A38e/+s4ytcq/NzQzQSinQS+v4CX9j9XcnQqehOsxLSw76NRA4NikbBddvkE610BDsE6bz+5TKMonMv5qsXP4cNREOF4isL5uaMIGpSmnAJ0nPkOARvLYoTqp8KsSn+UO9exbdilgqTnIUwst6EvWMyV4b1qVA4z7zpI4T1hkk6bE6BxDxa/fDQpYnKbJmX92XLG4cVR1QDvQEpAxFPjQ/UtYfLXmZZfYDoG2qx3/oCSsllMI6GzYIxCGnPQy+N4qHTzpiuSBCd/fy/xNK/mEP9MDGg5i3DyI7O6ZTfD41oWs19qmrb8If2YXx6OWeQsO3gQAhVHjmiB6o6zKUp0KzpLgoxiCEeIM6+/1Alrn1mScl+t6JRSjO38IRDBxgoJ/xbLyoNjF3V/yPJwBJ5CXiZCe/U/zpIfvzIASXoyf4/wWzIxzjnHFoLFLfuAAAAA=', recommendationId: 'tool-017' }, { id: 'tool-017', name: 'Pixel Cut AI', description: 'Espande i bordi delle immagini (outpainting) per cambiare formato o stile.', category: 'Immagini', country: 'USA', website: 'https://www.pixelcut.ai/t/uncrop', isFeatured: false, logoUrl: 'https://templateshake.com/wp-content/uploads/2021/09/Pixelcut_-AI-Graphic-Designer.png', recommendationId: 'tool-033' }, { id: 'tool-033', name: 'Whisk', description: 'Crea animazioni fluide da immagini statiche e genera anche immagini da prompt.', category: 'Immagini', country: 'USA', website: 'https://labs.google/fx/tools/whisk/', isFeatured: false, logoUrl: 'data:image/webp;base64,UklGRtoCAABXRUJQVlA4WAoAAAAQAAAAGgAAGgAAQUxQSHEBAAARkGTbtuoqvODSMJfuOTWKTiM8rt/d5UkY78XWKtwbBk2IiAlIkmv33+8W43GR53kR5nm29+35zVpSu/d6qoBLMVy8u3PlxusFghBBQHXx+trzmf8R1Pnjr4ioa0fbh+X+9vGKAOqnPUKxd0q2ec5JVwVwJ4ugDKct69MOCqpZYLQ1G9ibtRRD0gBF/0z7Nhd1FRQv0gDVP+XI5uy7yy9j6MnhVuVk82hXJXIpqC4a46G6ftleSCwlVi+bhvW8qSj/cHKwVkTmne1TFYjgrJEODHc659bnhmmsM22oZu0jddpWNM0AT7eLntJbx3DnRANxUnfRXd3+/delf2Zqlgm9uToeqxCZjtQ0FXYUoxhlXckzYEtAWa5bQrovjE7ns9l0MqmqqizLsqpO2+rOJ8HtRq/f6XZ7/f6w3+/3e1uon5/MDVGiIqrMn918QQREwiWvb9Zuv1qIUQAhmL24lyTJtYdfD/OwiOZFUex+eHSjlgAAVlA4IEIBAACQBwCdASobABsAPpEopFIloaWllACwEglsAJ0yhID1oDbNMQ1XPLbrzhvNnsAbpL+wAdmnnyJ9nYieeXb2Ryc1AKuoW3wA/vdDClcr9pD9tsCqduiNtQaVaXgNfHp+atcZTe26+3xORhwFno/1uCGFQNU/4IYVL2I0o6c2eo73COMYL756Lzd/ibcQRmlIAId+z6psKbtTu/HIkA2HcYl/lq+sJbc01Q/VZ218h72kU324N9YcnNwU4vXy6VXCKq/tTNwWHsJ66N8JgRuCvc2pDpQ7KYv4rj//agwrDT7PdEnuIAkZLuckIqBv9aVnsRgB0qHFxi5a42nw4jOMOI330LQhImDuwmt+4/ryzZZzC4m8PLOx6EdyPthzs6wIhg+lRzc3+QT27OYDqLpNkFX2To7bI2E7F1lLi0lg6Fo4SAAA', recommendationId: 'tool-014'}, { id: 'tool-041', name: 'Leonardo AI', description: 'Piattaforma per la generazione di asset visivi di alta qualità, da concept art a texture per giochi.', category: 'Immagini', country: 'USA', website: 'https://leonardo.ai/', isFeatured: false, logoUrl: 'https://yt3.googleusercontent.com/a04AUXisIIWkI-Pj5zORQTiDNS9tALLmPc8pxuRT_aEHrCOUDsPQoLuh4QRbfgICortk7tBhyg=s900-c-k-c0x00ffffff-no-rj', recommendationId: 'tool-014' }, { id: 'tool-042', name: 'Midjourney', description: 'Genera immagini artistiche e fotorealistiche di alta qualità da prompt testuali tramite Discord.', category: 'Immagini', country: 'USA', website: 'https://www.midjourney.com/home', isFeatured: false, logoUrl: 'https://sadesign.ai/pictures/picfullsizes/2024/12/10/dsn1733795303.jpg', recommendationId: 'tool-041' }, { id: 'tool-034', name: 'Kling', description: 'Genera video di alta qualità da prompt testuali, concentrandosi sul realismo e sul movimento complesso.', category: 'Video', country: 'Cina', website: 'https://klingai.com/global/', isFeatured: false, logoUrl: 'https://play-lh.googleusercontent.com/JOfjXqsShK8j1aGBc1xlHBnatoRKRwLsGuoFZUAvKksaEPvK71eLwSg4FbKlky9Es-s', recommendationId: 'tool-035' }, { id: 'tool-035', name: 'Veo', description: 'Il modello di generazione video più capace di Google, che crea video realistici e di alta qualità da prompt di testo e immagini.', category: 'Video', country: 'USA', website: 'https://deepmind.google/models/veo/', isFeatured: false, logoUrl: 'https://storage.googleapis.com/gweb-uniblog-publish-prod/images/IO25_Gemini_MOD_v33_PART_1_DG_FINAL_54.max-1440x810.png', isFeatured: false, recommendationId: 'tool-014' }, { id: 'tool-021', name: 'Claude', description: 'Crea bozze e contenuti per presentazioni interattive e documenti complessi.', category: 'Presentazioni', country: 'USA', website: 'https://claude.ai/new', isFeatured: true, logoUrl: 'https://logo.svgcdn.com/l/claude-icon-8x.png', recommendationId: 'tool-022' }, { id: 'tool-022', name: 'Gamma AI', description: 'Genera presentazioni, documenti e pagine web statiche partendo da un\'idea.', category: 'Presentazioni', country: 'USA', website: 'https://gamma.app/', isFeatured: false, logoUrl: 'https://www.fahimai.com/wp-content/uploads/2025/03/GAMMA-cta.png', recommendationId: 'tool-021' }, { id: 'tool-023', name: 'Napkin AI', description: 'Converte dati testuali e concetti in grafici statici e diagrammi chiari.', category: 'Presentazioni', country: 'USA', website: 'https://www.napkin.ai/', isFeatured: false, logoUrl: 'https://media.licdn.com/dms/image/v2/D560BAQEYfmQKrdByPg/company-logo_200_200/company-logo_200_200/0/1723039432148/napkin_ai_logo?e=2147483647&v=beta&t=Nsr22RG3uiy9usBNh55leGVf8ES5YJQwUANW-2N7yEA', recommendationId: 'tool-022' }, { id: 'tool-024', name: 'Google AI Studio', description: 'Crea app, siti e prototipi basati sui modelli Gemini di Google.', category: 'Codice', country: 'USA', website: 'https://aistudio.google.com/prompts/new_chat', isFeatured: true, logoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToBQo43LHKdO8g2NftGqpOjG-rHo61R8Rmpk0mEb0rUJ0A2P-z0kTx8M6XQHWZbHTR6lY&usqp=CAU', recommendationId: 'tool-026' }, { id: 'tool-025', name: 'Manus', description: "Piattaforma di AI estremamente potente. Può eseguire compiti come ChatGPT e gestirli in background, creando testi, ricerche, presentazioni, video, immagini e molto altro.", category: 'Codice', country: 'Cina', website: 'https://manus.im/app', isFeatured: true, logoUrl: 'https://i.namu.wiki/i/5-7MaDXSqFVQhJjDY8rbjzRuoAqlqXpQhoYWYqSgkgRo6Qo1imTF9nHaOTvNxIeEhg_OCEMzuySjfSCyMWLUTA.webp', recommendationId: 'tool-001' }, { id: 'tool-026', name: 'Microsoft Copilot', description: 'Assistente AI per codice, specializzato anche in script VBA per Excel.', category: 'Codice', country: 'USA', website: 'https://copilot.microsoft.com/chats/UXstZKziqtFHV3atU21qy', isFeatured: false, logoUrl: 'https://breakwaterit.co.uk/wp-content/uploads/2024/02/Copilot-65d6242f4e297.png', recommendationId: 'tool-024' }, { id: 'tool-027', name: 'Google Stitch', description: 'Tool per la creazione di codice per interfacce utente (UX Design).', category: 'Codice', country: 'USA', website: 'https://stitch.withgoogle.com/?pli=1', isFeatured: false, logoUrl: 'https://media2.dev.to/dynamic/image/width=1080,height=1080,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fzhshikvds4e6nn22fngm.png', recommendationId: 'tool-028' }, { id: 'tool-028', name: 'Chef Convex', description: 'Crea web app complete con un backend già integrato e pronto all\'uso.', category: 'Codice', country: 'USA', website: 'https://chef.convex.dev/', isFeatured: false, logoUrl: 'https://chef.convex.dev/chef.svg', recommendationId: 'tool-027' }, { id: 'tool-030', name: 'Deepseek', description: 'Modello linguistico specializzato nella scrittura e comprensione di codice in vari linguaggi.', category: 'Codice', country: 'Cina', website: 'https://chat.deepseek.com/', isFeatured: false, logoUrl: 'https://cdn-1.webcatalog.io/catalog/deepseek/deepseek-social-preview.png?v=1748219623720', recommendationId: 'tool-031' }, { id: 'tool-031', name: 'Qwen', description: 'Assistente AI multimodale di Alibaba Cloud, efficace nella generazione di codice, analisi, creazione di testi e ricerca web.', category: 'Codice', country: 'Cina', website: 'https://chat.qwen.ai/', isFeatured: false, logoUrl: 'https://crystalpng.com/wp-content/uploads/2025/02/Qwen-03.png', recommendationId: 'tool-030' }, { id: 'tool-032', name: 'Mistral', description: 'Modelli linguistici aperti e ottimizzati, ideali per lo Codice di applicazioni e la Codice.', category: 'Codice', country: 'Europe', website: 'https://mistral.ai/', isFeatured: false, logoUrl: 'https://www.massa-critica.it/wp-content/uploads/mistral-ai.jpg', recommendationId: 'tool-001' }, { id: 'tool-036', name: 'BOLT AI', description: 'Genera codice e componenti UI partendo da un prompt.', category: 'Codice', country: 'USA', website: 'https://bolt.new/', isFeatured: false, logoUrl: 'https://cdn-1.webcatalog.io/catalog/bolt-new/bolt-new-icon-filled-256.png?v=1730692903154', recommendationId: 'tool-024' }, { id: 'tool-037', name: 'V0 AI', description: 'Genera interfacce utente reattive basate su React da semplici prompt di testo.', category: 'Codice', country: 'USA', website: 'https://v0.dev/chat', isFeatured: false, logoUrl: 'https://logowik.com/content/uploads/images/v0-ai1721420590.logowik.com.webp', recommendationId: 'tool-027' }, { id: 'tool-038', name: 'Cursor', description: 'Un editor di codice basato su AI per programmare in modo più veloce ed efficiente.', category: 'Codice', country: 'USA', website: 'https://www.cursor.com/', isFeatured: false, logoUrl: 'https://cursor.com/favicon.svg', recommendationId: 'tool-026' }, { id: 'tool-039', name: 'Lovable', description: 'Sviluppa e testa interfacce utente con l\'aiuto dell\'intelligenza artificiale.', category: 'Codice', country: 'USA', website: 'https://lovable.dev/', isFeatured: false, logoUrl: 'https://lovable.dev/img/logo/lovable-icon-bg-dark.png', recommendationId: 'tool-037' }, { id: 'tool-040', name: 'Perplexity', description: 'Motore di ricerca conversazionale che fornisce risposte dirette con fonti, utile anche per la ricerca web e codice.', category: 'Codice', country: 'USA', website: 'https://www.perplexity.ai/', isFeatured: false, logoUrl: 'https://images.seeklogo.com/logo-png/51/2/perplexity-ai-logo-png_seeklogo-517845.png', recommendationId: 'tool-001' }, { id: 'tool-029', name: 'Eleven Labs', description: 'Generates realistic, high-quality speech from text in multiple languages.', category: 'Audio', country: 'USA', website: 'https://elevenlabs.io/', isFeatured: false, logoUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAeFBMVEX///8AAABra2vPz88wMDBvb2/c3NxSUlL6+vpaWlqfn5/U1NSBgYFAQEAgICBFRUXJycnBwcFKSkrs7Oy5ubkrKysWFRaJiYnj4+N1dXU3Nzf09PSCgoKQkJCsrKxjY2MjIyMLCwulpaWzs7MaGho0NDSYmJheXl7ei1KlAAAGlElEQVR4nO2da2OyIABGKVvq7KKpTbP7XP3/f/jKVaxmrZzi3ud8yYiQEwgoaIQAAAAAAAAA2me8G/ab3bheMBr0n6hOMOw6d40Q1hieus5cI5xqDIddZ64RhjDsPTAsWH6Nekn8sGFaE8VkvIcN31rLU7NYMISh8cCQwNB4YEhgaDwwJDA0HhgSGBoPDAkMjQeGBIbGA0MCQ+OBIYGh8cCQwNB4YEhgaDwwJDA0HhgSGBoPDAkMjQeGBIbGA0MCQ+OBIYGh8cCQwNB4Wjd0GM2k9RDNGNqu6y4SujWxbXvB7tiMaGAVeyx2uGxS4Q7NGLIIzGtBtyy69T64xhK3sIyaVLhD04Y2DP+a4WE/0xh4f89wcxX1rxl+XEX9Dw2TcfJA9xgm4+xWsDeuuw2d0rHh53xWvM1XJya52MdxfpSf7eI4XrJErXTGjunUEx/ZNGJC/BFLrPZpAt0ajheqlV35RNz5vxAR2YMOcrq1KRvjd/7ZlG6H7xehnRjWtjTWQGdLSMY2RJ3d0u1TEbjSY01Lw20Z+tmd4XwiSGVVKg0Tkb25eC1GfSl9DXjELxG2E2ozrbyY4aw0/OrOsETW19KQmb3RhiJktXUmPuTVNBHZYo8d2ftliok0LEo4dHxewt5ljjowlPVVGbI92zwwlAkc6CtrHZlZJGSEACvitTJk1SJcauVulqGtvlPwyYpENCrsIR1nuuWQQAUUOCwlaSh+nYleQ9o3PORLzrUhq31EDz0XrSt9jakMLZqdyH8iozHtTBiKFFmDU/OwgM7aUuYysxcMWxWKK6qpJeoe2/lCsqfvfGHo8wSjbg2/7w/9wRVzmd+i8V+L0tpdR7s4OIMeGU5lUi7JDqICnL83TFo0dJ4wZK+HykUOlk124IWWTJCVYeV6iO33xJCX+0U68vPth/zwTaWn0w9D1lWr4Zabyi6N1ssDfeTKSeX/LGMF0/esP4asCxw5ZTZiflahhpvjMmnRbNLrXPkwNMpwv5hrTD/0URt7NM6BlmLIDj7ZsQtBPsYmR/YmLXSc6CBrtkGGF7zphmLXM/kUoFik5vK34jzR+eJvR6Ocb3hGG6aVs6dqh2HLc3gRrBL/qkRjaZtrKMtwz7/naZmfqEsZTl7dnZOWsea8WV1dGtZk7vcMg8k1xVlukq7XEzWY8z5o6qvJVr/aEkyKKPr5UHKcFDV5udvIwA1NTHzFo7G3XRg+TcPTNgYaNgwMCQwpMOwUGBIYUm4aJoHvB4+4Jvb57K5/kukf8XuGbBLCfiAL7JqU+5NM/4hfHpc+knEYvggMCQwpMKzn7xmG283ZttcnOd8iDcOTO5uuI+300PuYHpaLjfXSGWPrhs56ILH5WTozPKvZ+qWcccvULP/qlUFS24bVuXt2HZQZ2m4ZerqO6d5aamKkYTaokknDK/GLmI8Mjoww5CW19n3/xK6obTTDc+Qf+ax87IhBn+t7VsCnn56uqO0ajrXMZnS686s05KH8aDyK34J/Kyh+iecbm3YNI31ftCHJM2kol0KxFRqxSEiEfd75m5ha2jUM0kma8sISK5pCYbhSUVhwxsvQ9p9vYSRd9PiO/zmUTac0VJfl+cITT3Ue7jBKbiXyMK0bepvlQEMalhet59zQyctIh/cX+vy2DbX+fnTb0OaGJNTXs43urbH8nnYNHZFr+yNw+LL+K0MnVilEu4NSnD1diu0a8unOIT+wKobqOByXaRXlGJ3k0K1u+WEt7RqylRWyX6jUUjk9yluYyh0nFuvyF+RJfnk9zbka72reTxnKasoHa3yMFo35PFT1J/gpv72+1PJLHN5O8kUX4u9flCFXFHOmdJ4wmMsVCvdWrnVqWCHkSS39LFMrmEvDwXL3Jg66HRELaQaLIAz5v6L5Nbs3yDDQ3+a6YV6NeHma9cI1gHYNte5w4Nu64bBctX3gB2oSa1/ddzzy1gznyvD6L/do0RzFdmzxZidUVzEC0Ve+SRnnpEY/p67HNLdxLhF7DLafwc2hZhJEQfVw84JTOtm+NtGDu2QJDI0HhgSGxgNDAkPjgSGBofHAkMDQeGBIYGg8MCQwNB4YEhgaDwwJDI0HhgSGxgNDAkPjgSGBofHAkMDQeGBIYGg8MCQwNB4YEhgaDwwJDI0HhgSGxgNDAkPjgSGBofF4Dxu6ntVHvOPDhj3n/za88QcMPWRXYxh1nblGqPvbqyy//33jyWsfA2P1XzG/c6dtFu2GfWYXvf4gHwAAAAAAAMDP+Qd5XHfMcP3iXQAAAABJRU5ErkJggg==', recommendationId: 'tool-029' },
+            { id: 'tool-001', name: 'ChatGPT', description: {it: 'Genera testo, immagini e risponde a domande con ricerca web.', en: 'Generates text, images, and answers questions with web search.'}, category: 'Testo', country: 'USA', website: 'https://chatgpt.com/', isFeatured: true, logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/ChatGPT_logo.svg/1024px-ChatGPT_logo.svg.png', recommendationId: 'tool-025' }, { id: 'tool-012', name: 'Google Notebook', description: {it: "Permette di creare riassunti audio sulle fonti dell'utente, rispondere a domande e creare mappe mentali.", en: "Allows creating audio summaries from user sources, answering questions, and creating mind maps."}, category: 'Testo', country: 'USA', website: 'https://notebooklm.google.com/', isFeatured: false, logoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJbWdW2SCEWfJuDTh5PVxgmqDvXoX5vElJ6s94SZ8Fe1YPzfxzGPuIyE9cBMDswv3qUd4&usqp=CAU', recommendationId: 'tool-021' }, { id: 'tool-013', name: 'Grok', description: {it: 'Assistente di ricerca conversazionale con accesso a dati in tempo reale. (Richiede VPN)', en: 'Conversational research assistant with real-time data access. (Requires VPN)'}, category: 'Testo', country: 'USA', website: 'https://grok.com/', isFeatured: false, logoUrl: 'https://i.namu.wiki/i/Wk8b-Vo4qqynLc4pN1T0otG83F383UPI_IR4VthZuZioAxVD_NS6uErIsecLMDK0F0L-KiUjL7xonRz4EwPL2g.webp', recommendationId: 'tool-001' }, { id: 'tool-014', name: 'FLUX', description: {it: 'Genera immagini, video e animazioni da prompt testuali e immagini.', en: 'Generates images, videos, and animations from text prompts and images.'}, category: 'Immagini', country: 'Cina', website: 'https://playground.bfl.ai/image/generate', isFeatured: false, logoUrl: 'https://kodexolabs.com/wp-content/uploads/2025/01/Flux.1.webp', recommendationId: 'tool-033' }, { id: 'tool-015', name: 'Swap AI', description: {it: 'Esegue il "face swap" (scambio di volti) in immagini e video in modo realistico.', en: 'Performs realistic "face swap" in images and videos.'}, category: 'Immagini', country: 'USA', website: 'https://aifaceswap.io/', isFeatured: false, logoUrl: 'https://www.toolpilot.ai/cdn/shop/files/aifaceswap-l.jpg?v=1733037433', recommendationId: 'tool-016' }, { id: 'tool-016', name: 'Inpaint AI', description: {it: 'Rimuove oggetti, persone o imperfezioni indesiderate dalle foto con un solo click.', en: 'Removes unwanted objects, people, or imperfections from photos with a single click.'}, category: 'Immagini', country: 'USA', website: 'https://theinpaint.com/', isFeatured: false, logoUrl: 'data:image/webp;base64,UklGRqoEAABXRUJQVlA4WAoAAAAQAAAAJgAAJgAAQUxQSFwCAAARkHRrmyHJ6vNLdvfYtm3btm3b9uxs7Gzbtle2bSu/OCcjvi9iIkJh27aNndUdNO0TlhHBH/rpz6b8gWMDKHlYZrTjDfkmRHilbjyJ/6DX7qOQfDsuBSOg2wfAgtJ3hcpfqzK7hp3gOpDzQohEwiMlTWaBZQepk2Y8EinDO91TmYR+8aXttv1DFuLL/DyuVt1cm7+8+Cd0/LMpm8446fNOvf5Hqyi+tnN4gYKVMk94rWSk4atmHo+M2+f2fxRqZigbbijOw1/26fJdFAb8MTanzwDcLH3PvUFkskfi8d2EQnEM7FI90m+PdkBUBZnKXu1bKgHQtxGz+eiUb4hE2Tkf57XKF8uMp92z4i3K7PXV2jCwbFJmI6iz8A7yER0/PaJySg+AiDPiGrMDz1sjqiSXuxIEM34JYYKXQyqlcIF7RC2e0R5k5dvUKun4khY8iaheP+//LK+dM4iUtv2xb9jTmEodaFUqKiiH0ofY5GnN8HK3aon4txZv3GthQHw4oG5yrlDSb0duPRJ9M6Z+aof3cf1emxzxY1bDjMruoE4EyLUGlV6+I9zcKHtgcz8FwKn62GTSlXYFYkDz22OafTM462nfSvGYGKQFv+oLvf8ypmpiOkrn2Omnf9UV9feiyimAial10o5+xjYQt1dNbSvJqypbypKkHS+xP/ly3dQOvwpkoCQRV23PL4rHbdN45PJpE4Bk6xRe8EbFp+GZfZudz0xWE0jZ5fTfCL/nawolV2kA8YvM/yJ+bShPCwWMAvDPwEvcYeuEovFtda20ALpetWV78eNzP45sp9ICVlA4ICgCAABwCwCdASonACcAPoEeoFAlISUlGqCgEAlsALszQnfZODkB5GjUCAeYDdAOkA9CXy3vYa8majvPbrEC3w5RFM5OSn/KrMNlvL8JdXmVHGHDzjTaj7fvjV1ibG55GrUaSF3oolIAAP7K3bd03vd3wdyfd3PWkrdc5+l+Iasr40ElHEoRyDAfR7KWhTEUDOXTp3v8yZt7uLso8TxJA+6uDYJCVhrs3AZpMuDzCsUjsIEPp38Cv4wYR9LrreH7v1LAyPebD82DkAcosDF1iVhC8XjMHEx40fnT6Y5A38e/+s4ytcq/NzQzQSinQS+v4CX9j9XcnQqehOsxLSw76NRA4NikbBddvkE610BDsE6bz+5TKMonMv5qsXP4cNREOF4isL5uaMIGpSmnAJ0nPkOARvLYoTqp8KsSn+UO9exbdilgqTnIUwst6EvWMyV4b1qVA4z7zpI4T1hkk6bE6BxDxa/fDQpYnKbJmX92XLG4cVR1QDvQEpAxFPjQ/UtYfLXmZZfYDoG2qx3/oCSsllMI6GzYIxCGnPQy+N4qHTzpiuSBCd/fy/xNK/mEP9MDGg5i3DyI7O6ZTfD41oWs19qmrb8If2YXx6OWeQsO3gQAhVHjmiB6o6zKUp0KzpLgoxiCEeIM6+/1Alrn1mScl+t6JRSjO38IRDBxgoJ/xbLyoNjF3V/yPJwBJ5CXiZCe/U/zpIfvzIASXoyf4/wWzIxzjnHFoLFLfuAAAAA=', recommendationId: 'tool-017' }, { id: 'tool-017', name: 'Pixel Cut AI', description: {it: "Espande i bordi delle immagini (outpainting) per cambiare formato o stile.", en: 'Expands image borders (outpainting) to change format or style.'}, category: 'Immagini', country: 'USA', website: 'https://www.pixelcut.ai/t/uncrop', isFeatured: false, logoUrl: 'https://templateshake.com/wp-content/uploads/2021/09/Pixelcut_-AI-Graphic-Designer.png', recommendationId: 'tool-033' }, { id: 'tool-033', name: 'Whisk', description: {it: 'Crea animazioni fluide da immagini statiche e genera anche immagini da prompt.', en: 'Creates smooth animations from static images and also generates images from prompts.'}, category: 'Immagini', country: 'USA', website: 'https://labs.google/fx/tools/whisk/', isFeatured: false, logoUrl: 'data:image/webp;base64,UklGRtoCAABXRUJQVlA4WAoAAAAQAAAAGgAAGgAAQUxQSHEBAAARkGTbtuoqvODSMJfuOTWKTiM8rt/d5UkY78XWKtwbBk2IiAlIkmv33+8W43GR53kR5nm29+35zVpSu/d6qoBLMVy8u3PlxusFghBBQHXx+trzmf8R1Pnjr4ioa0fbh+X+9vGKAOqnPUKxd0q2ec5JVwVwJ4ugDKct69MOCqpZYLQ1G9ibtRRD0gBF/0z7Nhd1FRQv0gDVP+XI5uy7yy9j6MnhVuVk82hXJXIpqC4a46G6ftleSCwlVi+bhvW8qSj/cHKwVkTmne1TFYjgrJEODHc659bnhmmsM22oZu0jddpWNM0AT7eLntJbx3DnRANxUnfRXd3+/delf2Zqlgm9uToeqxCZjtQ0FXYUoxhlXckzYEtAWa5bQrovjE7ns9l0MqmqqizLsqpO2+rOJ8HtRq/f6XZ7/f6w3+/3e1uon5/MDVGiIqrMn918QQREwiWvb9Zuv1qIUQAhmL24lyTJtYdfH/OwiOZFUex+eHSjlgAAVlA4IEIBAACQBwCdASobABsAPpEopFIloaWllACwEglsAJ0yhID1oDbNMQ1XPLbrzhvNnsAbpL+wAdmnnyJ9nYieeXb2Ryc1AKuoW3wA/vdDClcr9pD9tsCqduiNtQaVaXgNfHp+atcZTe36+3xORhwFno/1uCGFQNU/4IYVL2I0o6c2eo73COMYL756Lzd/ibcQRmlIAId+z6psKbtTu/HIkA2HcYl/lq+sJbc01Q/VZ218h72kU324N9YcnNwU4vXy6VXCKq/tTNwWHsJ66N8JgRuCvc2pDpQ7KYv4rj//agwrDT7PdEnuIAkZLuckIqBv9aVnsRgB0qHFxi5a42nw4jOMOI330LQhImDuwmt+4/ryzZZzC4m8PLOx6EdyPthzs6wIhg+lRzc3+QT27OYDqLpNkFX2To7bI2E7F1lLi0lg6Fo4SAAA', recommendationId: 'tool-014'}, { id: 'tool-041', name: 'Leonardo AI', description: {it: 'Piattaforma per la generazione di asset visivi di alta qualità, da concept art a texture per giochi.', en: 'Platform for generating high-quality visual assets, from concept art to game textures.'}, category: 'Immagini', country: 'USA', website: 'https://leonardo.ai/', isFeatured: false, logoUrl: 'https://yt3.googleusercontent.com/a04AUXisIIWkI-Pj5zORQTiDNS9tALLmPc8pxuRT_aEHrCOUDsPQoLuh4QRbfgICortk7tBhyg=s900-c-k-c0x00ffffff-no-rj', recommendationId: 'tool-014' }, { id: 'tool-042', name: 'Midjourney', description: {it: 'Genera immagini artistiche e fotorealistiche di alta qualità da prompt testuali tramite Discord.', en: 'Generates high-quality artistic and photorealistic images from text prompts via Discord.'}, category: 'Immagini', country: 'USA', website: 'https://www.midjourney.com/home', isFeatured: false, logoUrl: 'https://sadesign.ai/pictures/picfullsizes/2024/12/10/dsn1733795303.jpg', recommendationId: 'tool-041' }, { id: 'tool-034', name: 'Kling', description: {it: 'Genera video di alta qualità da prompt testuali, concentrandosi sul realismo e sul movimento complesso.', en: 'Generates high-quality videos from text prompts, focusing on realism and complex motion.'}, category: 'Video', country: 'Cina', website: 'https://klingai.com/global/', isFeatured: false, logoUrl: 'https://play-lh.googleusercontent.com/JOfjXqsShK8j1aGBc1xlHBnatoRKRwLsGuoFZUAvKksaEPvK71eLwSg4FbKlky9Es-s', recommendationId: 'tool-035' }, { id: 'tool-035', name: 'Veo', description: {it: "Il modello di generazione video più capace di Google, che crea video realistici e di alta qualità da prompt di testo e immagini.", en: "Google's most capable video generation model, creating realistic, high-quality videos from text and image prompts."}, category: 'Video', country: 'USA', website: 'https://deepmind.google/models/veo/', isFeatured: false, logoUrl: 'https://storage.googleapis.com/gweb-uniblog-publish-prod/images/IO25_Gemini_MOD_v33_PART_1_DG_FINAL_54.max-1440x810.png', isFeatured: false, recommendationId: 'tool-014' }, { id: 'tool-021', name: 'Claude', description: {it: 'Crea bozze e contenuti per presentazioni interattive e documenti complessi.', en: 'Creates drafts and content for interactive presentations and complex documents.'}, category: 'Presentazioni', country: 'USA', website: 'https://claude.ai/new', isFeatured: true, logoUrl: 'https://logo.svgcdn.com/l/claude-icon-8x.png', recommendationId: 'tool-022' }, { id: 'tool-022', name: 'Gamma AI', description: {it: "Genera presentazioni, documenti e pagine web statiche partendo da un'idea.", en: 'Generates presentations, documents, and static web pages from an idea.'}, category: 'Presentazioni', country: 'USA', website: 'https://gamma.app/', isFeatured: false, logoUrl: 'https://www.fahimai.com/wp-content/uploads/2025/03/GAMMA-cta.png', recommendationId: 'tool-021' }, { id: 'tool-023', name: 'Napkin AI', description: {it: 'Converte dati testuali e concetti in grafici statici e diagrammi chiari.', en: 'Converts text data and concepts into clear static charts and diagrams.'}, category: 'Presentazioni', country: 'USA', website: 'https://www.napkin.ai/', isFeatured: false, logoUrl: 'https://media.licdn.com/dms/image/v2/D560BAQEYfmQKrdByPg/company-logo_200_200/company-logo_200_200/0/1723039432148/napkin_ai_logo?e=2147483647&v=beta&t=Nsr22RG3uiy9usBNh55leGVf8ES5YJQwUANW-2N7yEA', recommendationId: 'tool-022' }, { id: 'tool-024', name: 'Google AI Studio', description: {it: "Crea app, siti e prototipi basati sui modelli Gemini di Google.", en: "Creates apps, sites, and prototypes based on Google's Gemini models."}, category: 'Codice', country: 'USA', website: 'https://aistudio.google.com/prompts/new_chat', isFeatured: true, logoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToBQo43LHKdO8g2NftGqpOjG-rHo61R8Rmpk0mEb0rUJ0A2P-z0kTx8M6XQHWZbHTR6lY&usqp=CAU', recommendationId: 'tool-026' }, { id: 'tool-025', name: 'Manus', description: {it: "Piattaforma di AI estremamente potente. Può eseguire compiti come ChatGPT e gestirli in background, creando testi, ricerche, presentazioni, video, immagini e molto altro.", en: 'Extremely powerful AI platform. It can perform tasks like ChatGPT and manage them in the background, creating text, research, presentations, videos, images, and much more.'}, category: 'Codice', country: 'Cina', website: 'https://manus.im/app', isFeatured: true, logoUrl: 'https://i.namu.wiki/i/5-7MaDXSqFVQhJjDY8rbjzRuoAqlqXpQhoYWYqSgkgRo6Qo1imTF9nHaOTvNxIeEhg_OCEMzuySjfSCyMWLUTA.webp', recommendationId: 'tool-001' }, { id: 'tool-026', name: 'Microsoft Copilot', description: {it: 'Assistente AI per codice, specializzato anche in script VBA per Excel.', en: 'AI assistant for code, also specializing in VBA scripts for Excel.'}, category: 'Codice', country: 'USA', website: 'https://copilot.microsoft.com/', isFeatured: false, logoUrl: 'https://breakwaterit.co.uk/wp-content/uploads/2024/02/Copilot-65d6242f4e297.png', recommendationId: 'tool-024' }, { id: 'tool-027', name: 'Google Stitch', description: {it: 'Tool per la creazione di codice per interfacce utente (UX Design).', en: 'Tool for creating code for user interfaces (UX Design).'}, category: 'Codice', country: 'USA', website: 'https://stitch.withgoogle.com/', isFeatured: false, logoUrl: 'https://media2.dev.to/dynamic/image/width=1080,height=1080,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fzhshikvds4e6nn22fngm.png', recommendationId: 'tool-028' }, { id: 'tool-028', name: 'Chef Convex', description: {it: "Crea web app complete con un backend già integrato e pronto all'uso.", en: 'Creates complete web apps with a built-in and ready-to-use backend.'}, category: 'Codice', country: 'USA', website: 'https://chef.convex.dev/', isFeatured: false, logoUrl: 'https://chef.convex.dev/chef.svg', recommendationId: 'tool-027' }, { id: 'tool-030', name: 'Deepseek', description: {it: 'Modello linguistico specializzato nella scrittura e comprensione di codice in vari linguaggi.', en: 'Language model specialized in writing and understanding code in various languages.'}, category: 'Codice', country: 'Cina', website: 'https://chat.deepseek.com/', isFeatured: false, logoUrl: 'https://cdn-1.webcatalog.io/catalog/deepseek/deepseek-social-preview.png?v=1748219623720', recommendationId: 'tool-031' }, { id: 'tool-031', name: 'Qwen', description: {it: 'Assistente AI multimodale di Alibaba Cloud, efficace nella generazione di codice, analisi, creazione di testi e ricerca web.', en: 'Multimodal AI assistant from Alibaba Cloud, effective in code generation, analysis, text creation, and web search.'}, category: 'Codice', country: 'Cina', website: 'https://chat.qwen.ai/', isFeatured: false, logoUrl: 'https://crystalpng.com/wp-content/uploads/2025/02/Qwen-03.png', recommendationId: 'tool-030' }, { id: 'tool-032', name: 'Mistral', description: {it: 'Modelli linguistici aperti e ottimizzati, ideali per lo Codice di applicazioni e la Codice.', en: 'Open and optimized language models, ideal for application development and coding.'}, category: 'Codice', country: 'Europe', website: 'https://mistral.ai/', isFeatured: false, logoUrl: 'https://www.massa-critica.it/wp-content/uploads/mistral-ai.jpg', recommendationId: 'tool-001' }, { id: 'tool-036', name: 'BOLT AI', description: {it: 'Genera codice e componenti UI partendo da un prompt.', en: 'Generates code and UI components from a prompt.'}, category: 'Codice', country: 'USA', website: 'https://bolt.new/', isFeatured: false, logoUrl: 'https://cdn-1.webcatalog.io/catalog/bolt-new/bolt-new-icon-filled-256.png?v=1730692903154', recommendationId: 'tool-024' }, { id: 'tool-037', name: 'V0 AI', description: {it: 'Genera interfacce utente reattive basate su React da semplici prompt di testo.', en: 'Generates responsive user interfaces based on React from simple text prompts.'}, category: 'Codice', country: 'USA', website: 'https://v0.dev/chat', isFeatured: false, logoUrl: 'https://logowik.com/content/uploads/images/v0-ai1721420590.logowik.com.webp', recommendationId: 'tool-027' }, { id: 'tool-038', name: 'Cursor', description: {it: 'Un editor di codice basato su AI per programmare in modo più veloce ed efficiente.', en: 'An AI-powered code editor for faster and more efficient programming.'}, category: 'Codice', country: 'USA', website: 'https://www.cursor.com/', isFeatured: false, logoUrl: 'https://cursor.com/favicon.svg', recommendationId: 'tool-026' }, { id: 'tool-039', name: 'Lovable', description: {it: "Sviluppa e testa interfacce utente con l'aiuto dell'intelligenza artificiale.", en: 'Develops and tests user interfaces with the help of artificial intelligence.'}, category: 'Codice', country: 'USA', website: 'https://lovable.dev/', isFeatured: false, logoUrl: 'https://lovable.dev/img/logo/lovable-icon-bg-dark.png', recommendationId: 'tool-037' }, { id: 'tool-040', name: 'Perplexity', description: {it: 'Motore di ricerca conversazionale che fornisce risposte dirette con fonti, utile anche per la ricerca web e codice.', en: 'Conversational search engine that provides direct answers with sources, also useful for web and code search.'}, category: 'Codice', country: 'USA', website: 'https://www.perplexity.ai/', isFeatured: false, logoUrl: 'https://images.seeklogo.com/logo-png/51/2/perplexity-ai-logo-png_seeklogo-517845.png', recommendationId: 'tool-001' }, { id: 'tool-029', description: {it: 'Genera un parlato realistico e di alta qualità dal testo in più lingue.', en: 'Generates realistic, high-quality speech from text in multiple languages.'}, name: 'Eleven Labs', category: 'Audio', country: 'USA', website: 'https://elevenlabs.io/', isFeatured: false, logoUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAeFBMVEX///8AAABra2vPz88wMDBvb2/c3NxSUlL6+vpaWlqfn5/U1NSBgYFAQEAgICBFRUXJycnBwcFKSkrs7Oy5ubkrKysWFRaJiYnj4+N1dXU3Nzf09PSCgoKQkJCsrKxjY2MjIyMLCwulpaWzs7MaGho0NDSYmJheXl7ei1KlAAAGlElEQVR4nO2da2OyIABGKVvq7KKpTbP7XP3/f/jKVaxmrZzi3ud8yYiQEwgoaIQAAAAAAAAA2me8G/ab3bheMBr0n6hOMOw6d40Q1hieus5cI5xqDIddZ64RhjDsPTAsWH6Nekn8sGFaE8VkvIcN31rLU7NYMISh8cCQwNB4YEhgaDwwJDA0HhgSGBoPDAkMjQeGBIbGA0MCQ+OBIYGh8cCQwNB4YEhgaDwwJDA0HhgSGBoPDAkMjQeGBIbGA0MCQ+OBIYGh8cCQwNB4Wjd0GM2k9RDNGNqu6y4SujWxbXvB7tiMaGAVeyx2uGxS4Q7NGLIIzGtBtyy69T64xhK3sIyaVLhD04Y2DP+a4WE/0xh4f89wcxX1rxl+XEX9Dw2TcfJA9xgm4+xWsDeuuw2d0rHh53xWvM1XJya52MdxfpSf7eI4XrJErXTGjunUEx/ZNGJC/BFLrPZpAt0ajheqlV35RNz5vxAR2YMOcrq1KRvjd/7ZlG6H7xehnRjWtjTWQGdLSMY2RJ3d0u1TEbjSY01Lw20Z+tmd4XwiSGVVKg0Tkb25eC1GfSl9DXjELxG2E2ozrbyY4aw0/OrOsETW19KQmb3RhiJktXUmPuTVNBHZYo8d2ftliok0LEo4dHxewt5ljjowlPVVGbI92zwwlAkc6CtrHZlZJGSEACvitTJk1SJcauVulqGtvlPwyYpENCrsIR1nuuWQQAUUOCwlaSh+nYleQ9o3PORLzrUhq31EDz0XrSt9jakMLZqdyH8iozHtTBiKFFmDU/OwgM7aUuYysxcMWxWKK6qpJeoe2/lCsqfvfGHo8wSjbg2/7w/9wRVzmd+i8V+L0tpdR7s4OIMeGU5lUi7JDqICnL83TFo0dJ4wZK+HykUOlk124IWWTJCVYeV6iO33xJCX+0U68vPth/zwTaWn0w9D1lWr4Zabyi6N1ssDfeTKSeX/LGMF0/esP4asCxw5ZTZiflahhpvjMmnRbNLrXPkwNMpwv5hrTD/0URt7NM6BlmLIDj7ZsQtBPsYmR/YmLXSc6CBrtkGGF7zphmLXM/kUoFik5vK34jzR+eJvR6Ocb3hGG6aVs6dqh2HLc3gRrBL/qkRjaZtrKMtwz7/naZmfqEsZTl7dnZOWsea8WV1dGtZk7vcMg8k1xVlukq7XEzWY8z5o6qvJVr/aEkyKKPr5UHKcFDV5udvIwA1NTHzFo7G3XRg+TcPTNgYaNgwMCQwpMOwUGBIYUm4aJoHvB4+4Jvb57K5/kukf8XuGbBLCfiAL7JqU+5NM/4hfHpc+knEYvggMCQwpMKzn7xmG283ZttcnOd8iDcOTO5uuI+300PuYHpaLjfXSGWPrhs56ILH5WTozPKvZ+qWcccvULP/qlUFS24bVuXt2HZQZ2m4ZerqO6d5aamKkYTaokknDK/GLmI8Mjoww5CW19n3/xK6obTTDc+Qf+ax87IhBn+t7VsCnn56uqO0ajrXMZnS686s05KH8aDyK34J/Kyh+iecbm3YNI31ftCHJM2kol0KxFRqxSEiEfd75m5ha2jUM0kma8sISK5pCYbhSUVhwxsvQ9p9vYSRd9PiO/zmUTac0VJfl+cITT3Ue7jBKbiXyMK0bepvlQEMalhet59zQyctIh/cX+vy2DbX+fnTb0OaGJNTXs43urbH8nnYNHZFr+yNw+LL+K0MnVilEu4NSnD1diu0a8unOIT+wKobqOByXaRXlGJ3k0K1u+WEt7RqylRWyX6jUUjk9yluYyh0nFuvyF+RJfnk9zbka72reTxnKasoHa3yMFo35PFT1J/gpv72+1PJLHN5O8kUX4u9flCFXFHOmdJ4wmMsVCvdWrnVqWCHkSS39LFMrmEvDwXL3Jg66HRELaQaLIAz5v6L5Nbs3yDDQ3+a6YV6NeHma9cI1gHYNte5w4Nu64bBctX3gB2oSa1/ddzzy1gznyvD6L/do0RzFdmzxZidUVzEC0Ve+SRnnpEY/p67HNLdxLhF7DLafwc2hZhJEQfVw84JTOtm+NtGDu2QJDI0HhgSGxgNDAkPjgSGBofHAkMDQeGBIYGg8MCQwNB4YEhgaDwwJDI0HhgSGxgNDAkPjgSGBofHAkMDQeGBIYGg8MCQwNB4YEhgaDwwJDI0HhgSGxgNDAkPjgSGBofF4Dxu6ntVHvOPDhj3n/za88QcMPWRXYxh1nblGqPvbqyy//33jyWsfA2P1XzG/c6dtFu2GfWYXvf4gHwAAAAAAAMDP+Qd5XHfMcP3iXQAAAABJRU5ErkJggg==' },
         ];
         
+        // Funzione globale accessibile anche dallo script React
+        window.getLocalizedToolsData = (lang) => {
+            return aiToolsData.map(tool => ({ ...tool, description: tool.description[lang] || tool.description['en'] }));
+        }
+        window.aiToolsData = aiToolsData; 
+
+        // MODIFICA: Le categorie ora hanno un ID e nomi traducibili
         const categories = [
-            { name: 'Testo', color: '#2659A9' }, { name: 'Immagini', color: '#8D49F2' }, { name: 'Video', color: '#AF2896' },
-            { name: 'Presentazioni', color: '#E13300' }, { name: 'Codice', color: '#BA5D07' }, { name: 'Audio', color: '#006450' },
+            { id: 'Testo', name: { it: 'Testo', en: 'Text' }, color: '#2659A9' },
+            { id: 'Immagini', name: { it: 'Immagini', en: 'Images' }, color: '#8D49F2' },
+            { id: 'Video', name: { it: 'Video', en: 'Video' }, color: '#AF2896' },
+            { id: 'Presentazioni', name: { it: 'Presentazioni', en: 'Presentations' }, color: '#E13300' },
+            { id: 'Codice', name: { it: 'Codice', en: 'Code' }, color: '#BA5D07' },
+            { id: 'Audio', name: { it: 'Audio', en: 'Audio' }, color: '#006450' },
         ];
         const countries = [...new Set(aiToolsData.map(t => t.country))]
             .filter(c => c !== 'Global')
@@ -714,6 +823,11 @@ Per la tua richiesta, ti suggerisco questi strumenti:
         let reactRoot = null;
         let conversations = {};
         let activeConversationId = null;
+        let currentLanguage = localStorage.getItem('koda-lang') || 'it';
+        let currentTheme = localStorage.getItem('koda-theme') || 'dark';
+
+        const sunIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79zM1 10.5h3v2H1zM11 .55h2V3.5h-2zm8.04 1.49l1.79-1.8-1.41-1.41-1.8 1.79zM20 10.5h3v2h-3zm-9.24 10.96l1.8 1.79 1.41-1.41-1.79-1.79zm-6.36-1.8l-1.79 1.8 1.41 1.41 1.8-1.79zM12 5.5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/></svg>`;
+        const moonIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M9.37 5.51A7.35 7.35 0 009.1 7.5c0 4.08 3.32 7.4 7.4 7.4.68 0 1.35-.09 1.99-.27C17.45 17.19 14.93 19 12 19c-3.86 0-7-3.14-7-7 0-2.93 1.81-5.45 4.37-6.49z"/></svg>`;
 
         const el = { 
             mainContent: document.getElementById('main-content'), 
@@ -721,11 +835,6 @@ Per la tua richiesta, ti suggerisco questi strumenti:
             modalContainer: document.getElementById('modal-container'),
             appContainer: document.getElementById('app-container'),
             authOverlay: document.getElementById('auth-overlay'),
-            authCards: document.querySelectorAll('.auth-card'),
-            authLinks: document.querySelectorAll('.auth-switch-link, .forgot-password-link'),
-            registerBtn: document.getElementById('register-btn'),
-            loginBtn: document.getElementById('login-btn'),
-            forgotBtn: document.getElementById('forgot-btn'),
             sideMenuOverlay: document.getElementById('side-menu-overlay'),
             sideMenu: document.getElementById('side-menu'),
             conversationListContainer: document.getElementById('conversation-list-container'),
@@ -755,7 +864,8 @@ Per la tua richiesta, ti suggerisco questi strumenti:
 
         const startNewChat = (remountApp = true) => {
             const newId = `chat-${Date.now()}`;
-            conversations[newId] = { id: newId, title: "Nuova Chat", messages: [], timestamp: Date.now() };
+            const t = translations[currentLanguage];
+            conversations[newId] = { id: newId, title: t.newChatTitle, messages: [], timestamp: Date.now() };
             activeConversationId = newId;
             saveConversations(conversations);
             saveActiveConversationId();
@@ -764,7 +874,7 @@ Per la tua richiesta, ti suggerisco questi strumenti:
             }
             toggleSideMenu(false);
         };
-        
+
         const showToast = (message) => {
             const toast = document.createElement('div');
             toast.className = 'toast-message';
@@ -778,31 +888,40 @@ Per la tua richiesta, ti suggerisco questi strumenti:
                 toast.addEventListener('transitionend', () => toast.remove());
             }, 3000);
         };
+        
+        // NUOVA FUNZIONE: Ottiene il nome tradotto di una categoria
+        const getTranslatedCategoryName = (categoryId) => {
+            const category = categories.find(c => c.id === categoryId);
+            return category ? category.name[currentLanguage] : categoryId;
+        };
 
         const createGridCard = (tool) => `<div class="tool-card-grid" data-id="${tool.id}"><div class="logo-container"><img src="${tool.logoUrl}" class="tool-logo" alt="${tool.name}" loading="lazy"></div><div class="tool-name">${tool.name}</div></div>`;
-        const createListCard = (tool) => `<div class="tool-card-list" data-id="${tool.id}"><div class="logo-container"><img src="${tool.logoUrl}" class="tool-logo" alt="${tool.name}" loading="lazy"></div><div class="info"><div class="tool-name">${tool.name}</div><div class="tool-subtext">${tool.category}</div></div><div class="favorite-icon" data-id="${tool.id}">${currentUser.uid && currentUser.favorites.includes(tool.id) ? '♥' : '♡'}</div></div>`;
+        const createListCard = (tool) => `<div class="tool-card-list" data-id="${tool.id}"><div class="logo-container"><img src="${tool.logoUrl}" class="tool-logo" alt="${tool.name}" loading="lazy"></div><div class="info"><div class="tool-name">${tool.name}</div><div class="tool-subtext">${getTranslatedCategoryName(tool.category)}</div></div><div class="favorite-icon" data-action="toggle-favorite" data-id="${tool.id}">${currentUser.uid && currentUser.favorites.includes(tool.id) ? '♥' : '♡'}</div></div>`;
         const createCategoryCard = (category) => {
-            const toolForLogo = aiToolsData.find(t=>t.category===category.name);
+            const currentTools = window.getLocalizedToolsData(currentLanguage);
+            const toolForLogo = currentTools.find(t=>t.category===category.id); // Usa category.id per la ricerca
             if (!toolForLogo) return '';
-            return `<div class="category-card" style="background-color: ${category.color};" data-filter-type="category" data-filter-value="${category.name}"><h3>${category.name}</h3><div class="logo-container"><img src="${toolForLogo.logoUrl}" class="tool-logo" loading="lazy"></div></div>`;
+            // Usa category.id per il filtro e category.name per la visualizzazione
+            return `<div class="category-card" style="background-color: ${category.color};" data-action="set-explore-filter" data-filter-type="category" data-filter-value="${category.id}"><h3>${category.name[currentLanguage]}</h3><div class="logo-container"><img src="${toolForLogo.logoUrl}" class="tool-logo" loading="lazy"></div></div>`;
         };
-        const createCountryCard = (country) => `<div class="category-card" style="background-color: #333;" data-filter-type="country" data-filter-value="${country.name}"><h3 style="font-size: 24px;">${country.flag} ${country.name}</h3></div>`;
+        const createCountryCard = (country) => `<div class="category-card" style="background-color: #333;" data-action="set-explore-filter" data-filter-type="country" data-filter-value="${country.name}"><h3 style="font-size: 24px;">${country.flag} ${country.name}</h3></div>`;
 
         window.openDetailModal = (toolId) => {
-            const tool = aiToolsData.find(t => t.id === toolId);
+            const currentTools = window.getLocalizedToolsData(currentLanguage);
+            const tool = currentTools.find(t => t.id === toolId);
             if (!tool) return;
+            const t = translations[currentLanguage];
             const isFavorited = currentUser.uid && currentUser.favorites.includes(toolId);
             let recommendationHTML = '';
             if (tool.recommendationId) {
-                const recommendedTool = aiToolsData.find(t => t.id === tool.recommendationId);
+                const recommendedTool = currentTools.find(t => t.id === tool.recommendationId);
                 if (recommendedTool) {
-                    recommendationHTML = `<div class="recommendation-box" data-id="${recommendedTool.id}"><img src="${recommendedTool.logoUrl}" alt="${recommendedTool.name}" class="recommendation-logo" loading="lazy"><div class="recommendation-text">In alternativa prova:<strong>${recommendedTool.name}</strong></div></div>`;
+                    recommendationHTML = `<div class="recommendation-box" data-action="open-detail-modal" data-id="${recommendedTool.id}"><img src="${recommendedTool.logoUrl}" alt="${recommendedTool.name}" class="recommendation-logo" loading="lazy"><div class="recommendation-text">${t.alternativeSuggestion}<strong>${recommendedTool.name}</strong></div></div>`;
                 }
             }
-            const modalHTML = `<div id="detail-modal" class="modal-overlay visible"><div class="modal-content"><button class="modal-close-btn" data-action="close-modal">×</button><div id="detail-content"><h2>${tool.name}</h2><p>${tool.description}</p><div class="detail-tags"><span class="tag">🌍 ${tool.country}</span></div><div class="detail-actions"><button class="button" data-action="toggle-favorite" data-id="${tool.id}">${isFavorited ? 'Rimuovi dai Preferiti' : 'Aggiungi ai Preferiti'}</button><a href="${tool.website}" target="_blank" class="button" style="text-decoration: none; display: flex; justify-content: center; align-items: center;">Visita Sito Web</a></div>${recommendationHTML}</div></div></div>`;
+            const modalHTML = `<div id="detail-modal" class="modal-overlay visible"><div class="modal-content"><button class="modal-close-btn" data-action="close-modal">×</button><div id="detail-content"><h2>${tool.name}</h2><p>${tool.description}</p><div class="detail-tags"><span class="tag">🌍 ${tool.country}</span></div><div class="detail-actions"><button class="button" data-action="toggle-favorite" data-id="${tool.id}">${isFavorited ? t.detailModalRemoveFavorite : t.detailModalAddFavorite}</button><a href="${tool.website}" target="_blank" class="button" style="text-decoration: none; display: flex; justify-content: center; align-items: center;">${t.visitWebsite}</a></div>${recommendationHTML}</div></div></div>`;
             el.modalContainer.innerHTML = modalHTML;
         };
-        window.aiToolsData = aiToolsData;
         
         const closeModal = () => el.modalContainer.innerHTML = '';
         const toggleFavorite = async (toolId) => {
@@ -817,8 +936,11 @@ Per la tua richiesta, ti suggerisco questi strumenti:
                     await updateDoc(userDocRef, { favorites: arrayUnion(toolId) });
                     currentUser.favorites.push(toolId);
                 }
-            } catch (error) { console.error("Errore nell'aggiornamento dei preferiti:", error); alert("Impossibile aggiornare i preferiti. Riprova."); return; }
-            if (document.getElementById('detail-modal')) { window.openDetailModal(toolId); } else { renderView(); }
+            } catch (error) { console.error("Error updating favorites:", error); alert("Could not update favorites. Please try again."); return; }
+            // Re-render the current view to update favorite icons
+            renderView();
+            // If detail modal is open, update it
+            if (document.getElementById('detail-modal')) { window.openDetailModal(toolId); }
         };
         
         const unmountReactApp = () => {
@@ -831,15 +953,17 @@ Per la tua richiesta, ti suggerisco questi strumenti:
         const renderSideMenu = () => {
             const sortedConversations = Object.values(conversations).sort((a, b) => b.timestamp - a.timestamp);
             el.conversationListContainer.innerHTML = sortedConversations.map(conv => `
-                <button class="conversation-item ${conv.id === activeConversationId ? 'active' : ''}" data-id="${conv.id}">
+                <button class="conversation-item" data-action="select-conversation" data-id="${conv.id}">
                     ${conv.title}
                 </button>
             `).join('');
+            el.conversationListContainer.querySelector(`[data-id="${activeConversationId}"]`)?.classList.add('active');
+            applyTranslations(currentLanguage); // Apply translations to menu items
         };
 
         const toggleSideMenu = (show) => {
             if (show) {
-                renderSideMenu();
+                renderSideMenu(); // Render menu content before showing
                 el.sideMenuOverlay.classList.add('visible');
                 el.sideMenu.classList.add('visible');
             } else {
@@ -848,18 +972,43 @@ Per la tua richiesta, ti suggerisco questi strumenti:
             }
         };
 
+        const getGlobalControlsHTML = () => {
+            const themeIcon = currentTheme === 'dark' ? sunIcon : moonIcon;
+            const isGuest = !currentUser.uid;
+            const userInitial = isGuest ? '?' : (currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U');
+            
+            // MODIFICA: L'avatar viene generato condizionatamente. Se la vista corrente è 'home', l'HTML dell'avatar è una stringa vuota.
+            const avatarHTML = currentView !== 'home'
+                ? `<div class="user-avatar" ${!isGuest ? 'data-action="open-settings-modal"' : ''}>${userInitial}</div>`
+                : '';
+            
+            return `
+                ${avatarHTML}
+                <button id="theme-toggle-btn" class="global-btn" data-action="toggle-theme">${themeIcon}</button>
+                <button id="lang-toggle-btn" class="global-btn" data-action="toggle-lang">${currentLanguage.toUpperCase()}</button>
+            `;
+        };
+
         const renderView = () => {
             unmountReactApp(); 
             el.mainContent.innerHTML = '';
             
+            const t = translations[currentLanguage];
+            const currentTools = window.getLocalizedToolsData(currentLanguage);
             const isGuest = !currentUser.uid;
-            const userInitial = isGuest ? '?' : (currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U');
-            const avatarHTML = `<div class="user-avatar" ${!isGuest ? 'data-action="open-settings-modal"' : ''}>${userInitial}</div>`;
+            const pageTitles = { home: t.pageTitleHome, 'top-ai': t.pageTitleTopAI, explore: t.pageTitleSearch, favorites: t.pageTitleLibrary };
 
-            const pageTitles = { home: 'Koda.AI Chatbot', 'top-ai': 'TOP AI', explore: 'Cerca', favorites: 'La tua libreria' };
-            const topBarHTML = `<div class="top-bar">${avatarHTML}<h1 class="page-title">${pageTitles[currentView]}</h1>${!isGuest ? '<button id="logout-btn" class="pill-btn">Logout</button>' : ''}</div>`;
-            
+            // Top bar is only rendered for non-home views
             if (currentView !== 'home') {
+                // Estrai solo l'avatar dal globalControlsHTML
+                const globalControlsHTML = getGlobalControlsHTML();
+                const avatarHTML = globalControlsHTML.split('\n')[1] || '';
+                const restControlsHTML = globalControlsHTML.replace(avatarHTML, '');
+
+                const topBarHTML = `<div class="top-bar" style="display: flex; align-items: center; gap: 8px;">
+                    <div id="profile-avatar-menu" style="margin-right: 8px;">${avatarHTML}</div>
+                    <div id="global-controls" style="margin-left: auto;">${restControlsHTML}</div>
+                </div>`;
                 el.mainContent.insertAdjacentHTML('beforeend', topBarHTML);
             }
 
@@ -867,11 +1016,12 @@ Per la tua richiesta, ti suggerisco questi strumenti:
             contentArea.id = 'content-area';
             
             if (currentView === 'home') {
+                // Chatbot view handles its own header and global controls via React prop
                 el.mainContent.innerHTML = `<div id="chatbot-container-wrapper"></div>`;
                 const chatbotContainer = document.getElementById('chatbot-container-wrapper');
                 if (window.mountChatbotApp) {
                     reactRoot = window.mountChatbotApp(chatbotContainer, {
-                        tools: aiToolsData,
+                        tools: currentTools,
                         initialConversations: conversations,
                         initialActiveId: activeConversationId,
                         onConversationsChange: (newConvos) => {
@@ -879,31 +1029,34 @@ Per la tua richiesta, ti suggerisco questi strumenti:
                             if(el.sideMenu.classList.contains('visible')) {
                                 renderSideMenu();
                             }
-                        }
+                        },
+                        onOpenDetail: window.openDetailModal,
+                        lang: currentLanguage,
+                        globalControlsHTML: getGlobalControlsHTML() // Pass controls HTML to React app
                     });
                 } else {
-                    console.error("Funzione di montaggio del chatbot non trovata.");
+                    console.error("Chatbot mount function not found.");
                 }
             } else if (currentView === 'top-ai') {
-                const featuredTools = aiToolsData.filter(t => t.isFeatured);
-                let contentHTML = `<div class="section-title">In Evidenza</div><div class="grid-container">${featuredTools.map(createGridCard).join('')}</div>`;
+                const featuredTools = currentTools.filter(t => t.isFeatured);
+                let contentHTML = `<div class="section-title" data-translate="featured">${t.featured}</div><div class="grid-container">${featuredTools.map(createGridCard).join('')}</div>`;
 
                 const rankings = [
-                    { title: "Classifica per il Testo", category: "Testo", toolIds: ['tool-013', 'tool-001', 'tool-021'] },
-                    { title: "Classifica per il Codice", category: "Codice", toolIds: ['tool-024', 'tool-021', 'tool-036'] },
-                    { title: "Classifica per le Immagini", category: "Immagini", toolIds: ['tool-014', 'tool-001', 'tool-033'] },
-                    { title: "Classifica per la Ricerca Web", category: "Ricerca Web", toolIds: ['tool-040', 'tool-001', 'tool-026'] }
+                    { titleKey: "rankingTextTitle", category: "Testo", toolIds: ['tool-013', 'tool-001', 'tool-021'] },
+                    { titleKey: "rankingCodeTitle", category: "Codice", toolIds: ['tool-024', 'tool-021', 'tool-036'] },
+                    { titleKey: "rankingImagesTitle", category: "Immagini", toolIds: ['tool-014', 'tool-001', 'tool-033'] },
+                    { titleKey: "rankingWebSearchTitle", category: "Ricerca Web", toolIds: ['tool-040', 'tool-001', 'tool-026'] }
                 ];
                 
-                const rankingFilterCategories = ["All", "Testo", "Codice", "Immagini", "Ricerca Web"];
+                const rankingCategoryIdentifiers = ["All", "Testo", "Codice", "Immagini", "Ricerca Web"];
                 const filtersHTML = `<div class="filters-container" style="top: 64px; margin-bottom: 20px;">
                     <div class="filter-pills" id="ranking-filters">
-                        ${rankingFilterCategories.map(f => `<button class="pill-btn ${rankingFilter === f ? 'active' : ''}" data-ranking-filter="${f}">${f === 'All' ? 'Tutti' : f}</button>`).join('')}
+                        ${rankingCategoryIdentifiers.map(id => `<button class="pill-btn ${rankingFilter === id ? 'active' : ''}" data-action="set-ranking-filter" data-filter="${id}">${id === 'All' ? t.filterAll : getTranslatedCategoryName(id)}</button>`).join('')}
                     </div>
                 </div>`;
 
                 const createRankingItem = (toolId, rank) => {
-                    const tool = aiToolsData.find(t => t.id === toolId);
+                    const tool = currentTools.find(t => t.id === toolId);
                     if (!tool) return '';
                     return `
                         <li class="ranking-item" data-id="${tool.id}">
@@ -911,19 +1064,19 @@ Per la tua richiesta, ti suggerisco questi strumenti:
                             <img src="${tool.logoUrl}" alt="${tool.name}" class="ranking-item-logo" loading="lazy">
                             <div class="ranking-item-info">
                                 <div class="tool-name">${tool.name}</div>
-                                <div class="tool-subtext">${tool.category}</div>
+                                <div class="tool-subtext">${getTranslatedCategoryName(tool.category)}</div>
                             </div>
                         </li>
                     `;
                 };
 
                 const rankingsHTML = `
-                    <div class="section-title" style="margin-top: 40px;">Classifiche TOP AI</div>
+                    <div class="section-title" style="margin-top: 40px;" data-translate="rankingsTitle">${t.rankingsTitle}</div>
                     ${filtersHTML}
                     <div class="ranking-section-container">
                         ${rankings.map(ranking => `
                             <div class="ranking-card" data-ranking-category="${ranking.category}">
-                                <h3>${ranking.title}</h3>
+                                <h3>${t[ranking.titleKey]}</h3>
                                 <ol class="ranking-list">
                                     ${ranking.toolIds.map((id, index) => createRankingItem(id, index + 1)).join('')}
                                 </ol>
@@ -944,275 +1097,417 @@ Per la tua richiesta, ti suggerisco questi strumenti:
                 });
 
             } else if (currentView === 'explore') {
+                el.mainContent.insertAdjacentHTML('beforeend', `<div class="search-bar-container"><input type="text" id="search-input" placeholder="${t.searchPlaceholder}"></div>`);
                 if (!exploreFilter.type) {
-                    el.mainContent.insertAdjacentHTML('beforeend', `<div class="search-bar-container"><input type="text" id="search-input" placeholder="Cerca strumenti, categorie..."></div>`);
-                    contentArea.innerHTML = `<div class="section-title">Sfoglia tutto</div><div class="category-grid">${categories.map(createCategoryCard).join('')}</div><div class="section-title" style="margin-top: 30px;">Sfoglia per Origine</div><div class="category-grid">${countries.map(createCountryCard).join('')}</div>`;
+                    contentArea.innerHTML = `<div class="section-title" data-translate="browseAll">${t.browseAll}</div><div class="category-grid">${categories.map(createCategoryCard).join('')}</div><div class="section-title" style="margin-top: 30px;" data-translate="browseByOrigin">${t.browseByOrigin}</div><div class="category-grid">${countries.map(createCountryCard).join('')}</div>`;
                 } else {
-                    const filteredTools = aiToolsData.filter(t => t[exploreFilter.type] === exploreFilter.value);
-                    const title = exploreFilter.type === 'category' ? exploreFilter.value : `Strumenti da ${exploreFilter.value}`;
-                    contentArea.innerHTML = `<div class="back-button" data-action="back-to-explore">‹ Torna a Cerca</div><h2 class="section-title">${title}</h2><div class="list-container">${filteredTools.map(createListCard).join('')}</div>`;
+                    const filteredTools = currentTools.filter(t => t[exploreFilter.type] === exploreFilter.value);
+                    const title = exploreFilter.type === 'category' ? getTranslatedCategoryName(exploreFilter.value) : `${t.toolsFrom} ${exploreFilter.value}`;
+                    contentArea.innerHTML = `<div class="back-button" data-action="back-to-explore">${t.backToSearch}</div><h2 class="section-title">${title}</h2><div class="list-container">${filteredTools.map(createListCard).join('')}</div>`;
                 }
                 el.mainContent.appendChild(contentArea);
             } else if (currentView === 'favorites') {
                 if (isGuest) {
                     contentArea.innerHTML = `
                         <div class="auth-prompt-card">
-                            <h3>Salva i tuoi preferiti</h3>
-                            <p>Accedi o registrati per salvare i preferiti.</p>
+                            <h3 data-translate="libraryPromptTitle">${t.libraryPromptTitle}</h3>
+                            <p data-translate="libraryPromptText">${t.libraryPromptText}</p>
                             <div class="auth-prompt-actions">
-                                <button class="button" data-action="prompt-login">Accedi</button>
-                                <button class="pill-btn" data-action="prompt-register">Registrati</button>
+                                <button class="button" data-action="prompt-login" data-translate="loginButton">${t.loginButton}</button>
+                                <button class="pill-btn" data-action="prompt-register" data-translate="registerButton">${t.registerButton}</button>
                             </div>
                         </div>
                     `;
                 } else {
-                    const favoriteToolsData = aiToolsData.filter(t => currentUser.favorites.includes(t.id));
+                    const favoriteToolsData = currentTools.filter(t => currentUser.favorites.includes(t.id));
                     const availableCategoriesInFavorites = [...new Set(favoriteToolsData.map(t => t.category))];
                     const filterPills = ['All', ...availableCategoriesInFavorites];
-                    const filtersHTML = `<div class="filters-container"><div class="filter-pills">${filterPills.map(f => `<button class="pill-btn ${activeFilter === f ? 'active' : ''}" data-filter="${f}">${f === 'All' ? 'Tutti' : f}</button>`).join('')}</div></div>`;
+                    const filtersHTML = `<div class="filters-container"><div class="filter-pills">${filterPills.map(f_id => `<button class="pill-btn ${activeFilter === f_id ? 'active' : ''}" data-action="set-favorite-filter" data-filter="${f_id}">${f_id === 'All' ? t.filterAll : getTranslatedCategoryName(f_id)}</button>`).join('')}</div></div>`;
                     el.mainContent.insertAdjacentHTML('beforeend', filtersHTML);
                     let favoriteTools = activeFilter === 'All' ? favoriteToolsData : favoriteToolsData.filter(t => t.category === activeFilter);
-                    contentArea.innerHTML = favoriteTools.length > 0 ? `<div class="list-container">${favoriteTools.map(createListCard).join('')}</div>` : `<div id="empty-state">Nessun preferito trovato. Aggiungine qualcuno!</div>`;
+                    contentArea.innerHTML = favoriteTools.length > 0 ? `<div class="list-container">${favoriteTools.map(createListCard).join('')}</div>` : `<div id="empty-state">${t.emptyFavorites}</div>`;
                 }
                 el.mainContent.appendChild(contentArea);
             }
             
             updateNavActiveState();
+            applyTranslations(currentLanguage); // Apply translations after rendering content
         };
 
         const updateNavActiveState = () => el.bottomNav.querySelectorAll('.nav-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.page === currentView));
         
-        el.bottomNav.addEventListener('click', (e) => {
-            const navButton = e.target.closest('.nav-btn');
-            if (navButton && navButton.dataset.page !== currentView) {
-                currentView = navButton.dataset.page;
-                activeFilter = 'All';
-                rankingFilter = 'All';
-                exploreFilter = { type: null, value: null };
-                renderView();
-                el.mainContent.scrollTop = 0;
-            }
-        });
-        
-        el.mainContent.addEventListener('click', (e) => {
-            const actionButton = e.target.closest('[data-action]');
-            const card = e.target.closest('.tool-card-grid, .tool-card-list, .ranking-item');
-            const favoriteIcon = e.target.closest('.favorite-icon');
-            const pillButton = e.target.closest('.pill-btn:not(#logout-btn)');
-            const rankingPill = e.target.closest('[data-ranking-filter]');
-            const filterCard = e.target.closest('[data-filter-type]');
-            const logoutButton = e.target.closest('#logout-btn');
-            const menuToggle = e.target.closest('#menu-toggle-btn');
-            
-            if (actionButton) {
-                const action = actionButton.dataset.action;
-                if (action === 'open-settings-modal' && !currentUser.isGuest) { window.openSettingsModal(); return; }
-                if (action === 'prompt-login') { triggerAuthFlow('login-card'); return; }
-                if (action === 'prompt-register') { triggerAuthFlow('register-card'); return; }
-                if (action === 'back-to-explore') { exploreFilter = { type: null, value: null }; renderView(); return; }
-            }
-            
-            if (menuToggle) { toggleSideMenu(true); return; }
+        // --- AUTHENTICATION FUNCTIONS (Copied from index.html and adapted) ---
 
-            if (rankingPill) {
-                rankingFilter = rankingPill.dataset.rankingFilter;
-                document.querySelectorAll('#ranking-filters .pill-btn').forEach(p => p.classList.remove('active'));
-                rankingPill.classList.add('active');
-                document.querySelectorAll('.ranking-card').forEach(card => {
-                    const shouldShow = rankingFilter === 'All' || card.dataset.rankingCategory === rankingFilter;
-                    card.classList.toggle('hidden', !shouldShow);
-                });
-                return;
-            }
+        const getAuthHTML = (lang) => {
+            const t = translations[lang];
+            return `
+            <div id="register-card" class="auth-card">
+                <button class="auth-close-btn" data-action="close-auth">×</button>
+                <svg class="auth-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="48" stroke="currentColor" stroke-width="4" fill="none"/><text x="50" y="62" font-size="40" font-weight="bold" text-anchor="middle" fill="currentColor">AI</text></svg>
+                <h2 data-translate="createAccount">${t.createAccount}</h2>
+                <div class="input-group"><label for="register-email" data-translate="registerEmailLabel">${t.registerEmailLabel}</label><input type="email" id="register-email" placeholder="${t.registerEmailPlaceholder}"></div>
+                <div class="input-group"><label for="register-password" data-translate="registerPasswordLabel">${t.registerPasswordLabel}</label><input type="password" id="register-password" placeholder="${t.registerPasswordPlaceholder}"></div>
+                <button id="register-btn" class="button" data-translate="registerButton">${t.registerButton}</button>
+                <div class="auth-links"><a class="auth-switch-link" data-action="show-login" data-translate="switchToLogin">${t.switchToLogin}</a></div>
+            </div>
+            <div id="login-card" class="auth-card hidden">
+                <button class="auth-close-btn" data-action="close-auth">×</button>
+                <svg class="auth-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="48" stroke="currentColor" stroke-width="4" fill="none"/><text x="50" y="62" font-size="40" font-weight="bold" text-anchor="middle" fill="currentColor">AI</text></svg>
+                <h2 data-translate="loginTitle">${t.loginTitle}</h2>
+                <div class="input-group"><label for="login-email" data-translate="registerEmailLabel">${t.registerEmailLabel}</label><input type="email" id="login-email" placeholder="${t.registerEmailPlaceholder}"></div>
+                <div class="input-group"><label for="login-password" data-translate="registerPasswordLabel">${t.registerPasswordLabel}</label><input type="password" id="login-password" placeholder="${t.registerPasswordPlaceholder}"></div>
+                <button id="login-btn" class="button" data-translate="loginButton">${t.loginButton}</button>
+                <div class="auth-links"><a class="auth-switch-link" data-action="show-register" data-translate="switchToRegister">${t.switchToRegister}</a><a class="forgot-password-link" data-action="show-forgot" data-translate="forgotPasswordLink">${t.forgotPasswordLink}</a></div>
+            </div>
+            <div id="forgot-password-card" class="auth-card hidden">
+                <button class="auth-close-btn" data-action="close-auth">×</button>
+                <svg class="auth-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="48" stroke="currentColor" stroke-width="4" fill="none"/><text x="50" y="62" font-size="40" font-weight="bold" text-anchor="middle" fill="currentColor">AI</text></svg>
+                <h2 data-translate="resetPasswordTitle">${t.resetPasswordTitle}</h2>
+                <p style="color: var(--spotify-text-secondary); font-size: 14px; margin-bottom: 20px;" data-translate="resetPasswordInfo">${t.resetPasswordInfo}</p>
+                <div class="input-group"><label for="forgot-email" data-translate="registerEmailLabel">${t.registerEmailLabel}</label><input type="email" id="forgot-email" placeholder="${t.registerEmailPlaceholder}"></div>
+                <button id="forgot-btn" class="button" data-translate="sendLinkButton">${t.sendLinkButton}</button>
+                <div class="auth-links"><a class="auth-switch-link" data-action="show-login" data-translate="backToLogin">${t.backToLogin}</a></div>
+            </div>`;
+        };
 
-            if (logoutButton) { signOut(auth).catch(error => console.error("Logout Error:", error)); } 
-            else if (favoriteIcon) { e.stopPropagation(); toggleFavorite(favoriteIcon.dataset.id); } 
-            else if (card) { window.openDetailModal(card.dataset.id); } 
-            else if (pillButton && pillButton.closest('#ranking-filters') === null) { activeFilter = pillButton.dataset.filter; renderView(); } 
-            else if (filterCard) { exploreFilter.type = filterCard.dataset.filterType; exploreFilter.value = filterCard.dataset.filterValue; renderView(); }
-        });
+        const showAuthCard = (cardId) => { 
+            el.authOverlay.querySelectorAll('.auth-card').forEach(c => c.classList.add('hidden'));
+            const cardToShow = el.authOverlay.querySelector('#' + cardId);
+            if(cardToShow) cardToShow.classList.remove('hidden');
+        };
+
+        const attachAuthListeners = () => {
+            // Remove previous listeners to avoid duplicates
+            const oldAuthOverlay = el.authOverlay.cloneNode(true);
+            el.authOverlay.parentNode.replaceChild(oldAuthOverlay, el.authOverlay);
+            el.authOverlay = oldAuthOverlay;
+
+            el.authOverlay.addEventListener('click', (e) => {
+                const target = e.target;
+                const actionTarget = target.closest('[data-action]');
+                
+                if(actionTarget) {
+                     const action = actionTarget.dataset.action;
+                     if (action === 'close-auth') closeAuthAndReturnToApp();
+                     else if (action === 'show-login') { e.preventDefault(); showAuthCard('login-card'); }
+                     else if (action === 'show-register') { e.preventDefault(); showAuthCard('register-card'); }
+                     else if (action === 'show-forgot') { e.preventDefault(); showAuthCard('forgot-password-card'); }
+                }
+
+                // Handle button clicks directly
+                if (target.id === 'register-btn') {
+                    const email = el.authOverlay.querySelector('#register-email').value;
+                    const password = el.authOverlay.querySelector('#register-password').value;
+                    const t = translations[currentLanguage];
+                    if (!email.includes('@') || password.length < 6) { showToast(t.passwordTooShort); return; }
+                    createUserWithEmailAndPassword(auth, email, password).catch(error => showToast(`Error: ${error.message}`));
+                }
+                if (target.id === 'login-btn') {
+                     const email = el.authOverlay.querySelector('#login-email').value;
+                    const password = el.authOverlay.querySelector('#login-password').value;
+                    const t = translations[currentLanguage];
+                    if (!email || !password) { showToast(t.registerEmailLabel + ' ' + t.registerPasswordLabel); return; } // Simplified message
+                    signInWithEmailAndPassword(auth, email, password).catch(error => showToast(`Error: ${error.message}`));
+                }
+                if (target.id === 'forgot-btn') {
+                    const email = el.authOverlay.querySelector('#forgot-email').value;
+                    const t = translations[currentLanguage];
+                    if (!email.includes('@')) { showToast(t.registerEmailLabel); return; } // Simplified message
+                    sendPasswordResetEmail(auth, email).then(() => {
+                        showToast(t.passwordResetSent.replace('%s', email));
+                        showAuthCard('login-card');
+                    }).catch(error => showToast(`Error: ${error.message}`));
+                }
+            });
+        };
         
+        const triggerAuthFlow = (card = 'login-card') => {
+            el.appContainer.style.display = 'none';
+            el.authOverlay.innerHTML = getAuthHTML(currentLanguage); // Generate HTML
+            attachAuthListeners(); // Attach listeners to the new HTML
+            el.authOverlay.style.display = 'flex';
+            el.authOverlay.classList.remove('hidden');
+            showAuthCard(card); // Show the requested card
+        };
+        
+        const closeAuthAndReturnToApp = () => {
+            el.authOverlay.classList.add('hidden');
+            el.authOverlay.addEventListener('transitionend', () => {
+                 el.authOverlay.style.display = 'none';
+                 el.authOverlay.innerHTML = ''; // Clear content after transition
+            }, { once: true });
+            el.appContainer.style.display = 'flex';
+        };
+
+        // --- SETTINGS MODAL FUNCTIONS (Copied from index.html and adapted) ---
+
         window.openSettingsModal = () => {
             if (!currentUser.uid) return;
+            const t = translations[currentLanguage];
             
             const modalHTML = `
                 <div id="settings-modal" class="modal-overlay visible">
                     <div class="modal-content">
                         <button class="modal-close-btn" data-action="close-modal">×</button>
-                        <h2>Impostazioni Account</h2>
+                        <h2 data-translate="settingsTitle">${t.settingsTitle}</h2>
                         
                         <p style="font-size: 16px; color: var(--spotify-text-secondary); margin-top: 16px; margin-bottom: 24px;">${currentUser.name}</p>
                         
                         <hr class="modal-divider">
 
-                        <h4>Cambia Password</h4>
+                        <h4 data-translate="changePasswordTitle">${t.changePasswordTitle}</h4>
                         <div class="input-group" style="margin-top: 16px;">
-                            <label for="profile-new-password">Nuova Password</label>
-                            <input type="password" id="profile-new-password" placeholder="Minimo 6 caratteri">
+                            <label for="profile-new-password" data-translate="newPasswordLabel">${t.newPasswordLabel}</label>
+                            <input type="password" id="profile-new-password" placeholder="${t.newPasswordPlaceholder}">
                         </div>
                         <div class="input-group">
-                            <label for="profile-confirm-password">Conferma Password</label>
-                            <input type="password" id="profile-confirm-password" placeholder="Reinserisci la nuova password">
+                            <label for="profile-confirm-password" data-translate="confirmPasswordLabel">${t.confirmPasswordLabel}</label>
+                            <input type="password" id="profile-confirm-password" placeholder="${t.confirmPasswordPlaceholder}">
                         </div>
-                        <button class="button" id="update-password-btn">Salva Password</button>
+                        <button class="button" id="update-password-btn" data-translate="savePasswordButton">${t.savePasswordButton}</button>
+
+                         <hr class="modal-divider">
+                         <button id="logout-btn-modal" class="pill-btn" data-action="logout" data-translate="logout">${t.logout}</button>
+
                     </div>
                 </div>`;
             el.modalContainer.innerHTML = modalHTML;
 
-            document.getElementById('update-password-btn').addEventListener('click', handlePasswordUpdate);
+            // Attach listener to the update password button
+            document.getElementById('update-password-btn')?.addEventListener('click', handlePasswordUpdate);
+             // Attach listener to the logout button inside the modal
+            document.getElementById('logout-btn-modal')?.addEventListener('click', () => {
+                 signOut(auth).catch(error => console.error("Logout Error:", error));
+                 closeModal(); // Close modal on logout attempt
+            });
         };
         
         const handlePasswordUpdate = async () => {
-            const newPassword = document.getElementById('profile-new-password').value;
-            const confirmPassword = document.getElementById('profile-confirm-password').value;
+            const newPasswordInput = document.getElementById('profile-new-password');
+            const confirmPasswordInput = document.getElementById('profile-confirm-password');
+            const newPassword = newPasswordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            const t = translations[currentLanguage];
 
             if (newPassword.length < 6) {
-                alert("La password deve contenere almeno 6 caratteri.");
+                showToast(t.passwordTooShort);
                 return;
             }
             if (newPassword !== confirmPassword) {
-                alert("Le password non coincidono.");
+                showToast(t.passwordsDoNotMatch);
                 return;
             }
 
             try {
                 await updatePassword(auth.currentUser, newPassword);
-                showToast("Password aggiornata con successo!");
-                document.getElementById('profile-new-password').value = '';
-                document.getElementById('profile-confirm-password').value = '';
-                closeModal();
+                showToast(t.passwordUpdateSuccess);
+                newPasswordInput.value = '';
+                confirmPasswordInput.value = '';
+                closeModal(); // Close modal on success
             } catch (error) {
-                console.error("Errore aggiornamento password:", error);
-                alert(`Errore: ${error.message}. Potrebbe essere necessario effettuare nuovamente il login.`);
+                console.error("Error updating password:", error);
+                showToast(t.updatePasswordError.replace('%s', error.message));
             }
         };
 
-        el.sideMenuOverlay.addEventListener('click', (e) => {
-            const conversationItem = e.target.closest('.conversation-item');
-            const newChatButton = e.target.closest('.new-chat-btn');
-            
-            if (newChatButton) { startNewChat(); return; }
 
-            if (conversationItem) {
-                const newActiveId = conversationItem.dataset.id;
-                if (newActiveId !== activeConversationId) {
-                    activeConversationId = newActiveId;
-                    saveActiveConversationId();
-                    renderView();
-                }
-                toggleSideMenu(false);
-                return;
-            }
-            if (e.target.id === 'side-menu-overlay') { toggleSideMenu(false); }
-        });
+        // --- INITIALIZATION LOGIC ---
 
-        el.mainContent.addEventListener('input', e => {
-            if (e.target.id === 'search-input') {
-                const searchTerm = e.target.value.toLowerCase();
-                const contentArea = document.getElementById('content-area');
-                if (!contentArea) return;
-                const toolsToShow = searchTerm.length > 1 ? aiToolsData.filter(t => t.name.toLowerCase().includes(searchTerm) || t.description.toLowerCase().includes(searchTerm)) : [];
-                if (searchTerm.length > 1) {
-                    contentArea.innerHTML = toolsToShow.length > 0 ? `<div class="list-container">${toolsToShow.map(createListCard).join('')}</div>` : `<div id="empty-state">Nessun risultato per "${searchTerm}"</div>`;
-                } else {
-                    contentArea.innerHTML = `<div class="section-title">Sfoglia tutto</div><div class="category-grid">${categories.map(createCategoryCard).join('')}</div><div class="section-title" style="margin-top: 30px;">Sfoglia per Origine</div><div class="category-grid">${countries.map(createCountryCard).join('')}</div>`;
-                }
-            }
-        });
-
-        el.modalContainer.addEventListener('click', (e) => {
-            const actionTarget = e.target.closest('[data-action]');
-            const recommendationCard = e.target.closest('.recommendation-box[data-id]');
-            if (recommendationCard) { window.openDetailModal(recommendationCard.dataset.id); return; }
-            if (e.target.id === 'detail-modal' || e.target.id === 'settings-modal') closeModal();
-            if (actionTarget) {
-                const action = actionTarget.dataset.action;
-                if (action === 'close-modal') closeModal();
-                if (action === 'toggle-favorite') toggleFavorite(actionTarget.dataset.id);
-            }
-        });
-
-        const showAuthCard = (cardId) => { el.authCards.forEach(card => card.classList.add('hidden')); document.getElementById(cardId).classList.remove('hidden'); };
-        
-        const triggerAuthFlow = (card = 'login-card') => {
-            el.appContainer.style.display = 'none';
-            el.authOverlay.style.display = 'flex';
-            el.authOverlay.classList.remove('hidden');
-            showAuthCard(card);
-        };
-        
-        const closeAuthAndReturnToApp = () => {
-            el.authOverlay.classList.add('hidden');
-            el.authOverlay.addEventListener('transitionend', () => el.authOverlay.style.display = 'none', { once: true });
-            el.appContainer.style.display = 'flex';
-        };
-        
         const initializeAppForGuest = () => {
             currentUser = { uid: null, name: 'Guest', favorites: [] };
             loadConversations();
             unmountReactApp();
             el.appContainer.style.display = 'flex';
             el.authOverlay.style.display = 'none';
+            el.authOverlay.innerHTML = ''; // Ensure auth overlay is empty
             renderView();
         };
 
         const initializeAppWithUser = async (user) => {
             const userDocRef = doc(db, "users", user.uid);
-            const userDocSnap = await getDoc(userDocRef);
-            if (userDocSnap.exists()) { 
-                currentUser = { ...userDocSnap.data(), uid: user.uid, name: user.email }; 
-            } else { 
-                await setDoc(userDocRef, { email: user.email, favorites: [] }); 
-                currentUser = { uid: user.uid, name: user.email, favorites: [] }; 
+            try {
+                const userDocSnap = await getDoc(userDocRef);
+                if (userDocSnap.exists()) { 
+                    currentUser = { ...userDocSnap.data(), uid: user.uid, name: user.email }; 
+                } else { 
+                    // Create user document if it doesn't exist (e.g., first time login after registration)
+                    await setDoc(userDocRef, { email: user.email, favorites: [] }); 
+                    currentUser = { uid: user.uid, name: user.email, favorites: [] }; 
+                }
+            } catch (error) {
+                 console.error("Error fetching/creating user doc:", error);
+                 // Fallback to guest or show error? For now, proceed with minimal user data
+                 currentUser = { uid: user.uid, name: user.email, favorites: [] };
+                 showToast("Could not load user data."); // Inform user
             }
+
             loadConversations();
             el.authOverlay.classList.add('hidden');
-            el.authOverlay.addEventListener('transitionend', () => el.authOverlay.style.display = 'none', { once: true });
+            el.authOverlay.addEventListener('transitionend', () => {
+                 el.authOverlay.style.display = 'none';
+                 el.authOverlay.innerHTML = ''; // Clear content after transition
+            }, { once: true });
             el.appContainer.style.display = 'flex';
-            renderView();
+            renderView(); // Render the app view
         };
 
-        // --- CORREZIONE: LOGICA DI AVVIO SEMPLIFICATA ---
+        // Apply theme on initial load
+        document.body.classList.toggle('light-mode', currentTheme === 'light');
+
+        // --- MAIN EVENT LISTENER ---
+        document.body.addEventListener('click', (e) => {
+            const target = e.target;
+            const actionTarget = target.closest('[data-action]');
+            
+            // Handle actions first
+            if (actionTarget) {
+                // e.preventDefault(); // Prevent default only if necessary for the action
+                const action = actionTarget.dataset.action;
+                
+                switch(action) {
+                    // Global Controls
+                    case 'toggle-theme':
+                        currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                        document.body.classList.toggle('light-mode', currentTheme === 'light');
+                        localStorage.setItem('koda-theme', currentTheme);
+                        renderView(); // Re-render to update icons/styles
+                        break;
+                    case 'toggle-lang':
+                        currentLanguage = currentLanguage === 'it' ? 'en' : 'it';
+                        localStorage.setItem('koda-lang', currentLanguage);
+                        applyTranslations(currentLanguage); // Apply translations immediately
+                        renderView(); // Re-render views to update content
+                        break;
+                    case 'toggle-menu':
+                         toggleSideMenu(true);
+                         break;
+                    case 'open-settings-modal':
+                         if (!currentUser.uid) { triggerAuthFlow(); } else { window.openSettingsModal(); }
+                         break;
+                    case 'logout':
+                         signOut(auth).catch(error => console.error("Logout Error:", error));
+                         break; // Rimuovi il logout dal global controls
+
+                    // Side Menu
+                    case 'new-chat': startNewChat(); break;
+                    case 'delete-all-chats':
+                        const t = translations[currentLanguage];
+                        if (confirm(t.confirmDeleteAll)) {
+                            conversations = {};
+                            localStorage.removeItem(getStorageKey());
+                            localStorage.removeItem(`activeConversationId_${currentUser.uid || 'guest'}`);
+                            startNewChat(true); // Start a new chat and re-render
+                        }
+                        break;
+                    case 'select-conversation':
+                        const newActiveId = actionTarget.dataset.id;
+                        if (newActiveId !== activeConversationId) {
+                            activeConversationId = newActiveId;
+                            saveActiveConversationId();
+                            renderView(); // Re-render with the selected conversation
+                        }
+                        toggleSideMenu(false); // Close menu
+                        break;
+
+                    // Auth Prompts (from Library page)
+                    case 'prompt-login': triggerAuthFlow('login-card'); break;
+                    case 'prompt-register': triggerAuthFlow('register-card'); break;
+
+                    // Explore/Top AI Filters
+                    case 'back-to-explore': exploreFilter = { type: null, value: null }; renderView(); break;
+                    case 'set-explore-filter': 
+                        exploreFilter.type = actionTarget.dataset.filterType;
+                        exploreFilter.value = actionTarget.dataset.filterValue;
+                        renderView();
+                        break;
+                    case 'set-ranking-filter':
+                        rankingFilter = actionTarget.dataset.filter;
+                        renderView(); // Re-render to apply ranking filter
+                        break;
+                    case 'set-favorite-filter':
+                        activeFilter = actionTarget.dataset.filter;
+                        renderView(); // Re-render to apply favorite filter
+                        break;
+
+                    // Modals (Detail, Settings)
+                    case 'close-modal': closeModal(); break;
+                    case 'toggle-favorite': toggleFavorite(actionTarget.dataset.id); break;
+                    case 'open-detail-modal': // For recommendation box in detail modal
+                         window.openDetailModal(actionTarget.dataset.id);
+                         break;
+
+                    // Auth Overlay actions are handled by attachAuthListeners on the overlay itself
+                    case 'close-auth': // Handled by attachAuthListeners
+                    case 'show-login': // Handled by attachAuthListeners
+                    case 'show-register': // Handled by attachAuthListeners
+                    case 'show-forgot': // Handled by attachAuthListeners
+                         // Let the specific auth overlay listener handle these
+                         return; 
+                }
+                // Prevent default for actions that navigate or submit forms handled by JS
+                 if (action !== 'open-detail-modal' && action !== 'toggle-favorite' && action !== 'set-explore-filter' && action !== 'set-ranking-filter' && action !== 'set-favorite-filter' && action !== 'select-conversation') {
+                     e.preventDefault();
+                 }
+                return; // Stop processing if an action was handled
+            }
+
+            // Handle navigation buttons
+            const navBtn = target.closest('.nav-btn');
+            if (navBtn && navBtn.dataset.page !== currentView) {
+                currentView = navBtn.dataset.page;
+                // Reset filters when changing main pages
+                activeFilter = 'All'; rankingFilter = 'All'; exploreFilter = { type: null, value: null };
+                renderView();
+                el.mainContent.scrollTop = 0; // Scroll to top on page change
+                return;
+            }
+            
+            // Handle clicks on tool/ranking cards (excluding favorite icon which is an action)
+            const toolCard = target.closest('.tool-card-grid, .tool-card-list, .ranking-item');
+            if (toolCard && !target.closest('.favorite-icon')) { 
+                 window.openDetailModal(toolCard.dataset.id); 
+                 return; 
+            }
+
+            // Handle clicks outside side menu to close it
+            if (target.id === 'side-menu-overlay') { toggleSideMenu(false); }
+            
+            // Handle clicks outside modals to close them
+            if (target.matches('.modal-overlay')) { closeModal(); }
+        });
+
+        // --- SEARCH INPUT LISTENER ---
+        el.mainContent.addEventListener('input', e => {
+            if (e.target.id === 'search-input') {
+                const searchTerm = e.target.value.toLowerCase();
+                const contentArea = document.getElementById('content-area');
+                if (!contentArea) return;
+
+                const currentTools = window.getLocalizedToolsData(currentLanguage);
+                const t = translations[currentLanguage];
+
+                const toolsToShow = searchTerm.length > 1 ? currentTools.filter(tool => tool.name.toLowerCase().includes(searchTerm) || tool.description.toLowerCase().includes(searchTerm)) : [];
+                if (searchTerm.length > 1) {
+                    contentArea.innerHTML = toolsToShow.length > 0 ? `<div class="list-container">${toolsToShow.map(createListCard).join('')}</div>` : `<div id="empty-state">${t.noResultsFor} "${searchTerm}"</div>`;
+                } else {
+                    // If search term is cleared, show default explore view
+                    contentArea.innerHTML = `<div class="section-title" data-translate="browseAll">${t.browseAll}</div><div class="category-grid">${categories.map(c => createCategoryCard(c)).join('')}</div><div class="section-title" style="margin-top: 30px;" data-translate="browseByOrigin">${t.browseByOrigin}</div><div class="category-grid">${countries.map(c => createCountryCard(c)).join('')}</div>`;
+                }
+                applyTranslations(currentLanguage); // Apply translations to search results/empty state
+            }
+        });
+        
+        // --- FIREBASE AUTH STATE CHANGE LISTENER ---
         onAuthStateChanged(auth, user => {
             if (user) {
+                console.log("User logged in:", user.uid);
                 initializeAppWithUser(user);
             } else {
+                console.log("User logged out or is guest.");
                 initializeAppForGuest();
             }
         });
         
-        el.authOverlay.addEventListener('click', (e) => {
-            const target = e.target.closest('[data-action]');
-            if (!target) return;
-            if (target.dataset.action === 'close-auth') closeAuthAndReturnToApp();
-        });
-
-        el.authLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const action = e.target.dataset.action;
-                if (action === 'show-login') showAuthCard('login-card');
-                else if (action === 'show-register') showAuthCard('register-card');
-                else if (action === 'show-forgot') showAuthCard('forgot-password-card');
-            });
-        });
-        el.registerBtn.addEventListener('click', async () => {
-            const email = document.getElementById('register-email').value;
-            const password = document.getElementById('register-password').value;
-            if (!email.includes('@') || password.length < 6) { alert('Email non valida o password troppo corta (minimo 6 caratteri).'); return; }
-            try { await createUserWithEmailAndPassword(auth, email, password); } catch (error) { alert(`Errore di registrazione: ${error.message}`); }
-        });
-        el.loginBtn.addEventListener('click', async () => {
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            if (!email || !password) { alert('Inserisci email e password.'); return; }
-            try { await signInWithEmailAndPassword(auth, email, password); } catch (error) { alert(`Errore di accesso: ${error.message}`); }
-        });
-        el.forgotBtn.addEventListener('click', async () => {
-            const email = document.getElementById('forgot-email').value;
-            if (!email.includes('@')) { alert('Inserisci un indirizzo email valido.'); return; }
-            try { await sendPasswordResetEmail(auth, email); alert(`Se l'utente esiste, un link per il reset è stato inviato a ${email}.`); showAuthCard('login-card'); } catch (error) { alert(`Errore: ${error.message}`); }
-        });
     });
     </script>
 </body>
