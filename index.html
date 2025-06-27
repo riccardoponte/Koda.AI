@@ -51,7 +51,7 @@
         #main-content { flex: 1; overflow-y: auto; padding-bottom: var(--bottom-nav-height); }
         .top-bar { padding: 16px; display: flex; align-items: center; gap: 16px; position: sticky; top: 0; background: linear-gradient(to bottom, rgba(18,18,18,1) 70%, rgba(18,18,18,0)); z-index: 10; }
         #logout-btn { margin-left: auto; flex-shrink: 0; }
-        .user-avatar { width: 32px; height: 32px; border-radius: 50%; background-color: var(--spotify-accent); display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 16px; }
+        .user-avatar { width: 32px; height: 32px; border-radius: 50%; background-color: var(--spotify-accent); display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 16px; cursor: pointer; object-fit: cover; }
         .page-title { font-size: 22px; font-weight: 700; flex-grow: 1; }
         .filters-container { padding: 8px 16px; position: sticky; top: 64px; background-color: var(--spotify-bg); z-index: 9; }
         .filter-pills { display: flex; gap: 8px; overflow-x: auto; -ms-overflow-style: none; scrollbar-width: none; }
@@ -171,6 +171,112 @@
         .conversation-list::-webkit-scrollbar { display: none; }
         .conversation-item { background: none; border: none; color: var(--spotify-text-secondary); text-align: left; padding: 12px; border-radius: 8px; font-size: 14px; cursor: pointer; transition: background-color 0.2s, color 0.2s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .conversation-item.active, .conversation-item:hover { background-color: var(--spotify-card); color: var(--spotify-text); }
+
+        /* --- STILI PER LE CLASSIFICHE (AGGIUNTI) --- */
+        .ranking-section-container {
+            display: grid;
+            gap: 24px;
+        }
+        .ranking-card {
+            background-color: var(--spotify-card);
+            border-radius: 12px;
+            padding: 16px;
+            transition: opacity 0.3s, transform 0.3s;
+            transform-origin: top;
+        }
+        .ranking-card.hidden {
+            opacity: 0;
+            transform: scale(0.95);
+            pointer-events: none;
+            display: none;
+        }
+        .ranking-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        .ranking-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .ranking-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+        .ranking-item:hover {
+            background-color: var(--spotify-bg-light);
+        }
+        .ranking-item-rank {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--spotify-text-secondary);
+            width: 20px;
+            text-align: center;
+        }
+        .ranking-item-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 6px;
+            object-fit: cover;
+        }
+        .ranking-item-info {
+            flex-grow: 1;
+        }
+        .ranking-item-info .tool-name {
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .ranking-item-info .tool-subtext {
+            font-size: 13px;
+            color: var(--spotify-text-secondary);
+        }
+        
+        /* --- STILI PER MODALE IMPOSTAZIONI (AGGIUNTI) --- */
+        #settings-modal .input-group {
+            margin-bottom: 16px; text-align: left;
+        }
+        #settings-modal label {
+            display: block; font-weight: 500; margin-bottom: 8px; font-size: 14px;
+        }
+        #settings-modal input {
+             width: 100%; padding: 14px 16px; font-size: 16px; background-color: var(--spotify-bg-light); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: var(--spotify-text);
+        }
+        #settings-modal .button {
+            width: 100%; margin-top: 8px;
+        }
+        hr.modal-divider {
+            border: none;
+            border-top: 1px solid var(--spotify-card);
+            margin: 24px 0;
+        }
+        .toast-message {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--spotify-accent);
+            color: black;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 3000;
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        .toast-message.show {
+            opacity: 1;
+            transform: translate(-50%, -10px);
+        }
 
     </style>
     <!-- SCRIPT AGGIUNTI PER REACT E BABEL -->
@@ -565,9 +671,9 @@ Per la tua richiesta, ti suggerisco questi strumenti:
     // --- FIREBASE IMPORTS ---
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut, updatePassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
+    
     // --- FIREBASE CONFIG ---
     const firebaseConfig = {
       apiKey: "AIzaSyDLouTZcRN28riyxBY06XYkWCsGkYbYm-o",
@@ -604,8 +710,8 @@ Per la tua richiesta, ti suggerisco questi strumenti:
         let currentView = 'home';
         let activeFilter = 'All';
         let exploreFilter = { type: null, value: null };
+        let rankingFilter = 'All';
         let reactRoot = null;
-        // NUOVO: gestione stato conversazioni
         let conversations = {};
         let activeConversationId = null;
 
@@ -625,8 +731,6 @@ Per la tua richiesta, ti suggerisco questi strumenti:
             conversationListContainer: document.getElementById('conversation-list-container'),
         };
         
-        // --- FUNZIONI DI GESTIONE CHAT HISTORY ---
-        
         const getStorageKey = () => `conversations_${currentUser.uid || 'guest'}`;
 
         const loadConversations = () => {
@@ -636,7 +740,7 @@ Per la tua richiesta, ti suggerisco questi strumenti:
             activeConversationId = savedActiveId && conversations[savedActiveId] ? savedActiveId : null;
 
             if (Object.keys(conversations).length === 0 || !activeConversationId) {
-                startNewChat(false); // Non rimontare l'app, solo preparare lo stato
+                startNewChat(false);
             }
         };
 
@@ -656,12 +760,25 @@ Per la tua richiesta, ti suggerisco questi strumenti:
             saveConversations(conversations);
             saveActiveConversationId();
             if (remountApp) {
-                renderView(); // Rimonta l'app per mostrare la nuova chat
+                renderView();
             }
             toggleSideMenu(false);
         };
         
-        // --- FUNZIONI DI RENDERIZZAZIONE ---
+        const showToast = (message) => {
+            const toast = document.createElement('div');
+            toast.className = 'toast-message';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                toast.addEventListener('transitionend', () => toast.remove());
+            }, 3000);
+        };
+
         const createGridCard = (tool) => `<div class="tool-card-grid" data-id="${tool.id}"><div class="logo-container"><img src="${tool.logoUrl}" class="tool-logo" alt="${tool.name}" loading="lazy"></div><div class="tool-name">${tool.name}</div></div>`;
         const createListCard = (tool) => `<div class="tool-card-list" data-id="${tool.id}"><div class="logo-container"><img src="${tool.logoUrl}" class="tool-logo" alt="${tool.name}" loading="lazy"></div><div class="info"><div class="tool-name">${tool.name}</div><div class="tool-subtext">${tool.category}</div></div><div class="favorite-icon" data-id="${tool.id}">${currentUser.uid && currentUser.favorites.includes(tool.id) ? '♥' : '♡'}</div></div>`;
         const createCategoryCard = (category) => {
@@ -737,8 +854,10 @@ Per la tua richiesta, ti suggerisco questi strumenti:
             
             const isGuest = !currentUser.uid;
             const userInitial = isGuest ? '?' : (currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U');
+            const avatarHTML = `<div class="user-avatar" ${!isGuest ? 'data-action="open-settings-modal"' : ''}>${userInitial}</div>`;
+
             const pageTitles = { home: 'Koda.AI Chatbot', 'top-ai': 'TOP AI', explore: 'Cerca', favorites: 'La tua libreria' };
-            const topBarHTML = `<div class="top-bar"><div class="user-avatar">${userInitial}</div><h1 class="page-title">${pageTitles[currentView]}</h1>${!isGuest ? '<button id="logout-btn" class="pill-btn">Logout</button>' : ''}</div>`;
+            const topBarHTML = `<div class="top-bar">${avatarHTML}<h1 class="page-title">${pageTitles[currentView]}</h1>${!isGuest ? '<button id="logout-btn" class="pill-btn">Logout</button>' : ''}</div>`;
             
             if (currentView !== 'home') {
                 el.mainContent.insertAdjacentHTML('beforeend', topBarHTML);
@@ -757,7 +876,6 @@ Per la tua richiesta, ti suggerisco questi strumenti:
                         initialActiveId: activeConversationId,
                         onConversationsChange: (newConvos) => {
                             saveConversations(newConvos);
-                            // Se il titolo è cambiato, aggiorna il menu laterale al prossimo rendering
                             if(el.sideMenu.classList.contains('visible')) {
                                 renderSideMenu();
                             }
@@ -768,8 +886,63 @@ Per la tua richiesta, ti suggerisco questi strumenti:
                 }
             } else if (currentView === 'top-ai') {
                 const featuredTools = aiToolsData.filter(t => t.isFeatured);
-                contentArea.innerHTML = `<div class="section-title">In Evidenza</div><div class="grid-container">${featuredTools.map(createGridCard).join('')}</div>`;
+                let contentHTML = `<div class="section-title">In Evidenza</div><div class="grid-container">${featuredTools.map(createGridCard).join('')}</div>`;
+
+                const rankings = [
+                    { title: "Classifica per il Testo", category: "Testo", toolIds: ['tool-013', 'tool-001', 'tool-021'] },
+                    { title: "Classifica per il Codice", category: "Codice", toolIds: ['tool-024', 'tool-021', 'tool-036'] },
+                    { title: "Classifica per le Immagini", category: "Immagini", toolIds: ['tool-014', 'tool-001', 'tool-033'] },
+                    { title: "Classifica per la Ricerca Web", category: "Ricerca Web", toolIds: ['tool-040', 'tool-001', 'tool-026'] }
+                ];
+                
+                const rankingFilterCategories = ["All", "Testo", "Codice", "Immagini", "Ricerca Web"];
+                const filtersHTML = `<div class="filters-container" style="top: 64px; margin-bottom: 20px;">
+                    <div class="filter-pills" id="ranking-filters">
+                        ${rankingFilterCategories.map(f => `<button class="pill-btn ${rankingFilter === f ? 'active' : ''}" data-ranking-filter="${f}">${f === 'All' ? 'Tutti' : f}</button>`).join('')}
+                    </div>
+                </div>`;
+
+                const createRankingItem = (toolId, rank) => {
+                    const tool = aiToolsData.find(t => t.id === toolId);
+                    if (!tool) return '';
+                    return `
+                        <li class="ranking-item" data-id="${tool.id}">
+                            <span class="ranking-item-rank">${rank}</span>
+                            <img src="${tool.logoUrl}" alt="${tool.name}" class="ranking-item-logo" loading="lazy">
+                            <div class="ranking-item-info">
+                                <div class="tool-name">${tool.name}</div>
+                                <div class="tool-subtext">${tool.category}</div>
+                            </div>
+                        </li>
+                    `;
+                };
+
+                const rankingsHTML = `
+                    <div class="section-title" style="margin-top: 40px;">Classifiche TOP AI</div>
+                    ${filtersHTML}
+                    <div class="ranking-section-container">
+                        ${rankings.map(ranking => `
+                            <div class="ranking-card" data-ranking-category="${ranking.category}">
+                                <h3>${ranking.title}</h3>
+                                <ol class="ranking-list">
+                                    ${ranking.toolIds.map((id, index) => createRankingItem(id, index + 1)).join('')}
+                                </ol>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+
+                contentHTML += rankingsHTML;
+                contentArea.innerHTML = contentHTML;
                 el.mainContent.appendChild(contentArea);
+                
+                const rankingCards = document.querySelectorAll('.ranking-card');
+                rankingCards.forEach(card => {
+                    if (rankingFilter !== 'All' && card.dataset.rankingCategory !== rankingFilter) {
+                        card.classList.add('hidden');
+                    }
+                });
+
             } else if (currentView === 'explore') {
                 if (!exploreFilter.type) {
                     el.mainContent.insertAdjacentHTML('beforeend', `<div class="search-bar-container"><input type="text" id="search-input" placeholder="Cerca strumenti, categorie..."></div>`);
@@ -814,6 +987,7 @@ Per la tua richiesta, ti suggerisco questi strumenti:
             if (navButton && navButton.dataset.page !== currentView) {
                 currentView = navButton.dataset.page;
                 activeFilter = 'All';
+                rankingFilter = 'All';
                 exploreFilter = { type: null, value: null };
                 renderView();
                 el.mainContent.scrollTop = 0;
@@ -822,53 +996,114 @@ Per la tua richiesta, ti suggerisco questi strumenti:
         
         el.mainContent.addEventListener('click', (e) => {
             const actionButton = e.target.closest('[data-action]');
-            const card = e.target.closest('.tool-card-grid, .tool-card-list');
+            const card = e.target.closest('.tool-card-grid, .tool-card-list, .ranking-item');
             const favoriteIcon = e.target.closest('.favorite-icon');
             const pillButton = e.target.closest('.pill-btn:not(#logout-btn)');
+            const rankingPill = e.target.closest('[data-ranking-filter]');
             const filterCard = e.target.closest('[data-filter-type]');
             const logoutButton = e.target.closest('#logout-btn');
             const menuToggle = e.target.closest('#menu-toggle-btn');
-
-            if (menuToggle) { toggleSideMenu(true); return; }
-
+            
             if (actionButton) {
                 const action = actionButton.dataset.action;
+                if (action === 'open-settings-modal' && !currentUser.isGuest) { window.openSettingsModal(); return; }
                 if (action === 'prompt-login') { triggerAuthFlow('login-card'); return; }
                 if (action === 'prompt-register') { triggerAuthFlow('register-card'); return; }
                 if (action === 'back-to-explore') { exploreFilter = { type: null, value: null }; renderView(); return; }
+            }
+            
+            if (menuToggle) { toggleSideMenu(true); return; }
+
+            if (rankingPill) {
+                rankingFilter = rankingPill.dataset.rankingFilter;
+                document.querySelectorAll('#ranking-filters .pill-btn').forEach(p => p.classList.remove('active'));
+                rankingPill.classList.add('active');
+                document.querySelectorAll('.ranking-card').forEach(card => {
+                    const shouldShow = rankingFilter === 'All' || card.dataset.rankingCategory === rankingFilter;
+                    card.classList.toggle('hidden', !shouldShow);
+                });
+                return;
             }
 
             if (logoutButton) { signOut(auth).catch(error => console.error("Logout Error:", error)); } 
             else if (favoriteIcon) { e.stopPropagation(); toggleFavorite(favoriteIcon.dataset.id); } 
             else if (card) { window.openDetailModal(card.dataset.id); } 
-            else if (pillButton) { activeFilter = pillButton.dataset.filter; renderView(); } 
+            else if (pillButton && pillButton.closest('#ranking-filters') === null) { activeFilter = pillButton.dataset.filter; renderView(); } 
             else if (filterCard) { exploreFilter.type = filterCard.dataset.filterType; exploreFilter.value = filterCard.dataset.filterValue; renderView(); }
         });
+        
+        window.openSettingsModal = () => {
+            if (!currentUser.uid) return;
+            
+            const modalHTML = `
+                <div id="settings-modal" class="modal-overlay visible">
+                    <div class="modal-content">
+                        <button class="modal-close-btn" data-action="close-modal">×</button>
+                        <h2>Impostazioni Account</h2>
+                        
+                        <p style="font-size: 16px; color: var(--spotify-text-secondary); margin-top: 16px; margin-bottom: 24px;">${currentUser.name}</p>
+                        
+                        <hr class="modal-divider">
+
+                        <h4>Cambia Password</h4>
+                        <div class="input-group" style="margin-top: 16px;">
+                            <label for="profile-new-password">Nuova Password</label>
+                            <input type="password" id="profile-new-password" placeholder="Minimo 6 caratteri">
+                        </div>
+                        <div class="input-group">
+                            <label for="profile-confirm-password">Conferma Password</label>
+                            <input type="password" id="profile-confirm-password" placeholder="Reinserisci la nuova password">
+                        </div>
+                        <button class="button" id="update-password-btn">Salva Password</button>
+                    </div>
+                </div>`;
+            el.modalContainer.innerHTML = modalHTML;
+
+            document.getElementById('update-password-btn').addEventListener('click', handlePasswordUpdate);
+        };
+        
+        const handlePasswordUpdate = async () => {
+            const newPassword = document.getElementById('profile-new-password').value;
+            const confirmPassword = document.getElementById('profile-confirm-password').value;
+
+            if (newPassword.length < 6) {
+                alert("La password deve contenere almeno 6 caratteri.");
+                return;
+            }
+            if (newPassword !== confirmPassword) {
+                alert("Le password non coincidono.");
+                return;
+            }
+
+            try {
+                await updatePassword(auth.currentUser, newPassword);
+                showToast("Password aggiornata con successo!");
+                document.getElementById('profile-new-password').value = '';
+                document.getElementById('profile-confirm-password').value = '';
+                closeModal();
+            } catch (error) {
+                console.error("Errore aggiornamento password:", error);
+                alert(`Errore: ${error.message}. Potrebbe essere necessario effettuare nuovamente il login.`);
+            }
+        };
 
         el.sideMenuOverlay.addEventListener('click', (e) => {
             const conversationItem = e.target.closest('.conversation-item');
             const newChatButton = e.target.closest('.new-chat-btn');
             
-            if (newChatButton) {
-                startNewChat();
-                return;
-            }
+            if (newChatButton) { startNewChat(); return; }
 
             if (conversationItem) {
                 const newActiveId = conversationItem.dataset.id;
                 if (newActiveId !== activeConversationId) {
                     activeConversationId = newActiveId;
                     saveActiveConversationId();
-                    renderView(); // Rimonta l'app con la nuova chat attiva
+                    renderView();
                 }
                 toggleSideMenu(false);
                 return;
             }
-
-            // Chiudi se si clicca sull'overlay ma non sul menu
-            if (e.target.id === 'side-menu-overlay') {
-                toggleSideMenu(false);
-            }
+            if (e.target.id === 'side-menu-overlay') { toggleSideMenu(false); }
         });
 
         el.mainContent.addEventListener('input', e => {
@@ -889,7 +1124,7 @@ Per la tua richiesta, ti suggerisco questi strumenti:
             const actionTarget = e.target.closest('[data-action]');
             const recommendationCard = e.target.closest('.recommendation-box[data-id]');
             if (recommendationCard) { window.openDetailModal(recommendationCard.dataset.id); return; }
-            if (e.target.id === 'detail-modal') closeModal();
+            if (e.target.id === 'detail-modal' || e.target.id === 'settings-modal') closeModal();
             if (actionTarget) {
                 const action = actionTarget.dataset.action;
                 if (action === 'close-modal') closeModal();
@@ -897,7 +1132,6 @@ Per la tua richiesta, ti suggerisco questi strumenti:
             }
         });
 
-        // --- AUTHENTICATION LOGIC ---
         const showAuthCard = (cardId) => { el.authCards.forEach(card => card.classList.add('hidden')); document.getElementById(cardId).classList.remove('hidden'); };
         
         const triggerAuthFlow = (card = 'login-card') => {
@@ -925,27 +1159,26 @@ Per la tua richiesta, ti suggerisco questi strumenti:
         const initializeAppWithUser = async (user) => {
             const userDocRef = doc(db, "users", user.uid);
             const userDocSnap = await getDoc(userDocRef);
-            if (userDocSnap.exists()) { currentUser = { ...userDocSnap.data(), uid: user.uid, name: user.email }; } 
-            else { await setDoc(userDocRef, { email: user.email, favorites: [] }); currentUser = { uid: user.uid, name: user.email, favorites: [] }; }
-            
+            if (userDocSnap.exists()) { 
+                currentUser = { ...userDocSnap.data(), uid: user.uid, name: user.email }; 
+            } else { 
+                await setDoc(userDocRef, { email: user.email, favorites: [] }); 
+                currentUser = { uid: user.uid, name: user.email, favorites: [] }; 
+            }
             loadConversations();
-            
             el.authOverlay.classList.add('hidden');
             el.authOverlay.addEventListener('transitionend', () => el.authOverlay.style.display = 'none', { once: true });
             el.appContainer.style.display = 'flex';
             renderView();
         };
 
-        // FIX AVVIO: Mostra subito l'interfaccia guest, poi aggiorna con l'utente se loggato.
         initializeAppForGuest(); 
         onAuthStateChanged(auth, user => {
             if (user) {
-                // Se l'utente è diverso da quello attuale (cioè era guest o un altro utente)
                 if (user.uid !== currentUser.uid) {
                     initializeAppWithUser(user);
                 }
             } else {
-                // Se non c'è utente e lo stato attuale non è già guest
                 if (currentUser.uid) {
                     initializeAppForGuest();
                 }
@@ -955,9 +1188,7 @@ Per la tua richiesta, ti suggerisco questi strumenti:
         el.authOverlay.addEventListener('click', (e) => {
             const target = e.target.closest('[data-action]');
             if (!target) return;
-            
-            const action = target.dataset.action;
-            if (action === 'close-auth') closeAuthAndReturnToApp();
+            if (target.dataset.action === 'close-auth') closeAuthAndReturnToApp();
         });
 
         el.authLinks.forEach(link => {
