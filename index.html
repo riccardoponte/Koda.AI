@@ -1172,16 +1172,12 @@ Per la tua richiesta, ti suggerisco questi strumenti:
             renderView();
         };
 
-        initializeAppForGuest(); 
+        // --- CORREZIONE: LOGICA DI AVVIO SEMPLIFICATA ---
         onAuthStateChanged(auth, user => {
             if (user) {
-                if (user.uid !== currentUser.uid) {
-                    initializeAppWithUser(user);
-                }
+                initializeAppWithUser(user);
             } else {
-                if (currentUser.uid) {
-                    initializeAppForGuest();
-                }
+                initializeAppForGuest();
             }
         });
         
