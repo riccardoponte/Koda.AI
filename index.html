@@ -82,12 +82,35 @@
         .tool-card-grid .tool-name { font-size: 14px; font-weight: 600; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
         .list-container { display: flex; flex-direction: column; gap: 12px; }
         .tool-card-list { display: flex; align-items: center; gap: 12px; cursor: pointer; }
-        .tool-card-list .logo-container { width: 56px; height: 56px; flex-shrink: 0; background-color: var(--spotify-card); display: flex; align-items: center; justify-content: center; overflow: hidden;}
+        .tool-card-list .logo-container { width: 56px; height: 56px; flex-shrink: 0; background-color: var(--spotify-card); display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; /* Needed for absolute positioning of edit icon */ }
         .tool-card-list .tool-logo { width: 100%; height: 100%; object-fit: cover; }
         .tool-card-list .info { flex-grow: 1; }
         .tool-card-list .tool-name { font-size: 16px; font-weight: 500; }
         .tool-card-list .tool-subtext { font-size: 13px; color: var(--spotify-text-secondary); }
         .tool-card-list .favorite-icon { font-size: 22px; color: var(--spotify-accent); margin-left: auto; padding: 10px; cursor: pointer; }
+         .tool-card-list .edit-icon { /* Style for edit icon in list view */
+             position: absolute;
+             top: 4px;
+             right: 4px;
+             background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
+             border-radius: 50%;
+             width: 20px; /* Smaller icon */
+             height: 20px; /* Smaller icon */
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             cursor: pointer;
+             z-index: 5; /* Above the logo */
+             color: white; /* White pencil icon */
+             font-size: 12px; /* Adjust size as needed */
+         }
+         .tool-card-list .edit-icon svg {
+             width: 12px;
+             height: 12px;
+             fill: currentColor;
+         }
+
+
         .category-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 30px; }
         .category-card { position: relative; padding: 12px; border-radius: 8px; font-size: 18px; font-weight: 700; overflow: hidden; aspect-ratio: 1.5 / 1; cursor: pointer; }
         .category-card h3 { position: relative; z-index: 2; color: #fff; }
@@ -277,7 +300,7 @@
             display: block; font-weight: 500; margin-bottom: 8px; font-size: 14px;
         }
         #settings-modal input,
-        #add-app-modal input,
+        #add-app-modal input:not([type="file"]), /* Exclude file input */
         #add-app-modal textarea,
         #replace-featured-modal input { /* Added replace modal */
              width: 100%; padding: 14px 16px; font-size: 16px; background-color: var(--spotify-bg-light); border: 1px solid rgba(128,128,128,0.2); border-radius: 8px; color: var(--spotify-text);
@@ -287,6 +310,43 @@
              min-height: 80px;
              resize: vertical;
          }
+         /* Style for file input */
+         #add-app-modal input[type="file"] {
+             width: 100%;
+             padding: 14px 0; /* Adjust padding for file input */
+             font-size: 16px;
+             background-color: transparent; /* File input background is handled by the container */
+             border: none; /* File input border is handled by the container */
+             border-radius: 0;
+             color: var(--spotify-text);
+             box-sizing: border-box;
+         }
+         #add-app-modal input[type="file"]::file-selector-button {
+             background-color: var(--spotify-bg-light);
+             color: var(--spotify-text);
+             border: 1px solid rgba(128,128,128,0.2);
+             border-radius: 8px;
+             padding: 8px 12px;
+             margin-right: 10px;
+             cursor: pointer;
+             transition: background-color 0.2s;
+         }
+         #add-app-modal input[type="file"]::file-selector-button:hover {
+             background-color: var(--spotify-card);
+         }
+         /* Style for logo preview */
+         #add-app-logo-preview {
+             display: block;
+             width: 80px;
+             height: 80px;
+             margin: 10px auto 0; /* Center preview below input */
+             border-radius: 8px;
+             object-fit: cover;
+             border: 1px solid rgba(128,128,128,0.2);
+             background-color: var(--spotify-bg-light); /* Placeholder background */
+         }
+
+
         #settings-modal .button,
         #add-app-modal .button,
         #replace-featured-modal .button { /* Added replace modal */
@@ -812,7 +872,7 @@
       apiKey: "AIzaSyDLouTZcRN28riyxBY06XYkWCsGkYbYm-o",
       authDomain: "n8n-riccardo-29-aprile.firebaseapp.com",
       projectId: "n8n-riccardo-29-aprile",
-      storageBucket: "n8n-riccardo-29-aprile.firebasestorage.app",
+      storageBucket: "n8n-riccardo-29-aprile.firebaseapp.com",
       messagingSenderId: "785683001992",
       appId: "1:785683001992:web:d24e375041fb7c0f18653d",
       measurementId: "G-B78J4HK2NX"
@@ -868,7 +928,7 @@
                 appNameLabel: "Nome App", appNamePlaceholder: "Es. La mia AI fantastica",
                 appDescriptionLabel: "Descrizione", appDescriptionPlaceholder: "Breve descrizione dell'app...",
                 appWebsiteLabel: "Link Sito Web", appWebsitePlaceholder: "https://tuasito.com",
-                appLogoLabel: "Link Logo (URL)", appLogoPlaceholder: "https://tuasito.com/logo.png",
+                appLogoLabel: "Logo (File Immagine)", // Updated label for file input
                 addAppButton: "Aggiungi App",
                 addAppSuccess: "App aggiunta con successo!",
                 addAppError: "Errore nell'aggiunta dell'app: %s",
@@ -879,12 +939,13 @@
                 emptyUserTools: "Nessuna app aggiunta da te.",
                 appNameRequired: "Il nome dell'app è obbligatorio.",
                 appWebsiteRequired: "Il link del sito web è obbligatorio.",
-                appLogoRequired: "Il link del logo è obbligatorio.",
+                appLogoRequired: "Il logo è obbligatorio.", // Updated required message
                 category: "Categoria", // Added missing category translation
                 replaceFeaturedTitle: "Sostituisci AI in Evidenza", // New translation
                 selectAppToFeature: "Seleziona un'app dalla tua libreria per metterla in evidenza:", // New translation
                 noUserApps: "Non hai ancora aggiunto app custom.", // New translation
                 removeFeaturedReplacement: "Rimuovi Sostituzione", // New translation
+                removeUserTool: "Rimuovi App Custom", // New translation for removing user tools
             },
             en: {
                 // Auth
@@ -926,7 +987,7 @@
                 appNameLabel: "App Name", appNamePlaceholder: "Ex. My Awesome AI",
                 appDescriptionLabel: "Description", appDescriptionPlaceholder: "Brief description of the app...",
                 appWebsiteLabel: "Website Link", appWebsitePlaceholder: "https://yourwebsite.com",
-                appLogoLabel: "Logo Link (URL)", appLogoPlaceholder: "https://yourwebsite.com/logo.png",
+                appLogoLabel: "Logo (Image File)", // Updated label for file input
                 addAppButton: "Add App",
                 addAppSuccess: "App added successfully!",
                 addAppError: "Error adding app: %s",
@@ -937,12 +998,13 @@
                 emptyUserTools: "No apps added by you.",
                 appNameRequired: "App name is required.",
                 appWebsiteRequired: "Website link is required.",
-                appLogoRequired: "Logo link is required.",
+                appLogoRequired: "Logo is required.", // Updated required message
                 category: "Category", // Added missing category translation
                 replaceFeaturedTitle: "Replace Featured AI", // New translation
                 selectAppToFeature: "Select an app from your library to feature it:", // New translation
                 noUserApps: "You haven't added any custom apps yet.", // New translation
                 removeFeaturedReplacement: "Remove Replacement", // New translation
+                removeUserTool: "Remove Custom App", // New translation for removing user tools
             }
         };
         
@@ -989,7 +1051,7 @@
 
         // --- DATABASE PERSONALIZZATO ---
         const aiToolsData = [
-            { id: 'tool-001', name: 'ChatGPT', description: {it: 'Genera testo, immagini e risponde a domande con ricerca web.', en: 'Generates text, images, and answers questions with web search.'}, category: 'Testo', country: 'USA', website: 'https://chatgpt.com/', isFeatured: true, logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/ChatGPT_logo.svg/1024px-ChatGPT_logo.svg.png', recommendationId: 'tool-025' }, { id: 'tool-012', name: 'Google Notebook', description: {it: "Permette di creare riassunti audio sulle fonti dell'utente, rispondere a domande e creare mappe mentali.", en: "Allows creating audio summaries from user sources, answering questions, and creating mind maps."}, category: 'Testo', country: 'USA', website: 'https://notebooklm.google.com/', isFeatured: false, logoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJbWdW2SCEWfJuDTh5PVxgmqDvXoX5vElJ6s94SZ8Fe1YPzfxzGPuIyE9cBMDswv3qUd4&usqp=CAU', recommendationId: 'tool-021' }, { id: 'tool-013', name: 'Grok', description: {it: 'Assistente di ricerca conversazionale con accesso a dati in tempo reale. (Richiede VPN)', en: 'Conversational research assistant with real-time data access. (Requires VPN)'}, category: 'Testo', country: 'USA', website: 'https://grok.com/', isFeatured: false, logoUrl: 'https://i.namu.wiki/i/Wk8b-Vo4qqynLc4pN1T0otG83F383UPI_IR4VthZuZioAxVD_NS6uErIsecLMDK0F0L-KiUjL7xonRz4EwPL2g.webp', recommendationId: 'tool-001' }, { id: 'tool-014', name: 'FLUX', description: {it: 'Genera immagini, video e animazioni da prompt testuali e immagini.', en: 'Generates images, videos, and animations from text prompts and images.'}, category: 'Immagini', country: 'Cina', website: 'https://playground.bfl.ai/image/generate', isFeatured: false, logoUrl: 'https://kodexolabs.com/wp-content/uploads/2025/01/Flux.1.webp', recommendationId: 'tool-033' }, { id: 'tool-015', name: 'Swap AI', description: {it: 'Esegue il "face swap" (scambio di volti) in immagini e video in modo realistico.', en: 'Performs realistic "face swap" in images and videos.'}, category: 'Immagini', country: 'USA', website: 'https://aifaceswap.io/', isFeatured: false, logoUrl: 'https://www.toolpilot.ai/cdn/shop/files/aifaceswap-l.jpg?v=1733037433', recommendationId: 'tool-016' }, { id: 'tool-016', name: 'Inpaint AI', description: {it: 'Rimuove oggetti, persone o imperfezioni indesiderate dalle foto con un solo click.', en: 'Removes unwanted objects, people, or imperfections from photos with a single click.'}, category: 'Immagini', country: 'USA', website: 'https://theinpaint.com/', isFeatured: false, logoUrl: 'data:image/webp;base64,UklGRqoEAABXRUJQVlA4WAoAAAAQAAAAJgAAJgAAQUxQSFwCAAARkHRrmyHJ6vNLdvfYtm3btm3b9uxs7Gzbtle2bSu/OCcjvi9iIkJh27aNndUdNO0TlhHBH/rpz6b8gWMDKHlYZrTjDfkmRHilbjyJ/6DX7uOQfDsuBSOg2wfAgtJ3hcpfqzK7hp3gOpDzQohEwiMlTWaBZQepk2Y8EinDO91TmYR+8aXttv1DFuLL/DyuVt1cm7+8+Cd0/LMpm8446fNOvf5Hqyi+tnN4gYKVMk94rWSk4atmHo+M2+f2fxRqZigbbijOw1/26fJdFAb8MTanzwDcLH3PvUFkskfi8d2EQnEM7FI90m+PdkBUBZnKXu1bKgHQtxGz+eiUb4hE2Tkf57XKF8uMp92z4i3K7PXV2jCwbFJmI6iz8A7yER0/PaJySg+AiDPiGrMDz1sjqiSXuxIEM34JYYKXQyqlcIF7RC2e0R5k5dvUKun4khY8iaheP+//LK+dM4iUtv2xb9jTmEodaFUqKiiH0ofY5GnN8HK3aon4txZv3GthQHw4oG5yrlDSb0duPRJ9M6Z+aof3cf1emxzxY1bDjMruoE4EyLUGlV6+I9zcKHtgcz8FwKn62GTSlXYFYkDz22OafTM462nfSvGYGKQFv+oLvf8ypmpiOkrn2Omnf9UV9feiyimAial10o5+xjYQt1dNbSvJqypbypKkHS+xP/ly3dQOvwpkoCQRV23PL4rHbdN45PJpE4Bk6xRe8EbFp+G5fZudz0xWE0jZ5fTfCL/nawolV2kA8YvM/yJ+bShPCwWMAvDPwEvcYeuEovFtda20ALpetWV78eNzP45sp9ICVlA4ICgCAABwCwCdASonACcAPoEeoFAlISUlGqCgEAlsALszQnfZODkB5GjUCAeYDdAOkA9CXy3vYa8majvPbrEC3w5RFM5OSn/KrMNlvL8JdXmVHGHDzjTaj7fvjV1ibG55GrUaSF3oolIAAP7K3bd03vd3wdyfd3PWkrdc5+l+Iasr40ElHEoRyDAfR7KWhTEUDOXTp3v8yZt7uLso8TxJA+6uDYJCVhrs3AZpMuDzCsUjsIEPp38Cv4wYR9LrreH7v1LAyPebD82DkAcosDF1iVhC8XjMHEx40fnT6Y5A38e/+s4ytcq/NzQzQSinQS+v4CX9j9XcnQqehOsxLSw76NRA4NikbBddvkE610BDsE6bz+5TKMonMv5qsXP4cNREOF4isL5uaMIGpSmnAJ0nPkOARvLYoTqp8KsSn+UO9exbdilgqTnIUwst6EvWMyV4b1qVA4z7zpI4T1hkk6bE6BxDxa/fDQpYnKbJmX92XLG4cVR1QDvQEpAxFPjQ/UtYfLXmZZfYDoG2qx3/oCSsllMI6GzYIxCGnPQy+N4qHTzpiuSBCd/fy/xNK/mEP9MDGg5i3DyI7O6ZTfD41oWs19qmrb8If2YXx6OWeQsO3gQAhVHjmiB6o6zKUp0KzpLgoxiCEeIM6+/1Alrn1mScl+t6JRSjO38IRDBxgoJ/xbLyoNjF3V/yPJwBJ5CXiZCe/U/zpIfvzIASXoyf4/wzIxzjnHFoLFLfuAAAAA=', recommendationId: 'tool-017' }, { id: 'tool-017', name: 'Pixel Cut AI', description: {it: "Espande i bordi delle immagini (outpainting) per cambiare formato o stile.", en: 'Expands image borders (outpainting) to change format or style.'}, category: 'Immagini', country: 'USA', website: 'https://www.pixelcut.ai/t/uncrop', isFeatured: false, logoUrl: 'https://templateshake.com/wp-content/uploads/2021/09/Pixelcut_-AI-Graphic-Designer.png', recommendationId: 'tool-033' }, { id: 'tool-033', name: 'Whisk', description: {it: 'Crea animazioni fluide da immagini statiche e genera anche immagini da prompt.', en: 'Creates smooth animations from static images and also generates images from prompts.'}, category: 'Immagini', country: 'USA', website: 'https://labs.google/fx/tools/whisk/', isFeatured: false, logoUrl: 'data:image/webp;base64,UklGRtoCAABXRUJQVlA4WAoAAAAQAAAAGgAAGgAAQUxQSHEBAAARkGTbtuoqvODSMJfuOTWKTiM8rt/d5UkY78XWKtwbBk2IiAlIkmv33+8W43GR53kR5nm29+35zVpSu/d6qoBLMVy8u3PlxusFghBBQHXx+trzmf8R1Pnjr4ioa0fbh+X+9vGKAOqnPUKxd0q2ec5JVwVwJ4ugDKct69MOCqpZYLQ1G9ibtRRD0gBF/0z7Nhd1FRQv0gDVP+XI5uy7yy9j6MnhVuVk82hXJXIpqC4a46G6ftleSCwlVi+bhvW8qSj/cHKwVkTmne1TFYjgrJEODHc659bnhmmsM22oZu0jddpWNM0AT7eLntJbx3DnRANxUnfRXd3+/delf2Zqlgm9uToeqxCZjtQ0FXYUoxhlXckzYEtAWa5bQrovjE7ns9l0MqmqqizLsqpO2+rOJ8HtRq/f6XZ7/f6w3+/3e1uon5/MDVGiIqrMn918QQREwiWvb9Zuv1qIUQAhmL24lyTJtYdfH/OwiOZFUex+eHSjlgAAVlA4IEIBAACQBwCdASobABsAPpEopFIloaWllACwEglsAJ0yhID1oDbNMQ1XPLbrzhvNnsAbpL+wAdmnnyJ9nYieeXb2Ryc1AKuoW3wA/vdDClcr9pD9tsCqduiNtQaVaXgNfHp+atcZTe36+3xORhwFno/1uCGFQNU/4IYVL2I0o6c2eo73COMYL756Lzd/ibcQRmlIAId+z6psKbtTu/HIkA2HcYl/lq+sJbc01Q/VZ218h72kU324N9YcnNwU4vXy6VXCKq/tTNwWHsJ66N8JgRuCvc2pDpQ7KYv4rj//agwrDT7PdEnuIAkZLuckIqBv9aVnsRgB0qHFxi5a42nw4jOMOI330LQhImDuwmt+4/ryzZZzC4m8PLOx6EdyPthzs6wIhg+lRzc3+QT27OYDqLpNkFX2To7bI2E7F1lLi0lg6Fo4SAAA', recommendationId: 'tool-014'}, { id: 'tool-041', name: 'Leonardo AI', description: {it: 'Piattaforma per la generazione di asset visivi di alta qualità, da concept art a texture per giochi.', en: 'Platform for generating high-quality visual assets, from concept art to game textures.'}, category: 'Immagini', country: 'USA', website: 'https://leonardo.ai/', isFeatured: false, logoUrl: 'https://yt3.googleusercontent.com/a04AUXisIIWkI-Pj5zORQTiDNS9tALLmPc8pxuRT_aEHrCOUDsPQoLuh4QRbfgICortk7tBhyg=s900-c-k-c0x00ffffff-no-rj', recommendationId: 'tool-014' }, { id: 'tool-042', name: 'Midjourney', description: {it: 'Genera immagini artistiche e fotorealistiche di alta qualità da prompt testuali tramite Discord.', en: 'Generates high-quality artistic and fotorealistic images from text prompts via Discord.'}, category: 'Immagini', country: 'USA', website: 'https://www.midjourney.com/home', isFeatured: false, logoUrl: 'https://sadesign.ai/pictures/picfullsizes/2024/12/10/dsn1733795303.jpg', recommendationId: 'tool-041' }, { id: 'tool-034', name: 'Kling', description: {it: 'Genera video di alta qualità da prompt testuali, concentrandosi sul realismo e sul movimento complesso.', en: 'Generates high-quality videos from text prompts, focusing on realism and complex motion.'}, category: 'Video', country: 'Cina', website: 'https://klingai.com/global/', isFeatured: false, logoUrl: 'https://play-lh.googleusercontent.com/JOfjXqsShK8j1aGBc1xlHBnatoRKRwLsGuoFZUAvKksaEPvK71eLwSg4FbKlky9Es-s', recommendationId: 'tool-035' }, { id: 'tool-035', name: 'Veo', description: {it: "Il modello di generazione video più capace di Google, che crea video realistici e di alta qualità da prompt di testo e immagini.", en: "Google's most capable video generation model, creating realistic, high-quality videos from text and image prompts."}, category: 'Video', country: 'USA', website: 'https://deepmind.google/models/veo/', isFeatured: false, logoUrl: 'https://storage.googleapis.com/gweb-uniblog-publish-prod/images/IO25_Gemini_MOD_v33_PART_1_DG_FINAL_54.max-1440x810.png', isFeatured: false, recommendationId: 'tool-014' }, { id: 'tool-021', name: 'Claude', description: {it: 'Crea bozze e contenuti per presentazioni interattive e documenti complessi.', en: 'Creates drafts and content for interactive presentations and complex documents.'}, category: 'Presentazioni', country: 'USA', website: 'https://claude.ai/new', isFeatured: true, logoUrl: 'https://logo.svgcdn.com/l/claude-icon-8x.png', recommendationId: 'tool-022' }, { id: 'tool-022', name: 'Gamma AI', description: {it: "Genera presentazioni, documenti e pagine web statiche partendo da un'idea.", en: 'Generates presentations, documents, and static web pages from an idea.'}, category: 'Presentazioni', country: 'USA', website: 'https://gamma.app/', isFeatured: false, logoUrl: 'https://www.fahimai.com/wp-content/uploads/2025/03/GAMMA-cta.png', recommendationId: 'tool-021' }, { id: 'tool-023', name: 'Napkin AI', description: {it: 'Converte dati testuali e concetti in grafici statici e diagrammi chiari.', en: 'Converts text data and concepts into clear static charts and diagrams.'}, category: 'Presentazioni', country: 'USA', website: 'https://www.napkin.ai/', isFeatured: false, logoUrl: 'https://media.licdn.com/dms/image/v2/D560BAQEYfmQKrdByPg/company-logo_200_200/company-logo_200_200/0/1723039432148/napkin_ai_logo?e=2147483647&v=beta&t=Nsr22RG3uiy9usBNh55leGVf8ES5YJQwUANW-2N7yEA', recommendationId: 'tool-022' }, { id: 'tool-024', name: 'Google AI Studio', description: {it: "Crea app, siti e prototipi basati sui modelli Gemini di Google.", en: "Creates apps, sites, and prototypes based on Google's Gemini models."}, category: 'Codice', country: 'USA', website: 'https://aistudio.google.com/prompts/new_chat', isFeatured: true, logoUrl: 'data:image/png;base64,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', recommendationId: 'tool-026' }, { id: 'tool-025', name: 'Manus', description: {it: "Piattaforma di AI estremamente potente. Può eseguire compiti come ChatGPT e gestirli in background, creando testi, ricerche, presentazioni, video, immagini e molto altro.", en: 'Extremely powerful AI platform. It can perform tasks like ChatGPT and manage them in the background, creating text, research, presentations, videos, images and much more.'}, category: 'Codice', country: 'Cina', website: 'https://manus.im/app', isFeatured: true, logoUrl: 'data:image/png;base64,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', recommendationId: 'tool-001' }, { id: 'tool-026', name: 'Microsoft Copilot', description: {it: 'Assistente AI per codice, specializzato anche in script VBA per Excel.', en: 'AI assistant for code, also specializing in VBA scripts for Excel.'}, category: 'Codice', country: 'USA', website: 'https://copilot.microsoft.com/', isFeatured: false, logoUrl: 'https://breakwaterit.co.uk/wp-content/uploads/2024/02/Copilot-65d6242f4e297.png', recommendationId: 'tool-024' }, { id: 'tool-027', name: 'Google Stitch', description: {it: 'Tool per la creazione di codice per interfacce utente (UX Design).', en: 'Tool for creating code for user interfaces (UX Design).'}, category: 'Codice', country: 'USA', website: 'https://stitch.withgoogle.com/', isFeatured: false, logoUrl: 'https://media2.dev.to/dynamic/image/width=1080,height=1080,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fzhshikvds4e6nn22fngm.png', recommendationId: 'tool-028' }, { id: 'tool-028', name: 'Chef Convex', description: {it: "Crea web app complete con un backend già integrato e pronto all'uso.", en: 'Creates complete web apps with a built-in and ready-to-use backend.'}, category: 'Codice', country: 'USA', website: 'https://chef.convex.dev/', isFeatured: false, logoUrl: 'https://chef.convex.dev/chef.svg', recommendationId: 'tool-027' }, { id: 'tool-030', name: 'Deepseek', description: {it: 'Modello linguistico specializzato nella scrittura e comprensione di codice in vari linguaggi.', en: 'Language model specialized in writing and understanding code in various languages.'}, category: 'Codice', country: 'Cina', website: 'https://chat.deepseek.com/', isFeatured: false, logoUrl: 'https://cdn-1.webcatalog.io/catalog/deepseek/deepseek-social-preview.png?v=1748219623720', recommendationId: 'tool-031' }, { id: 'tool-031', name: 'Qwen', description: {it: 'Assistente AI multimodale di Alibaba Cloud, efficace nella generazione di codice, analisi, creazione di testi e ricerca web.', en: 'Multimodal AI assistant from Alibaba Cloud, effective in code generation, analysis, text creation, and web search.'}, category: 'Codice', country: 'Cina', website: 'https://chat.qwen.ai/', isFeatured: false, logoUrl: 'https://crystalpng.com/wp-content/uploads/2025/02/Qwen-03.png', recommendationId: 'tool-030' }, { id: 'tool-032', name: 'Mistral', description: {it: 'Modelli linguistici aperti e ottimizzati, ideali per lo Codice di applicazioni e la Codice.', en: 'Open and optimized language models, ideal for application development and coding.'}, category: 'Codice', country: 'Europe', website: 'https://mistral.ai/', isFeatured: false, logoUrl: 'https://www.massa-critica.it/wp-content/uploads/mistral-ai.jpg', recommendationId: 'tool-001' }, { id: 'tool-036', name: 'BOLT AI', description: {it: 'Genera codice e componenti UI partendo da un prompt.', en: 'Generates code and UI components from a prompt.'}, category: 'Codice', country: 'USA', website: 'https://bolt.new/', isFeatured: false, logoUrl: 'https://cdn-1.webcatalog.io/catalog/bolt-new/bolt-new-icon-filled-256.png?v=1730692903154', recommendationId: 'tool-024' }, { id: 'tool-037', name: 'V0 AI', description: {it: 'Genera interfacce utente reattive basate su React da semplici prompt di testo.', en: 'Generates responsive user interfaces based on React from simple text prompts.'}, category: 'Codice', country: 'USA', website: 'https://v0.dev/chat', isFeatured: false, logoUrl: 'https://logowik.com/content/uploads/images/v0-ai1721420590.logowik.com.webp', recommendationId: 'tool-027' }, { id: 'tool-038', name: 'Cursor', description: {it: 'Un editor di codice basato su AI per programmare in modo più veloce ed efficiente.', en: 'An AI-powered code editor for faster and more efficient programming.'}, category: 'Codice', country: 'USA', website: 'https://www.cursor.com/', isFeatured: false, logoUrl: 'https://cursor.com/favicon.svg', recommendationId: 'tool-026' }, { id: 'tool-039', name: 'Lovable', description: {it: "Sviluppa e testa interfacce utente con l'aiuto dell'intelligenza artificiale.", en: 'Develops and tests user interfaces with the help of artificial intelligence.'}, category: 'Codice', country: 'USA', website: 'https://lovable.dev/', isFeatured: false, logoUrl: 'https://lovable.dev/img/logo/lovable-icon-bg-dark.png', recommendationId: 'tool-037' }, { id: 'tool-040', name: 'Perplexity', description: {it: 'Motore di ricerca conversazionale che fornisce risposte dirette con fonti, utile anche per la ricerca web e codice.', en: 'Conversational search engine that provides direct answers with sources, also useful for web and code search.'}, category: 'Codice', country: 'USA', website: 'https://www.perplexity.ai/', isFeatured: false, logoUrl: 'https://images.seeklogo.com/logo-png/51/2/perplexity-ai-logo-png_seeklogo-517845.png', recommendationId: 'tool-001' }, { id: 'tool-029', description: {it: 'Genera un parlato realistico e di alta qualità dal testo in più lingue.', en: 'Generates realistic, high-quality speech from text in multiple languages.'}, name: 'Eleven Labs', category: 'Audio', country: 'USA', website: 'https://elevenlabs.io/', isFeatured: false, logoUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAeFBMVEX///8AAABra2vPz88wMDBvb2/c3NxSUlL6+vpaWlqfn5/U1NSBgYFAQEAgICBFRUXJycnBwcFKSkrs7Oy5ubkrKysWFRaJiYnj4+N1dXU3Nzf09PSCgoKQkJCsrKxjY2MjIyMLCwulpaWzs7MaGho0NDSYmJheXl7ei1KlAAAGlElEQVR4nO2da2OyIABGKVvq7KKpTbP7XP3/f/jKVaxmrZzi3ud8yYiQEwgoaIQAAAAAAAAA2me8G/ab3bheMBr0n6hOMOw6d40Q1hieus5cI5xqDIddZ64RhjDsPTAsWH6Nekn8sGFaE8VkvIcN31rLU7NYMISh8cCQwNB4YEhgaDwwJDA0HhgSGBoPDAkMjQeGBIbGA0MCQ+OBIYGh8cCQwNB4YEhgaDwwJDA0HhgSGBoPDAkMjQeGBIbGA0MCQ+OBIYGh8cCQwNB4Wjd0GM2k9RDNGNqu6y4SujWxbXvB7tiMaGAVeyx2uGxS4Q7NGLIIzGtBtyy69T64xhK3sIyaVLhD04Y2DP+a4WE/0xh4f89wcxX1rxl+XEX9Dw0TcfJA9xgm4+xWsDeuuw2d0rHh53xWvM1XJya52MdxfpSf7eI4XrJErXTGjunUEx/ZNGJC/BFLrPZpAt0ajheqlV35RNz5vxAR2YMOcrq1KRvjd/7ZlG6H7xehnRjWtjTWQGdLSMY2RJ3d0u1TEbjSY01Lw20Z+tmd4XwiGKVVKg0Tkb25eC1GfSl9DXjELxG2E2ozrbyY4aw0/OrOsETW19KQmb3RhiJktXUmPuTVNBHZYo8d2ftliok0LEo4dHxewt5ljjowlPVVGbI92zwwlAkc6CtrHZlZJGSEACvirTJk1SJcauVulqGtvhPwyYpENCrsIR1nuWQQAUUOCwlaSh/nYleQ9o3PORLzrUhq31EDz0XrSt9jakMLZqdyH8iozHtjBiKFFmDU/OwgM7aUuYysxcMWxWKK6qpJeoe2/lCsqfv3GHo8wSjbg2/7w/9wRVzmd+i8V+L0tpdR7s4OIMeGU5lUi7JDqICnL83TFo0dJ4wZK+HykUOlk124IWWTJCVYeV6iO33xJCX+0U68vPth/zwTaWn0w9D1lWr4Zabyi6N1ssDfeTKSeX/LGMF0/esP4asCxw5ZTZiflahhpvjMmnRbNLrXPkwNMpwv5hrTD/0URt7NM6BlmLIDj7ZsQtBPsYmR/YmLXSc6CBrtkGGF7zphmLXM/kUoFik5vK34jzR+eJvR6Ocb3hGG6aVs6dqh2HLc3gRrBL/qkRjaZtrKMtwz7/naZmfqEsZTl7dnZOWsea8WV1dGtZk7vcMg8k1xVlukq7XEzWY8z5o6qvJVr/aEkyKKPr5UHKcFDV5udvIwA1NTHzFo7G3XRg+TcPTNgYaNgwMCQwpMOwUGBIYUm4aJoHvB4+4Jvb57K5/kukf8XuGbBLCfiAL7JqU+5NM/4hfHpc+knEYvggMCQwpMKzn7xmG283ZttcnOd8iDcOTO5uuI+300PuYHpaLjfXSGWPrhs56ILH5W Senado zPKvZ+qWcccvUL/qlUFS24bVuXt2HZQZ2m4ZerqO6d5aamKkYTaokknDK/GLmI8Mjoww5CW19n3/xK6obTTDc+Qf+ax87IhBn+t7VsCnn56uqO0ajrXMZnS686s05KH8aDyK34JvKyh+iecbm3YNI31ftCHJM2kol0KxFRqxSEiEfd75m5ha2jUM0kma8sISK5pCYbhSUVhwxsvQ9p9vYSRd9PiO/zmUTac0VJfl+cITT3Ue7jBKbiXyMK0bepvlQEMalhet59zQyctIh/cX+vy2DbX+fnTb0OaGJNTXs43urbH8nnYNHZFr+yNw+LL+K0MnVilEu4NSnD1diu0a8unOIT+wKobqOByXaRXlGJ3k0K1u+WEt7RqylRWyX6jUUjk9yluYyh0nFuvyF+RJfnk9zbka72reTxnKcasoHa3yMFo35PFT1J/gpv72+1PJLHN5O8kUX4u9flCFXFHOmdJ4wmMsVCvdWrnVqWCHkSS39LFMrmEvDwXL3Jg66HRELaQaLIAz5v6L5Nbs3yDDQ3+a6YV6NeHma9cI1gHYNte5w4Nu64bBctX3gB2oSa1/ddzzy1gznyvD6L/do0RzFdmzxZidUVzEC0Ve+SRnnpEY/p67HNLdxLhF7DLafwc2hZhJEQfVw84JTOtm+NtGodu2QJDI0HhgSGxgNDAkPjgSGBofHAkMDQeGBIYGg8MCQwNB4YEhgaDwwJDI0HhgSGxgNDAkPjgSGBofHAkMDQeGBIYGg8MCQwNB4YEhgaDwwJDI0HhgSGxgNDAkPjgSGBofF4Dxu6ntVHvOPDhj3n/za88QcMPWRXYxh1nblGqPvbqyy//33jyWsfA2P1XzG/c6dtFu2GfWYXvf4gHwAAAAAAAMDP+Qd5XHfMcP3iXQAAAABJRU5ErkJggg==' },
+            { id: 'tool-001', name: 'ChatGPT', description: {it: 'Genera testo, immagini e risponde a domande con ricerca web.', en: 'Generates text, images, and answers questions with web search.'}, category: 'Testo', country: 'USA', website: 'https://chatgpt.com/', isFeatured: true, logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/ChatGPT_logo.svg/1024px-ChatGPT_logo.svg.png', recommendationId: 'tool-025' }, { id: 'tool-012', name: 'Google Notebook', description: {it: "Permette di creare riassunti audio sulle fonti dell'utente, rispondere a domande e creare mappe mentali.", en: "Allows creating audio summaries from user sources, answering questions, and creating mind maps."}, category: 'Testo', country: 'USA', website: 'https://notebooklm.google.com/', isFeatured: false, logoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJbWdW2SCEWfJuDTh5PVxgmqDvXoX5vElJ6s94SZ8Fe1YPzfxzGPuIyE9cBMDswv3qUd4&usqp=CAU', recommendationId: 'tool-021' }, { id: 'tool-013', name: 'Grok', description: {it: 'Assistente di ricerca conversazionale con accesso a dati in tempo reale. (Richiede VPN)', en: 'Conversational research assistant with real-time data access. (Requires VPN)'}, category: 'Testo', country: 'USA', website: 'https://grok.com/', isFeatured: false, logoUrl: 'https://i.namu.wiki/i/Wk8b-Vo4qqynLc4pN1T0otG83F383UPI_IR4VthZuZioAxVD_NS6uErIsecLMDK0F0L-KiUjL7xonRz4EwPL2g.webp', recommendationId: 'tool-001' }, { id: 'tool-014', name: 'FLUX', description: {it: 'Genera immagini, video e animazioni da prompt testuali e immagini.', en: 'Generates images, videos, and animations from text prompts and images.'}, category: 'Immagini', country: 'Cina', website: 'https://playground.bfl.ai/image/generate', isFeatured: false, logoUrl: 'https://kodexolabs.com/wp-content/uploads/2025/01/Flux.1.webp', recommendationId: 'tool-033' }, { id: 'tool-015', name: 'Swap AI', description: {it: 'Esegue il "face swap" (scambio di volti) in immagini e video in modo realistico.', en: 'Performs realistic "face swap" in images and videos.'}, category: 'Immagini', country: 'USA', website: 'https://aifaceswap.io/', isFeatured: false, logoUrl: 'https://www.toolpilot.ai/cdn/shop/files/aifaceswap-l.jpg?v=1733037433', recommendationId: 'tool-016' }, { id: 'tool-016', name: 'Inpaint AI', description: {it: 'Rimuove oggetti, persone o imperfezioni indesiderate dalle foto con un solo click.', en: 'Removes unwanted objects, people, or imperfections from photos with a single click.'}, category: 'Immagini', country: 'USA', website: 'https://theinpaint.com/', isFeatured: false, logoUrl: 'data:image/webp;base64,UklGRqoEAABXRUJQVlA4WAoAAAAQAAAAJgAAJgAAQUxQSFwCAAARkHRrmyHJ6vNLdvfYtm3btm3b9uxs7Gzbtle2bSu/OCcjvi9iIkJh27aNndUdNO0TlhHBH/rpz6b8gWMDKHlYZrTjDfkmRHilbjyJ/6DX7uOQfDsuBSOg2wfAgtJ3hcpfqzK7hp3gOpDzQohEwiMlTWaBZQepk2Y8EinDO91TmYR+8aXttv1DFuLL/DyuVt1cm7+8+Cd0/LMpm8446fNOvf5Hqyi+tnN4gYKVMk94rWSk4atmHo+M2+f2fxRqZigbbijOw1/26fJdFAb8MTanzwDcLH3PvUFkskfi8d2EQnEM7FI90m+PdkBUBZnKXu1bKgHQtxGz+eiUb4hE2Tkf57XKF8uMp92z4i3K7PXV2jCwbFJmI6iz8A7yER0/PaJySg+AiDPiGrMDz1sjqiSXuxIEM34JYYKXQyqlcIF7RC2e0R5k5dvUKun4khY8iaheP+//LK+dM4iUtv2xb9jTmEodaFUqKiiH0ofY5GnN8HK3aon4txZv3GthQHw4oG5yrlDSb0duPRJ9M6Z+aof3cf1emxzxY1bDjMruoE4EyLUGlV6+I9zcKHtgcz8FwKn62GTSlXYFYkDz22OafTM462nfSvGYGKQFv+oLvf8ypmpiOkrn2Omnf9UV9feiyimAial10o5+xjYQt1dNbSvJqypbypKkHS+xP/ly3dQOvwpkoCQRV23PL4rHbdN45PJpE4Bk6xRe8EbFp+G5fZudz0xWE0jZ5fTfCL/nawolV2kA8YvM/yJ+bShPCwWMAvDPwEvcYeuEovFtda20ALpetWV78eNzP45sp9ICVlA4ICgCAABwCwCdASonACcAPoEeoFAlISUlGqCgEAlsALszQnfZODkB5GjUCAeYDdAOkA9CXy3vYa8majvPbrEC3w5RFM5OSn/KrMNlvL8JdXmVHGHDzjTaj7fvjV1ibG55GrUaSF3oolIAAP7K3bd03vd3wdyfd3PWkrdc5+l+Iasr40ElHEoRyDAfR7KWhTEUDOXTp3v8yZt7uLso8TxJA+6uDYJCVhrs3AZpMuDzCsUjsIEPp38Cv4wYR9LrreH7v1LAyPebD82DkAcosDF1iVhC8XjMHEx40fnT6Y5A38e/+s4ytcq/NzQzQSinQS+v4CX9j9XcnQqehOsxLSw76NRA4NikbBddvkE610BDsE6bz+5TKMonMv5qsXP4cNREOF4isL5uaMIGpSmnAJ0nPkOARvLYoTqp8KsSn+UO9exbdilgqTnIUwst6EvWMyV4b1qVA4z7zpI4T1hkk6bE6BxDxa/fDQpYnKbJmX92XLG4cVR1QDvQEpAxFPjQ/UtYfLXmZZfYDoG2qx3/oCSsllMI6GzYIxCGnPQy+N4qHTzpiuSBCd/fy/xNK/mEP9MDGg5i3DyI7O6ZTfD41oWs19qmrb8If2YXx6OWeQsO3gQAhVHjmiB6o6zKUp0KzpLgoxiCEeIM6+/1Alrn1mScl+t6JRSjO38IRDBxgoJ/xbLyoNjF3V/yPJwBJ5CXiZCe/U/zpIfvzIASXoyf4/wzIxzjnHFoLFLfuAAAAA=', recommendationId: 'tool-017' }, { id: 'tool-017', name: 'Pixel Cut AI', description: {it: "Espande i bordi delle immagini (outpainting) per cambiare formato o stile.", en: 'Expands image borders (outpainting) to change format or style.'}, category: 'Immagini', country: 'USA', website: 'https://www.pixelcut.ai/t/uncrop', isFeatured: false, logoUrl: 'https://templateshake.com/wp-content/uploads/2021/09/Pixelcut_-AI-Graphic-Designer.png', recommendationId: 'tool-033' }, { id: 'tool-033', name: 'Whisk', description: {it: 'Crea animazioni fluide da immagini statiche e genera anche immagini da prompt.', en: 'Creates smooth animations from static images and also generates images from prompts.'}, category: 'Immagini', country: 'USA', website: 'https://labs.google/fx/tools/whisk/', isFeatured: false, logoUrl: 'data:image/webp;base64,UklGRtoCAABXRUJQVlA4WAoAAAAQAAAAGgAAGgAAQUxQSHEBAAARkGTbtuoqvODSMJfuOTWKTiM8rt/d5UkY78XWKtwbBk2IiAlIkmv33+8W43GR53kR5nm29+35zVpSu/d6qoBLMVy8u3PlxusFghBBQHXx+trzmf8R1Pnjr4ioa0fbh+X+9vGKAOqnPUKxd0q2ec5JVwVwJ4ugDKct69MOCqpZYLQ1G9ibtRRD0gBF/0z7Nhd1FRQv0gDVP+XI5uy7yy9j6MnhVuVk82hXJXIpqC4a46G6ftleSCwlVi+bhvW8qSj/cHKwVkTmne1TFYjgrJEODHc659bnhmmsM22oZu0jddpWNM0AT7eLntJbx3DnRANxUnfRXd3+/delf2Zqlgm9uToeqxCZjtQ0FXYUoxhlXckzYEtAWa5bQrovjE7ns9l0MqmqqizLsqpO2+rOJ8HtRq/f6XZ7/f6w3+/3e1uon5/MDVGiIqrMn918QQREwiWvb9Zuv1qIUQAhmL24lyTJtYdfH/OwiOZFUex+eHSjlgAAVlA4IEIBAACQBwCdASobABsAPpEopFIloaWllACwEglsAJ0yhID1oDbNMQ1XPLbrzhvNnsAbpL+wAdmnnyJ9nYieeXb2Ryc1AKuoW3wA/vdDClcr9pD9tsCqduiNtQaVaXgNfHp+atcZTe36+3xORhwFno/1uCGFQNU/4IYVL2I0o6c2eo73COMYL756Lzd/ibcQRmlIAId+z6psKbtTu/HIkA2HcYl/lq+sJbc01Q/VZ218h72kU324N9YcnNwU4vXy6VXCKq/tTNwWHsJ66N8JgRuCvc2pDpQ7KYv4rj//agwrDT7PdEnuIAkZLuckIqBv9aVnsRgB0qHFxi5a42nw4jOMOI330LQhImDuwmt+4/ryzZZzC4m8PLOx6EdyPthzs6wIhg+lRzc3+QT27OYDqLpNkFX2To7bI2E7F1lLi0lg6Fo4SAAA', recommendationId: 'tool-014'}, { id: 'tool-041', name: 'Leonardo AI', description: {it: 'Piattaforma per la generazione di asset visivi di alta qualità, da concept art a texture per giochi.', en: 'Platform for generating high-quality visual assets, from concept art to game textures.'}, category: 'Immagini', country: 'USA', website: 'https://leonardo.ai/', isFeatured: false, logoUrl: 'https://yt3.googleusercontent.com/a04AUXisIIWkI-Pj5zORQTiDNS9tALLmPc8pxuRT_aEHrCOUDsPQoLuh4QRbfgICortk7tBhyg=s900-c-k-c0x00ffffff-no-rj', recommendationId: 'tool-014' }, { id: 'tool-042', name: 'Midjourney', description: {it: 'Genera immagini artistiche e fotorealistiche di alta qualità da prompt testuali tramite Discord.', en: 'Generates high-quality artistic and fotorealistic images from text prompts via Discord.'}, category: 'Immagini', country: 'USA', website: 'https://www.midjourney.com/home', isFeatured: false, logoUrl: 'https://sadesign.ai/pictures/picfullsizes/2024/12/10/dsn1733795303.jpg', recommendationId: 'tool-041' }, { id: 'tool-034', name: 'Kling', description: {it: 'Genera video di alta qualità da prompt testuali, concentrandosi sul realismo e sul movimento complesso.', en: 'Generates high-quality videos from text prompts, focusing on realism and complex motion.'}, category: 'Video', country: 'Cina', website: 'https://klingai.com/global/', isFeatured: false, logoUrl: 'https://play-lh.googleusercontent.com/JOfjXqsShK8j1aGBc1xlHBnatoRKRwLsGuoFZUAvKksaEPvK71eLwSg4FbKlky9Es-s', recommendationId: 'tool-035' }, { id: 'tool-035', name: 'Veo', description: {it: "Il modello di generazione video più capace di Google, che crea video realistici e di alta qualità da prompt di testo e immagini.", en: "Google's most capable video generation model, creating realistic, high-quality videos from text and image prompts."}, category: 'Video', country: 'USA', website: 'https://deepmind.google/models/veo/', isFeatured: false, logoUrl: 'https://storage.googleapis.com/gweb-uniblog-publish-prod/images/IO25_Gemini_MOD_v33_PART_1_DG_FINAL_54.max-1440x810.png', isFeatured: false, recommendationId: 'tool-014' }, { id: 'tool-021', name: 'Claude', description: {it: 'Crea bozze e contenuti per presentazioni interattive e documenti complessi.', en: 'Creates drafts and content for interactive presentations and complex documents.'}, category: 'Presentazioni', country: 'USA', website: 'https://claude.ai/new', isFeatured: true, logoUrl: 'https://logo.svgcdn.com/l/claude-icon-8x.png', recommendationId: 'tool-022' }, { id: 'tool-022', name: 'Gamma AI', description: {it: "Genera presentazioni, documenti e pagine web statiche partendo da un'idea.", en: 'Generates presentations, documents, and static web pages from an idea.'}, category: 'Presentazioni', country: 'USA', website: 'https://gamma.app/', isFeatured: false, logoUrl: 'https://www.fahimai.com/wp-content/uploads/2025/03/GAMMA-cta.png', recommendationId: 'tool-021' }, { id: 'tool-023', name: 'Napkin AI', description: {it: 'Converte dati testuali e concetti in grafici statici e diagrammi chiari.', en: 'Converts text data and concepts into clear static charts and diagrams.'}, category: 'Presentazioni', country: 'USA', website: 'https://www.napkin.ai/', isFeatured: false, logoUrl: 'https://media.licdn.com/dms/image/v2/D560BAQEYfmQKrdByPg/company-logo_200_200/company-logo_200_200/0/1723039432148/napkin_ai_logo?e=2147483647&v=beta&t=Nsr22RG3uiy9usBNh55leGVf8ES5YJQwUANW-2N7yEA', recommendationId: 'tool-022' }, { id: 'tool-024', name: 'Google AI Studio', description: {it: "Crea app, siti e prototipi basati sui modelli Gemini di Google.", en: "Creates apps, sites, and prototypes based on Google's Gemini models."}, category: 'Codice', country: 'USA', website: 'https://aistudio.google.com/prompts/new_chat', isFeatured: true, logoUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPsAAADJCAMAAADSHrQyAAAAw1BMVEX///8AV8yFqP8AVMsAUssAT8oATcoAUct/pP8ASsmGqf8ASMmJq/99o/+Cpv8AR8kAWs3A0f/x9f/4+v+1ye3o7/qKrf+WtP/X4v+2yv+jvf+vxf/M2/Py9/3Z5ffh6vhDeNW+0fBOf9fQ3f/h6f+cuP/I1/9vlt5ThtmatOaKqeMlZtDV4vY7c9R2mN57n+CvxexljtulvekgaNGYseXF1/JOgthfitokZ9BIe9URYM+GpeIvbtKBpexmlPF5ovNcjOlnijKLAAANIklEQVR4nN1diULqOhAFkm6ULlrBDaTiCggKileRd6///1Wvi9B0T9IkBc8HNDnMZLZMhkbjF+Dp5O3hcfa6tptNe+ou3l76de9IDFYTV9dlSYGgGQJASdZ1d7Kqe2d80R27mi7BZgagpMuPL3VvkBecF9eSM3nv+Gv226DubXJAd2JrhcRD/Zfl527dW2WMpwdZBqXMA0ja/Lju7TJE/4+u4BEP2YNx3TtmhScy5j60za9wet0HjZS5Byi/1b3x6hgrEjlzH/LowG1e39XomHtQXq/q3n4FOJPsMAYT0D7cSG81kysw9wDAdd0cKPFWSegheXhSNwsaHD9WFHpIXjpA8v0phWPLIg8OztEvYWV935JfD+smQ4Y5C33/gTKrmw0RmBz1HeTnuvngY+BSRnJ50A7G03Vf2Vi5CMA+kHrGlc3KykWQ53WzwsKThFmhIIJ1CI7uSeFBvQkPwNZfAS7UPcFjhnfHq+Xkeb6Yf70tX574ck1g2OREvQmm5atfT95tS5MlRVEkRZI1XdvMl6JqAEObF3XPzy2L117NbV2CifWBJFuvzyuHP/UuBwsf0dgUrTyZWnk2Fij6+pl7EWTDkXqRqT+ewOLyN1C092uuwn9nHM0lAP/krDu2MSJoqG2W/AKkZ/rCHB70zL2vZhqekQHax5KT7JcWZ+pNLeuekqQgCLQNl0LINW+pZyr9cESWMAJtxN7qdbk5dgRactX+mjhrUsCENXeXq4n/gZ5IZV+oakOyy1b0E6a1ijwoX3HqlFkTbJaESUS4FkK9CV5ZUPev+BfM3F13LeCw+7CQRVdVcmVpyirPGbGu0+RBj3ZcMXUAMpsL/rEYjfcgR+55VtW4aixKQfzy1hSk3ZX8c/XfW36vzl2YxnuGfiura53B16SPqhZvKUzjPe+0FRUb4wqb1QobAjU+yuFZhRMAVLruEqjxHkIH32Wh8QGAUiHGe+GfwqBYB4vO2f3eQKF29IMPgRrvwfYXHbLMlkGTVu3FxPERbMZi9wDXdAZvyHITOPAL1Q7j3xu+UjWwLoQaumZo65g7VcWlKGWtBGt8E7gNBtFsCvIDOfdPEQULFH7VasChLkjeviqgRJeAX7zg4lUl0uYGIXWqGORlo/HAw8YAmyzGES/2oPeET50EzojsnXixN61u45jTNQBRP1MNYm/KHJeVCa4tahA7/OSYMgMbO7jtM8ul8OG7omdu4ZQywuUuPKTzoK8ajUd+6lbW3bBFV3RI5wN6C2/4JY4As4wjOoHzofih55rnAgsc6g7HxppcBNdxPLk3dRxbL7hcEwL4K/NdYY0R4bDPpcohBTeRNtc15PIL6ivuPRYZsAL/y1XnPVtfau6++HYVZQI+Bku/8l1FKU3l67B0VvhU7pPz0lZJ3ZbJjRAh4E/UteBsaWBJdFdHTLftLJzwPm7F3epODQ5uF3a88A6q/IQpH3U4d7i1v/xzqELB/xHv3LWoS4K7e4VuAXfxYkfTS47JzA+s/Nqd+IJN7M6Mu7Er8vFcCqWFiJWT+vxjSi23H0N4TKfFy4j8mx1yo3rhxSo50ULMP6AGzRzub4KrFtIooYECEqm8mu1MbCwvuakbYv7XgD95UxKOWJWXZumk8oT/FpTMVFash5PdrE288rd2mSVboam7/JjpbfgLPvtBGv+wKtqAlndHxr9kJmXEdqybXQoA88e78PezWW3W4tpMtMyj/gMGrcTFABnvrkX1iytWYcXUmfI+ejB9M/kuJH+F1mNJvXTFO8DJsPScVwwArVn5lIM3zkc+Xb7p8o+lJesTa3jZgvPpS40X4fwgCiiyPcFt8XznuxcpKQGOpg5AWbLnBPPqnE+uSphKZDmV6jx5K/b7mLCdmy/5lJdjH0l74pab0wXVXA6Hq9rbicPHlronbrAeTa7pH27Mccf9UkCOn78rdioPFK358XBS9Xni0uZWPUyEtYzMvKfnYLM4YfIceTjiJfpEAYNFcxuU5OnjkuHYnSXOuAsKgI/YMpWTd0/g7qTPeNB297lkzAktYopZzcVBuTkacxk0M/xaY0x3J0Xc2FUoXHiieVzyGzw5WLpS8VR/csTTGer+bai5Y94TN4fLP7YlK8mxTvSI3U0d035EexczdPG4/zZ317rm/QIMfoLYhewV1fcUbSF0mNqgez3++uO+2po/00yi/xXAFEnl+jRj5PVFPeNlncFgeL2czP1fQQ9Ugfg3QLvKyUMboI/EDtDLguMMnk7GzyPb0sgGZKNvZU9IuUvNvfq7mO7JxJV1/BkhGuLkCMM6YC327+9CnNXX1MIMhVAnR3YFK9n7OkH8avxq4Si/hMwSIgppdXbzczig72KwR/vpCR5fA53l3CQe6M9KK70QmYSC308J7frNeylOpBI+aHCD/U5H2eyzvu8w+Cw2YGjJDvdSRv4UMBSVCb4KuwkAMgAHk3uyOWif8V8RJYCMgxhhcad5SV8bbv9icsdq8jmQcelb9P4WxDlIQI8jd+mwqDcu2wXkEe4Y5x2mW8L2G0dq5zuffFRhK+cOZr0D436jttq5T7pBxL3Uv4OPXuvA/vfszGi12nl1SIR7WZkWrHtt87ZGIhQIuLdyCpEI97LucfCv3VJvaiRCAU/nW61OnqeLuJe8u4ffnVbLvKyRCAWOfO6tzne2Skd2vjiHBZte8JlDiWdDXJqtYNeZt+uIjyupXbTb/lcOTOkDeXlHXs2SJhLXFdaslL+d4CvmaY1MiDE0Qu6ZWo/mMkW1SjDr/HxFva+RCynC456j9WATnd+iGrUdanwg+QNyc1uBeVqftvVo/v6U79+V7+grZudg4pszY7frVif1IgR9F5w/phC8RtR98oci+Tsz2nXbTAkUqVU6uQMX4L92CyWvHtXHhwCo2DPMnYL27+fdQUeGbgu1dwiib8c33UnINjbSL/eNVCvxFU/0xt3es79UE9wTgtfQy5WcZAZ+J8Uesj89q40WDm6N5JbbccHLaDt3TlBrp6S+ZW+e76/JPzZTG06UMWKTzbKHDmSLfSf8fY1xe2nu7ZjgY70HjVWm3O30aU8Ifx9rOXdp6p7g0RJOvJt4mHXegZsv9hCqcbl3qn+nZu20baD6HL9nyBI7+Fck9q3wz/cqtXWyqbdaPcSNJ6bWZhS2wKZM7KHsO3t07rsZZz0Eau0SjdQZTg7+LRd7AONiX479WTuPeqv9D5FuvAc0o3oxxWPuwWzvh7+/z9H3UPA71QbT+DFNZ7Hllg7BPoT5TjKaS3DfKX3ylVj6jRhQMVU+JF97JfO2V0i91dopvZR8LJScYAY+SKjXT/7IzD3qP9jVb+Tkm63ktRQoiOn2j7xzUSL0FqL0ybdCKWNHpvIB+fNaaPu4PS2n7ln6ULzpl9BJYzclpe75uroc/VmpvgfohXKXUoMHBvEGlXTRAgf1BLiFrg3Bj5eT023v8cgOO7BBYd7VwLxxk8rW87iHBz71Fjg5Sss2KbjXovW3mFL3i9U+d5jxD2srVOkBxXEPPi88sRnkh7Ep9Pwr18wpL+jAAbrjXoetv8Cn3ur5BQyY9aALPfBUxz0gL7jv8gz3sPvwjV32gBvUwwNq7oID+9ycNZP7J8gZbITOzlsXVqsKvy+UOpHYA0OfPdCqETVfgCndcfdgCE1nM2tzuWj/hXkTeqMuesySTRaEtqYcE4ndi2qVvAF20URm4kQGXUAgd9yIboueBPI+tTN21GbegyHwxorEwQXc9a+8T+1azapwF9mdQbq3jpX7nHGn9DZxAhtB4IF3yI67dx6zRzYG2EY3a4zKfC53cS1JXVLuRsFjn22P4Zqeugdh3NP3rcUoFMvTT3hD7949GMLyGVLuxWY4jOkrhDb+CsJuKgi5l5zGsMmwIndh1RvC817ifQcSA+7CHDyZnTcvSj4XxLXgoxJ3cSMBiExy6Vl88l18vKmOmLu4m0mSuA6jrOI/marIXVzd6gg/njd75Z/zZ2VWO+8qf85bEORxWFZoBqpxF9pqfoqr9HiFxBO9IneRCTxubR5H4324sBJ3sV32mBs1Me3vtVWJu8j8HVfw+IW0EaS8mQhg8qSaBk7FzsBXxSe9Qg4r+inZcbmbM0guTB6gQc1dbJ22gVGmNoik0a1QsxKs8h6OiskTSd3D+JuWex3NF+dF5Mkviv6jpC4ymI9wr+YZPJrOv1vC4u9urXoajnL6y0yVquOTIEuIrVZTW7VzmW65MdUepd0lu+n6gVFfe2X3so1qvqmq9G8buhShnXlaZz/58c1FzzRUD4baOT2vEl6ekWt97W9GneHN/f3R0c1tVYtLfOQJQse9R3FfcgpqWS3woIDRpIpQv9urxyOVQUBePT2I6W4EuMAtiKl3v416Sawcwbj4XQof4iY3Vo5wKC/DidG9KxP9YTwLp8O9WWTyfq3QQzjnRh571bjcl8dxvOAcdYz0ud/X18DMcXveNgx1myp6eZLRufy95zyFwdnR5V2v0+r0Ti+Pztg69P8BdTgtyzdUTYgAAAAASUVORK5CYII=', recommendationId: 'tool-026' }, { id: 'tool-025', name: 'Manus', description: {it: 'Piattaforma di AI estremamente potente. Può eseguire compiti come ChatGPT e gestirli in background, creando testi, ricerche, presentazioni, video, immagini e molto altro.', en: 'Extremely powerful AI platform. It can perform tasks like ChatGPT and manage them in the background, creating text, research, presentations, videos, images and much more.'}, category: 'Codice', country: 'Cina', website: 'https://manus.im/app', isFeatured: true, logoUrl: 'data:image/png;base64,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' },
             { 
                 id: 'tool-043', 
                 name: 'Rows', 
@@ -1077,7 +1139,7 @@
         };
 
         const saveConversations = (newConversations) => {
-            conversations = newConversations;
+            conversations = newConversations; // Corrected variable name
             localStorage.setItem(getStorageKey(), JSON.stringify(conversations));
         };
 
@@ -1132,34 +1194,55 @@
 
 
         // Modified createGridCard to optionally show an edit icon and specify its action
-        const createGridCard = (tool, showEditIcon = false, editAction = 'toggle-user-featured') => {
+        const createGridCard = (tool, context) => {
             let editIconHTML = '';
             // Check if user is logged in AND privileged (status loaded from Firestore)
-            if (showEditIcon && currentUser.uid && currentUser.isPrivileged) {
+            if (currentUser.uid && currentUser.isPrivileged) {
                 const isUserTool = tool.id.startsWith('user-');
-                // Determine the correct action and title based on whether it's a user tool or a static tool replacement
-                const action = isUserTool ? 'toggle-user-featured' : 'replace-featured-static';
-                const title = isUserTool ? translations[currentLanguage].unmarkAsFeatured : translations[currentLanguage].replaceFeaturedTitle;
-                
-                // If it's a static tool being replaced, the edit icon should trigger removal
-                const isReplacement = currentUser.userFeaturedReplacements && currentUser.userFeaturedReplacements[tool.id];
-                const finalAction = isReplacement ? 'remove-featured-replacement' : action;
-                const finalTitle = isReplacement ? translations[currentLanguage].removeFeaturedReplacement : title;
+                let action = '';
+                let title = '';
 
+                if (context === 'user-featured-section' && isUserTool) {
+                    // Pencil on user tool in Featured by You section -> Toggle Featured status
+                    action = 'toggle-user-featured';
+                    title = translations[currentLanguage].unmarkAsFeatured; // Assuming it's already featured here
+                } else if (context === 'top-ai-featured') {
+                     const replacementToolId = currentUser.userFeaturedReplacements?.[tool.id];
+                     if (replacementToolId) {
+                         // Pencil on a static tool that has been replaced -> Remove replacement
+                         action = 'remove-featured-replacement';
+                         title = translations[currentLanguage].removeFeaturedReplacement;
+                     } else if (!isUserTool) {
+                         // Pencil on a static featured tool (not replaced) -> Open replace modal
+                         action = 'replace-featured-static';
+                         title = translations[currentLanguage].replaceFeaturedTitle;
+                     }
+                     // No pencil on user tools in Top AI Featured unless they are replacements (handled above)
+                }
 
-                editIconHTML = `<div class="edit-icon" data-action="${finalAction}" data-id="${tool.id}" title="${finalTitle}"> ${pencilIcon} </div>`;
+                if (action) {
+                     editIconHTML = `<div class="edit-icon" data-action="${action}" data-id="${tool.id}" title="${title}"> ${pencilIcon} </div>`;
+                }
             }
 
             return `<div class="tool-card-grid" data-id="${tool.id}"><div class="logo-container"><img src="${tool.logoUrl}" class="tool-logo" alt="${tool.name}" loading="lazy">${editIconHTML}</div><div class="tool-name">${tool.name}</div></div>`;
         };
 
-        const createListCard = (tool) => {
+        const createListCard = (tool, context) => {
             const isUserTool = tool.id.startsWith('user-'); // Simple check for user tools
             const isFavorited = currentUser.uid && currentUser.favorites.includes(tool.id);
-            // Favorite icon is only for static tools
-            const favoriteIconHTML = !isUserTool && currentUser.uid ? `<div class="favorite-icon" data-action="toggle-favorite" data-id="${tool.id}">${isFavorited ? '♥' : '♡'}</div>` : '';
+            
+            // Favorite icon is shown for all tools if logged in
+            const favoriteIconHTML = currentUser.uid ? `<div class="favorite-icon" data-action="toggle-favorite" data-id="${tool.id}">${isFavorited ? '♥' : '♡'}</div>` : '';
 
-            return `<div class="tool-card-list" data-id="${tool.id}"><div class="logo-container"><img src="${tool.logoUrl}" class="tool-logo" alt="${tool.name}" loading="lazy"></div><div class="info"><div class="tool-name">${tool.name}</div><div class="tool-subtext">${getTranslatedCategoryName(tool.category)}</div></div>${favoriteIconHTML}</div>`;
+            let editIconHTML = '';
+            // Pencil icon is shown for user tools in the Library list if privileged
+            if (context === 'library' && isUserTool && currentUser.uid && currentUser.isPrivileged) {
+                 editIconHTML = `<div class="edit-icon" data-action="remove-user-tool" data-id="${tool.id}" title="${translations[currentLanguage].removeUserTool}"> ${pencilIcon} </div>`;
+            }
+
+
+            return `<div class="tool-card-list" data-id="${tool.id}"><div class="logo-container"><img src="${tool.logoUrl}" class="tool-logo" alt="${tool.name}" loading="lazy">${editIconHTML}</div><div class="info"><div class="tool-name">${tool.name}</div><div class="tool-subtext">${getTranslatedCategoryName(tool.category)}</div></div>${favoriteIconHTML}</div>`;
         };
 
         const createCategoryCard = (category) => {
@@ -1195,7 +1278,7 @@
                  userToolActionsHTML = `<button class="button" data-action="toggle-user-featured" data-id="${tool.id}">${isUserFeatured ? t.unmarkAsFeatured : t.markAsFeatured}</button>`;
             }
 
-            const modalHTML = `<div id="detail-modal" class="modal-overlay visible"><div class="modal-content"><button class="modal-close-btn" data-action="close-modal">×</button><div id="detail-content"><h2>${tool.name}</h2><p>${tool.description}</p><div class="detail-tags"><span class="tag">🌍 ${tool.country || 'N/A'}</span><span class="tag">${getTranslatedCategoryName(tool.category || 'N/A')}</span></div><div class="detail-actions">${userToolActionsHTML}${!isUserTool ? `<button class="button" data-action="toggle-favorite" data-id="${tool.id}">${isFavorited ? t.detailModalRemoveFavorite : t.detailModalAddFavorite}</button>` : ''}<a href="${tool.website}" target="_blank" class="button" style="text-decoration: none; display: flex; justify-content: center; align-items: center;">${t.visitWebsite}</a></div>${recommendationHTML}</div></div></div>`;
+            const modalHTML = `<div id="detail-modal" class="modal-overlay visible"><div class="modal-content"><button class="modal-close-btn" data-action="close-modal">×</button><div id="detail-content"><h2>${tool.name}</h2><p>${tool.description}</p><div class="detail-tags"><span class="tag">🌍 ${tool.country || 'N/A'}</span><span class="tag">${getTranslatedCategoryName(tool.category || 'N/A')}</span></div><div class="detail-actions">${userToolActionsHTML}${currentUser.uid ? `<button class="button" data-action="toggle-favorite" data-id="${tool.id}">${isFavorited ? t.detailModalRemoveFavorite : t.detailModalAddFavorite}</button>` : ''}<a href="${tool.website}" target="_blank" class="button" style="text-decoration: none; display: flex; justify-content: center; align-items: center;">${t.visitWebsite}</a></div>${recommendationHTML}</div></div></div>`;
             el.modalContainer.innerHTML = modalHTML;
         };
         
@@ -1203,8 +1286,8 @@
 
         const toggleFavorite = async (toolId) => {
             if (!currentUser || !currentUser.uid) { triggerAuthFlow(); return; }
-            // Ensure it's not a user-added tool
-            if (toolId.startsWith('user-')) return;
+            // Removed the check !toolId.startsWith('user-')
+            // Now all tools can be favorited
 
             const userDocRef = doc(db, "users", currentUser.uid);
             const isFavorited = currentUser.favorites.includes(toolId);
@@ -1294,6 +1377,72 @@
              }
 
              renderView(); // Re-render Top AI view
+        };
+
+        // NEW FUNCTION: Remove user-added tool entirely (Firestore)
+        const removeUserTool = async (toolId) => {
+            if (!currentUser || !currentUser.uid || !currentUser.isPrivileged || !toolId.startsWith('user-')) {
+                showToast("Action not allowed."); // Or a more specific message
+                return;
+            }
+
+            const userDocRef = doc(db, "users", currentUser.uid);
+            const t = translations[currentLanguage];
+
+            try {
+                // 1. Read the current user document
+                const userDocSnap = await getDoc(userDocRef);
+                if (!userDocSnap.exists()) {
+                    showToast("User data not found.");
+                    return;
+                }
+                const userData = userDocSnap.data();
+
+                // 2. Filter the userTools array in memory
+                const updatedUserTools = (userData.userTools || []).filter(tool => tool.id !== toolId);
+
+                // 3. Filter the userFeaturedTools array
+                const updatedUserFeaturedTools = (userData.userFeaturedTools || []).filter(id => id !== toolId);
+
+                // 4. Remove the tool from userFeaturedReplacements if it was used as a replacement
+                const updatedUserFeaturedReplacements = { ...(userData.userFeaturedReplacements || {}) };
+                let replacementRemoved = false;
+                for (const staticId in updatedUserFeaturedReplacements) {
+                    if (updatedUserFeaturedReplacements[staticId] === toolId) {
+                        delete updatedUserFeaturedReplacements[staticId];
+                        replacementRemoved = true;
+                        break; // Assuming a user tool can only replace one static tool at a time
+                    }
+                }
+                
+                // 5. Remove the tool from favorites if it was favorited
+                const updatedFavorites = (userData.favorites || []).filter(id => id !== toolId);
+
+
+                // 6. Prepare the update object
+                const updateData = {
+                    userTools: updatedUserTools,
+                    userFeaturedTools: updatedUserFeaturedTools,
+                    userFeaturedReplacements: updatedUserFeaturedReplacements,
+                    favorites: updatedFavorites // Update favorites as well
+                };
+
+                // 7. Write the updated data back to Firestore
+                await updateDoc(userDocRef, updateData);
+
+                // 8. Update local state
+                currentUser.userTools = updatedUserTools;
+                currentUser.userFeaturedTools = updatedUserFeaturedTools;
+                currentUser.userFeaturedReplacements = updatedUserFeaturedReplacements;
+                currentUser.favorites = updatedFavorites; // Update local favorites
+
+                showToast(t.removeUserTool + " Success!"); // Need this translation
+                renderView(); // Re-render the Library view
+                closeModal(); // Close any open modal (like detail modal)
+            } catch (error) {
+                console.error("Error removing user tool:", error);
+                showToast(`Error: ${error.message}`);
+            }
         };
 
 
@@ -1407,12 +1556,8 @@
 
                     if (!toolToDisplay) return ''; // Should not happen if data is consistent
 
-                    // Show edit icon if privileged
-                    const showEdit = isPrivileged;
-                    // If it's a user replacement, the edit icon removes the replacement
-                    const editAction = replacementToolId ? 'remove-featured-replacement' : 'replace-featured-static';
-
-                    return createGridCard(toolToDisplay, showEdit, editAction);
+                    // Pass context 'top-ai-featured' to createGridCard
+                    return createGridCard(toolToDisplay, 'top-ai-featured');
 
                 }).join('');
 
@@ -1483,7 +1628,8 @@
                     // Filter from all tools (static + user)
                     const filteredTools = allTools.filter(t => t[exploreFilter.type] === exploreFilter.value);
                     const title = exploreFilter.type === 'category' ? getTranslatedCategoryName(exploreFilter.value) : `${t.toolsFrom} ${exploreFilter.value}`;
-                    contentArea.innerHTML = `<div class="back-button" data-action="back-to-explore">${t.backToSearch}</div><h2 class="section-title">${title}</h2><div class="list-container">${filteredTools.map(createListCard).join('')}</div>`;
+                    // Pass context 'explore' to createListCard
+                    contentArea.innerHTML = `<div class="back-button" data-action="back-to-explore">${t.backToSearch}</div><h2 class="section-title">${title}</h2><div class="list-container">${filteredTools.map(tool => createListCard(tool, 'explore')).join('')}</div>`;
                 }
                 el.mainContent.appendChild(contentArea);
             } else if (currentView === 'favorites') {
@@ -1520,7 +1666,7 @@
                              <div class="user-featured-section">
                                  <div class="section-title" data-translate="featuredByYou">${t.featuredByYou}</div>
                                  <div class="grid-container">
-                                     ${userFeaturedTools.length > 0 ? userFeaturedTools.map(tool => createGridCard(tool, true, 'toggle-user-featured')).join('') : '' /* Removed empty state text */}
+                                     ${userFeaturedTools.length > 0 ? userFeaturedTools.map(tool => createGridCard(tool, 'user-featured-section')).join('') : '' /* Removed empty state text */}
                                  </div>
                              </div>
                          `;
@@ -1545,7 +1691,8 @@
                          filteredLibraryTools = filteredLibraryTools.filter(tool => !userFeaturedIds.includes(tool.id));
                     }
 
-                    contentHTML += filteredLibraryTools.length > 0 ? `<div class="list-container">${filteredLibraryTools.map(createListCard).join('')}</div>` : `<div id="empty-state">${t.emptyFavorites}</div>`; // Use emptyFavorites for now, could add emptyUserTools state
+                    // Pass context 'library' to createListCard
+                    contentHTML += filteredLibraryTools.length > 0 ? `<div class="list-container">${filteredLibraryTools.map(tool => createListCard(tool, 'library')).join('')}</div>` : `<div id="empty-state">${t.emptyFavorites}</div>`; // Use emptyFavorites for now, could add emptyUserTools state
 
                     contentArea.innerHTML = contentHTML;
                 }
@@ -1774,7 +1921,8 @@
                          </div>
                          <div class="input-group">
                              <label for="add-app-logo" data-translate="appLogoLabel">${t.appLogoLabel}</label>
-                             <input type="url" id="add-app-logo" placeholder="${t.appLogoPlaceholder}">
+                             <input type="file" id="add-app-logo" accept="image/*">
+                             <img id="add-app-logo-preview" src="" alt="Logo Preview" style="display: none;">
                          </div>
                          <div class="input-group">
                              <label for="add-app-category" data-translate="category">${t.category}</label>
@@ -1791,6 +1939,24 @@
 
              // Attach listener to the add app button
              document.getElementById('add-app-btn')?.addEventListener('click', handleAddApp);
+
+             // Attach listener for file input change to show preview
+             const logoInput = document.getElementById('add-app-logo');
+             const logoPreview = document.getElementById('add-app-logo-preview');
+             logoInput.addEventListener('change', (event) => {
+                 const file = event.target.files[0];
+                 if (file) {
+                     const reader = new FileReader();
+                     reader.onload = (e) => {
+                         logoPreview.src = e.target.result;
+                         logoPreview.style.display = 'block';
+                     };
+                     reader.readAsDataURL(file);
+                 } else {
+                     logoPreview.src = '';
+                     logoPreview.style.display = 'none';
+                 }
+             });
         };
 
         // NEW FUNCTION: Open Replace Featured Modal
@@ -1835,26 +2001,34 @@
              const nameInput = document.getElementById('add-app-name');
              const descInput = document.getElementById('add-app-description');
              const websiteInput = document.getElementById('add-app-website');
-             const logoInput = document.getElementById('add-app-logo');
+             const logoInput = document.getElementById('add-app-logo'); // This is now the file input
              const categorySelect = document.getElementById('add-app-category');
 
              const name = nameInput.value.trim();
              const description = descInput.value.trim();
              const website = websiteInput.value.trim();
-             const logoUrl = logoInput.value.trim();
+             const file = logoInput.files[0]; // Get the selected file
              const category = categorySelect.value;
              const t = translations[currentLanguage];
 
              if (!name) { showToast(t.appNameRequired); return; }
              if (!website) { showToast(t.appWebsiteRequired); return; }
-             if (!logoUrl) { showToast(t.appLogoRequired); return; }
+             if (!file) { showToast(t.appLogoRequired); return; } // Check if a file is selected
+
+             // Read the file as a Data URL (Base64)
+             const logoUrl = await new Promise((resolve, reject) => {
+                 const reader = new FileReader();
+                 reader.onloadend = () => resolve(reader.result);
+                 reader.onerror = reject;
+                 reader.readAsDataURL(file);
+             });
 
              const newTool = {
                  id: `user-${currentUser.uid}-${Date.now()}`, // Unique ID for user tools
                  name: name,
                  description: description || { it: 'Descrizione non fornita.', en: 'Description not provided.' }, // Allow empty desc, provide default
                  website: website,
-                 logoUrl: logoUrl,
+                 logoUrl: logoUrl, // This is now the Base64 string
                  category: category,
                  country: 'User Added', // Indicate origin
                  // isFeatured: false, // This flag is not used for user tools featured status
@@ -2124,6 +2298,14 @@
                              showToast("You need privileged access for this action.");
                          }
                          break;
+                    case 'remove-user-tool': // Triggered by pencil on user apps in the main Library list
+                         // Check privileged status loaded from Firestore
+                         if (currentUser.uid && currentUser.isPrivileged) {
+                             removeUserTool(actionTarget.dataset.id);
+                         } else {
+                             showToast("You need privileged access for this action.");
+                         }
+                         break;
 
 
                     // Auth Overlay actions are handled by attachAuthListeners on the overlay itself
@@ -2169,7 +2351,8 @@
                 ) : [];
 
                 if (searchTerm.length > 1) {
-                    contentArea.innerHTML = toolsToShow.length > 0 ? `<div class="list-container">${toolsToShow.map(createListCard).join('')}</div>` : `<div id="empty-state">${t.noResultsFor} "${searchTerm}"</div>`;
+                    // Pass context 'explore' to createListCard for search results
+                    contentArea.innerHTML = toolsToShow.length > 0 ? `<div class="list-container">${toolsToShow.map(tool => createListCard(tool, 'explore')).join('')}</div>` : `<div id="empty-state">${t.noResultsFor} "${searchTerm}"</div>`;
                 } else {
                     // If search term is cleared, show default explore view
                     contentArea.innerHTML = `<div class="section-title" data-translate="browseAll">${t.browseAll}</div><div class="category-grid">${categories.map(c => createCategoryCard(c)).join('')}</div><div class="section-title" style="margin-top: 30px;" data-translate="browseByOrigin">${t.browseByOrigin}</div><div class="category-grid">${countries.map(c => createCountryCard(c)).join('')}</div>`;
