@@ -199,12 +199,12 @@
         /* --- STILI PER LE CLASSIFICHE (AGGIUNTI) --- */
         .ranking-section-container {
             display: grid;
-            gap: 24px;
+            gap: 20px; /* Reduced gap */
         }
         .ranking-card {
             background-color: var(--spotify-card);
             border-radius: 12px;
-            padding: 16px;
+            padding: 12px; /* Reduced padding */
             transition: opacity 0.3s, transform 0.3s;
             transform-origin: top;
         }
@@ -215,9 +215,9 @@
             display: none; /* Use display: none to fully hide */
         }
         .ranking-card h3 {
-            font-size: 18px;
+            font-size: 16px; /* Reduced font size */
             font-weight: 700;
-            margin-bottom: 16px;
+            margin-bottom: 12px; /* Reduced margin */
         }
         .ranking-list {
             list-style: none;
@@ -225,14 +225,14 @@
             margin: 0;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 8px; /* Reduced gap */
         }
         .ranking-item {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px; /* Reduced gap */
             cursor: pointer;
-            padding: 4px;
+            padding: 2px; /* Reduced padding */
             border-radius: 8px;
             transition: background-color 0.2s;
         }
@@ -240,21 +240,28 @@
             background-color: var(--spotify-bg-light);
         }
         .ranking-item-rank {
-            font-size: 16px;
+            font-size: 14px; /* Reduced font size */
             font-weight: 700;
             color: var(--spotify-text-secondary);
             width: 20px;
             text-align: center;
         }
+        .ranking-item-logo { /* Added style for logo in ranking list */
+             width: 32px; /* Smaller logo */
+             height: 32px; /* Smaller logo */
+             border-radius: 4px;
+             object-fit: cover;
+             flex-shrink: 0;
+        }
         .ranking-item-info {
             flex-grow: 1;
         }
         .ranking-item-info .tool-name {
-            font-size: 16px;
+            font-size: 15px; /* Reduced font size */
             font-weight: 500;
         }
         .ranking-item-info .tool-subtext {
-            font-size: 13px;
+            font-size: 12px; /* Reduced font size */
             color: var(--spotify-text-secondary);
         }
         
@@ -867,8 +874,8 @@
                 addAppError: "Errore nell'aggiunta dell'app: %s",
                 markAsFeatured: "Segna come In Evidenza",
                 unmarkAsFeatured: "Rimuovi da In Evidenza",
-                featuredByYou: "In Evidenza per Te",
-                emptyUserFeatured: "Nessuna app segnata come In Evidenza per te.", // Keeping translation key but not used in UI
+                featuredByYou: "In evidenza",
+                emptyUserFeatured: "Nessuna app segnata come In evidenza.", // Keeping translation key but not used in UI
                 emptyUserTools: "Nessuna app aggiunta da te.",
                 appNameRequired: "Il nome dell'app è obbligatorio.",
                 appWebsiteRequired: "Il link del sito web è obbligatorio.",
@@ -982,7 +989,7 @@
 
         // --- DATABASE PERSONALIZZATO ---
         const aiToolsData = [
-            { id: 'tool-001', name: 'ChatGPT', description: {it: 'Genera testo, immagini e risponde a domande con ricerca web.', en: 'Generates text, images, and answers questions with web search.'}, category: 'Testo', country: 'USA', website: 'https://chatgpt.com/', isFeatured: true, logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/ChatGPT_logo.svg/1024px-ChatGPT_logo.svg.png', recommendationId: 'tool-025' }, { id: 'tool-012', name: 'Google Notebook', description: {it: "Permette di creare riassunti audio sulle fonti dell'utente, rispondere a domande e creare mappe mentali.", en: "Allows creating audio summaries from user sources, answering questions, and creating mind maps."}, category: 'Testo', country: 'USA', website: 'https://notebooklm.google.com/', isFeatured: false, logoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJbWdW2SCEWfJuDTh5PVxgmqDvXoX5vElJ6s94SZ8Fe1YPzfxzGPuIyE9cBMDswv3qUd4&usqp=CAU', recommendationId: 'tool-021' }, { id: 'tool-013', name: 'Grok', description: {it: 'Assistente di ricerca conversazionale con accesso a dati in tempo reale. (Richiede VPN)', en: 'Conversational research assistant with real-time data access. (Requires VPN)'}, category: 'Testo', country: 'USA', website: 'https://grok.com/', isFeatured: false, logoUrl: 'https://i.namu.wiki/i/Wk8b-Vo4qqynLc4pN1T0otG83F383UPI_IR4VthZuZioAxVD_NS6uErIsecLMDK0F0L-KiUjL7xonRz4EwPL2g.webp', recommendationId: 'tool-001' }, { id: 'tool-014', name: 'FLUX', description: {it: 'Genera immagini, video e animazioni da prompt testuali e immagini.', en: 'Generates images, videos, and animations from text prompts and images.'}, category: 'Immagini', country: 'Cina', website: 'https://playground.bfl.ai/image/generate', isFeatured: false, logoUrl: 'https://kodexolabs.com/wp-content/uploads/2025/01/Flux.1.webp', recommendationId: 'tool-033' }, { id: 'tool-015', name: 'Swap AI', description: {it: 'Esegue il "face swap" (scambio di volti) in immagini e video in modo realistico.', en: 'Performs realistic "face swap" in images and videos.'}, category: 'Immagini', country: 'USA', website: 'https://aifaceswap.io/', isFeatured: false, logoUrl: 'https://www.toolpilot.ai/cdn/shop/files/aifaceswap-l.jpg?v=1733037433', recommendationId: 'tool-016' }, { id: 'tool-016', name: 'Inpaint AI', description: {it: 'Rimuove oggetti, persone o imperfezioni indesiderate dalle foto con un solo click.', en: 'Removes unwanted objects, people, or imperfections from photos with a single click.'}, category: 'Immagini', country: 'USA', website: 'https://theinpaint.com/', isFeatured: false, logoUrl: 'data:image/webp;base64,UklGRqoEAABXRUJQVlA4WAoAAAAQAAAAJgAAJgAAQUxQSFwCAAARkHRrmyHJ6vNLdvfYtm3btm3b9uxs7Gzbtle2bSu/OCcjvi9iIkJh27aNndUdNO0TlhHBH/rpz6b8gWMDKHlYZrTjDfkmRHilbjyJ/6DX7uOQfDsuBSOg2wfAgtJ3hcpfqzK7hp3gOpDzQohEwiMlTWaBZQepk2Y8EinDO91TmYR+8aXttv1DFuLL/DyuVt1cm7+8+Cd0/LMpm8446fNOvf5Hqyi+tnN4gYKVMk94rWSk4atmHo+M2+f2fxRqZigbbijOw1/26fJdFAb8MTanzwDcLH3PvUFkskfi8d2EQnEM7FI90m+PdkBUBZnKXu1bKgHQtxGz+eiUb4hE2Tkf57XKF8uMp92z4i3K7PXV2jCwbFJmI6iz8A7yER0/PaJySg+AiDPiGrMDz1sjqiSXuxIEM34JYYKXQyqlcIF7RC2e0R5k5dvUKun4khY8iaheP+//LK+dM4iUtv2xb9jTmEodaFUqKiiH0ofY5GnN8HK3aon4txZv3GthQHw4oG5yrlDSb0duPRJ9M6Z+aof3cf1emxzxY1bDjMruoE4EyLUGlV6+I9zcKHtgcz8FwKn62GTSlXYFYkDz22OafTM462nfSvGYGKQFv+oLvf8ypmpiOkrn2Omnf9UV9feiyimAial10o5+xjYQt1dNbSvJqypbypKkHS+xP/ly3dQOvwpkoCQRV23PL4rHbdN45PJpE4Bk6xRe8EbFp+G5fZudz0xWE0jZ5fTfCL/nawolV2kA8YvM/yJ+bShPCwWMAvDPwEvcYeuEovFtda20ALpetWV78eNzP45sp9ICVlA4ICgCAABwCwCdASonACcAPoEeoFAlISUlGqCgEAlsALszQnfZODkB5GjUCAeYDdAOkA9CXy3vYa8majvPbrEC3w5RFM5OSn/KrMNlvL8JdXmVHGHDzjTaj7fvjV1ibG55GrUaSF3oolIAAP7K3bd03vd3wdyfd3PWkrdc5+l+Iasr40ElHEoRyDAfR7KWhTEUDOXTp3v8yZt7uLso8TxJA+6uDYJCVhrs3AZpMuDzCsUjsIEPp38Cv4wYR9LrreH7v1LAyPebD82DkAcosDF1iVhC8XjMHEx40fnT6Y5A38e/+s4ytcq/NzQzQSinQS+v4CX9j9XcnQqehOsxLSw76NRA4NikbBddvkE610BDsE6bz+5TKMonMv5qsXP4cNREOF4isL5uaMIGpSmnAJ0nPkOARvLYoTqp8KsSn+UO9exbdilgqTnIUwst6EvWMyV4b1qVA4z7zpI4T1hkk6bE6BxDxa/fDQpYnKbJmX92XLG4cVR1QDvQEpAxFPjQ/UtYfLXmZZfYDoG2qx3/oCSsllMI6GzYIxCGnPQy+N4qHTzpiuSBCd/fy/xNK/mEP9MDGg5i3DyI7O6ZTfD41oWs19qmrb8If2YXx6OWeQsO3gQAhVHjmiB6o6zKUp0KzpLgoxiCEeIM6+/1Alrn1mScl+t6JRSjO38IRDBxgoJ/xbLyoNjF3V/yPJwBJ5CXiZCe/U/zpIfvzIASXoyf4/wzIxzjnHFoLFLfuAAAAA=', recommendationId: 'tool-017' }, { id: 'tool-017', name: 'Pixel Cut AI', description: {it: "Espande i bordi delle immagini (outpainting) per cambiare formato o stile.", en: 'Expands image borders (outpainting) to change format or style.'}, category: 'Immagini', country: 'USA', website: 'https://www.pixelcut.ai/t/uncrop', isFeatured: false, logoUrl: 'https://templateshake.com/wp-content/uploads/2021/09/Pixelcut_-AI-Graphic-Designer.png', recommendationId: 'tool-033' }, { id: 'tool-033', name: 'Whisk', description: {it: 'Crea animazioni fluide da immagini statiche e genera anche immagini da prompt.', en: 'Creates smooth animations from static images and also generates images from prompts.'}, category: 'Immagini', country: 'USA', website: 'https://labs.google/fx/tools/whisk/', isFeatured: false, logoUrl: 'data:image/webp;base64,UklGRtoCAABXRUJQVlA4WAoAAAAQAAAAGgAAGgAAQUxQSHEBAAARkGTbtuoqvODSMJfuOTWKTiM8rt/d5UkY78XWKtwbBk2IiAlIkmv33+8W43GR53kR5nm29+35zVpSu/d6qoBLMVy8u3PlxusFghBBQHXx+trzmf8R1Pnjr4ioa0fbh+X+9vGKAOqnPUKxd0q2ec5JVwVwJ4ugDKct69MOCqpZYLQ1G9ibtRRD0gBF/0z7Nhd1FRQv0gDVP+XI5uy7yy9j6MnhVuVk82hXJXIpqC4a46G6ftleSCwlVi+bhvW8qSj/cHKwVkTmne1TFYjgrJEODHc659bnhmmsM22oZu0jddpWNM0AT7eLntJbx3DnRANxUnfRXd3+/delf2Zqlgm9uToeqxCZjtQ0FXYUoxhlXckzYEtAWa5bQrovjE7ns9l0MqmqqizLsqpO2+rOJ8HtRq/f6XZ7/f6w3+/3e1uon5/MDVGiIqrMn918QQREwiWvb9Zuv1qIUQAhmL24lyTJtYdfH/OwiOZFUex+eHSjlgAAVlA4IEIBAACQBwCdASobABsAPpEopFIloaWllACwEglsAJ0yhID1oDbNMQ1XPLbrzhvNnsAbpL+wAdmnnyJ9nYieeXb2Ryc1AKuoW3wA/vdDClcr9pD9tsCqduiNtQaVaXgNfHp+atcZTe36+3xORhwFno/1uCGFQNU/4IYVL2I0o6c2eo73COMYL756Lzd/ibcQRmlIAId+z6psKbtTu/HIkA2HcYl/lq+sJbc01Q/VZ218h72kU324N9YcnNwU4vXy6VXCKq/tTNwWHsJ66N8JgRuCvc2pDpQ7KYv4rj//agwrDT7PdEnuIAkZLuckIqBv9aVnsRgB0qHFxi5a42nw4jOMOI330LQhImDuwmt+4/ryzZZzC4m8PLOx6EdyPthzs6wIhg+lRzc3+QT27OYDqLpNkFX2To7bI2E7F1lLi0lg6Fo4SAAA', recommendationId: 'tool-014'}, { id: 'tool-041', name: 'Leonardo AI', description: {it: 'Piattaforma per la generazione di asset visivi di alta qualità, da concept art a texture per giochi.', en: 'Platform for generating high-quality visual assets, from concept art to game textures.'}, category: 'Immagini', country: 'USA', website: 'https://leonardo.ai/', isFeatured: false, logoUrl: 'https://yt3.googleusercontent.com/a04AUXisIIWkI-Pj5zORQTiDNS9tALLmPc8pxuRT_aEHrCOUDsPQoLuh4QRbfgICortk7tBhyg=s900-c-k-c0x00ffffff-no-rj', recommendationId: 'tool-014' }, { id: 'tool-042', name: 'Midjourney', description: {it: 'Genera immagini artistiche e fotorealistiche di alta qualità da prompt testuali tramite Discord.', en: 'Generates high-quality artistic and fotorealistic images from text prompts via Discord.'}, category: 'Immagini', country: 'USA', website: 'https://www.midjourney.com/home', isFeatured: false, logoUrl: 'https://sadesign.ai/pictures/picfullsizes/2024/12/10/dsn1733795303.jpg', recommendationId: 'tool-041' }, { id: 'tool-034', name: 'Kling', description: {it: 'Genera video di alta qualità da prompt testuali, concentrandosi sul realismo e sul movimento complesso.', en: 'Generates high-quality videos from text prompts, focusing on realism and complex motion.'}, category: 'Video', country: 'Cina', website: 'https://klingai.com/global/', isFeatured: false, logoUrl: 'https://play-lh.googleusercontent.com/JOfjXqsShK8j1aGBc1xlHBnatoRKRwLsGuoFZUAvKksaEPvK71eLwSg4FbKlky9Es-s', recommendationId: 'tool-035' }, { id: 'tool-035', name: 'Veo', description: {it: "Il modello di generazione video più capace di Google, che crea video realistici e di alta qualità da prompt di testo e immagini.", en: "Google's most capable video generation model, creating realistic, high-quality videos from text and image prompts."}, category: 'Video', country: 'USA', website: 'https://deepmind.google/models/veo/', isFeatured: false, logoUrl: 'https://storage.googleapis.com/gweb-uniblog-publish-prod/images/IO25_Gemini_MOD_v33_PART_1_DG_FINAL_54.max-1440x810.png', isFeatured: false, recommendationId: 'tool-014' }, { id: 'tool-021', name: 'Claude', description: {it: 'Crea bozze e contenuti per presentazioni interattive e documenti complessi.', en: 'Creates drafts and content for interactive presentations and complex documents.'}, category: 'Presentazioni', country: 'USA', website: 'https://claude.ai/new', isFeatured: true, logoUrl: 'https://logo.svgcdn.com/l/claude-icon-8x.png', recommendationId: 'tool-022' }, { id: 'tool-022', name: 'Gamma AI', description: {it: "Genera presentazioni, documenti e pagine web statiche partendo da un'idea.", en: 'Generates presentations, documents, and static web pages from an idea.'}, category: 'Presentazioni', country: 'USA', website: 'https://gamma.app/', isFeatured: false, logoUrl: 'https://www.fahimai.com/wp-content/uploads/2025/03/GAMMA-cta.png', recommendationId: 'tool-021' }, { id: 'tool-023', name: 'Napkin AI', description: {it: 'Converte dati testuali e concetti in grafici statici e diagrammi chiari.', en: 'Converts text data and concepts into clear static charts and diagrams.'}, category: 'Presentazioni', country: 'USA', website: 'https://www.napkin.ai/', isFeatured: false, logoUrl: 'https://media.licdn.com/dms/image/v2/D560BAQEYfmQKrdByPg/company-logo_200_200/company-logo_200_200/0/1723039432148/napkin_ai_logo?e=2147483647&v=beta&t=Nsr22RG3uiy9usBNh55leGVf8ES5YJQwUANW-2N7yEA', recommendationId: 'tool-022' }, { id: 'tool-024', name: 'Google AI Studio', description: {it: "Crea app, siti e prototipi basati sui modelli Gemini di Google.", en: "Creates apps, sites, and prototypes based on Google's Gemini models."}, category: 'Codice', country: 'USA', website: 'https://aistudio.google.com/prompts/new_chat', isFeatured: true, logoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToBQo43LHKdO8g2NftGqpOjG-rHo61R8Rmpk0mEb0rUJ0A2P-z0kTx8M6XQHWZbHTR61R8Rmpk0mEb0rUJ0A2P-z0kTx8M6XQHWZbHTR6lY&usqp=CAU', recommendationId: 'tool-026' }, { id: 'tool-025', name: 'Manus', description: {it: "Piattaforma di AI estremamente potente. Può eseguire compiti come ChatGPT e gestirli in background, creando testi, ricerche, presentazioni, video, immagini e molto altro.", en: 'Extremely powerful AI platform. It can perform tasks like ChatGPT and manage them in the background, creating text, research, presentations, videos, images and much more.'}, category: 'Codice', country: 'Cina', website: 'https://manus.im/app', isFeatured: true, logoUrl: 'https://i.namu.wiki/i/5-7MaDXSqFVQhJjDY8rbjzRuoAqlqXpQhoYWYqSgkgRo6Qo1imTF9nHaOTvNxIeEhg_OCEMzuySjfSCyMWLUTA.webp', recommendationId: 'tool-001' }, { id: 'tool-026', name: 'Microsoft Copilot', description: {it: 'Assistente AI per codice, specializzato anche in script VBA per Excel.', en: 'AI assistant for code, also specializing in VBA scripts for Excel.'}, category: 'Codice', country: 'USA', website: 'https://copilot.microsoft.com/', isFeatured: false, logoUrl: 'https://breakwaterit.co.uk/wp-content/uploads/2024/02/Copilot-65d6242f4e297.png', recommendationId: 'tool-024' }, { id: 'tool-027', name: 'Google Stitch', description: {it: 'Tool per la creazione di codice per interfacce utente (UX Design).', en: 'Tool for creating code for user interfaces (UX Design).'}, category: 'Codice', country: 'USA', website: 'https://stitch.withgoogle.com/', isFeatured: false, logoUrl: 'https://media2.dev.to/dynamic/image/width=1080,height=1080,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fzhshikvds4e6nn22fngm.png', recommendationId: 'tool-028' }, { id: 'tool-028', name: 'Chef Convex', description: {it: "Crea web app complete con un backend già integrato e pronto all'uso.", en: 'Creates complete web apps with a built-in and ready-to-use backend.'}, category: 'Codice', country: 'USA', website: 'https://chef.convex.dev/', isFeatured: false, logoUrl: 'https://chef.convex.dev/chef.svg', recommendationId: 'tool-027' }, { id: 'tool-030', name: 'Deepseek', description: {it: 'Modello linguistico specializzato nella scrittura e comprensione di codice in vari linguaggi.', en: 'Language model specialized in writing and understanding code in various languages.'}, category: 'Codice', country: 'Cina', website: 'https://chat.deepseek.com/', isFeatured: false, logoUrl: 'https://cdn-1.webcatalog.io/catalog/deepseek/deepseek-social-preview.png?v=1748219623720', recommendationId: 'tool-031' }, { id: 'tool-031', name: 'Qwen', description: {it: 'Assistente AI multimodale di Alibaba Cloud, efficace nella generazione di codice, analisi, creazione di testi e ricerca web.', en: 'Multimodal AI assistant from Alibaba Cloud, effective in code generation, analysis, text creation, and web search.'}, category: 'Codice', country: 'Cina', website: 'https://chat.qwen.ai/', isFeatured: false, logoUrl: 'https://crystalpng.com/wp-content/uploads/2025/02/Qwen-03.png', recommendationId: 'tool-030' }, { id: 'tool-032', name: 'Mistral', description: {it: 'Modelli linguistici aperti e ottimizzati, ideali per lo Codice di applicazioni e la Codice.', en: 'Open and optimized language models, ideal for application development and coding.'}, category: 'Codice', country: 'Europe', website: 'https://mistral.ai/', isFeatured: false, logoUrl: 'https://www.massa-critica.it/wp-content/uploads/mistral-ai.jpg', recommendationId: 'tool-001' }, { id: 'tool-036', name: 'BOLT AI', description: {it: 'Genera codice e componenti UI partendo da un prompt.', en: 'Generates code and UI components from a prompt.'}, category: 'Codice', country: 'USA', website: 'https://bolt.new/', isFeatured: false, logoUrl: 'https://cdn-1.webcatalog.io/catalog/bolt-new/bolt-new-icon-filled-256.png?v=1730692903154', recommendationId: 'tool-024' }, { id: 'tool-037', name: 'V0 AI', description: {it: 'Genera interfacce utente reattive basate su React da semplici prompt di testo.', en: 'Generates responsive user interfaces based on React from simple text prompts.'}, category: 'Codice', country: 'USA', website: 'https://v0.dev/chat', isFeatured: false, logoUrl: 'https://logowik.com/content/uploads/images/v0-ai1721420590.logowik.com.webp', recommendationId: 'tool-027' }, { id: 'tool-038', name: 'Cursor', description: {it: 'Un editor di codice basato su AI per programmare in modo più veloce ed efficiente.', en: 'An AI-powered code editor for faster and more efficient programming.'}, category: 'Codice', country: 'USA', website: 'https://www.cursor.com/', isFeatured: false, logoUrl: 'https://cursor.com/favicon.svg', recommendationId: 'tool-026' }, { id: 'tool-039', name: 'Lovable', description: {it: "Sviluppa e testa interfacce utente con l'aiuto dell'intelligenza artificiale.", en: 'Develops and tests user interfaces with the help of artificial intelligence.'}, category: 'Codice', country: 'USA', website: 'https://lovable.dev/', isFeatured: false, logoUrl: 'https://lovable.dev/img/logo/lovable-icon-bg-dark.png', recommendationId: 'tool-037' }, { id: 'tool-040', name: 'Perplexity', description: {it: 'Motore di ricerca conversazionale che fornisce risposte dirette con fonti, utile anche per la ricerca web e codice.', en: 'Conversational search engine that provides direct answers with sources, also useful for web and code search.'}, category: 'Codice', country: 'USA', website: 'https://www.perplexity.ai/', isFeatured: false, logoUrl: 'https://images.seeklogo.com/logo-png/51/2/perplexity-ai-logo-png_seeklogo-517845.png', recommendationId: 'tool-001' }, { id: 'tool-029', description: {it: 'Genera un parlato realistico e di alta qualità dal testo in più lingue.', en: 'Generates realistic, high-quality speech from text in multiple languages.'}, name: 'Eleven Labs', category: 'Audio', country: 'USA', website: 'https://elevenlabs.io/', isFeatured: false, logoUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAeFBMVEX///8AAABra2vPz88wMDBvb2/c3NxSUlL6+vpaWlqfn5/U1NSBgYFAQEAgICBFRUXJycnBwcFKSkrs7Oy5ubkrKysWFRaJiYnj4+N1dXU3Nzf09PSCgoKQkJCsrKxjY2MjIyMLCwulpaWzs7MaGho0NDSYmJheXl7ei1KlAAAGlElEQVR4nO2da2OyIABGKVvq7KKpTbP7XP3/f/jKVaxmrZzi3ud8yYiQEwgoaIQAAAAAAAAA2me8G/ab3bheMBr0n6hOMOw6d40Q1hieus5cI5xqDIddZ64RhjDsPTAsWH6Nekn8sGFaE8VkvIcN31rLU7NYMISh8cCQwNB4YEhgaDwwJDA0HhgSGBoPDAkMjQeGBIbGA0MCQ+OBIYGh8cCQwNB4YEhgaDwwJDA0HhgSGBoPDAkMjQeGBIbGA0MCQ+OBIYGh8cCQwNB4Wjd0GM2k9RDNGNqu6y4SujWxbXvB7tiMaGAVeyx2uGxS4Q7NGLIIzGtBtyy69T64xhK3sIyaVLhD04Y2DP+a4WE/0xh4f89wcxX1rxl+XEX9Dw2TcfJA9xgm4+xWsDeuuw2d0rHh53xWvM1XJya52MdxfpSf7eI4XrJErXTGjunUEx/ZNGJC/BFLrPZpAt0ajheqlV35RNz5vxAR2YMOcrq1KRvjd/7ZlG6H7xehnRjWtjTWQGdLSMY2RJ3d0u1TEbjSY01Lw20Z+tmd4XwiSGVVKg0Tkb25eC1GfSl9DXjELxG2E2ozrbyY4aw0/OrOsETW19KQmb3RhiJktXUmPuTVNBHZYo8d2ftliok0LEo4dHxewt5ljjowlPVVGbI92zwwlAkc6CtrHZlZJGSEACvitTJk1SJcauVulqGtvlPwyYpENCrsIR1nuWQQAUUOCwlaSh+nYleQ9o3PORLzrUhq31EDz0XrSt9jakMLZqdyH8iozHtTBiKFFmDU/OwgM7aUuYysxcMWxWKK6qpJeoe2/lCsqfv3GHo8wSjbg2/7w/9wRVzmd+i8V+L0tpdR7s4OIMeGU5lUi7JDqICnL83TFo0dJ4wZK+HykUOlk124IWWTJCVYeV6iO33xJCX+0U68vPth/zwTaWn0w9D1lWr4Zabyi6N1ssDfeTKSeX/LGMF0/esP4asCxw5ZTZiflahhpvjMmnRbNLrXPkwNMpwv5hrTD/0URt7NM6BlmLIDj7ZsQtBPsYmR/YmLXSc6CBrtkGGF7zphmLXM/kUoFik5vK34jzR+eJvR6Ocb3hGG6aVs6dqh2HLc3gRrBL/qkRjaZtrKMtwz7/naZmfqEsZTl7dnZOWsea8WV1dGtZk7vcMg8k1xVlukq7XEzWY8z5o6qvJVr/aEkyKKPr5UHKcFDV5udvIwA1NTHzFo7G3XRg+TcPTNgYaNgwMCQwpMOwUGBIYUm4aJoHvB4+4Jvb57K5/kukf8XuGbBLCfiAL7JqU+5NM/4hfHpc+knEYvggMCQwpMKzn7xmG283ZttcnOd8iDcOTO5uuI+300PuYHpaLjfXSGWPrhs56ILH5W Senado zPKvZ+qWcccvULP/qlUFS24bVuXt2HZQZ2m4ZerqO6d5aamKkYTaokknDK/GLmI8Mjoww5CW19n3/xK6obTTDc+Qf+ax87IhBn+t7VsCnn56uqO0ajrXMZnS686s05KH8aDyK34JvKyh+iecbm3YNI31ftCHJM2kol0KxFRqxSEiEfd75m5ha2jUM0kma8sISK5pCYbhSUVhwxsvQ9p9vYSRd9PiO/zmUTac0VJfl+cITT3Ue7jBKbiXyMK0bepvlQEMalhet59zQyctIh/cX+vy2DbX+fnTb0OaGJNTXs43urbH8nnYNHZFr+yNw+LL+K0MnVilEu4NSnD1diu0a8unOIT+wKobqOByXaRXlGJ3k0K1u+WEt7RqylRWyX6jUUjk9yluYyh0nFuvyF+RJfnk9zbka72reTxnKcasoHa3yMFo35PFT1J/gpv72+1PJLHN5O8kUX4u9flCFXFHOmdJ4wmMsVCvdWrnVqWCHkSS39LFMrmEvDwXL3Jg66HRELaQaLIAz5v6L5Nbs3yDDQ3+a6YV6NeHma9cI1gHYNte5w4Nu64bBctX3gB2oSa1/ddzzy1gznyvD6L/do0RzFdmzxZidUVzEC0Ve+SRnnpEY/p67HNLdxLhF7DLafwc2hZhJEQfVw84JTOtm+NtGodu2QJDI0HhgSGxgNDAkPjgSGBofHAkMDQeGBIYGg8MCQwNB4YEhgaDwwJDI0HhgSGxgNDAkPjgSGBofHAkMDQeGBIYGg8MCQwNB4YEhgaDwwJDI0HhgSGxgNDAkPjgSGBofF4Dxu6ntVHvOPDhj3n/za88QcMPWRXYxh1nblGqPvbqyy//33jyWsfA2P1XzG/c6dtFu2GfWYXvf4gHwAAAAAAAMDP+Qd5XHfMcP3iXQAAAABJRU5ErkJggg==' },
+            { id: 'tool-001', name: 'ChatGPT', description: {it: 'Genera testo, immagini e risponde a domande con ricerca web.', en: 'Generates text, images, and answers questions with web search.'}, category: 'Testo', country: 'USA', website: 'https://chatgpt.com/', isFeatured: true, logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/ChatGPT_logo.svg/1024px-ChatGPT_logo.svg.png', recommendationId: 'tool-025' }, { id: 'tool-012', name: 'Google Notebook', description: {it: "Permette di creare riassunti audio sulle fonti dell'utente, rispondere a domande e creare mappe mentali.", en: "Allows creating audio summaries from user sources, answering questions, and creating mind maps."}, category: 'Testo', country: 'USA', website: 'https://notebooklm.google.com/', isFeatured: false, logoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJbWdW2SCEWfJuDTh5PVxgmqDvXoX5vElJ6s94SZ8Fe1YPzfxzGPuIyE9cBMDswv3qUd4&usqp=CAU', recommendationId: 'tool-021' }, { id: 'tool-013', name: 'Grok', description: {it: 'Assistente di ricerca conversazionale con accesso a dati in tempo reale. (Richiede VPN)', en: 'Conversational research assistant with real-time data access. (Requires VPN)'}, category: 'Testo', country: 'USA', website: 'https://grok.com/', isFeatured: false, logoUrl: 'https://i.namu.wiki/i/Wk8b-Vo4qqynLc4pN1T0otG83F383UPI_IR4VthZuZioAxVD_NS6uErIsecLMDK0F0L-KiUjL7xonRz4EwPL2g.webp', recommendationId: 'tool-001' }, { id: 'tool-014', name: 'FLUX', description: {it: 'Genera immagini, video e animazioni da prompt testuali e immagini.', en: 'Generates images, videos, and animations from text prompts and images.'}, category: 'Immagini', country: 'Cina', website: 'https://playground.bfl.ai/image/generate', isFeatured: false, logoUrl: 'https://kodexolabs.com/wp-content/uploads/2025/01/Flux.1.webp', recommendationId: 'tool-033' }, { id: 'tool-015', name: 'Swap AI', description: {it: 'Esegue il "face swap" (scambio di volti) in immagini e video in modo realistico.', en: 'Performs realistic "face swap" in images and videos.'}, category: 'Immagini', country: 'USA', website: 'https://aifaceswap.io/', isFeatured: false, logoUrl: 'https://www.toolpilot.ai/cdn/shop/files/aifaceswap-l.jpg?v=1733037433', recommendationId: 'tool-016' }, { id: 'tool-016', name: 'Inpaint AI', description: {it: 'Rimuove oggetti, persone o imperfezioni indesiderate dalle foto con un solo click.', en: 'Removes unwanted objects, people, or imperfections from photos with a single click.'}, category: 'Immagini', country: 'USA', website: 'https://theinpaint.com/', isFeatured: false, logoUrl: 'data:image/webp;base64,UklGRqoEAABXRUJQVlA4WAoAAAAQAAAAJgAAJgAAQUxQSFwCAAARkHRrmyHJ6vNLdvfYtm3btm3b9uxs7Gzbtle2bSu/OCcjvi9iIkJh27aNndUdNO0TlhHBH/rpz6b8gWMDKHlYZrTjDfkmRHilbjyJ/6DX7uOQfDsuBSOg2wfAgtJ3hcpfqzK7hp3gOpDzQohEwiMlTWaBZQepk2Y8EinDO91TmYR+8aXttv1DFuLL/DyuVt1cm7+8+Cd0/LMpm8446fNOvf5Hqyi+tnN4gYKVMk94rWSk4atmHo+M2+f2fxRqZigbbijOw1/26fJdFAb8MTanzwDcLH3PvUFkskfi8d2EQnEM7FI90m+PdkBUBZnKXu1bKgHQtxGz+eiUb4hE2Tkf57XKF8uMp92z4i3K7PXV2jCwbFJmI6iz8A7yER0/PaJySg+AiDPiGrMDz1sjqiSXuxIEM34JYYKXQyqlcIF7RC2e0R5k5dvUKun4khY8iaheP+//LK+dM4iUtv2xb9jTmEodaFUqKiiH0ofY5GnN8HK3aon4txZv3GthQHw4oG5yrlDSb0duPRJ9M6Z+aof3cf1emxzxY1bDjMruoE4EyLUGlV6+I9zcKHtgcz8FwKn62GTSlXYFYkDz22OafTM462nfSvGYGKQFv+oLvf8ypmpiOkrn2Omnf9UV9feiyimAial10o5+xjYQt1dNbSvJqypbypKkHS+xP/ly3dQOvwpkoCQRV23PL4rHbdN45PJpE4Bk6xRe8EbFp+G5fZudz0xWE0jZ5fTfCL/nawolV2kA8YvM/yJ+bShPCwWMAvDPwEvcYeuEovFtda20ALpetWV78eNzP45sp9ICVlA4ICgCAABwCwCdASonACcAPoEeoFAlISUlGqCgEAlsALszQnfZODkB5GjUCAeYDdAOkA9CXy3vYa8majvPbrEC3w5RFM5OSn/KrMNlvL8JdXmVHGHDzjTaj7fvjV1ibG55GrUaSF3oolIAAP7K3bd03vd3wdyfd3PWkrdc5+l+Iasr40ElHEoRyDAfR7KWhTEUDOXTp3v8yZt7uLso8TxJA+6uDYJCVhrs3AZpMuDzCsUjsIEPp38Cv4wYR9LrreH7v1LAyPebD82DkAcosDF1iVhC8XjMHEx40fnT6Y5A38e/+s4ytcq/NzQzQSinQS+v4CX9j9XcnQqehOsxLSw76NRA4NikbBddvkE610BDsE6bz+5TKMonMv5qsXP4cNREOF4isL5uaMIGpSmnAJ0nPkOARvLYoTqp8KsSn+UO9exbdilgqTnIUwst6EvWMyV4b1qVA4z7zpI4T1hkk6bE6BxDxa/fDQpYnKbJmX92XLG4cVR1QDvQEpAxFPjQ/UtYfLXmZZfYDoG2qx3/oCSsllMI6GzYIxCGnPQy+N4qHTzpiuSBCd/fy/xNK/mEP9MDGg5i3DyI7O6ZTfD41oWs19qmrb8If2YXx6OWeQsO3gQAhVHjmiB6o6zKUp0KzpLgoxiCEeIM6+/1Alrn1mScl+t6JRSjO38IRDBxgoJ/xbLyoNjF3V/yPJwBJ5CXiZCe/U/zpIfvzIASXoyf4/wzIxzjnHFoLFLfuAAAAA=', recommendationId: 'tool-017' }, { id: 'tool-017', name: 'Pixel Cut AI', description: {it: "Espande i bordi delle immagini (outpainting) per cambiare formato o stile.", en: 'Expands image borders (outpainting) to change format or style.'}, category: 'Immagini', country: 'USA', website: 'https://www.pixelcut.ai/t/uncrop', isFeatured: false, logoUrl: 'https://templateshake.com/wp-content/uploads/2021/09/Pixelcut_-AI-Graphic-Designer.png', recommendationId: 'tool-033' }, { id: 'tool-033', name: 'Whisk', description: {it: 'Crea animazioni fluide da immagini statiche e genera anche immagini da prompt.', en: 'Creates smooth animations from static images and also generates images from prompts.'}, category: 'Immagini', country: 'USA', website: 'https://labs.google/fx/tools/whisk/', isFeatured: false, logoUrl: 'data:image/webp;base64,UklGRtoCAABXRUJQVlA4WAoAAAAQAAAAGgAAGgAAQUxQSHEBAAARkGTbtuoqvODSMJfuOTWKTiM8rt/d5UkY78XWKtwbBk2IiAlIkmv33+8W43GR53kR5nm29+35zVpSu/d6qoBLMVy8u3PlxusFghBBQHXx+trzmf8R1Pnjr4ioa0fbh+X+9vGKAOqnPUKxd0q2ec5JVwVwJ4ugDKct69MOCqpZYLQ1G9ibtRRD0gBF/0z7Nhd1FRQv0gDVP+XI5uy7yy9j6MnhVuVk82hXJXIpqC4a46G6ftleSCwlVi+bhvW8qSj/cHKwVkTmne1TFYjgrJEODHc659bnhmmsM22oZu0jddpWNM0AT7eLntJbx3DnRANxUnfRXd3+/delf2Zqlgm9uToeqxCZjtQ0FXYUoxhlXckzYEtAWa5bQrovjE7ns9l0MqmqqizLsqpO2+rOJ8HtRq/f6XZ7/f6w3+/3e1uon5/MDVGiIqrMn918QQREwiWvb9Zuv1qIUQAhmL24lyTJtYdfH/OwiOZFUex+eHSjlgAAVlA4IEIBAACQBwCdASobABsAPpEopFIloaWllACwEglsAJ0yhID1oDbNMQ1XPLbrzhvNnsAbpL+wAdmnnyJ9nYieeXb2Ryc1AKuoW3wA/vdDClcr9pD9tsCqduiNtQaVaXgNfHp+atcZTe36+3xORhwFno/1uCGFQNU/4IYVL2I0o6c2eo73COMYL756Lzd/ibcQRmlIAId+z6psKbtTu/HIkA2HcYl/lq+sJbc01Q/VZ218h72kU324N9YcnNwU4vXy6VXCKq/tTNwWHsJ66N8JgRuCvc2pDpQ7KYv4rj//agwrDT7PdEnuIAkZLuckIqBv9aVnsRgB0qHFxi5a42nw4jOMOI330LQhImDuwmt+4/ryzZZzC4m8PLOx6EdyPthzs6wIhg+lRzc3+QT27OYDqLpNkFX2To7bI2E7F1lLi0lg6Fo4SAAA', recommendationId: 'tool-014'}, { id: 'tool-041', name: 'Leonardo AI', description: {it: 'Piattaforma per la generazione di asset visivi di alta qualità, da concept art a texture per giochi.', en: 'Platform for generating high-quality visual assets, from concept art to game textures.'}, category: 'Immagini', country: 'USA', website: 'https://leonardo.ai/', isFeatured: false, logoUrl: 'https://yt3.googleusercontent.com/a04AUXisIIWkI-Pj5zORQTiDNS9tALLmPc8pxuRT_aEHrCOUDsPQoLuh4QRbfgICortk7tBhyg=s900-c-k-c0x00ffffff-no-rj', recommendationId: 'tool-014' }, { id: 'tool-042', name: 'Midjourney', description: {it: 'Genera immagini artistiche e fotorealistiche di alta qualità da prompt testuali tramite Discord.', en: 'Generates high-quality artistic and fotorealistic images from text prompts via Discord.'}, category: 'Immagini', country: 'USA', website: 'https://www.midjourney.com/home', isFeatured: false, logoUrl: 'https://sadesign.ai/pictures/picfullsizes/2024/12/10/dsn1733795303.jpg', recommendationId: 'tool-041' }, { id: 'tool-034', name: 'Kling', description: {it: 'Genera video di alta qualità da prompt testuali, concentrandosi sul realismo e sul movimento complesso.', en: 'Generates high-quality videos from text prompts, focusing on realism and complex motion.'}, category: 'Video', country: 'Cina', website: 'https://klingai.com/global/', isFeatured: false, logoUrl: 'https://play-lh.googleusercontent.com/JOfjXqsShK8j1aGBc1xlHBnatoRKRwLsGuoFZUAvKksaEPvK71eLwSg4FbKlky9Es-s', recommendationId: 'tool-035' }, { id: 'tool-035', name: 'Veo', description: {it: "Il modello di generazione video più capace di Google, che crea video realistici e di alta qualità da prompt di testo e immagini.", en: "Google's most capable video generation model, creating realistic, high-quality videos from text and image prompts."}, category: 'Video', country: 'USA', website: 'https://deepmind.google/models/veo/', isFeatured: false, logoUrl: 'https://storage.googleapis.com/gweb-uniblog-publish-prod/images/IO25_Gemini_MOD_v33_PART_1_DG_FINAL_54.max-1440x810.png', isFeatured: false, recommendationId: 'tool-014' }, { id: 'tool-021', name: 'Claude', description: {it: 'Crea bozze e contenuti per presentazioni interattive e documenti complessi.', en: 'Creates drafts and content for interactive presentations and complex documents.'}, category: 'Presentazioni', country: 'USA', website: 'https://claude.ai/new', isFeatured: true, logoUrl: 'https://logo.svgcdn.com/l/claude-icon-8x.png', recommendationId: 'tool-022' }, { id: 'tool-022', name: 'Gamma AI', description: {it: "Genera presentazioni, documenti e pagine web statiche partendo da un'idea.", en: 'Generates presentations, documents, and static web pages from an idea.'}, category: 'Presentazioni', country: 'USA', website: 'https://gamma.app/', isFeatured: false, logoUrl: 'https://www.fahimai.com/wp-content/uploads/2025/03/GAMMA-cta.png', recommendationId: 'tool-021' }, { id: 'tool-023', name: 'Napkin AI', description: {it: 'Converte dati testuali e concetti in grafici statici e diagrammi chiari.', en: 'Converts text data and concepts into clear static charts and diagrams.'}, category: 'Presentazioni', country: 'USA', website: 'https://www.napkin.ai/', isFeatured: false, logoUrl: 'https://media.licdn.com/dms/image/v2/D560BAQEYfmQKrdByPg/company-logo_200_200/company-logo_200_200/0/1723039432148/napkin_ai_logo?e=2147483647&v=beta&t=Nsr22RG3uiy9usBNh55leGVf8ES5YJQwUANW-2N7yEA', recommendationId: 'tool-022' }, { id: 'tool-024', name: 'Google AI Studio', description: {it: "Crea app, siti e prototipi basati sui modelli Gemini di Google.", en: "Creates apps, sites, and prototypes based on Google's Gemini models."}, category: 'Codice', country: 'USA', website: 'https://aistudio.google.com/prompts/new_chat', isFeatured: true, logoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToBQo43LHKdO8g2NftGqpOjG-rHo61R8Rmpk0mEb0rUJ0A2P-z0kTx8M6XQHWZbHTR61R8Rmpk0mEb0rUJ0A2P-z0kTx8M6XQHWZbHTR6lY&usqp=CAU', recommendationId: 'tool-026' }, { id: 'tool-025', name: 'Manus', description: {it: "Piattaforma di AI estremamente potente. Può eseguire compiti come ChatGPT e gestirli in background, creando testi, ricerche, presentazioni, video, immagini e molto altro.", en: 'Extremely powerful AI platform. It can perform tasks like ChatGPT and manage them in the background, creating text, research, presentations, videos, images and much more.'}, category: 'Codice', country: 'Cina', website: 'https://manus.im/app', isFeatured: true, logoUrl: 'https://i.namu.wiki/i/5-7MaDXSqFVQhJjDY8rbjzRuoAqlqXpQho6Qo1imTF9nHaOTvNxIeEhg_OCEMzuySjfSCyMWLUTA.webp', recommendationId: 'tool-001' }, { id: 'tool-026', name: 'Microsoft Copilot', description: {it: 'Assistente AI per codice, specializzato anche in script VBA per Excel.', en: 'AI assistant for code, also specializing in VBA scripts for Excel.'}, category: 'Codice', country: 'USA', website: 'https://copilot.microsoft.com/', isFeatured: false, logoUrl: 'https://breakwaterit.co.uk/wp-content/uploads/2024/02/Copilot-65d6242f4e297.png', recommendationId: 'tool-024' }, { id: 'tool-027', name: 'Google Stitch', description: {it: 'Tool per la creazione di codice per interfacce utente (UX Design).', en: 'Tool for creating code for user interfaces (UX Design).'}, category: 'Codice', country: 'USA', website: 'https://stitch.withgoogle.com/', isFeatured: false, logoUrl: 'https://media2.dev.to/dynamic/image/width=1080,height=1080,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fzhshikvds4e6nn22fngm.png', recommendationId: 'tool-028' }, { id: 'tool-028', name: 'Chef Convex', description: {it: "Crea web app complete con un backend già integrato e pronto all'uso.", en: 'Creates complete web apps with a built-in and ready-to-use backend.'}, category: 'Codice', country: 'USA', website: 'https://chef.convex.dev/', isFeatured: false, logoUrl: 'https://chef.convex.dev/chef.svg', recommendationId: 'tool-027' }, { id: 'tool-030', name: 'Deepseek', description: {it: 'Modello linguistico specializzato nella scrittura e comprensione di codice in vari linguaggi.', en: 'Language model specialized in writing and understanding code in various languages.'}, category: 'Codice', country: 'Cina', website: 'https://chat.deepseek.com/', isFeatured: false, logoUrl: 'https://cdn-1.webcatalog.io/catalog/deepseek/deepseek-social-preview.png?v=1748219623720', recommendationId: 'tool-031' }, { id: 'tool-031', name: 'Qwen', description: {it: 'Assistente AI multimodale di Alibaba Cloud, efficace nella generazione di codice, analisi, creazione di testi e ricerca web.', en: 'Multimodal AI assistant from Alibaba Cloud, effective in code generation, analysis, text creation, and web search.'}, category: 'Codice', country: 'Cina', website: 'https://chat.qwen.ai/', isFeatured: false, logoUrl: 'https://crystalpng.com/wp-content/uploads/2025/02/Qwen-03.png', recommendationId: 'tool-030' }, { id: 'tool-032', name: 'Mistral', description: {it: 'Modelli linguistici aperti e ottimizzati, ideali per lo Codice di applicazioni e la Codice.', en: 'Open and optimized language models, ideal for application development and coding.'}, category: 'Codice', country: 'Europe', website: 'https://mistral.ai/', isFeatured: false, logoUrl: 'https://www.massa-critica.it/wp-content/uploads/mistral-ai.jpg', recommendationId: 'tool-001' }, { id: 'tool-036', name: 'BOLT AI', description: {it: 'Genera codice e componenti UI partendo da un prompt.', en: 'Generates code and UI components from a prompt.'}, category: 'Codice', country: 'USA', website: 'https://bolt.new/', isFeatured: false, logoUrl: 'https://cdn-1.webcatalog.io/catalog/bolt-new/bolt-new-icon-filled-256.png?v=1730692903154', recommendationId: 'tool-024' }, { id: 'tool-037', name: 'V0 AI', description: {it: 'Genera interfacce utente reattive basate su React da semplici prompt di testo.', en: 'Generates responsive user interfaces based on React from simple text prompts.'}, category: 'Codice', country: 'USA', website: 'https://v0.dev/chat', isFeatured: false, logoUrl: 'https://logowik.com/content/uploads/images/v0-ai1721420590.logowik.com.webp', recommendationId: 'tool-027' }, { id: 'tool-038', name: 'Cursor', description: {it: 'Un editor di codice basato su AI per programmare in modo più veloce ed efficiente.', en: 'An AI-powered code editor for faster and more efficient programming.'}, category: 'Codice', country: 'USA', website: 'https://www.cursor.com/', isFeatured: false, logoUrl: 'https://cursor.com/favicon.svg', recommendationId: 'tool-026' }, { id: 'tool-039', name: 'Lovable', description: {it: "Sviluppa e testa interfacce utente con l'aiuto dell'intelligenza artificiale.", en: 'Develops and tests user interfaces with the help of artificial intelligence.'}, category: 'Codice', country: 'USA', website: 'https://lovable.dev/', isFeatured: false, logoUrl: 'https://lovable.dev/img/logo/lovable-icon-bg-dark.png', recommendationId: 'tool-037' }, { id: 'tool-040', name: 'Perplexity', description: {it: 'Motore di ricerca conversazionale che fornisce risposte dirette con fonti, utile anche per la ricerca web e codice.', en: 'Conversational search engine that provides direct answers with sources, also useful for web and code search.'}, category: 'Codice', country: 'USA', website: 'https://www.perplexity.ai/', isFeatured: false, logoUrl: 'https://images.seeklogo.com/logo-png/51/2/perplexity-ai-logo-png_seeklogo-517845.png', recommendationId: 'tool-001' }, { id: 'tool-029', description: {it: 'Genera un parlato realistico e di alta qualità dal testo in più lingue.', en: 'Generates realistic, high-quality speech from text in multiple languages.'}, name: 'Eleven Labs', category: 'Audio', country: 'USA', website: 'https://elevenlabs.io/', isFeatured: false, logoUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAeFBMVEX///8AAABra2vPz88wMDBvb2/c3NxSUlL6+vpaWlqfn5/U1NSBgYFAQEAgICBFRUXJycnBwcFKSkrs7Oy5ubkrKysWFRaJiYnj4+N1dXU3Nzf09PSCgoKQkJCsrKxjY2MjIyMLCwulpaWzs7MaGho0NDSYmJheXl7ei1KlAAAGlElEQVR4nO2da2OyIABGKVvq7KKpTbP7XP3/f/jKVaxmrZzi3ud8yYiQEwgoaIQAAAAAAAAA2me8G/ab3bheMBr0n6hOMOw6d40Q1hieus5cI5xqDIddZ64RhjDsPTAsWH6Nekn8sGFaE8VkvIcN31rLU7NYMISh8cCQwNB4YEhgaDwwJDA0HhgSGBoPDAkMjQeGBIbGA0MCQ+OBIYGh8cCQwNB4YEhgaDwwJDA0HhgSGBoPDAkMjQeGBIbGA0MCQ+OBIYGh8cCQwNB4Wjd0GM2k9RDNGNqu6y4SujWxbXvB7tiMaGAVeyx2uGxS4Q7NGLIIzGtBtyy69T64xhK3sIyaVLhD04Y2DP+a4WE/0xh4f89wcxX1rxl+XEX9Dw0TcfJA9xgm4+xWsDeuuw2d0rHh53xWvM1XJya52MdxfpSf7eI4XrJErXTGjunUEx/ZNGJC/BFLrPZpAt0ajheqlV35RNz5vxAR2YMOcrq1KRvjd/7ZlG6H7xehnRjWtjTWQGdLSMY2RJ3d0u1TEbjSY01Lw20Z+tmd4XwiGKVVKg0Tkb25eC1GfSl9DXjELxG2E2ozrbyY4aw0/OrOsETW19KQmb3RhiJktXUmPuTVNBHZYo8d2ftliok0LEo4dHxewt5ljjowlPVVGbI92zwwlAkc6CtrHZlZJGSEACvirTJk1SJcauVulqGtvhPwyYpENCrsIR1nuWQQAUUOCwlaSh/nYleQ9o3PORLzrUhq31EDz0XrSt9jakMLZqdyH8iozHtjBiKFFmDU/OwgM7aUuYysxcMWxWKK6qpJeoe2/lCsqfv3GHo8wSjbg2/7w/9wRVzmd+i8V+L0tpdR7s4OIMeGU5lUi7JDqICnL83TFo0dJ4wZK+HykUOlk124IWWTJCVYeV6iO33xJCX+0U68vPth/zwTaWn0w9D1lWr4Zabyi6N1ssDfeTKSeX/LGMF0/esP4asCxw5ZTZiflahhpvjMmnRbNLrXPkwNMpwv5hrTD/0URt7NM6BlmLIDj7ZsQtBPsYmR/YmLXSc6CBrtkGGF7zphmLXM/kUoFik5vK34jzR+eJvR6Ocb3hGG6aVs6dqh2HLc3gRrBL/qkRjaZtrKMtwz7/naZmfqEsZTl7dnZOWsea8WV1dGtZk7vcMg8k1xVlukq7XEzWY8z5o6qvJVr/aEkyKKPr5UHKcFDV5udvIwA1NTHzFo7G3XRg+TcPTNgYaNgwMCQwpMOwUGBIYUm4aJoHvB4+4Jvb57K5/kukf8XuGbBLCfiAL7JqU+5NM/4hfHpc+knEYvggMCQwpMKzn7xmG283ZttcnOd8iDcOTO5uuI+300PuYHpaLjfXSGWPrhs56ILH5W Senado zPKvZ+qWcccvUL/qlUFS24bVuXt2HZQZ2m4ZerqO6d5aamKkYTaokknDK/GLmI8Mjoww5CW19n3/xK6obTTDc+Qf+ax87IhBn+t7VsCnn56uqO0ajrXMZnS686s05KH8aDyK34JvKyh+iecbm3YNI31ftCHJM2kol0KxFRqxSEiEfd75m5ha2jUM0kma8sISK5pCYbhSUVhwxsvQ9p9vYSRd9PiO/zmUTac0VJfl+cITT3Ue7jBKbiXyMK0bepvlQEMalhet59zQyctIh/cX+vy2DbX+fnTb0OaGJNTXs43urbH8nnYNHZFr+yNw+LL+K0MnVilEu4NSnD1diu0a8unOIT+wKobqOByXaRXlGJ3k0K1u+WEt7RqylRWyX6jUUjk9yluYyh0nFuvyF+RJfnk9zbka72reTxnKcasoHa3yMFo35PFT1J/gpv72+1PJLHN5O8kUX4u9flCFXFHOmdJ4wmMsVCvdWrnVqWCHkSS39LFMrmEvDwXL3Jg66HRELaQaLIAz5v6L5Nbs3yDDQ3+a6YV6NeHma9cI1gHYNte5w4Nu64bBctX3gB2oSa1/ddzzy1gznyvD6L/do0RzFdmzxZidUVzEC0Ve+SRnnpEY/p67HNLdxLhF7DLafwc2hZhJEQfVw84JTOtm+NtGodu2QJDI0HhgSGxgNDAkPjgSGBofHAkMDQeGBIYGg8MCQwNB4YEhgaDwwJDI0HhgSGxgNDAkPjgSGBofHAkMDQeGBIYGg8MCQwNB4YEhgaDwwJDI0HhgSGxgNDAkPjgSGBofF4Dxu6ntVHvOPDhj3n/za88QcMPWRXYxh1nblGqPvbqyy//33jyWsfA2P1XzG/c6dtFu2GfWYXvf4gHwAAAAAAAMDP+Qd5XHfMcP3iXQAAAABJRU5ErkJggg==' },
             { 
                 id: 'tool-043', 
                 name: 'Rows', 
@@ -1019,8 +1026,8 @@
             .filter(c => c !== 'Global')
             .map(c => ({ name: c, flag: { 'USA': '🇺🇸', 'Cina': '🇨🇳', 'Europe': '🇪🇺' }[c] || '🏳️' }));
 
-        // currentUser will now include Firestore data (favorites, userTools, userFeaturedTools)
-        // and local state (isLocallyPrivileged)
+        // currentUser will now include Firestore data (favorites, userTools, userFeaturedTools, userFeaturedReplacements)
+        // and the privileged status loaded from Firestore
         let currentUser = {}; 
         let currentView = 'home';
         let activeFilter = 'All'; // Filter for Favorites page
@@ -1057,8 +1064,6 @@
         };
         
         const getStorageKey = () => `conversations_${currentUser.uid || 'guest'}`;
-        // Local storage key for the privileged flag only
-        const getPrivilegedLocalDataKey = () => `koda_privileged_flag_${currentUser.uid}`;
 
         const loadConversations = () => {
             const saved = localStorage.getItem(getStorageKey());
@@ -1079,28 +1084,6 @@
         const saveActiveConversationId = () => {
              localStorage.setItem(`activeConversationId_${currentUser.uid || 'guest'}`, activeConversationId);
         }
-
-        // NEW FUNCTION: Load user-specific local data (privileged status ONLY)
-        const loadUserLocalData = () => {
-             if (!currentUser.uid) {
-                 currentUser.isLocallyPrivileged = false;
-                 // userTools and userFeaturedTools will be loaded from Firestore
-                 return;
-             }
-             const savedData = localStorage.getItem(getPrivilegedLocalDataKey());
-             const data = savedData ? JSON.parse(savedData) : {};
-             currentUser.isLocallyPrivileged = data.isLocallyPrivileged || false;
-        };
-
-        // NEW FUNCTION: Save user-specific local data (privileged status ONLY)
-        const saveUserLocalData = () => {
-             if (!currentUser.uid) return;
-             const dataToSave = {
-                 isLocallyPrivileged: currentUser.isLocallyPrivileged,
-             };
-             localStorage.setItem(getPrivilegedLocalDataKey(), JSON.stringify(dataToSave));
-        };
-
 
         const startNewChat = (remountApp = true) => {
             const newId = `chat-${Date.now()}`;
@@ -1151,7 +1134,8 @@
         // Modified createGridCard to optionally show an edit icon and specify its action
         const createGridCard = (tool, showEditIcon = false, editAction = 'toggle-user-featured') => {
             let editIconHTML = '';
-            if (showEditIcon && currentUser.uid && currentUser.isLocallyPrivileged) {
+            // Check if user is logged in AND privileged (status loaded from Firestore)
+            if (showEditIcon && currentUser.uid && currentUser.isPrivileged) {
                 const isUserTool = tool.id.startsWith('user-');
                 // Determine the correct action and title based on whether it's a user tool or a static tool replacement
                 const action = isUserTool ? 'toggle-user-featured' : 'replace-featured-static';
@@ -1194,8 +1178,8 @@
             const t = translations[currentLanguage];
             const isFavorited = currentUser.uid && currentUser.favorites.includes(toolId);
             const isUserTool = tool.id.startsWith('user-');
-            // Check local privileged status and Firestore-synced featured list
-            const isUserFeatured = currentUser.uid && currentUser.isLocallyPrivileged && currentUser.userFeaturedTools?.includes(toolId);
+            // Check privileged status loaded from Firestore
+            const isUserFeatured = currentUser.uid && currentUser.isPrivileged && currentUser.userFeaturedTools?.includes(toolId);
 
             let recommendationHTML = '';
             if (tool.recommendationId) {
@@ -1207,7 +1191,7 @@
             
             let userToolActionsHTML = '';
             // Show Mark Featured button only for user's own tools if privileged
-            if (isUserTool && currentUser.uid && currentUser.isLocallyPrivileged) {
+            if (isUserTool && currentUser.uid && currentUser.isPrivileged) {
                  userToolActionsHTML = `<button class="button" data-action="toggle-user-featured" data-id="${tool.id}">${isUserFeatured ? t.unmarkAsFeatured : t.markAsFeatured}</button>`;
             }
 
@@ -1241,7 +1225,8 @@
 
         // NEW FUNCTION: Toggle user-added tool featured status (Firestore)
         const toggleUserFeatured = async (toolId) => {
-             if (!currentUser || !currentUser.uid || !currentUser.isLocallyPrivileged) return;
+             // Check privileged status loaded from Firestore
+             if (!currentUser || !currentUser.uid || !currentUser.isPrivileged) return;
              // Ensure it is a user-added tool
              if (!toolId.startsWith('user-')) return;
 
@@ -1267,7 +1252,8 @@
 
         // NEW FUNCTION: Replace static featured tool with user tool (Firestore)
         const replaceFeaturedStatic = async (staticToolId, userToolId) => {
-             if (!currentUser || !currentUser.uid || !currentUser.isLocallyPrivileged) return;
+             // Check privileged status loaded from Firestore
+             if (!currentUser || !currentUser.uid || !currentUser.isPrivileged) return;
              if (!staticToolId || !userToolId) return;
 
              const userDocRef = doc(db, "users", currentUser.uid);
@@ -1289,7 +1275,8 @@
 
          // NEW FUNCTION: Remove featured replacement (Firestore)
         const removeFeaturedReplacement = async (staticToolId) => {
-             if (!currentUser || !currentUser.uid || !currentUser.isLocallyPrivileged) return;
+             // Check privileged status loaded from Firestore
+             if (!currentUser || !currentUser.uid || !currentUser.isPrivileged) return;
              if (!staticToolId) return;
 
              const userDocRef = doc(db, "users", currentUser.uid);
@@ -1370,8 +1357,8 @@
             const staticTools = window.getLocalizedToolsData(currentLanguage);
             const allTools = getAllToolsForCurrentUser(); // Use combined list for search/explore
             const isGuest = !currentUser.uid;
-            // Check local privileged status
-            const isLocallyPrivileged = currentUser.uid && currentUser.isLocallyPrivileged; 
+            // Check privileged status loaded from Firestore
+            const isPrivileged = currentUser.uid && currentUser.isPrivileged; 
             const pageTitles = { home: t.pageTitleHome, 'top-ai': t.pageTitleTopAI, explore: t.pageTitleSearch, favorites: t.pageTitleLibrary };
 
             // Top bar is only rendered for non-home views
@@ -1421,7 +1408,7 @@
                     if (!toolToDisplay) return ''; // Should not happen if data is consistent
 
                     // Show edit icon if privileged
-                    const showEdit = isLocallyPrivileged;
+                    const showEdit = isPrivileged;
                     // If it's a user replacement, the edit icon removes the replacement
                     const editAction = replacementToolId ? 'remove-featured-replacement' : 'replace-featured-static';
 
@@ -1515,12 +1502,12 @@
                     let contentHTML = '';
 
                     // Add the K button for logged-in users (only if not already privileged)
-                    if (currentUser.uid && !currentUser.isLocallyPrivileged) {
+                    if (currentUser.uid && !currentUser.isPrivileged) {
                          contentHTML += `<button id="privileged-unlock-btn" data-action="unlock-privileged">K</button>`;
                     }
 
                     // Add "Add Custom App" Button for privileged users
-                    if (isLocallyPrivileged) {
+                    if (isPrivileged) {
                          contentHTML += `<button id="add-app-button" class="button" data-action="open-add-app-modal" data-translate="addCustomApp">${t.addCustomApp}</button>`;
                     }
 
@@ -1528,7 +1515,7 @@
                     // User Featured Section for privileged users
                     // userFeaturedTools now comes from currentUser (synced with Firestore)
                     const userFeaturedTools = (currentUser.userTools || []).filter(tool => currentUser.userFeaturedTools?.includes(tool.id));
-                    if (isLocallyPrivileged) {
+                    if (isPrivileged) {
                          contentHTML += `
                              <div class="user-featured-section">
                                  <div class="section-title" data-translate="featuredByYou">${t.featuredByYou}</div>
@@ -1553,7 +1540,7 @@
                     let filteredLibraryTools = activeFilter === 'All' ? combinedLibraryTools : combinedLibraryTools.filter(t => t.category === activeFilter);
 
                     // Exclude user featured tools from the main list if they are shown in the featured section AND the user is privileged
-                    if (isLocallyPrivileged) {
+                    if (isPrivileged) {
                          const userFeaturedIds = userFeaturedTools.map(t => t.id);
                          filteredLibraryTools = filteredLibraryTools.filter(tool => !userFeaturedIds.includes(tool.id));
                     }
@@ -1704,7 +1691,7 @@
                         </div>
                         <div class="input-group">
                             <label for="profile-confirm-password" data-translate="confirmPasswordLabel">${t.confirmPasswordLabel}</label>
-                            <input type="password" id="profile-confirm-password" placeholder="${t.profile-confirm-password}">
+                            <input type="password" id="profile-confirm-password" placeholder="${t.confirmPasswordPlaceholder}">
                         </div>
                         <button class="button" id="update-password-btn" data-translate="savePasswordButton">${t.savePasswordButton}</button>
 
@@ -1754,8 +1741,8 @@
 
         // NEW FUNCTION: Open Add App Modal
         const openAddAppModal = () => {
-             // Check local privileged status
-             if (!currentUser.uid || !currentUser.isLocallyPrivileged) {
+             // Check privileged status loaded from Firestore
+             if (!currentUser.uid || !currentUser.isPrivileged) {
                  // This shouldn't happen if triggered only by K button, but good safeguard
                  showToast("You need privileged access to add apps.");
                  return; 
@@ -1808,7 +1795,8 @@
 
         // NEW FUNCTION: Open Replace Featured Modal
         const openReplaceFeaturedModal = (staticToolId) => {
-             if (!currentUser.uid || !currentUser.isLocallyPrivileged) return;
+             // Check privileged status loaded from Firestore
+             if (!currentUser.uid || !currentUser.isPrivileged) return;
              const t = translations[currentLanguage];
              const userTools = currentUser.userTools || [];
 
@@ -1841,8 +1829,8 @@
 
         // NEW FUNCTION: Handle Add App submission (Firestore)
         const handleAddApp = async () => { // Made async again for Firestore
-             // Check local privileged status
-             if (!currentUser.uid || !currentUser.isLocallyPrivileged) return;
+             // Check privileged status loaded from Firestore
+             if (!currentUser.uid || !currentUser.isPrivileged) return;
 
              const nameInput = document.getElementById('add-app-name');
              const descInput = document.getElementById('add-app-description');
@@ -1896,8 +1884,8 @@
         // --- INITIALIZATION LOGIC ---
 
         const initializeAppForGuest = () => {
-            // Initialize currentUser with default empty local state and empty Firestore-synced arrays
-            currentUser = { uid: null, name: 'Guest', favorites: [], isLocallyPrivileged: false, userTools: [], userFeaturedTools: [], userFeaturedReplacements: {} };
+            // Initialize currentUser with default empty state
+            currentUser = { uid: null, name: 'Guest', favorites: [], isPrivileged: false, userTools: [], userFeaturedTools: [], userFeaturedReplacements: {} };
             loadConversations();
             unmountReactApp();
             el.appContainer.style.display = 'flex';
@@ -1919,16 +1907,18 @@
                         favorites: data.favorites || [],
                         userTools: data.userTools || [],
                         userFeaturedTools: data.userFeaturedTools || [],
-                        userFeaturedReplacements: data.userFeaturedReplacements || {} // Fetch replacements
+                        userFeaturedReplacements: data.userFeaturedReplacements || {}, // Fetch replacements
+                        isPrivileged: data.isPrivileged || false // Load privileged status from Firestore
                     }; 
                 } else { 
-                    // Create user doc if it doesn't exist with initial empty arrays
+                    // Create user doc if it doesn't exist with initial empty arrays and non-privileged status
                     const initialUserData = { 
                         email: user.email, 
                         favorites: [],
                         userTools: [],
                         userFeaturedTools: [],
-                        userFeaturedReplacements: {} // Initialize replacements
+                        userFeaturedReplacements: {}, // Initialize replacements
+                        isPrivileged: false // Default to non-privileged
                     };
                     await setDoc(userDocRef, initialUserData).catch(e => console.error("Error creating user doc:", e));
                     currentUser = { uid: user.uid, name: user.email, ...initialUserData }; 
@@ -1936,12 +1926,9 @@
             } catch (error) {
                  console.error("Error fetching user data:", error);
                  // Fallback to minimal user data if Firestore fails
-                 currentUser = { uid: user.uid, name: user.email, favorites: [], userTools: [], userFeaturedTools: [], userFeaturedReplacements: {} };
+                 currentUser = { uid: user.uid, name: user.email, favorites: [], userTools: [], userFeaturedTools: [], userFeaturedReplacements: {}, isPrivileged: false };
                  showToast("Could not load user data."); // Inform user
             }
-
-            // Load local privileged state AFTER basic user and Firestore data is set
-            loadUserLocalData();
 
             loadConversations();
             el.authOverlay.classList.add('hidden');
@@ -1974,7 +1961,8 @@
 
             // 2. Handle the K button click (specific element, specific logic)
             const kButton = target.closest('#privileged-unlock-btn');
-            if (kButton && currentUser.uid && !currentUser.isLocallyPrivileged) {
+            // Check if user is logged in AND NOT already privileged (status loaded from Firestore)
+            if (kButton && currentUser.uid && !currentUser.isPrivileged) {
                  const now = Date.now();
                  if (now - lastKButtonClickTime > K_BUTTON_CLICK_RESET_DELAY) {
                      kButtonClickCount = 0; // Reset if clicks are too slow
@@ -1991,17 +1979,23 @@
                  console.log(`K button clicked: ${kButtonClickCount} times`);
 
                  if (kButtonClickCount >= K_BUTTON_CLICK_THRESHOLD) {
-                     // Unlock privileged mode locally
                      kButtonClickCount = 0; // Reset immediately after unlocking
                      lastKButtonClickTime = 0;
                      clearTimeout(kButtonClickTimeout); // Clear the reset timeout
 
-                     currentUser.isLocallyPrivileged = true; // Update local state
-                     saveUserLocalData(); // Save to local storage
-
-                     showToast(translations[currentLanguage].privilegedUnlocked);
-                     // Re-render the view to show the "Add Custom App" button and featured section
-                     renderView(); 
+                     // Unlock privileged mode in Firestore
+                     const userDocRef = doc(db, "users", currentUser.uid);
+                     updateDoc(userDocRef, { isPrivileged: true })
+                         .then(() => {
+                             currentUser.isPrivileged = true; // Update local state after successful Firestore update
+                             showToast(translations[currentLanguage].privilegedUnlocked);
+                             // Re-render the view to show the "Add Custom App" button and featured section
+                             renderView(); 
+                         })
+                         .catch(error => {
+                             console.error("Error unlocking privileged mode:", error);
+                             showToast(`Error unlocking feature: ${error.message}`);
+                         });
                  }
                  e.preventDefault(); // Prevent default button click behavior
                  return; // Stop processing
@@ -2086,7 +2080,8 @@
                          break;
                     case 'open-add-app-modal': // This action is now triggered by the "Add Custom App" button
                          // We still need the privilege check here as a safeguard
-                         if (currentUser.uid && currentUser.isLocallyPrivileged) {
+                         // Check privileged status loaded from Firestore
+                         if (currentUser.uid && currentUser.isPrivileged) {
                              openAddAppModal();
                          } else if (currentUser.uid) {
                              // Maybe show a message that they need to unlock privileged mode?
@@ -2096,10 +2091,16 @@
                          }
                          break;
                     case 'toggle-user-featured': // Triggered by pencil on user featured apps in Library
-                         toggleUserFeatured(actionTarget.dataset.id);
+                         // Check privileged status loaded from Firestore
+                         if (currentUser.uid && currentUser.isPrivileged) {
+                             toggleUserFeatured(actionTarget.dataset.id);
+                         } else {
+                             showToast("You need privileged access for this action.");
+                         }
                          break;
                     case 'replace-featured-static': // Triggered by pencil on static featured apps in Top AI
-                         if (currentUser.uid && currentUser.isLocallyPrivileged) {
+                         // Check privileged status loaded from Firestore
+                         if (currentUser.uid && currentUser.isPrivileged) {
                              openReplaceFeaturedModal(actionTarget.dataset.id);
                          } else if (currentUser.uid) {
                              showToast("Click the 'K' button 5 times to unlock this feature!");
@@ -2108,10 +2109,20 @@
                          }
                          break;
                     case 'select-user-tool-for-featured': // Triggered by clicking a user app in the replace modal
-                         replaceFeaturedStatic(actionTarget.dataset.staticId, actionTarget.dataset.userId);
+                         // Check privileged status loaded from Firestore
+                         if (currentUser.uid && currentUser.isPrivileged) {
+                             replaceFeaturedStatic(actionTarget.dataset.staticId, actionTarget.dataset.userId);
+                         } else {
+                             showToast("You need privileged access for this action.");
+                         }
                          break;
                     case 'remove-featured-replacement': // Triggered by pencil on user-replaced featured apps in Top AI
-                         removeFeaturedReplacement(actionTarget.dataset.id);
+                         // Check privileged status loaded from Firestore
+                         if (currentUser.uid && currentUser.isPrivileged) {
+                             removeFeaturedReplacement(actionTarget.dataset.id);
+                         } else {
+                             showToast("You need privileged access for this action.");
+                         }
                          break;
 
 
@@ -2172,10 +2183,8 @@
             if (user) {
                 console.log("User logged in:", user.uid);
                 // Initialize currentUser with basic info from Firebase
-                currentUser = { uid: user.uid, name: user.email, favorites: [], userTools: [], userFeaturedTools: [], userFeaturedReplacements: {} }; 
-                // Load local privileged flag
-                loadUserLocalData();
-                // Fetch all user data (favorites, userTools, userFeaturedTools, userFeaturedReplacements) from Firestore
+                currentUser = { uid: user.uid, name: user.email, favorites: [], userTools: [], userFeaturedTools: [], userFeaturedReplacements: {}, isPrivileged: false }; 
+                // Fetch all user data (favorites, userTools, userFeaturedTools, userFeaturedReplacements, isPrivileged) from Firestore
                 const userDocRef = doc(db, "users", user.uid);
                  getDoc(userDocRef).then(userDocSnap => {
                      if (userDocSnap.exists()) {
@@ -2184,17 +2193,20 @@
                          currentUser.userTools = data.userTools || [];
                          currentUser.userFeaturedTools = data.userFeaturedTools || [];
                          currentUser.userFeaturedReplacements = data.userFeaturedReplacements || {}; // Fetch replacements
+                         currentUser.isPrivileged = data.isPrivileged || false; // Load privileged status
                      } else {
-                         // Create user doc if it doesn't exist with initial empty arrays
+                         // Create user doc if it doesn't exist with initial empty arrays and non-privileged status
                          const initialUserData = { 
                              email: user.email, 
                              favorites: [],
                              userTools: [],
                              userFeaturedTools: [],
-                             userFeaturedReplacements: {} // Initialize replacements
+                             userFeaturedReplacements: {}, // Initialize replacements
+                             isPrivileged: false // Default to non-privileged
                          };
                          setDoc(userDocRef, initialUserData).catch(e => console.error("Error creating user doc:", e));
                          // currentUser is already initialized with empty arrays above
+                         currentUser.isPrivileged = false; // Ensure local state reflects default
                      }
                  }).catch(e => console.error("Error fetching user data:", e))
                  .finally(() => {
@@ -2211,7 +2223,7 @@
 
             } else {
                 console.log("User logged out or is guest.");
-                initializeAppForGuest(); // Guest mode doesn't load/save local user data
+                initializeAppForGuest(); // Guest mode doesn't load/save user data
             }
         });
         
