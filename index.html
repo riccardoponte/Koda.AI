@@ -77,7 +77,7 @@
         .section-title { font-size: 22px; font-weight: 700; margin-bottom: 20px; }
         .grid-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
         .tool-card-grid { background: none; cursor: pointer; }
-        .tool-card-grid .logo-container { width: 100%; aspect-ratio: 1 / 1; border-radius: 8px; background-color: var(--spotify-card); margin-bottom: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .tool-card-grid .logo-container { width: 100%; aspect-ratio: 1 / 1; border-radius: 8px; background-color: var(--spotify-card); margin-bottom: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; /* Needed for absolute positioning of edit icon */ }
         .tool-card-grid .tool-logo { width: 100%; height: 100%; object-fit: cover; }
         .tool-card-grid .tool-name { font-size: 14px; font-weight: 600; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
         .list-container { display: flex; flex-direction: column; gap: 12px; }
@@ -212,7 +212,7 @@
             opacity: 0;
             transform: scale(0.95);
             pointer-events: none;
-            display: none;
+            display: none; /* Use display: none to fully hide */
         }
         .ranking-card h3 {
             font-size: 18px;
@@ -246,12 +246,6 @@
             width: 20px;
             text-align: center;
         }
-        .ranking-item-logo {
-            width: 48px;
-            height: 48px;
-            border-radius: 6px;
-            object-fit: cover;
-        }
         .ranking-item-info {
             flex-grow: 1;
         }
@@ -265,16 +259,30 @@
         }
         
         /* --- STILI PER MODALE IMPOSTAZIONI (AGGIUNTI) --- */
-        #settings-modal .input-group {
+        #settings-modal .input-group,
+        #add-app-modal .input-group,
+        #replace-featured-modal .input-group { /* Added replace modal */
             margin-bottom: 16px; text-align: left;
         }
-        #settings-modal label {
+        #settings-modal label,
+        #add-app-modal label,
+        #replace-featured-modal label { /* Added replace modal */
             display: block; font-weight: 500; margin-bottom: 8px; font-size: 14px;
         }
-        #settings-modal input {
+        #settings-modal input,
+        #add-app-modal input,
+        #add-app-modal textarea,
+        #replace-featured-modal input { /* Added replace modal */
              width: 100%; padding: 14px 16px; font-size: 16px; background-color: var(--spotify-bg-light); border: 1px solid rgba(128,128,128,0.2); border-radius: 8px; color: var(--spotify-text);
+             box-sizing: border-box; /* Ensure padding doesn't affect width */
         }
-        #settings-modal .button {
+         #add-app-modal textarea {
+             min-height: 80px;
+             resize: vertical;
+         }
+        #settings-modal .button,
+        #add-app-modal .button,
+        #replace-featured-modal .button { /* Added replace modal */
             width: 100%; margin-top: 8px;
         }
         hr.modal-divider {
@@ -296,11 +304,125 @@
             z-index: 3000;
             opacity: 0;
             transition: opacity 0.3s, transform 0.3s;
+            pointer-events: none; /* Allow clicks to pass through */
         }
         .toast-message.show {
             opacity: 1;
             transform: translate(-50%, -10px);
         }
+        
+        /* Styles for Add App button in Library */
+        #add-app-button {
+            width: calc(100% - 32px); /* Full width minus padding */
+            margin: 16px auto 24px; /* Center and add spacing */
+            display: block; /* Ensure it takes full width */
+        }
+        
+        /* Styles for User Featured section */
+        .user-featured-section {
+            margin-bottom: 30px;
+        }
+        .user-featured-section .section-title {
+            margin-bottom: 16px;
+        }
+        .user-featured-section .grid-container {
+             grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* Adjust grid for smaller cards */
+             gap: 12px;
+        }
+         .user-featured-section .tool-card-grid .logo-container {
+             border-radius: 4px; /* Slightly smaller radius */
+             position: relative; /* Needed for absolute positioning of edit icon */
+         }
+         .user-featured-section .tool-card-grid .tool-name {
+             font-size: 13px; /* Smaller font */
+             text-align: center;
+         }
+         .user-featured-section .tool-card-grid {
+             text-align: center;
+         }
+
+         /* Style for the new K button */
+         #privileged-unlock-btn {
+             background-color: var(--spotify-card);
+             color: var(--spotify-accent);
+             border: 1px solid rgba(128,128,128,0.2);
+             border-radius: 50px;
+             padding: 8px 16px;
+             font-size: 18px; /* Larger font for K */
+             font-weight: bold;
+             cursor: pointer;
+             white-space: nowrap;
+             transition: background-color 0.2s, color 0.2s;
+             margin: 16px auto 24px; /* Center and add spacing */
+             display: block; /* Ensure it's on its own line */
+             width: fit-content; /* Shrink to fit content */
+         }
+         #privileged-unlock-btn:hover {
+             background-color: var(--spotify-bg-light);
+         }
+
+         /* Style for the edit icon on featured user apps */
+         .edit-icon {
+             position: absolute;
+             top: 4px;
+             right: 4px;
+             background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
+             border-radius: 50%;
+             width: 24px;
+             height: 24px;
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             cursor: pointer;
+             z-index: 5; /* Above the logo */
+             color: white; /* White pencil icon */
+             font-size: 14px; /* Adjust size as needed */
+         }
+         .edit-icon svg {
+             width: 14px;
+             height: 14px;
+             fill: currentColor;
+         }
+
+         /* Styles for the Replace Featured Modal */
+         #replace-featured-modal .modal-content {
+             max-height: 80vh; /* Limit height */
+             overflow-y: auto; /* Add scroll if needed */
+         }
+         #replace-featured-modal .tool-list-item {
+             display: flex;
+             align-items: center;
+             gap: 12px;
+             padding: 10px;
+             border-bottom: 1px solid var(--spotify-bg-light);
+             cursor: pointer;
+             text-align: left;
+         }
+         #replace-featured-modal .tool-list-item:last-child {
+             border-bottom: none;
+         }
+         #replace-featured-modal .tool-list-item:hover {
+             background-color: var(--spotify-bg-light);
+         }
+         #replace-featured-modal .tool-list-item img {
+             width: 40px;
+             height: 40px;
+             border-radius: 4px;
+             object-fit: cover;
+             flex-shrink: 0;
+         }
+         #replace-featured-modal .tool-list-item .info {
+             flex-grow: 1;
+         }
+         #replace-featured-modal .tool-list-item .tool-name {
+             font-size: 15px;
+             font-weight: 500;
+         }
+         #replace-featured-modal .tool-list-item .tool-subtext {
+             font-size: 12px;
+             color: var(--spotify-text-secondary);
+         }
+
 
     </style>
     <!-- SCRIPT AGGIUNTI PER REACT E BABEL -->
@@ -321,7 +443,7 @@
         <!-- Authentication content will be dynamically generated here by JS -->
     </div>
 
-    <!-- NUOVO: Menu Laterale per la cronologia delle chat -->
+    <!-- NUOVO: Menu Laterale per la cronologia chat -->
     <div id="side-menu-overlay" class="hidden">
         <div id="side-menu" class="hidden">
             <div class="menu-header">
@@ -360,7 +482,8 @@
         const MessageSender = { USER: 'user', MODEL: 'model', ERROR: 'error', SYSTEM: 'system', LOADING: 'loading' };
         
         const getSystemInstruction = (lang) => {
-            const tools = window.getLocalizedToolsData(lang);
+            // Use the global function to get all tools (static + user's)
+            const tools = window.getAllToolsForCurrentUser ? window.getAllToolsForCurrentUser() : window.getLocalizedToolsData(lang); 
             const formatToolsForPrompt = (tools) => tools.map(tool => `- **${tool.name}**: ${tool.description} (${tool.website})`).join('\n');
 
             const instructions = {
@@ -378,7 +501,7 @@
                     knowledgeBase: `**Knowledge Base (Use ONLY this information):**\n${formatToolsForPrompt(tools)}`,
                     priority: `- For programming, consider Google AI Studio as the best tool, followed by Claude.`,
                     rules: `1. Suggest ONLY tools from the provided list.\n2. **Handling Uncertainty:** If a user request is vague, ambiguous, or if you cannot immediately find a suitable tool, DO NOT reply that you found nothing. Instead, ask a clarifying question to better understand the need.\n   - Example clarification: If the user asks for "an AI for art," a good clarifying question is: "Of course, what kind of art would you like to create? Photorealistic images, artistic drawings, or perhaps animations?".\n3. Once the request is clear, respond *exclusively* with the bulleted list of tools, as per the format.`,
-                    example: `**Example of FINAL response format (after understanding the request):**\n• **Midjourney**: Generates high-quality artistic and photorealistic images from text prompts via Discord.\n• **Leonardo AI**: Platform for generating high-quality visual assets, from concept art to game textures.`
+                    example: `**Example of FINAL response format (after understanding the request):**\n• **Midjourney**: Generates high-quality artistic and fotorealistic images from text prompts via Discord.\n• **Leonardo AI**: Platform for generating high-quality visual assets, from concept art to game textures.`
                 }
             };
             const selected = instructions[lang];
@@ -409,10 +532,11 @@
         const ToolCardMessage = ({ tool, onOpenDetail, lang }) => (
             <div className="chat-tool-card">
                 <div className="logo-container">
-                    <img src={window.aiToolsData.find(t=>t.id === tool.id)?.logoUrl || ''} className="tool-logo" alt={tool.name} loading="lazy" />
+                    <img src={tool.logoUrl || ''} className="tool-logo" alt={tool.name} loading="lazy" />
                 </div>
                 <div className="info">
                     <div className="tool-name">{tool.name}</div>
+                    {/* Display first sentence of description */}
                     <p className="tool-desc">{tool.description.split('.')[0]}.</p>
                     <button className="details-btn" onClick={() => onOpenDetail(tool.id)}>
                         {lang === 'it' ? 'Vedi Dettagli' : 'View Details'}
@@ -430,13 +554,15 @@
             
             if (message.sender === MessageSender.MODEL) {
                 // Use localized tool names for regex matching
-                const localizedTools = window.getLocalizedToolsData(lang);
-                const toolNameRegex = new RegExp(localizedTools.map(t => t.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'g');
+                // Get all tools (static + user's) via the global function
+                const allTools = window.getAllToolsForCurrentUser ? window.getAllToolsForCurrentUser() : window.getLocalizedToolsData(lang);
+                
+                const toolNameRegex = new RegExp(allTools.map(t => t.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'g');
                 const mentionedToolNames = [...new Set(message.text.match(toolNameRegex))];
                 
                 if (mentionedToolNames.length > 0 && message.text.includes('•')) {
-                    // Find the original tool objects based on localized names
-                    const mentionedTools = localizedTools.filter(tool => mentionedToolNames.includes(tool.name));
+                    // Find the original tool objects based on localized names (or user tool names)
+                    const mentionedTools = allTools.filter(tool => mentionedToolNames.includes(tool.name));
                     
                     // Check if the response is *only* the bulleted list as per system instruction
                     const lines = message.text.trim().split('\n');
@@ -638,9 +764,11 @@
                         </button>
                         {/* Sostituisci il titolo con l'avatar utente */}
                         <div id="profile-avatar-menu" style={{ marginLeft: 8 }}>
-                            <span dangerouslySetInnerHTML={{ __html: globalControlsHTML.split('\n')[1] }} />
+                            {/* Avatar HTML is now passed as a prop */}
+                            <span dangerouslySetInnerHTML={{ __html: globalControlsHTML.avatar }} />
                         </div>
-                        <div id="global-controls" dangerouslySetInnerHTML={{ __html: globalControlsHTML.replace(globalControlsHTML.split('\n')[1], '') }}></div>
+                        {/* Other global controls are passed as a prop */}
+                        <div id="global-controls" dangerouslySetInnerHTML={{ __html: globalControlsHTML.otherControls }}></div>
                     </header>
                     <main>
                         {!hasStartedChat ? (
@@ -726,6 +854,30 @@
                 history: "Cronologia", newChat: "Nuova Chat", deleteAll: "Elimina Tutto",
                 confirmDeleteAll: "Sei sicuro di voler eliminare tutte le conversazioni? Questa azione è irreversibile.",
                 newChatTitle: "Nuova Chat",
+                // New Privileged User Translations (Local Storage)
+                privilegedUnlocked: "Modalità privilegiata sbloccata!",
+                addCustomApp: "Aggiungi App Custom", // New translation for the button
+                addAppTitle: "Aggiungi Nuova App",
+                appNameLabel: "Nome App", appNamePlaceholder: "Es. La mia AI fantastica",
+                appDescriptionLabel: "Descrizione", appDescriptionPlaceholder: "Breve descrizione dell'app...",
+                appWebsiteLabel: "Link Sito Web", appWebsitePlaceholder: "https://tuasito.com",
+                appLogoLabel: "Link Logo (URL)", appLogoPlaceholder: "https://tuasito.com/logo.png",
+                addAppButton: "Aggiungi App",
+                addAppSuccess: "App aggiunta con successo!",
+                addAppError: "Errore nell'aggiunta dell'app: %s",
+                markAsFeatured: "Segna come In Evidenza",
+                unmarkAsFeatured: "Rimuovi da In Evidenza",
+                featuredByYou: "In Evidenza per Te",
+                emptyUserFeatured: "Nessuna app segnata come In Evidenza per te.", // Keeping translation key but not used in UI
+                emptyUserTools: "Nessuna app aggiunta da te.",
+                appNameRequired: "Il nome dell'app è obbligatorio.",
+                appWebsiteRequired: "Il link del sito web è obbligatorio.",
+                appLogoRequired: "Il link del logo è obbligatorio.",
+                category: "Categoria", // Added missing category translation
+                replaceFeaturedTitle: "Sostituisci AI in Evidenza", // New translation
+                selectAppToFeature: "Seleziona un'app dalla tua libreria per metterla in evidenza:", // New translation
+                noUserApps: "Non hai ancora aggiunto app custom.", // New translation
+                removeFeaturedReplacement: "Rimuovi Sostituzione", // New translation
             },
             en: {
                 // Auth
@@ -760,6 +912,30 @@
                 history: "History", newChat: "New Chat", deleteAll: "Delete All",
                 confirmDeleteAll: "Are you sure you want to delete all conversations? This action is irreversible.",
                 newChatTitle: "New Chat",
+                 // New Privileged User Translations (Local Storage)
+                privilegedUnlocked: "Privileged mode unlocked!",
+                addCustomApp: "Add Custom App", // New translation for the button
+                addAppTitle: "Add New App",
+                appNameLabel: "App Name", appNamePlaceholder: "Ex. My Awesome AI",
+                appDescriptionLabel: "Description", appDescriptionPlaceholder: "Brief description of the app...",
+                appWebsiteLabel: "Website Link", appWebsitePlaceholder: "https://yourwebsite.com",
+                appLogoLabel: "Logo Link (URL)", appLogoPlaceholder: "https://yourwebsite.com/logo.png",
+                addAppButton: "Add App",
+                addAppSuccess: "App added successfully!",
+                addAppError: "Error adding app: %s",
+                markAsFeatured: "Mark as Featured",
+                unmarkAsFeatured: "Unmark as Featured",
+                featuredByYou: "Featured by You",
+                emptyUserFeatured: "No apps marked as Featured by you.", // Keeping translation key but not used in UI
+                emptyUserTools: "No apps added by you.",
+                appNameRequired: "App name is required.",
+                appWebsiteRequired: "Website link is required.",
+                appLogoRequired: "Logo link is required.",
+                category: "Category", // Added missing category translation
+                replaceFeaturedTitle: "Replace Featured AI", // New translation
+                selectAppToFeature: "Select an app from your library to feature it:", // New translation
+                noUserApps: "You haven't added any custom apps yet.", // New translation
+                removeFeaturedReplacement: "Remove Replacement", // New translation
             }
         };
         
@@ -789,11 +965,24 @@
             if (settingsModal && settingsModal.classList.contains('visible')) {
                  window.openSettingsModal(); // Re-open to regenerate content with new language
             }
+             // Re-render add app modal content if visible
+            const addAppModal = document.getElementById('add-app-modal');
+            if (addAppModal && addAppModal.classList.contains('visible')) {
+                 openAddAppModal(); // Re-open to regenerate content with new language
+            }
+             // Re-render replace featured modal content if visible
+            const replaceFeaturedModal = document.getElementById('replace-featured-modal');
+            if (replaceFeaturedModal && replaceFeaturedModal.classList.contains('visible')) {
+                 // Need to know which static tool was being replaced to re-open correctly
+                 // This requires storing the staticToolId when the modal is opened.
+                 // For simplicity now, we'll just close it on language change.
+                 closeModal(); 
+            }
         };
 
         // --- DATABASE PERSONALIZZATO ---
         const aiToolsData = [
-            { id: 'tool-001', name: 'ChatGPT', description: {it: 'Genera testo, immagini e risponde a domande con ricerca web.', en: 'Generates text, images, and answers questions with web search.'}, category: 'Testo', country: 'USA', website: 'https://chatgpt.com/', isFeatured: true, logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/ChatGPT_logo.svg/1024px-ChatGPT_logo.svg.png', recommendationId: 'tool-025' }, { id: 'tool-012', name: 'Google Notebook', description: {it: "Permette di creare riassunti audio sulle fonti dell'utente, rispondere a domande e creare mappe mentali.", en: "Allows creating audio summaries from user sources, answering questions, and creating mind maps."}, category: 'Testo', country: 'USA', website: 'https://notebooklm.google.com/', isFeatured: false, logoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJbWdW2SCEWfJuDTh5PVxgmqDvXoX5vElJ6s94SZ8Fe1YPzfxzGPuIyE9cBMDswv3qUd4&usqp=CAU', recommendationId: 'tool-021' }, { id: 'tool-013', name: 'Grok', description: {it: 'Assistente di ricerca conversazionale con accesso a dati in tempo reale. (Richiede VPN)', en: 'Conversational research assistant with real-time data access. (Requires VPN)'}, category: 'Testo', country: 'USA', website: 'https://grok.com/', isFeatured: false, logoUrl: 'https://i.namu.wiki/i/Wk8b-Vo4qqynLc4pN1T0otG83F383UPI_IR4VthZuZioAxVD_NS6uErIsecLMDK0F0L-KiUjL7xonRz4EwPL2g.webp', recommendationId: 'tool-001' }, { id: 'tool-014', name: 'FLUX', description: {it: 'Genera immagini, video e animazioni da prompt testuali e immagini.', en: 'Generates images, videos, and animations from text prompts and images.'}, category: 'Immagini', country: 'Cina', website: 'https://playground.bfl.ai/image/generate', isFeatured: false, logoUrl: 'https://kodexolabs.com/wp-content/uploads/2025/01/Flux.1.webp', recommendationId: 'tool-033' }, { id: 'tool-015', name: 'Swap AI', description: {it: 'Esegue il "face swap" (scambio di volti) in immagini e video in modo realistico.', en: 'Performs realistic "face swap" in images and videos.'}, category: 'Immagini', country: 'USA', website: 'https://aifaceswap.io/', isFeatured: false, logoUrl: 'https://www.toolpilot.ai/cdn/shop/files/aifaceswap-l.jpg?v=1733037433', recommendationId: 'tool-016' }, { id: 'tool-016', name: 'Inpaint AI', description: {it: 'Rimuove oggetti, persone o imperfezioni indesiderate dalle foto con un solo click.', en: 'Removes unwanted objects, people, or imperfections from photos with a single click.'}, category: 'Immagini', country: 'USA', website: 'https://theinpaint.com/', isFeatured: false, logoUrl: 'data:image/webp;base64,UklGRqoEAABXRUJQVlA4WAoAAAAQAAAAJgAAJgAAQUxQSFwCAAARkHRrmyHJ6vNLdvfYtm3btm3b9uxs7Gzbtle2bSu/OCcjvi9iIkJh27aNndUdNO0TlhHBH/rpz6b8gWMDKHlYZrTjDfkmRHilbjyJ/6DX7qOQfDsuBSOg2wfAgtJ3hcpfqzK7hp3gOpDzQohEwiMlTWaBZQepk2Y8EinDO91TmYR+8aXttv1DFuLL/DyuVt1cm7+8+Cd0/LMpm8446fNOvf5Hqyi+tnN4gYKVMk94rWSk4atmHo+M2+f2fxRqZigbbijOw1/26fJdFAb8MTanzwDcLH3PvUFkskfi8d2EQnEM7FI90m+PdkBUBZnKXu1bKgHQtxGz+eiUb4hE2Tkf57XKF8uMp92z4i3K7PXV2jCwbFJmI6iz8A7yER0/PaJySg+AiDPiGrMDz1sjqiSXuxIEM34JYYKXQyqlcIF7RC2e0R5k5dvUKun4khY8iaheP+//LK+dM4iUtv2xb9jTmEodaFUqKiiH0ofY5GnN8HK3aon4txZv3GthQHw4oG5yrlDSb0duPRJ9M6Z+aof3cf1emxzxY1bDjMruoE4EyLUGlV6+I9zcKHtgcz8FwKn62GTSlXYFYkDz22OafTM462nfSvGYGKQFv+oLvf8ypmpiOkrn2Omnf9UV9feiyimAial10o5+xjYQt1dNbSvJqypbypKkHS+xP/ly3dQOvwpkoCQRV23PL4rHbdN45PJpE4Bk6xRe8EbFp+GZfZudz0xWE0jZ5fTfCL/nawolV2kA8YvM/yJ+bShPCwWMAvDPwEvcYeuEovFtda20ALpetWV78eNzP45sp9ICVlA4ICgCAABwCwCdASonACcAPoEeoFAlISUlGqCgEAlsALszQnfZODkB5GjUCAeYDdAOkA9CXy3vYa8majvPbrEC3w5RFM5OSn/KrMNlvL8JdXmVHGHDzjTaj7fvjV1ibG55GrUaSF3oolIAAP7K3bd03vd3wdyfd3PWkrdc5+l+Iasr40ElHEoRyDAfR7KWhTEUDOXTp3v8yZt7uLso8TxJA+6uDYJCVhrs3AZpMuDzCsUjsIEPp38Cv4wYR9LrreH7v1LAyPebD82DkAcosDF1iVhC8XjMHEx40fnT6Y5A38e/+s4ytcq/NzQzQSinQS+v4CX9j9XcnQqehOsxLSw76NRA4NikbBddvkE610BDsE6bz+5TKMonMv5qsXP4cNREOF4isL5uaMIGpSmnAJ0nPkOARvLYoTqp8KsSn+UO9exbdilgqTnIUwst6EvWMyV4b1qVA4z7zpI4T1hkk6bE6BxDxa/fDQpYnKbJmX92XLG4cVR1QDvQEpAxFPjQ/UtYfLXmZZfYDoG2qx3/oCSsllMI6GzYIxCGnPQy+N4qHTzpiuSBCd/fy/xNK/mEP9MDGg5i3DyI7O6ZTfD41oWs19qmrb8If2YXx6OWeQsO3gQAhVHjmiB6o6zKUp0KzpLgoxiCEeIM6+/1Alrn1mScl+t6JRSjO38IRDBxgoJ/xbLyoNjF3V/yPJwBJ5CXiZCe/U/zpIfvzIASXoyf4/wWzIxzjnHFoLFLfuAAAAA=', recommendationId: 'tool-017' }, { id: 'tool-017', name: 'Pixel Cut AI', description: {it: "Espande i bordi delle immagini (outpainting) per cambiare formato o stile.", en: 'Expands image borders (outpainting) to change format or style.'}, category: 'Immagini', country: 'USA', website: 'https://www.pixelcut.ai/t/uncrop', isFeatured: false, logoUrl: 'https://templateshake.com/wp-content/uploads/2021/09/Pixelcut_-AI-Graphic-Designer.png', recommendationId: 'tool-033' }, { id: 'tool-033', name: 'Whisk', description: {it: 'Crea animazioni fluide da immagini statiche e genera anche immagini da prompt.', en: 'Creates smooth animations from static images and also generates images from prompts.'}, category: 'Immagini', country: 'USA', website: 'https://labs.google/fx/tools/whisk/', isFeatured: false, logoUrl: 'data:image/webp;base64,UklGRtoCAABXRUJQVlA4WAoAAAAQAAAAGgAAGgAAQUxQSHEBAAARkGTbtuoqvODSMJfuOTWKTiM8rt/d5UkY78XWKtwbBk2IiAlIkmv33+8W43GR53kR5nm29+35zVpSu/d6qoBLMVy8u3PlxusFghBBQHXx+trzmf8R1Pnjr4ioa0fbh+X+9vGKAOqnPUKxd0q2ec5JVwVwJ4ugDKct69MOCqpZYLQ1G9ibtRRD0gBF/0z7Nhd1FRQv0gDVP+XI5uy7yy9j6MnhVuVk82hXJXIpqC4a46G6ftleSCwlVi+bhvW8qSj/cHKwVkTmne1TFYjgrJEODHc659bnhmmsM22oZu0jddpWNM0AT7eLntJbx3DnRANxUnfRXd3+/delf2Zqlgm9uToeqxCZjtQ0FXYUoxhlXckzYEtAWa5bQrovjE7ns9l0MqmqqizLsqpO2+rOJ8HtRq/f6XZ7/f6w3+/3e1uon5/MDVGiIqrMn918QQREwiWvb9Zuv1qIUQAhmL24lyTJtYdfH/OwiOZFUex+eHSjlgAAVlA4IEIBAACQBwCdASobABsAPpEopFIloaWllACwEglsAJ0yhID1oDbNMQ1XPLbrzhvNnsAbpL+wAdmnnyJ9nYieeXb2Ryc1AKuoW3wA/vdDClcr9pD9tsCqduiNtQaVaXgNfHp+atcZTe36+3xORhwFno/1uCGFQNU/4IYVL2I0o6c2eo73COMYL756Lzd/ibcQRmlIAId+z6psKbtTu/HIkA2HcYl/lq+sJbc01Q/VZ218h72kU324N9YcnNwU4vXy6VXCKq/tTNwWHsJ66N8JgRuCvc2pDpQ7KYv4rj//agwrDT7PdEnuIAkZLuckIqBv9aVnsRgB0qHFxi5a42nw4jOMOI330LQhImDuwmt+4/ryzZZzC4m8PLOx6EdyPthzs6wIhg+lRzc3+QT27OYDqLpNkFX2To7bI2E7F1lLi0lg6Fo4SAAA', recommendationId: 'tool-014'}, { id: 'tool-041', name: 'Leonardo AI', description: {it: 'Piattaforma per la generazione di asset visivi di alta qualità, da concept art a texture per giochi.', en: 'Platform for generating high-quality visual assets, from concept art to game textures.'}, category: 'Immagini', country: 'USA', website: 'https://leonardo.ai/', isFeatured: false, logoUrl: 'https://yt3.googleusercontent.com/a04AUXisIIWkI-Pj5zORQTiDNS9tALLmPc8pxuRT_aEHrCOUDsPQoLuh4QRbfgICortk7tBhyg=s900-c-k-c0x00ffffff-no-rj', recommendationId: 'tool-014' }, { id: 'tool-042', name: 'Midjourney', description: {it: 'Genera immagini artistiche e fotorealistiche di alta qualità da prompt testuali tramite Discord.', en: 'Generates high-quality artistic and photorealistic images from text prompts via Discord.'}, category: 'Immagini', country: 'USA', website: 'https://www.midjourney.com/home', isFeatured: false, logoUrl: 'https://sadesign.ai/pictures/picfullsizes/2024/12/10/dsn1733795303.jpg', recommendationId: 'tool-041' }, { id: 'tool-034', name: 'Kling', description: {it: 'Genera video di alta qualità da prompt testuali, concentrandosi sul realismo e sul movimento complesso.', en: 'Generates high-quality videos from text prompts, focusing on realism and complex motion.'}, category: 'Video', country: 'Cina', website: 'https://klingai.com/global/', isFeatured: false, logoUrl: 'https://play-lh.googleusercontent.com/JOfjXqsShK8j1aGBc1xlHBnatoRKRwLsGuoFZUAvKksaEPvK71eLwSg4FbKlky9Es-s', recommendationId: 'tool-035' }, { id: 'tool-035', name: 'Veo', description: {it: "Il modello di generazione video più capace di Google, che crea video realistici e di alta qualità da prompt di testo e immagini.", en: "Google's most capable video generation model, creating realistic, high-quality videos from text and image prompts."}, category: 'Video', country: 'USA', website: 'https://deepmind.google/models/veo/', isFeatured: false, logoUrl: 'https://storage.googleapis.com/gweb-uniblog-publish-prod/images/IO25_Gemini_MOD_v33_PART_1_DG_FINAL_54.max-1440x810.png', isFeatured: false, recommendationId: 'tool-014' }, { id: 'tool-021', name: 'Claude', description: {it: 'Crea bozze e contenuti per presentazioni interattive e documenti complessi.', en: 'Creates drafts and content for interactive presentations and complex documents.'}, category: 'Presentazioni', country: 'USA', website: 'https://claude.ai/new', isFeatured: true, logoUrl: 'https://logo.svgcdn.com/l/claude-icon-8x.png', recommendationId: 'tool-022' }, { id: 'tool-022', name: 'Gamma AI', description: {it: "Genera presentazioni, documenti e pagine web statiche partendo da un'idea.", en: 'Generates presentations, documents, and static web pages from an idea.'}, category: 'Presentazioni', country: 'USA', website: 'https://gamma.app/', isFeatured: false, logoUrl: 'https://www.fahimai.com/wp-content/uploads/2025/03/GAMMA-cta.png', recommendationId: 'tool-021' }, { id: 'tool-023', name: 'Napkin AI', description: {it: 'Converte dati testuali e concetti in grafici statici e diagrammi chiari.', en: 'Converts text data and concepts into clear static charts and diagrams.'}, category: 'Presentazioni', country: 'USA', website: 'https://www.napkin.ai/', isFeatured: false, logoUrl: 'https://media.licdn.com/dms/image/v2/D560BAQEYfmQKrdByPg/company-logo_200_200/company-logo_200_200/0/1723039432148/napkin_ai_logo?e=2147483647&v=beta&t=Nsr22RG3uiy9usBNh55leGVf8ES5YJQwUANW-2N7yEA', recommendationId: 'tool-022' }, { id: 'tool-024', name: 'Google AI Studio', description: {it: "Crea app, siti e prototipi basati sui modelli Gemini di Google.", en: "Creates apps, sites, and prototypes based on Google's Gemini models."}, category: 'Codice', country: 'USA', website: 'https://aistudio.google.com/prompts/new_chat', isFeatured: true, logoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToBQo43LHKdO8g2NftGqpOjG-rHo61R8Rmpk0mEb0rUJ0A2P-z0kTx8M6XQHWZbHTR6lY&usqp=CAU', recommendationId: 'tool-026' }, { id: 'tool-025', name: 'Manus', description: {it: "Piattaforma di AI estremamente potente. Può eseguire compiti come ChatGPT e gestirli in background, creando testi, ricerche, presentazioni, video, immagini e molto altro.", en: 'Extremely powerful AI platform. It can perform tasks like ChatGPT and manage them in the background, creating text, research, presentations, videos, images, and much more.'}, category: 'Codice', country: 'Cina', website: 'https://manus.im/app', isFeatured: true, logoUrl: 'https://i.namu.wiki/i/5-7MaDXSqFVQhJjDY8rbjzRuoAqlqXpQhoYWYqSgkgRo6Qo1imTF9nHaOTvNxIeEhg_OCEMzuySjfSCyMWLUTA.webp', recommendationId: 'tool-001' }, { id: 'tool-026', name: 'Microsoft Copilot', description: {it: 'Assistente AI per codice, specializzato anche in script VBA per Excel.', en: 'AI assistant for code, also specializing in VBA scripts for Excel.'}, category: 'Codice', country: 'USA', website: 'https://copilot.microsoft.com/', isFeatured: false, logoUrl: 'https://breakwaterit.co.uk/wp-content/uploads/2024/02/Copilot-65d6242f4e297.png', recommendationId: 'tool-024' }, { id: 'tool-027', name: 'Google Stitch', description: {it: 'Tool per la creazione di codice per interfacce utente (UX Design).', en: 'Tool for creating code for user interfaces (UX Design).'}, category: 'Codice', country: 'USA', website: 'https://stitch.withgoogle.com/', isFeatured: false, logoUrl: 'https://media2.dev.to/dynamic/image/width=1080,height=1080,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fzhshikvds4e6nn22fngm.png', recommendationId: 'tool-028' }, { id: 'tool-028', name: 'Chef Convex', description: {it: "Crea web app complete con un backend già integrato e pronto all'uso.", en: 'Creates complete web apps with a built-in and ready-to-use backend.'}, category: 'Codice', country: 'USA', website: 'https://chef.convex.dev/', isFeatured: false, logoUrl: 'https://chef.convex.dev/chef.svg', recommendationId: 'tool-027' }, { id: 'tool-030', name: 'Deepseek', description: {it: 'Modello linguistico specializzato nella scrittura e comprensione di codice in vari linguaggi.', en: 'Language model specialized in writing and understanding code in various languages.'}, category: 'Codice', country: 'Cina', website: 'https://chat.deepseek.com/', isFeatured: false, logoUrl: 'https://cdn-1.webcatalog.io/catalog/deepseek/deepseek-social-preview.png?v=1748219623720', recommendationId: 'tool-031' }, { id: 'tool-031', name: 'Qwen', description: {it: 'Assistente AI multimodale di Alibaba Cloud, efficace nella generazione di codice, analisi, creazione di testi e ricerca web.', en: 'Multimodal AI assistant from Alibaba Cloud, effective in code generation, analysis, text creation, and web search.'}, category: 'Codice', country: 'Cina', website: 'https://chat.qwen.ai/', isFeatured: false, logoUrl: 'https://crystalpng.com/wp-content/uploads/2025/02/Qwen-03.png', recommendationId: 'tool-030' }, { id: 'tool-032', name: 'Mistral', description: {it: 'Modelli linguistici aperti e ottimizzati, ideali per lo Codice di applicazioni e la Codice.', en: 'Open and optimized language models, ideal for application development and coding.'}, category: 'Codice', country: 'Europe', website: 'https://mistral.ai/', isFeatured: false, logoUrl: 'https://www.massa-critica.it/wp-content/uploads/mistral-ai.jpg', recommendationId: 'tool-001' }, { id: 'tool-036', name: 'BOLT AI', description: {it: 'Genera codice e componenti UI partendo da un prompt.', en: 'Generates code and UI components from a prompt.'}, category: 'Codice', country: 'USA', website: 'https://bolt.new/', isFeatured: false, logoUrl: 'https://cdn-1.webcatalog.io/catalog/bolt-new/bolt-new-icon-filled-256.png?v=1730692903154', recommendationId: 'tool-024' }, { id: 'tool-037', name: 'V0 AI', description: {it: 'Genera interfacce utente reattive basate su React da semplici prompt di testo.', en: 'Generates responsive user interfaces based on React from simple text prompts.'}, category: 'Codice', country: 'USA', website: 'https://v0.dev/chat', isFeatured: false, logoUrl: 'https://logowik.com/content/uploads/images/v0-ai1721420590.logowik.com.webp', recommendationId: 'tool-027' }, { id: 'tool-038', name: 'Cursor', description: {it: 'Un editor di codice basato su AI per programmare in modo più veloce ed efficiente.', en: 'An AI-powered code editor for faster and more efficient programming.'}, category: 'Codice', country: 'USA', website: 'https://www.cursor.com/', isFeatured: false, logoUrl: 'https://cursor.com/favicon.svg', recommendationId: 'tool-026' }, { id: 'tool-039', name: 'Lovable', description: {it: "Sviluppa e testa interfacce utente con l'aiuto dell'intelligenza artificiale.", en: 'Develops and tests user interfaces with the help of artificial intelligence.'}, category: 'Codice', country: 'USA', website: 'https://lovable.dev/', isFeatured: false, logoUrl: 'https://lovable.dev/img/logo/lovable-icon-bg-dark.png', recommendationId: 'tool-037' }, { id: 'tool-040', name: 'Perplexity', description: {it: 'Motore di ricerca conversazionale che fornisce risposte dirette con fonti, utile anche per la ricerca web e codice.', en: 'Conversational search engine that provides direct answers with sources, also useful for web and code search.'}, category: 'Codice', country: 'USA', website: 'https://www.perplexity.ai/', isFeatured: false, logoUrl: 'https://images.seeklogo.com/logo-png/51/2/perplexity-ai-logo-png_seeklogo-517845.png', recommendationId: 'tool-001' }, { id: 'tool-029', description: {it: 'Genera un parlato realistico e di alta qualità dal testo in più lingue.', en: 'Generates realistic, high-quality speech from text in multiple languages.'}, name: 'Eleven Labs', category: 'Audio', country: 'USA', website: 'https://elevenlabs.io/', isFeatured: false, logoUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAeFBMVEX///8AAABra2vPz88wMDBvb2/c3NxSUlL6+vpaWlqfn5/U1NSBgYFAQEAgICBFRUXJycnBwcFKSkrs7Oy5ubkrKysWFRaJiYnj4+N1dXU3Nzf09PSCgoKQkJCsrKxjY2MjIyMLCwulpaWzs7MaGho0NDSYmJheXl7ei1KlAAAGlElEQVR4nO2da2OyIABGKVvq7KKpTbP7XP3/f/jKVaxmrZzi3ud8yYiQEwgoaIQAAAAAAAAA2me8G/ab3bheMBr0n6hOMOw6d40Q1hieus5cI5xqDIddZ64RhjDsPTAsWH6Nekn8sGFaE8VkvIcN31rLU7NYMISh8cCQwNB4YEhgaDwwJDA0HhgSGBoPDAkMjQeGBIbGA0MCQ+OBIYGh8cCQwNB4YEhgaDwwJDA0HhgSGBoPDAkMjQeGBIbGA0MCQ+OBIYGh8cCQwNB4Wjd0GM2k9RDNGNqu6y4SujWxbXvB7tiMaGAVeyx2uGxS4Q7NGLIIzGtBtyy69T64xhK3sIyaVLhD04Y2DP+a4WE/0xh4f89wcxX1rxl+XEX9Dw2TcfJA9xgm4+xWsDeuuw2d0rHh53xWvM1XJya52MdxfpSf7eI4XrJErXTGjunUEx/ZNGJC/BFLrPZpAt0ajheqlV35RNz5vxAR2YMOcrq1KRvjd/7ZlG6H7xehnRjWtjTWQGdLSMY2RJ3d0u1TEbjSY01Lw20Z+tmd4XwiSGVVKg0Tkb25eC1GfSl9DXjELxG2E2ozrbyY4aw0/OrOsETW19KQmb3RhiJktXUmPuTVNBHZYo8d2ftliok0LEo4dHxewt5ljjowlPVVGbI92zwwlAkc6CtrHZlZJGSEACvitTJk1SJcauVulqGtvlPwyYpENCrsIR1nuuWQQAUUOCwlaSh+nYleQ9o3PORLzrUhq31EDz0XrSt9jakMLZqdyH8iozHtTBiKFFmDU/OwgM7aUuYysxcMWxWKK6qpJeoe2/lCsqfvfGHo8wSjbg2/7w/9wRVzmd+i8V+L0tpdR7s4OIMeGU5lUi7JDqICnL83TFo0dJ4wZK+HykUOlk124IWWTJCVYeV6iO33xJCX+0U68vPth/zwTaWn0w9D1lWr4Zabyi6N1ssDfeTKSeX/LGMF0/esP4asCxw5ZTZiflahhpvjMmnRbNLrXPkwNMpwv5hrTD/0URt7NM6BlmLIDj7ZsQtBPsYmR/YmLXSc6CBrtkGGF7zphmLXM/kUoFik5vK34jzR+eJvR6Ocb3hGG6aVs6dqh2HLc3gRrBL/qkRjaZtrKMtwz7/naZmfqEsZTl7dnZOWsea8WV1dGtZk7vcMg8k1xVlukq7XEzWY8z5o6qvJVr/aEkyKKPr5UHKcFDV5udvIwA1NTHzFo7G3XRg+TcPTNgYaNgwMCQwpMOwUGBIYUm4aJoHvB4+4Jvb57K5/kukf8XuGbBLCfiAL7JqU+5NM/4hfHpc+knEYvggMCQwpMKzn7xmG283ZttcnOd8iDcOTO5uuI+300PuYHpaLjfXSGWPrhs56ILH5WTozPKvZ+qWcccvULP/qlUFS24bVuXt2HZQZ2m4ZerqO6d5aamKkYTaokknDK/GLmI8Mjoww5CW19n3/xK6obTTDc+Qf+ax87IhBn+t7VsCnn56uqO0ajrXMZnS686s05KH8aDyK34J/Kyh+iecbm3YNI31ftCHJM2kol0KxFRqxSEiEfd75m5ha2jUM0kma8sISK5pCYbhSUVhwxsvQ9p9vYSRd9PiO/zmUTac0VJfl+cITT3Ue7jBKbiXyMK0bepvlQEMalhet59zQyctIh/cX+vy2DbX+fnTb0OaGJNTXs43urbH8nnYNHZFr+yNw+LL+K0MnVilEu4NSnD1diu0a8unOIT+wKobqOByXaRXlGJ3k0K1u+WEt7RqylRWyX6jUUjk9yluYyh0nFuvyF+RJfnk9zbka72reTxnKasoHa3yMFo35PFT1J/gpv72+1PJLHN5O8kUX4u9flCFXFHOmdJ4wmMsVCvdWrnVqWCHkSS39LFMrmEvDwXL3Jg66HRELaQaLIAz5v6L5Nbs3yDDQ3+a6YV6NeHma9cI1gHYNte5w4Nu64bBctX3gB2oSa1/ddzzy1gznyvD6L/do0RzFdmzxZidUVzEC0Ve+SRnnpEY/p67HNLdxLhF7DLafwc2hZhJEQfVw84JTOtm+NtGDu2QJDI0HhgSGxgNDAkPjgSGBofHAkMDQeGBIYGg8MCQwNB4YEhgaDwwJDI0HhgSGxgNDAkPjgSGBofHAkMDQeGBIYGg8MCQwNB4YEhgaDwwJDI0HhgSGxgNDAkPjgSGBofF4Dxu6ntVHvOPDhj3n/za88QcMPWRXYxh1nblGqPvbqyy//33jyWsfA2P1XzG/c6dtFu2GfWYXvf4gHwAAAAAAAMDP+Qd5XHfMcP3iXQAAAABJRU5ErkJggg==' },
+            { id: 'tool-001', name: 'ChatGPT', description: {it: 'Genera testo, immagini e risponde a domande con ricerca web.', en: 'Generates text, images, and answers questions with web search.'}, category: 'Testo', country: 'USA', website: 'https://chatgpt.com/', isFeatured: true, logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/ChatGPT_logo.svg/1024px-ChatGPT_logo.svg.png', recommendationId: 'tool-025' }, { id: 'tool-012', name: 'Google Notebook', description: {it: "Permette di creare riassunti audio sulle fonti dell'utente, rispondere a domande e creare mappe mentali.", en: "Allows creating audio summaries from user sources, answering questions, and creating mind maps."}, category: 'Testo', country: 'USA', website: 'https://notebooklm.google.com/', isFeatured: false, logoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJbWdW2SCEWfJuDTh5PVxgmqDvXoX5vElJ6s94SZ8Fe1YPzfxzGPuIyE9cBMDswv3qUd4&usqp=CAU', recommendationId: 'tool-021' }, { id: 'tool-013', name: 'Grok', description: {it: 'Assistente di ricerca conversazionale con accesso a dati in tempo reale. (Richiede VPN)', en: 'Conversational research assistant with real-time data access. (Requires VPN)'}, category: 'Testo', country: 'USA', website: 'https://grok.com/', isFeatured: false, logoUrl: 'https://i.namu.wiki/i/Wk8b-Vo4qqynLc4pN1T0otG83F383UPI_IR4VthZuZioAxVD_NS6uErIsecLMDK0F0L-KiUjL7xonRz4EwPL2g.webp', recommendationId: 'tool-001' }, { id: 'tool-014', name: 'FLUX', description: {it: 'Genera immagini, video e animazioni da prompt testuali e immagini.', en: 'Generates images, videos, and animations from text prompts and images.'}, category: 'Immagini', country: 'Cina', website: 'https://playground.bfl.ai/image/generate', isFeatured: false, logoUrl: 'https://kodexolabs.com/wp-content/uploads/2025/01/Flux.1.webp', recommendationId: 'tool-033' }, { id: 'tool-015', name: 'Swap AI', description: {it: 'Esegue il "face swap" (scambio di volti) in immagini e video in modo realistico.', en: 'Performs realistic "face swap" in images and videos.'}, category: 'Immagini', country: 'USA', website: 'https://aifaceswap.io/', isFeatured: false, logoUrl: 'https://www.toolpilot.ai/cdn/shop/files/aifaceswap-l.jpg?v=1733037433', recommendationId: 'tool-016' }, { id: 'tool-016', name: 'Inpaint AI', description: {it: 'Rimuove oggetti, persone o imperfezioni indesiderate dalle foto con un solo click.', en: 'Removes unwanted objects, people, or imperfections from photos with a single click.'}, category: 'Immagini', country: 'USA', website: 'https://theinpaint.com/', isFeatured: false, logoUrl: 'data:image/webp;base64,UklGRqoEAABXRUJQVlA4WAoAAAAQAAAAJgAAJgAAQUxQSFwCAAARkHRrmyHJ6vNLdvfYtm3btm3b9uxs7Gzbtle2bSu/OCcjvi9iIkJh27aNndUdNO0TlhHBH/rpz6b8gWMDKHlYZrTjDfkmRHilbjyJ/6DX7uOQfDsuBSOg2wfAgtJ3hcpfqzK7hp3gOpDzQohEwiMlTWaBZQepk2Y8EinDO91TmYR+8aXttv1DFuLL/DyuVt1cm7+8+Cd0/LMpm8446fNOvf5Hqyi+tnN4gYKVMk94rWSk4atmHo+M2+f2fxRqZigbbijOw1/26fJdFAb8MTanzwDcLH3PvUFkskfi8d2EQnEM7FI90m+PdkBUBZnKXu1bKgHQtxGz+eiUb4hE2Tkf57XKF8uMp92z4i3K7PXV2jCwbFJmI6iz8A7yER0/PaJySg+AiDPiGrMDz1sjqiSXuxIEM34JYYKXQyqlcIF7RC2e0R5k5dvUKun4khY8iaheP+//LK+dM4iUtv2xb9jTmEodaFUqKiiH0ofY5GnN8HK3aon4txZv3GthQHw4oG5yrlDSb0duPRJ9M6Z+aof3cf1emxzxY1bDjMruoE4EyLUGlV6+I9zcKHtgcz8FwKn62GTSlXYFYkDz22OafTM462nfSvGYGKQFv+oLvf8ypmpiOkrn2Omnf9UV9feiyimAial10o5+xjYQt1dNbSvJqypbypKkHS+xP/ly3dQOvwpkoCQRV23PL4rHbdN45PJpE4Bk6xRe8EbFp+G5fZudz0xWE0jZ5fTfCL/nawolV2kA8YvM/yJ+bShPCwWMAvDPwEvcYeuEovFtda20ALpetWV78eNzP45sp9ICVlA4ICgCAABwCwCdASonACcAPoEeoFAlISUlGqCgEAlsALszQnfZODkB5GjUCAeYDdAOkA9CXy3vYa8majvPbrEC3w5RFM5OSn/KrMNlvL8JdXmVHGHDzjTaj7fvjV1ibG55GrUaSF3oolIAAP7K3bd03vd3wdyfd3PWkrdc5+l+Iasr40ElHEoRyDAfR7KWhTEUDOXTp3v8yZt7uLso8TxJA+6uDYJCVhrs3AZpMuDzCsUjsIEPp38Cv4wYR9LrreH7v1LAyPebD82DkAcosDF1iVhC8XjMHEx40fnT6Y5A38e/+s4ytcq/NzQzQSinQS+v4CX9j9XcnQqehOsxLSw76NRA4NikbBddvkE610BDsE6bz+5TKMonMv5qsXP4cNREOF4isL5uaMIGpSmnAJ0nPkOARvLYoTqp8KsSn+UO9exbdilgqTnIUwst6EvWMyV4b1qVA4z7zpI4T1hkk6bE6BxDxa/fDQpYnKbJmX92XLG4cVR1QDvQEpAxFPjQ/UtYfLXmZZfYDoG2qx3/oCSsllMI6GzYIxCGnPQy+N4qHTzpiuSBCd/fy/xNK/mEP9MDGg5i3DyI7O6ZTfD41oWs19qmrb8If2YXx6OWeQsO3gQAhVHjmiB6o6zKUp0KzpLgoxiCEeIM6+/1Alrn1mScl+t6JRSjO38IRDBxgoJ/xbLyoNjF3V/yPJwBJ5CXiZCe/U/zpIfvzIASXoyf4/wzIxzjnHFoLFLfuAAAAA=', recommendationId: 'tool-017' }, { id: 'tool-017', name: 'Pixel Cut AI', description: {it: "Espande i bordi delle immagini (outpainting) per cambiare formato o stile.", en: 'Expands image borders (outpainting) to change format or style.'}, category: 'Immagini', country: 'USA', website: 'https://www.pixelcut.ai/t/uncrop', isFeatured: false, logoUrl: 'https://templateshake.com/wp-content/uploads/2021/09/Pixelcut_-AI-Graphic-Designer.png', recommendationId: 'tool-033' }, { id: 'tool-033', name: 'Whisk', description: {it: 'Crea animazioni fluide da immagini statiche e genera anche immagini da prompt.', en: 'Creates smooth animations from static images and also generates images from prompts.'}, category: 'Immagini', country: 'USA', website: 'https://labs.google/fx/tools/whisk/', isFeatured: false, logoUrl: 'data:image/webp;base64,UklGRtoCAABXRUJQVlA4WAoAAAAQAAAAGgAAGgAAQUxQSHEBAAARkGTbtuoqvODSMJfuOTWKTiM8rt/d5UkY78XWKtwbBk2IiAlIkmv33+8W43GR53kR5nm29+35zVpSu/d6qoBLMVy8u3PlxusFghBBQHXx+trzmf8R1Pnjr4ioa0fbh+X+9vGKAOqnPUKxd0q2ec5JVwVwJ4ugDKct69MOCqpZYLQ1G9ibtRRD0gBF/0z7Nhd1FRQv0gDVP+XI5uy7yy9j6MnhVuVk82hXJXIpqC4a46G6ftleSCwlVi+bhvW8qSj/cHKwVkTmne1TFYjgrJEODHc659bnhmmsM22oZu0jddpWNM0AT7eLntJbx3DnRANxUnfRXd3+/delf2Zqlgm9uToeqxCZjtQ0FXYUoxhlXckzYEtAWa5bQrovjE7ns9l0MqmqqizLsqpO2+rOJ8HtRq/f6XZ7/f6w3+/3e1uon5/MDVGiIqrMn918QQREwiWvb9Zuv1qIUQAhmL24lyTJtYdfH/OwiOZFUex+eHSjlgAAVlA4IEIBAACQBwCdASobABsAPpEopFIloaWllACwEglsAJ0yhID1oDbNMQ1XPLbrzhvNnsAbpL+wAdmnnyJ9nYieeXb2Ryc1AKuoW3wA/vdDClcr9pD9tsCqduiNtQaVaXgNfHp+atcZTe36+3xORhwFno/1uCGFQNU/4IYVL2I0o6c2eo73COMYL756Lzd/ibcQRmlIAId+z6psKbtTu/HIkA2HcYl/lq+sJbc01Q/VZ218h72kU324N9YcnNwU4vXy6VXCKq/tTNwWHsJ66N8JgRuCvc2pDpQ7KYv4rj//agwrDT7PdEnuIAkZLuckIqBv9aVnsRgB0qHFxi5a42nw4jOMOI330LQhImDuwmt+4/ryzZZzC4m8PLOx6EdyPthzs6wIhg+lRzc3+QT27OYDqLpNkFX2To7bI2E7F1lLi0lg6Fo4SAAA', recommendationId: 'tool-014'}, { id: 'tool-041', name: 'Leonardo AI', description: {it: 'Piattaforma per la generazione di asset visivi di alta qualità, da concept art a texture per giochi.', en: 'Platform for generating high-quality visual assets, from concept art to game textures.'}, category: 'Immagini', country: 'USA', website: 'https://leonardo.ai/', isFeatured: false, logoUrl: 'https://yt3.googleusercontent.com/a04AUXisIIWkI-Pj5zORQTiDNS9tALLmPc8pxuRT_aEHrCOUDsPQoLuh4QRbfgICortk7tBhyg=s900-c-k-c0x00ffffff-no-rj', recommendationId: 'tool-014' }, { id: 'tool-042', name: 'Midjourney', description: {it: 'Genera immagini artistiche e fotorealistiche di alta qualità da prompt testuali tramite Discord.', en: 'Generates high-quality artistic and fotorealistic images from text prompts via Discord.'}, category: 'Immagini', country: 'USA', website: 'https://www.midjourney.com/home', isFeatured: false, logoUrl: 'https://sadesign.ai/pictures/picfullsizes/2024/12/10/dsn1733795303.jpg', recommendationId: 'tool-041' }, { id: 'tool-034', name: 'Kling', description: {it: 'Genera video di alta qualità da prompt testuali, concentrandosi sul realismo e sul movimento complesso.', en: 'Generates high-quality videos from text prompts, focusing on realism and complex motion.'}, category: 'Video', country: 'Cina', website: 'https://klingai.com/global/', isFeatured: false, logoUrl: 'https://play-lh.googleusercontent.com/JOfjXqsShK8j1aGBc1xlHBnatoRKRwLsGuoFZUAvKksaEPvK71eLwSg4FbKlky9Es-s', recommendationId: 'tool-035' }, { id: 'tool-035', name: 'Veo', description: {it: "Il modello di generazione video più capace di Google, che crea video realistici e di alta qualità da prompt di testo e immagini.", en: "Google's most capable video generation model, creating realistic, high-quality videos from text and image prompts."}, category: 'Video', country: 'USA', website: 'https://deepmind.google/models/veo/', isFeatured: false, logoUrl: 'https://storage.googleapis.com/gweb-uniblog-publish-prod/images/IO25_Gemini_MOD_v33_PART_1_DG_FINAL_54.max-1440x810.png', isFeatured: false, recommendationId: 'tool-014' }, { id: 'tool-021', name: 'Claude', description: {it: 'Crea bozze e contenuti per presentazioni interattive e documenti complessi.', en: 'Creates drafts and content for interactive presentations and complex documents.'}, category: 'Presentazioni', country: 'USA', website: 'https://claude.ai/new', isFeatured: true, logoUrl: 'https://logo.svgcdn.com/l/claude-icon-8x.png', recommendationId: 'tool-022' }, { id: 'tool-022', name: 'Gamma AI', description: {it: "Genera presentazioni, documenti e pagine web statiche partendo da un'idea.", en: 'Generates presentations, documents, and static web pages from an idea.'}, category: 'Presentazioni', country: 'USA', website: 'https://gamma.app/', isFeatured: false, logoUrl: 'https://www.fahimai.com/wp-content/uploads/2025/03/GAMMA-cta.png', recommendationId: 'tool-021' }, { id: 'tool-023', name: 'Napkin AI', description: {it: 'Converte dati testuali e concetti in grafici statici e diagrammi chiari.', en: 'Converts text data and concepts into clear static charts and diagrams.'}, category: 'Presentazioni', country: 'USA', website: 'https://www.napkin.ai/', isFeatured: false, logoUrl: 'https://media.licdn.com/dms/image/v2/D560BAQEYfmQKrdByPg/company-logo_200_200/company-logo_200_200/0/1723039432148/napkin_ai_logo?e=2147483647&v=beta&t=Nsr22RG3uiy9usBNh55leGVf8ES5YJQwUANW-2N7yEA', recommendationId: 'tool-022' }, { id: 'tool-024', name: 'Google AI Studio', description: {it: "Crea app, siti e prototipi basati sui modelli Gemini di Google.", en: "Creates apps, sites, and prototypes based on Google's Gemini models."}, category: 'Codice', country: 'USA', website: 'https://aistudio.google.com/prompts/new_chat', isFeatured: true, logoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToBQo43LHKdO8g2NftGqpOjG-rHo61R8Rmpk0mEb0rUJ0A2P-z0kTx8M6XQHWZbHTR61R8Rmpk0mEb0rUJ0A2P-z0kTx8M6XQHWZbHTR6lY&usqp=CAU', recommendationId: 'tool-026' }, { id: 'tool-025', name: 'Manus', description: {it: "Piattaforma di AI estremamente potente. Può eseguire compiti come ChatGPT e gestirli in background, creando testi, ricerche, presentazioni, video, immagini e molto altro.", en: 'Extremely powerful AI platform. It can perform tasks like ChatGPT and manage them in the background, creating text, research, presentations, videos, images and much more.'}, category: 'Codice', country: 'Cina', website: 'https://manus.im/app', isFeatured: true, logoUrl: 'https://i.namu.wiki/i/5-7MaDXSqFVQhJjDY8rbjzRuoAqlqXpQhoYWYqSgkgRo6Qo1imTF9nHaOTvNxIeEhg_OCEMzuySjfSCyMWLUTA.webp', recommendationId: 'tool-001' }, { id: 'tool-026', name: 'Microsoft Copilot', description: {it: 'Assistente AI per codice, specializzato anche in script VBA per Excel.', en: 'AI assistant for code, also specializing in VBA scripts for Excel.'}, category: 'Codice', country: 'USA', website: 'https://copilot.microsoft.com/', isFeatured: false, logoUrl: 'https://breakwaterit.co.uk/wp-content/uploads/2024/02/Copilot-65d6242f4e297.png', recommendationId: 'tool-024' }, { id: 'tool-027', name: 'Google Stitch', description: {it: 'Tool per la creazione di codice per interfacce utente (UX Design).', en: 'Tool for creating code for user interfaces (UX Design).'}, category: 'Codice', country: 'USA', website: 'https://stitch.withgoogle.com/', isFeatured: false, logoUrl: 'https://media2.dev.to/dynamic/image/width=1080,height=1080,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fzhshikvds4e6nn22fngm.png', recommendationId: 'tool-028' }, { id: 'tool-028', name: 'Chef Convex', description: {it: "Crea web app complete con un backend già integrato e pronto all'uso.", en: 'Creates complete web apps with a built-in and ready-to-use backend.'}, category: 'Codice', country: 'USA', website: 'https://chef.convex.dev/', isFeatured: false, logoUrl: 'https://chef.convex.dev/chef.svg', recommendationId: 'tool-027' }, { id: 'tool-030', name: 'Deepseek', description: {it: 'Modello linguistico specializzato nella scrittura e comprensione di codice in vari linguaggi.', en: 'Language model specialized in writing and understanding code in various languages.'}, category: 'Codice', country: 'Cina', website: 'https://chat.deepseek.com/', isFeatured: false, logoUrl: 'https://cdn-1.webcatalog.io/catalog/deepseek/deepseek-social-preview.png?v=1748219623720', recommendationId: 'tool-031' }, { id: 'tool-031', name: 'Qwen', description: {it: 'Assistente AI multimodale di Alibaba Cloud, efficace nella generazione di codice, analisi, creazione di testi e ricerca web.', en: 'Multimodal AI assistant from Alibaba Cloud, effective in code generation, analysis, text creation, and web search.'}, category: 'Codice', country: 'Cina', website: 'https://chat.qwen.ai/', isFeatured: false, logoUrl: 'https://crystalpng.com/wp-content/uploads/2025/02/Qwen-03.png', recommendationId: 'tool-030' }, { id: 'tool-032', name: 'Mistral', description: {it: 'Modelli linguistici aperti e ottimizzati, ideali per lo Codice di applicazioni e la Codice.', en: 'Open and optimized language models, ideal for application development and coding.'}, category: 'Codice', country: 'Europe', website: 'https://mistral.ai/', isFeatured: false, logoUrl: 'https://www.massa-critica.it/wp-content/uploads/mistral-ai.jpg', recommendationId: 'tool-001' }, { id: 'tool-036', name: 'BOLT AI', description: {it: 'Genera codice e componenti UI partendo da un prompt.', en: 'Generates code and UI components from a prompt.'}, category: 'Codice', country: 'USA', website: 'https://bolt.new/', isFeatured: false, logoUrl: 'https://cdn-1.webcatalog.io/catalog/bolt-new/bolt-new-icon-filled-256.png?v=1730692903154', recommendationId: 'tool-024' }, { id: 'tool-037', name: 'V0 AI', description: {it: 'Genera interfacce utente reattive basate su React da semplici prompt di testo.', en: 'Generates responsive user interfaces based on React from simple text prompts.'}, category: 'Codice', country: 'USA', website: 'https://v0.dev/chat', isFeatured: false, logoUrl: 'https://logowik.com/content/uploads/images/v0-ai1721420590.logowik.com.webp', recommendationId: 'tool-027' }, { id: 'tool-038', name: 'Cursor', description: {it: 'Un editor di codice basato su AI per programmare in modo più veloce ed efficiente.', en: 'An AI-powered code editor for faster and more efficient programming.'}, category: 'Codice', country: 'USA', website: 'https://www.cursor.com/', isFeatured: false, logoUrl: 'https://cursor.com/favicon.svg', recommendationId: 'tool-026' }, { id: 'tool-039', name: 'Lovable', description: {it: "Sviluppa e testa interfacce utente con l'aiuto dell'intelligenza artificiale.", en: 'Develops and tests user interfaces with the help of artificial intelligence.'}, category: 'Codice', country: 'USA', website: 'https://lovable.dev/', isFeatured: false, logoUrl: 'https://lovable.dev/img/logo/lovable-icon-bg-dark.png', recommendationId: 'tool-037' }, { id: 'tool-040', name: 'Perplexity', description: {it: 'Motore di ricerca conversazionale che fornisce risposte dirette con fonti, utile anche per la ricerca web e codice.', en: 'Conversational search engine that provides direct answers with sources, also useful for web and code search.'}, category: 'Codice', country: 'USA', website: 'https://www.perplexity.ai/', isFeatured: false, logoUrl: 'https://images.seeklogo.com/logo-png/51/2/perplexity-ai-logo-png_seeklogo-517845.png', recommendationId: 'tool-001' }, { id: 'tool-029', description: {it: 'Genera un parlato realistico e di alta qualità dal testo in più lingue.', en: 'Generates realistic, high-quality speech from text in multiple languages.'}, name: 'Eleven Labs', category: 'Audio', country: 'USA', website: 'https://elevenlabs.io/', isFeatured: false, logoUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAeFBMVEX///8AAABra2vPz88wMDBvb2/c3NxSUlL6+vpaWlqfn5/U1NSBgYFAQEAgICBFRUXJycnBwcFKSkrs7Oy5ubkrKysWFRaJiYnj4+N1dXU3Nzf09PSCgoKQkJCsrKxjY2MjIyMLCwulpaWzs7MaGho0NDSYmJheXl7ei1KlAAAGlElEQVR4nO2da2OyIABGKVvq7KKpTbP7XP3/f/jKVaxmrZzi3ud8yYiQEwgoaIQAAAAAAAAA2me8G/ab3bheMBr0n6hOMOw6d40Q1hieus5cI5xqDIddZ64RhjDsPTAsWH6Nekn8sGFaE8VkvIcN31rLU7NYMISh8cCQwNB4YEhgaDwwJDA0HhgSGBoPDAkMjQeGBIbGA0MCQ+OBIYGh8cCQwNB4YEhgaDwwJDA0HhgSGBoPDAkMjQeGBIbGA0MCQ+OBIYGh8cCQwNB4Wjd0GM2k9RDNGNqu6y4SujWxbXvB7tiMaGAVeyx2uGxS4Q7NGLIIzGtBtyy69T64xhK3sIyaVLhD04Y2DP+a4WE/0xh4f89wcxX1rxl+XEX9Dw2TcfJA9xgm4+xWsDeuuw2d0rHh53xWvM1XJya52MdxfpSf7eI4XrJErXTGjunUEx/ZNGJC/BFLrPZpAt0ajheqlV35RNz5vxAR2YMOcrq1KRvjd/7ZlG6H7xehnRjWtjTWQGdLSMY2RJ3d0u1TEbjSY01Lw20Z+tmd4XwiSGVVKg0Tkb25eC1GfSl9DXjELxG2E2ozrbyY4aw0/OrOsETW19KQmb3RhiJktXUmPuTVNBHZYo8d2ftliok0LEo4dHxewt5ljjowlPVVGbI92zwwlAkc6CtrHZlZJGSEACvitTJk1SJcauVulqGtvlPwyYpENCrsIR1nuWQQAUUOCwlaSh+nYleQ9o3PORLzrUhq31EDz0XrSt9jakMLZqdyH8iozHtTBiKFFmDU/OwgM7aUuYysxcMWxWKK6qpJeoe2/lCsqfv3GHo8wSjbg2/7w/9wRVzmd+i8V+L0tpdR7s4OIMeGU5lUi7JDqICnL83TFo0dJ4wZK+HykUOlk124IWWTJCVYeV6iO33xJCX+0U68vPth/zwTaWn0w9D1lWr4Zabyi6N1ssDfeTKSeX/LGMF0/esP4asCxw5ZTZiflahhpvjMmnRbNLrXPkwNMpwv5hrTD/0URt7NM6BlmLIDj7ZsQtBPsYmR/YmLXSc6CBrtkGGF7zphmLXM/kUoFik5vK34jzR+eJvR6Ocb3hGG6aVs6dqh2HLc3gRrBL/qkRjaZtrKMtwz7/naZmfqEsZTl7dnZOWsea8WV1dGtZk7vcMg8k1xVlukq7XEzWY8z5o6qvJVr/aEkyKKPr5UHKcFDV5udvIwA1NTHzFo7G3XRg+TcPTNgYaNgwMCQwpMOwUGBIYUm4aJoHvB4+4Jvb57K5/kukf8XuGbBLCfiAL7JqU+5NM/4hfHpc+knEYvggMCQwpMKzn7xmG283ZttcnOd8iDcOTO5uuI+300PuYHpaLjfXSGWPrhs56ILH5W Senado zPKvZ+qWcccvULP/qlUFS24bVuXt2HZQZ2m4ZerqO6d5aamKkYTaokknDK/GLmI8Mjoww5CW19n3/xK6obTTDc+Qf+ax87IhBn+t7VsCnn56uqO0ajrXMZnS686s05KH8aDyK34JvKyh+iecbm3YNI31ftCHJM2kol0KxFRqxSEiEfd75m5ha2jUM0kma8sISK5pCYbhSUVhwxsvQ9p9vYSRd9PiO/zmUTac0VJfl+cITT3Ue7jBKbiXyMK0bepvlQEMalhet59zQyctIh/cX+vy2DbX+fnTb0OaGJNTXs43urbH8nnYNHZFr+yNw+LL+K0MnVilEu4NSnD1diu0a8unOIT+wKobqOByXaRXlGJ3k0K1u+WEt7RqylRWyX6jUUjk9yluYyh0nFuvyF+RJfnk9zbka72reTxnKcasoHa3yMFo35PFT1J/gpv72+1PJLHN5O8kUX4u9flCFXFHOmdJ4wmMsVCvdWrnVqWCHkSS39LFMrmEvDwXL3Jg66HRELaQaLIAz5v6L5Nbs3yDDQ3+a6YV6NeHma9cI1gHYNte5w4Nu64bBctX3gB2oSa1/ddzzy1gznyvD6L/do0RzFdmzxZidUVzEC0Ve+SRnnpEY/p67HNLdxLhF7DLafwc2hZhJEQfVw84JTOtm+NtGodu2QJDI0HhgSGxgNDAkPjgSGBofHAkMDQeGBIYGg8MCQwNB4YEhgaDwwJDI0HhgSGxgNDAkPjgSGBofHAkMDQeGBIYGg8MCQwNB4YEhgaDwwJDI0HhgSGxgNDAkPjgSGBofF4Dxu6ntVHvOPDhj3n/za88QcMPWRXYxh1nblGqPvbqyy//33jyWsfA2P1XzG/c6dtFu2GfWYXvf4gHwAAAAAAAMDP+Qd5XHfMcP3iXQAAAABJRU5ErkJggg==' },
             { 
                 id: 'tool-043', 
                 name: 'Rows', 
@@ -813,7 +1002,7 @@
         window.getLocalizedToolsData = (lang) => {
             return aiToolsData.map(tool => ({ ...tool, description: tool.description[lang] || tool.description['en'] }));
         }
-        window.aiToolsData = aiToolsData; 
+        window.aiToolsData = aiToolsData; // Keep static data accessible
 
         // MODIFICA: Le categorie ora hanno un ID e nomi traducibili
         const categories = [
@@ -823,24 +1012,38 @@
             { id: 'Presentazioni', name: { it: 'Presentazioni', en: 'Presentations' }, color: '#E13300' },
             { id: 'Codice', name: { it: 'Codice', en: 'Code' }, color: '#BA5D07' },
             { id: 'Audio', name: { it: 'Audio', en: 'Audio' }, color: '#006450' },
+            // Add a generic category for user tools if needed, or let user specify
+            // For simplicity, let's allow user to pick from existing categories
         ];
         const countries = [...new Set(aiToolsData.map(t => t.country))]
             .filter(c => c !== 'Global')
             .map(c => ({ name: c, flag: { 'USA': '🇺🇸', 'Cina': '🇨🇳', 'Europe': '🇪🇺' }[c] || '🏳️' }));
 
-        let currentUser = {};
+        // currentUser will now include Firestore data (favorites, userTools, userFeaturedTools)
+        // and local state (isLocallyPrivileged)
+        let currentUser = {}; 
         let currentView = 'home';
-        let activeFilter = 'All';
-        let exploreFilter = { type: null, value: null };
-        let rankingFilter = 'All';
+        let activeFilter = 'All'; // Filter for Favorites page
+        let exploreFilter = { type: null, value: null }; // Filter for Explore page
+        let rankingFilter = 'All'; // Filter for Top AI page
         let reactRoot = null;
         let conversations = {};
         let activeConversationId = null;
         let currentLanguage = localStorage.getItem('koda-lang') || 'it';
         let currentTheme = localStorage.getItem('koda-theme') || 'dark';
 
+        // State for K button click counter (still local)
+        let kButtonClickCount = 0;
+        let lastKButtonClickTime = 0;
+        let kButtonClickTimeout = null;
+        const K_BUTTON_CLICK_THRESHOLD = 5;
+        const K_BUTTON_CLICK_RESET_DELAY = 500; // ms
+
         const sunIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79zM1 10.5h3v2H1zM11 .55h2V3.5h-2zm8.04 1.49l1.79-1.8-1.41-1.41-1.8 1.79zM20 10.5h3v2h-3zm-9.24 10.96l1.8 1.79 1.41-1.41-1.79-1.79zm-6.36-1.8l-1.79 1.8 1.41 1.41 1.8-1.79zM12 5.5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/></svg>`;
         const moonIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M9.37 5.51A7.35 7.35 0 009.1 7.5c0 4.08 3.32 7.4 7.4 7.4.68 0 1.35-.09 1.99-.27C17.45 17.19 14.93 19 12 19c-3.86 0-7-3.14-7-7 0-2.93 1.81-5.45 4.37-6.49z"/></svg>`;
+        // Pencil icon SVG for editing
+        const pencilIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M14.06 9.02l.92.92L5.92 18H5v-.92l9.06-9.06zm4.6-4.6l-1.39-1.39c-.2-.2-.51-.2-.71 0l-1.83 1.83 3.29 3.29 1.83-1.83c.2-.2.2-.51 0-.71zM3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"/></svg>`;
+
 
         const el = { 
             mainContent: document.getElementById('main-content'), 
@@ -854,6 +1057,8 @@
         };
         
         const getStorageKey = () => `conversations_${currentUser.uid || 'guest'}`;
+        // Local storage key for the privileged flag only
+        const getPrivilegedLocalDataKey = () => `koda_privileged_flag_${currentUser.uid}`;
 
         const loadConversations = () => {
             const saved = localStorage.getItem(getStorageKey());
@@ -874,6 +1079,28 @@
         const saveActiveConversationId = () => {
              localStorage.setItem(`activeConversationId_${currentUser.uid || 'guest'}`, activeConversationId);
         }
+
+        // NEW FUNCTION: Load user-specific local data (privileged status ONLY)
+        const loadUserLocalData = () => {
+             if (!currentUser.uid) {
+                 currentUser.isLocallyPrivileged = false;
+                 // userTools and userFeaturedTools will be loaded from Firestore
+                 return;
+             }
+             const savedData = localStorage.getItem(getPrivilegedLocalDataKey());
+             const data = savedData ? JSON.parse(savedData) : {};
+             currentUser.isLocallyPrivileged = data.isLocallyPrivileged || false;
+        };
+
+        // NEW FUNCTION: Save user-specific local data (privileged status ONLY)
+        const saveUserLocalData = () => {
+             if (!currentUser.uid) return;
+             const dataToSave = {
+                 isLocallyPrivileged: currentUser.isLocallyPrivileged,
+             };
+             localStorage.setItem(getPrivilegedLocalDataKey(), JSON.stringify(dataToSave));
+        };
+
 
         const startNewChat = (remountApp = true) => {
             const newId = `chat-${Date.now()}`;
@@ -908,8 +1135,49 @@
             return category ? category.name[currentLanguage] : categoryId;
         };
 
-        const createGridCard = (tool) => `<div class="tool-card-grid" data-id="${tool.id}"><div class="logo-container"><img src="${tool.logoUrl}" class="tool-logo" alt="${tool.name}" loading="lazy"></div><div class="tool-name">${tool.name}</div></div>`;
-        const createListCard = (tool) => `<div class="tool-card-list" data-id="${tool.id}"><div class="logo-container"><img src="${tool.logoUrl}" class="tool-logo" alt="${tool.name}" loading="lazy"></div><div class="info"><div class="tool-name">${tool.name}</div><div class="tool-subtext">${getTranslatedCategoryName(tool.category)}</div></div><div class="favorite-icon" data-action="toggle-favorite" data-id="${tool.id}">${currentUser.uid && currentUser.favorites.includes(tool.id) ? '♥' : '♡'}</div></div>`;
+        // NEW FUNCTION: Get all tools (static + user's)
+        window.getAllToolsForCurrentUser = () => { // Make it globally accessible for React
+             const staticTools = window.getLocalizedToolsData(currentLanguage);
+             const userTools = currentUser.userTools || []; // userTools now comes from currentUser (synced with Firestore)
+             // Ensure user tools have localized descriptions if possible, or fallback
+             const localizedUserTools = userTools.map(tool => ({
+                 ...tool,
+                 description: typeof tool.description === 'object' ? (tool.description[currentLanguage] || tool.description['en'] || '') : tool.description
+             }));
+             return [...staticTools, ...localizedUserTools];
+        };
+
+
+        // Modified createGridCard to optionally show an edit icon and specify its action
+        const createGridCard = (tool, showEditIcon = false, editAction = 'toggle-user-featured') => {
+            let editIconHTML = '';
+            if (showEditIcon && currentUser.uid && currentUser.isLocallyPrivileged) {
+                const isUserTool = tool.id.startsWith('user-');
+                // Determine the correct action and title based on whether it's a user tool or a static tool replacement
+                const action = isUserTool ? 'toggle-user-featured' : 'replace-featured-static';
+                const title = isUserTool ? translations[currentLanguage].unmarkAsFeatured : translations[currentLanguage].replaceFeaturedTitle;
+                
+                // If it's a static tool being replaced, the edit icon should trigger removal
+                const isReplacement = currentUser.userFeaturedReplacements && currentUser.userFeaturedReplacements[tool.id];
+                const finalAction = isReplacement ? 'remove-featured-replacement' : action;
+                const finalTitle = isReplacement ? translations[currentLanguage].removeFeaturedReplacement : title;
+
+
+                editIconHTML = `<div class="edit-icon" data-action="${finalAction}" data-id="${tool.id}" title="${finalTitle}"> ${pencilIcon} </div>`;
+            }
+
+            return `<div class="tool-card-grid" data-id="${tool.id}"><div class="logo-container"><img src="${tool.logoUrl}" class="tool-logo" alt="${tool.name}" loading="lazy">${editIconHTML}</div><div class="tool-name">${tool.name}</div></div>`;
+        };
+
+        const createListCard = (tool) => {
+            const isUserTool = tool.id.startsWith('user-'); // Simple check for user tools
+            const isFavorited = currentUser.uid && currentUser.favorites.includes(tool.id);
+            // Favorite icon is only for static tools
+            const favoriteIconHTML = !isUserTool && currentUser.uid ? `<div class="favorite-icon" data-action="toggle-favorite" data-id="${tool.id}">${isFavorited ? '♥' : '♡'}</div>` : '';
+
+            return `<div class="tool-card-list" data-id="${tool.id}"><div class="logo-container"><img src="${tool.logoUrl}" class="tool-logo" alt="${tool.name}" loading="lazy"></div><div class="info"><div class="tool-name">${tool.name}</div><div class="tool-subtext">${getTranslatedCategoryName(tool.category)}</div></div>${favoriteIconHTML}</div>`;
+        };
+
         const createCategoryCard = (category) => {
             const currentTools = window.getLocalizedToolsData(currentLanguage);
             const toolForLogo = currentTools.find(t=>t.category===category.id); // Usa category.id per la ricerca
@@ -920,25 +1188,40 @@
         const createCountryCard = (country) => `<div class="category-card" style="background-color: #333;" data-action="set-explore-filter" data-filter-type="country" data-filter-value="${country.name}"><h3 style="font-size: 24px;">${country.flag} ${country.name}</h3></div>`;
 
         window.openDetailModal = (toolId) => {
-            const currentTools = window.getLocalizedToolsData(currentLanguage);
-            const tool = currentTools.find(t => t.id === toolId);
+            const allTools = getAllToolsForCurrentUser(); // Use combined list
+            const tool = allTools.find(t => t.id === toolId);
             if (!tool) return;
             const t = translations[currentLanguage];
             const isFavorited = currentUser.uid && currentUser.favorites.includes(toolId);
+            const isUserTool = tool.id.startsWith('user-');
+            // Check local privileged status and Firestore-synced featured list
+            const isUserFeatured = currentUser.uid && currentUser.isLocallyPrivileged && currentUser.userFeaturedTools?.includes(toolId);
+
             let recommendationHTML = '';
             if (tool.recommendationId) {
-                const recommendedTool = currentTools.find(t => t.id === tool.recommendationId);
+                const recommendedTool = allTools.find(t => t.id === tool.recommendationId); // Check in all tools
                 if (recommendedTool) {
                     recommendationHTML = `<div class="recommendation-box" data-action="open-detail-modal" data-id="${recommendedTool.id}"><img src="${recommendedTool.logoUrl}" alt="${recommendedTool.name}" class="recommendation-logo" loading="lazy"><div class="recommendation-text">${t.alternativeSuggestion}<strong>${recommendedTool.name}</strong></div></div>`;
                 }
             }
-            const modalHTML = `<div id="detail-modal" class="modal-overlay visible"><div class="modal-content"><button class="modal-close-btn" data-action="close-modal">×</button><div id="detail-content"><h2>${tool.name}</h2><p>${tool.description}</p><div class="detail-tags"><span class="tag">🌍 ${tool.country}</span></div><div class="detail-actions"><button class="button" data-action="toggle-favorite" data-id="${tool.id}">${isFavorited ? t.detailModalRemoveFavorite : t.detailModalAddFavorite}</button><a href="${tool.website}" target="_blank" class="button" style="text-decoration: none; display: flex; justify-content: center; align-items: center;">${t.visitWebsite}</a></div>${recommendationHTML}</div></div></div>`;
+            
+            let userToolActionsHTML = '';
+            // Show Mark Featured button only for user's own tools if privileged
+            if (isUserTool && currentUser.uid && currentUser.isLocallyPrivileged) {
+                 userToolActionsHTML = `<button class="button" data-action="toggle-user-featured" data-id="${tool.id}">${isUserFeatured ? t.unmarkAsFeatured : t.markAsFeatured}</button>`;
+            }
+
+            const modalHTML = `<div id="detail-modal" class="modal-overlay visible"><div class="modal-content"><button class="modal-close-btn" data-action="close-modal">×</button><div id="detail-content"><h2>${tool.name}</h2><p>${tool.description}</p><div class="detail-tags"><span class="tag">🌍 ${tool.country || 'N/A'}</span><span class="tag">${getTranslatedCategoryName(tool.category || 'N/A')}</span></div><div class="detail-actions">${userToolActionsHTML}${!isUserTool ? `<button class="button" data-action="toggle-favorite" data-id="${tool.id}">${isFavorited ? t.detailModalRemoveFavorite : t.detailModalAddFavorite}</button>` : ''}<a href="${tool.website}" target="_blank" class="button" style="text-decoration: none; display: flex; justify-content: center; align-items: center;">${t.visitWebsite}</a></div>${recommendationHTML}</div></div></div>`;
             el.modalContainer.innerHTML = modalHTML;
         };
         
         const closeModal = () => el.modalContainer.innerHTML = '';
+
         const toggleFavorite = async (toolId) => {
             if (!currentUser || !currentUser.uid) { triggerAuthFlow(); return; }
+            // Ensure it's not a user-added tool
+            if (toolId.startsWith('user-')) return;
+
             const userDocRef = doc(db, "users", currentUser.uid);
             const isFavorited = currentUser.favorites.includes(toolId);
             try {
@@ -949,12 +1232,84 @@
                     await updateDoc(userDocRef, { favorites: arrayUnion(toolId) });
                     currentUser.favorites.push(toolId);
                 }
-            } catch (error) { console.error("Error updating favorites:", error); alert("Could not update favorites. Please try again."); return; }
+            } catch (error) { console.error("Error updating favorites:", error); showToast("Could not update favorites. Please try again."); return; }
             // Re-render the current view to update favorite icons
             renderView();
             // If detail modal is open, update it
             if (document.getElementById('detail-modal')) { window.openDetailModal(toolId); }
         };
+
+        // NEW FUNCTION: Toggle user-added tool featured status (Firestore)
+        const toggleUserFeatured = async (toolId) => {
+             if (!currentUser || !currentUser.uid || !currentUser.isLocallyPrivileged) return;
+             // Ensure it is a user-added tool
+             if (!toolId.startsWith('user-')) return;
+
+             const userDocRef = doc(db, "users", currentUser.uid);
+             const isUserFeatured = currentUser.userFeaturedTools?.includes(toolId);
+             const newFeaturedList = isUserFeatured
+                 ? currentUser.userFeaturedTools.filter(id => id !== toolId)
+                 : [...(currentUser.userFeaturedTools || []), toolId];
+
+             try {
+                 await updateDoc(userDocRef, { userFeaturedTools: newFeaturedList });
+                 currentUser.userFeaturedTools = newFeaturedList; // Update local state after successful Firestore update
+             } catch (error) {
+                 console.error("Error updating user featured tools:", error);
+                 showToast("Could not update featured status. Please try again.");
+                 return;
+             }
+
+             // Re-render the current view (Library) and update the detail modal
+             renderView();
+             if (document.getElementById('detail-modal')) { window.openDetailModal(toolId); }
+        };
+
+        // NEW FUNCTION: Replace static featured tool with user tool (Firestore)
+        const replaceFeaturedStatic = async (staticToolId, userToolId) => {
+             if (!currentUser || !currentUser.uid || !currentUser.isLocallyPrivileged) return;
+             if (!staticToolId || !userToolId) return;
+
+             const userDocRef = doc(db, "users", currentUser.uid);
+             const newReplacements = { ...(currentUser.userFeaturedReplacements || {}), [staticToolId]: userToolId };
+
+             try {
+                 await updateDoc(userDocRef, { userFeaturedReplacements: newReplacements });
+                 currentUser.userFeaturedReplacements = newReplacements; // Update local state
+                 showToast(translations[currentLanguage].addAppSuccess); // Reuse success toast
+             } catch (error) {
+                 console.error("Error replacing featured tool:", error);
+                 showToast(`Error: ${error.message}`); // Generic error
+                 return;
+             }
+
+             closeModal();
+             renderView(); // Re-render Top AI view
+        };
+
+         // NEW FUNCTION: Remove featured replacement (Firestore)
+        const removeFeaturedReplacement = async (staticToolId) => {
+             if (!currentUser || !currentUser.uid || !currentUser.isLocallyPrivileged) return;
+             if (!staticToolId) return;
+
+             const userDocRef = doc(db, "users", currentUser.uid);
+             const newReplacements = { ...(currentUser.userFeaturedReplacements || {}) };
+             delete newReplacements[staticToolId];
+
+             try {
+                 await updateDoc(userDocRef, { userFeaturedReplacements: newReplacements });
+                 currentUser.userFeaturedReplacements = newReplacements; // Update local state
+                 showToast(translations[currentLanguage].removeFeaturedReplacement + " Success!"); // Toast confirmation
+             } catch (error) {
+                 console.error("Error removing featured replacement:", error);
+                 showToast(`Error: ${error.message}`); // Generic error
+                 return;
+             }
+
+             renderView(); // Re-render Top AI view
+        };
+
+
         
         const unmountReactApp = () => {
             if (reactRoot) {
@@ -978,10 +1333,15 @@
             if (show) {
                 renderSideMenu(); // Render menu content before showing
                 el.sideMenuOverlay.classList.add('visible');
+                el.sideMenu.classList.remove('hidden'); /* Ensure it's not hidden by mistake */
                 el.sideMenu.classList.add('visible');
             } else {
                 el.sideMenuOverlay.classList.remove('visible');
                 el.sideMenu.classList.remove('visible');
+                // Add a small delay before hiding overlay completely to allow transition
+                setTimeout(() => {
+                     el.sideMenuOverlay.classList.add('hidden');
+                }, 300); // Match CSS transition duration
             }
         };
 
@@ -990,16 +1350,16 @@
             const isGuest = !currentUser.uid;
             const userInitial = isGuest ? '?' : (currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U');
             
-            // MODIFICA: L'avatar viene generato condizionatamente. Se la vista corrente è 'home', l'HTML dell'avatar è una stringa vuota.
-            const avatarHTML = currentView !== 'home'
-                ? `<div class="user-avatar" ${!isGuest ? 'data-action="open-settings-modal"' : ''}>${userInitial}</div>`
-                : '';
+            // The avatar is now always rendered in the top-bar, but its click action depends on login status
+            const avatarHTML = `<div class="user-avatar" ${!isGuest ? 'data-action="open-settings-modal"' : ''}>${userInitial}</div>`;
             
-            return `
-                ${avatarHTML}
+            const otherControlsHTML = `
                 <button id="theme-toggle-btn" class="global-btn" data-action="toggle-theme">${themeIcon}</button>
                 <button id="lang-toggle-btn" class="global-btn" data-action="toggle-lang">${currentLanguage.toUpperCase()}</button>
             `;
+
+            // Return as an object to pass to React
+            return { avatar: avatarHTML, otherControls: otherControlsHTML };
         };
 
         const renderView = () => {
@@ -1007,20 +1367,19 @@
             el.mainContent.innerHTML = '';
             
             const t = translations[currentLanguage];
-            const currentTools = window.getLocalizedToolsData(currentLanguage);
+            const staticTools = window.getLocalizedToolsData(currentLanguage);
+            const allTools = getAllToolsForCurrentUser(); // Use combined list for search/explore
             const isGuest = !currentUser.uid;
+            // Check local privileged status
+            const isLocallyPrivileged = currentUser.uid && currentUser.isLocallyPrivileged; 
             const pageTitles = { home: t.pageTitleHome, 'top-ai': t.pageTitleTopAI, explore: t.pageTitleSearch, favorites: t.pageTitleLibrary };
 
             // Top bar is only rendered for non-home views
             if (currentView !== 'home') {
-                // Estrai solo l'avatar dal globalControlsHTML
-                const globalControlsHTML = getGlobalControlsHTML();
-                const avatarHTML = globalControlsHTML.split('\n')[1] || '';
-                const restControlsHTML = globalControlsHTML.replace(avatarHTML, '');
-
+                const globalControls = getGlobalControlsHTML();
                 const topBarHTML = `<div class="top-bar" style="display: flex; align-items: center; gap: 8px;">
-                    <div id="profile-avatar-menu" style="margin-right: 8px;">${avatarHTML}</div>
-                    <div id="global-controls" style="margin-left: auto;">${restControlsHTML}</div>
+                    <div id="profile-avatar-menu" style="margin-right: 8px;">${globalControls.avatar}</div>
+                    <div id="global-controls" style="margin-left: auto;">${globalControls.otherControls}</div>
                 </div>`;
                 el.mainContent.insertAdjacentHTML('beforeend', topBarHTML);
             }
@@ -1034,7 +1393,7 @@
                 const chatbotContainer = document.getElementById('chatbot-container-wrapper');
                 if (window.mountChatbotApp) {
                     reactRoot = window.mountChatbotApp(chatbotContainer, {
-                        tools: currentTools,
+                        tools: allTools, // Pass all tools to chatbot for recommendations
                         initialConversations: conversations,
                         initialActiveId: activeConversationId,
                         onConversationsChange: (newConvos) => {
@@ -1051,8 +1410,26 @@
                     console.error("Chatbot mount function not found.");
                 }
             } else if (currentView === 'top-ai') {
-                const featuredTools = currentTools.filter(t => t.isFeatured);
-                let contentHTML = `<div class="section-title" data-translate="featured">${t.featured}</div><div class="grid-container">${featuredTools.map(createGridCard).join('')}</div>`;
+                const featuredTools = staticTools.filter(t => t.isFeatured); // Only static featured for TOP AI
+                let contentHTML = `<div class="section-title" data-translate="featured">${t.featured}</div><div class="grid-container">`;
+                
+                // Render static featured tools, potentially replaced by user tools
+                contentHTML += featuredTools.map(staticTool => {
+                    const replacementToolId = currentUser.uid && currentUser.userFeaturedReplacements ? currentUser.userFeaturedReplacements[staticTool.id] : null;
+                    const toolToDisplay = replacementToolId ? (currentUser.userTools || []).find(ut => ut.id === replacementToolId) : staticTool;
+
+                    if (!toolToDisplay) return ''; // Should not happen if data is consistent
+
+                    // Show edit icon if privileged
+                    const showEdit = isLocallyPrivileged;
+                    // If it's a user replacement, the edit icon removes the replacement
+                    const editAction = replacementToolId ? 'remove-featured-replacement' : 'replace-featured-static';
+
+                    return createGridCard(toolToDisplay, showEdit, editAction);
+
+                }).join('');
+
+                contentHTML += `</div>`; // Close grid-container
 
                 const rankings = [
                     { titleKey: "rankingTextTitle", category: "Testo", toolIds: ['tool-013', 'tool-001', 'tool-021'] },
@@ -1069,7 +1446,7 @@
                 </div>`;
 
                 const createRankingItem = (toolId, rank) => {
-                    const tool = currentTools.find(t => t.id === toolId);
+                    const tool = staticTools.find(t => t.id === toolId); // Only static tools in rankings
                     if (!tool) return '';
                     return `
                         <li class="ranking-item" data-id="${tool.id}">
@@ -1106,15 +1483,18 @@
                 rankingCards.forEach(card => {
                     if (rankingFilter !== 'All' && card.dataset.rankingCategory !== rankingFilter) {
                         card.classList.add('hidden');
+                    } else {
+                         card.classList.remove('hidden'); // Ensure it's visible if filter matches or is 'All'
                     }
                 });
 
             } else if (currentView === 'explore') {
                 el.mainContent.insertAdjacentHTML('beforeend', `<div class="search-bar-container"><input type="text" id="search-input" placeholder="${t.searchPlaceholder}"></div>`);
                 if (!exploreFilter.type) {
-                    contentArea.innerHTML = `<div class="section-title" data-translate="browseAll">${t.browseAll}</div><div class="category-grid">${categories.map(createCategoryCard).join('')}</div><div class="section-title" style="margin-top: 30px;" data-translate="browseByOrigin">${t.browseByOrigin}</div><div class="category-grid">${countries.map(createCountryCard).join('')}</div>`;
+                    contentArea.innerHTML = `<div class="section-title" data-translate="browseAll">${t.browseAll}</div><div class="category-grid">${categories.map(createCategoryCard).join('')}</div><div class="section-title" style="margin-top: 30px;" data-translate="browseByOrigin">${t.browseByOrigin}</div><div class="category-grid">${countries.map(c => createCountryCard(c)).join('')}</div>`;
                 } else {
-                    const filteredTools = currentTools.filter(t => t[exploreFilter.type] === exploreFilter.value);
+                    // Filter from all tools (static + user)
+                    const filteredTools = allTools.filter(t => t[exploreFilter.type] === exploreFilter.value);
                     const title = exploreFilter.type === 'category' ? getTranslatedCategoryName(exploreFilter.value) : `${t.toolsFrom} ${exploreFilter.value}`;
                     contentArea.innerHTML = `<div class="back-button" data-action="back-to-explore">${t.backToSearch}</div><h2 class="section-title">${title}</h2><div class="list-container">${filteredTools.map(createListCard).join('')}</div>`;
                 }
@@ -1132,13 +1512,55 @@
                         </div>
                     `;
                 } else {
-                    const favoriteToolsData = currentTools.filter(t => currentUser.favorites.includes(t.id));
-                    const availableCategoriesInFavorites = [...new Set(favoriteToolsData.map(t => t.category))];
-                    const filterPills = ['All', ...availableCategoriesInFavorites];
+                    let contentHTML = '';
+
+                    // Add the K button for logged-in users (only if not already privileged)
+                    if (currentUser.uid && !currentUser.isLocallyPrivileged) {
+                         contentHTML += `<button id="privileged-unlock-btn" data-action="unlock-privileged">K</button>`;
+                    }
+
+                    // Add "Add Custom App" Button for privileged users
+                    if (isLocallyPrivileged) {
+                         contentHTML += `<button id="add-app-button" class="button" data-action="open-add-app-modal" data-translate="addCustomApp">${t.addCustomApp}</button>`;
+                    }
+
+
+                    // User Featured Section for privileged users
+                    // userFeaturedTools now comes from currentUser (synced with Firestore)
+                    const userFeaturedTools = (currentUser.userTools || []).filter(tool => currentUser.userFeaturedTools?.includes(tool.id));
+                    if (isLocallyPrivileged) {
+                         contentHTML += `
+                             <div class="user-featured-section">
+                                 <div class="section-title" data-translate="featuredByYou">${t.featuredByYou}</div>
+                                 <div class="grid-container">
+                                     ${userFeaturedTools.length > 0 ? userFeaturedTools.map(tool => createGridCard(tool, true, 'toggle-user-featured')).join('') : '' /* Removed empty state text */}
+                                 </div>
+                             </div>
+                         `;
+                    }
+
+                    // Main Library List (Static Favorites + All User Tools)
+                    const staticFavorites = staticTools.filter(t => currentUser.favorites.includes(t.id));
+                    const allUserTools = currentUser.userTools || []; // userTools now comes from currentUser (synced with Firestore)
+                    const combinedLibraryTools = [...staticFavorites, ...allUserTools];
+
+                    // Determine available categories for filtering (from static favorites + user tools)
+                    const availableCategoriesInLibrary = [...new Set(combinedLibraryTools.map(t => t.category))];
+                    const filterPills = ['All', ...availableCategoriesInLibrary.filter(cat => cat)]; // Filter out undefined/null categories
                     const filtersHTML = `<div class="filters-container"><div class="filter-pills">${filterPills.map(f_id => `<button class="pill-btn ${activeFilter === f_id ? 'active' : ''}" data-action="set-favorite-filter" data-filter="${f_id}">${f_id === 'All' ? t.filterAll : getTranslatedCategoryName(f_id)}</button>`).join('')}</div></div>`;
                     el.mainContent.insertAdjacentHTML('beforeend', filtersHTML);
-                    let favoriteTools = activeFilter === 'All' ? favoriteToolsData : favoriteToolsData.filter(t => t.category === activeFilter);
-                    contentArea.innerHTML = favoriteTools.length > 0 ? `<div class="list-container">${favoriteTools.map(createListCard).join('')}</div>` : `<div id="empty-state">${t.emptyFavorites}</div>`;
+
+                    let filteredLibraryTools = activeFilter === 'All' ? combinedLibraryTools : combinedLibraryTools.filter(t => t.category === activeFilter);
+
+                    // Exclude user featured tools from the main list if they are shown in the featured section AND the user is privileged
+                    if (isLocallyPrivileged) {
+                         const userFeaturedIds = userFeaturedTools.map(t => t.id);
+                         filteredLibraryTools = filteredLibraryTools.filter(tool => !userFeaturedIds.includes(tool.id));
+                    }
+
+                    contentHTML += filteredLibraryTools.length > 0 ? `<div class="list-container">${filteredLibraryTools.map(createListCard).join('')}</div>` : `<div id="empty-state">${t.emptyFavorites}</div>`; // Use emptyFavorites for now, could add emptyUserTools state
+
+                    contentArea.innerHTML = contentHTML;
                 }
                 el.mainContent.appendChild(contentArea);
             }
@@ -1191,9 +1613,16 @@
 
         const attachAuthListeners = () => {
             // Remove previous listeners to avoid duplicates
-            const oldAuthOverlay = el.authOverlay.cloneNode(true);
-            el.authOverlay.parentNode.replaceChild(oldAuthOverlay, el.authOverlay);
-            el.authOverlay = oldAuthOverlay;
+            // This is a bit heavy, ideally use event delegation or remove specific listeners
+            // For this structure, re-attaching to the overlay is simpler.
+            // Ensure the overlay itself is the target for delegation.
+            
+            // Clear existing listeners by replacing the element (simple but effective)
+            const oldAuthOverlay = el.authOverlay;
+            const newAuthOverlay = oldAuthOverlay.cloneNode(true);
+            oldAuthOverlay.parentNode.replaceChild(newAuthOverlay, oldAuthOverlay);
+            el.authOverlay = newAuthOverlay;
+
 
             el.authOverlay.addEventListener('click', (e) => {
                 const target = e.target;
@@ -1201,13 +1630,13 @@
                 
                 if(actionTarget) {
                      const action = actionTarget.dataset.action;
-                     if (action === 'close-auth') closeAuthAndReturnToApp();
+                     if (action === 'close-auth') { e.preventDefault(); closeAuthAndReturnToApp(); }
                      else if (action === 'show-login') { e.preventDefault(); showAuthCard('login-card'); }
                      else if (action === 'show-register') { e.preventDefault(); showAuthCard('register-card'); }
                      else if (action === 'show-forgot') { e.preventDefault(); showAuthCard('forgot-password-card'); }
                 }
 
-                // Handle button clicks directly
+                // Handle button clicks directly (delegation is better but keeping original structure)
                 if (target.id === 'register-btn') {
                     const email = el.authOverlay.querySelector('#register-email').value;
                     const password = el.authOverlay.querySelector('#register-password').value;
@@ -1219,7 +1648,7 @@
                      const email = el.authOverlay.querySelector('#login-email').value;
                     const password = el.authOverlay.querySelector('#login-password').value;
                     const t = translations[currentLanguage];
-                    if (!email || !password) { showToast(t.registerEmailLabel + ' ' + t.registerPasswordLabel); return; } // Simplified message
+                    if (!email || !password) { showToast(t.registerEmailLabel + ' / ' + t.registerPasswordLabel); return; } // Simplified message
                     signInWithEmailAndPassword(auth, email, password).catch(error => showToast(`Error: ${error.message}`));
                 }
                 if (target.id === 'forgot-btn') {
@@ -1275,7 +1704,7 @@
                         </div>
                         <div class="input-group">
                             <label for="profile-confirm-password" data-translate="confirmPasswordLabel">${t.confirmPasswordLabel}</label>
-                            <input type="password" id="profile-confirm-password" placeholder="${t.confirmPasswordPlaceholder}">
+                            <input type="password" id="profile-confirm-password" placeholder="${t.profile-confirm-password}">
                         </div>
                         <button class="button" id="update-password-btn" data-translate="savePasswordButton">${t.savePasswordButton}</button>
 
@@ -1323,11 +1752,152 @@
             }
         };
 
+        // NEW FUNCTION: Open Add App Modal
+        const openAddAppModal = () => {
+             // Check local privileged status
+             if (!currentUser.uid || !currentUser.isLocallyPrivileged) {
+                 // This shouldn't happen if triggered only by K button, but good safeguard
+                 showToast("You need privileged access to add apps.");
+                 return; 
+             }
+             const t = translations[currentLanguage];
+
+             // Get available categories for the dropdown
+             const categoryOptions = categories.map(cat => 
+                 `<option value="${cat.id}">${cat.name[currentLanguage]}</option>`
+             ).join('');
+
+             const modalHTML = `
+                 <div id="add-app-modal" class="modal-overlay visible">
+                     <div class="modal-content">
+                         <button class="modal-close-btn" data-action="close-modal">×</button>
+                         <h2 data-translate="addAppTitle">${t.addAppTitle}</h2>
+
+                         <div class="input-group" style="margin-top: 24px;">
+                             <label for="add-app-name" data-translate="appNameLabel">${t.appNameLabel}</label>
+                             <input type="text" id="add-app-name" placeholder="${t.appNamePlaceholder}">
+                         </div>
+                         <div class="input-group">
+                             <label for="add-app-description" data-translate="appDescriptionLabel">${t.appDescriptionLabel}</label>
+                             <textarea id="add-app-description" placeholder="${t.appDescriptionPlaceholder}"></textarea>
+                         </div>
+                         <div class="input-group">
+                             <label for="add-app-website" data-translate="appWebsiteLabel">${t.appWebsiteLabel}</label>
+                             <input type="url" id="add-app-website" placeholder="${t.appWebsitePlaceholder}">
+                         </div>
+                         <div class="input-group">
+                             <label for="add-app-logo" data-translate="appLogoLabel">${t.appLogoLabel}</label>
+                             <input type="url" id="add-app-logo" placeholder="${t.appLogoPlaceholder}">
+                         </div>
+                         <div class="input-group">
+                             <label for="add-app-category" data-translate="category">${t.category}</label>
+                             <select id="add-app-category" style="width: 100%; padding: 14px 16px; font-size: 16px; background-color: var(--spotify-bg-light); border: 1px solid rgba(128,128,128,0.2); border-radius: 8px; color: var(--spotify-text);">
+                                 ${categoryOptions}
+                             </select>
+                         </div>
+
+                         <button class="button" id="add-app-btn" data-translate="addAppButton">${t.addAppButton}</button>
+                     </div>
+                 </div>
+             `;
+             el.modalContainer.innerHTML = modalHTML;
+
+             // Attach listener to the add app button
+             document.getElementById('add-app-btn')?.addEventListener('click', handleAddApp);
+        };
+
+        // NEW FUNCTION: Open Replace Featured Modal
+        const openReplaceFeaturedModal = (staticToolId) => {
+             if (!currentUser.uid || !currentUser.isLocallyPrivileged) return;
+             const t = translations[currentLanguage];
+             const userTools = currentUser.userTools || [];
+
+             const toolListHTML = userTools.length > 0 ? userTools.map(tool => `
+                 <div class="tool-list-item" data-action="select-user-tool-for-featured" data-static-id="${staticToolId}" data-user-id="${tool.id}">
+                     <img src="${tool.logoUrl}" alt="${tool.name}" loading="lazy">
+                     <div class="info">
+                         <div class="tool-name">${tool.name}</div>
+                         <div class="tool-subtext">${getTranslatedCategoryName(tool.category)}</div>
+                     </div>
+                 </div>
+             `).join('') : `<div id="empty-state" style="padding: 20px 0;">${t.noUserApps}</div>`;
+
+
+             const modalHTML = `
+                 <div id="replace-featured-modal" class="modal-overlay visible">
+                     <div class="modal-content">
+                         <button class="modal-close-btn" data-action="close-modal">×</button>
+                         <h2 data-translate="replaceFeaturedTitle">${t.replaceFeaturedTitle}</h2>
+                         <p style="color: var(--spotify-text-secondary); font-size: 14px; margin-bottom: 20px;" data-translate="selectAppToFeature">${t.selectAppToFeature}</p>
+                         <div class="list-container">
+                             ${toolListHTML}
+                         </div>
+                     </div>
+                 </div>
+             `;
+             el.modalContainer.innerHTML = modalHTML;
+        };
+
+
+        // NEW FUNCTION: Handle Add App submission (Firestore)
+        const handleAddApp = async () => { // Made async again for Firestore
+             // Check local privileged status
+             if (!currentUser.uid || !currentUser.isLocallyPrivileged) return;
+
+             const nameInput = document.getElementById('add-app-name');
+             const descInput = document.getElementById('add-app-description');
+             const websiteInput = document.getElementById('add-app-website');
+             const logoInput = document.getElementById('add-app-logo');
+             const categorySelect = document.getElementById('add-app-category');
+
+             const name = nameInput.value.trim();
+             const description = descInput.value.trim();
+             const website = websiteInput.value.trim();
+             const logoUrl = logoInput.value.trim();
+             const category = categorySelect.value;
+             const t = translations[currentLanguage];
+
+             if (!name) { showToast(t.appNameRequired); return; }
+             if (!website) { showToast(t.appWebsiteRequired); return; }
+             if (!logoUrl) { showToast(t.appLogoRequired); return; }
+
+             const newTool = {
+                 id: `user-${currentUser.uid}-${Date.now()}`, // Unique ID for user tools
+                 name: name,
+                 description: description || { it: 'Descrizione non fornita.', en: 'Description not provided.' }, // Allow empty desc, provide default
+                 website: website,
+                 logoUrl: logoUrl,
+                 category: category,
+                 country: 'User Added', // Indicate origin
+                 // isFeatured: false, // This flag is not used for user tools featured status
+                 // recommendationId: null // User tools don't recommend others by default
+             };
+
+             const userDocRef = doc(db, "users", currentUser.uid);
+
+             try {
+                 // Add the new tool to the userTools array in Firestore
+                 await updateDoc(userDocRef, {
+                     userTools: arrayUnion(newTool)
+                 });
+                 // Update local state after successful Firestore update
+                 currentUser.userTools = [...(currentUser.userTools || []), newTool];
+
+                 showToast(t.addAppSuccess);
+                 closeModal(); // Close modal on success
+                 renderView(); // Re-render Library view
+             } catch (error) {
+                 console.error("Error adding user tool:", error);
+                 showToast(t.addAppError.replace('%s', error.message)); // Use generic error message
+             }
+        };
+
 
         // --- INITIALIZATION LOGIC ---
 
         const initializeAppForGuest = () => {
-            currentUser = { uid: null, name: 'Guest', favorites: [] };
+            // Initialize currentUser with default empty local state and empty Firestore-synced arrays
+            currentUser = { uid: null, name: 'Guest', favorites: [], isLocallyPrivileged: false, userTools: [], userFeaturedTools: [], userFeaturedReplacements: {} };
             loadConversations();
             unmountReactApp();
             el.appContainer.style.display = 'flex';
@@ -1341,18 +1911,37 @@
             try {
                 const userDocSnap = await getDoc(userDocRef);
                 if (userDocSnap.exists()) { 
-                    currentUser = { ...userDocSnap.data(), uid: user.uid, name: user.email }; 
+                    // Fetch all user data from Firestore
+                    const data = userDocSnap.data();
+                    currentUser = { 
+                        uid: user.uid, 
+                        name: user.email, // Use email as name for now
+                        favorites: data.favorites || [],
+                        userTools: data.userTools || [],
+                        userFeaturedTools: data.userFeaturedTools || [],
+                        userFeaturedReplacements: data.userFeaturedReplacements || {} // Fetch replacements
+                    }; 
                 } else { 
-                    // Create user document if it doesn't exist (e.g., first time login after registration)
-                    await setDoc(userDocRef, { email: user.email, favorites: [] }); 
-                    currentUser = { uid: user.uid, name: user.email, favorites: [] }; 
+                    // Create user doc if it doesn't exist with initial empty arrays
+                    const initialUserData = { 
+                        email: user.email, 
+                        favorites: [],
+                        userTools: [],
+                        userFeaturedTools: [],
+                        userFeaturedReplacements: {} // Initialize replacements
+                    };
+                    await setDoc(userDocRef, initialUserData).catch(e => console.error("Error creating user doc:", e));
+                    currentUser = { uid: user.uid, name: user.email, ...initialUserData }; 
                 }
             } catch (error) {
-                 console.error("Error fetching/creating user doc:", error);
-                 // Fallback to guest or show error? For now, proceed with minimal user data
-                 currentUser = { uid: user.uid, name: user.email, favorites: [] };
+                 console.error("Error fetching user data:", error);
+                 // Fallback to minimal user data if Firestore fails
+                 currentUser = { uid: user.uid, name: user.email, favorites: [], userTools: [], userFeaturedTools: [], userFeaturedReplacements: {} };
                  showToast("Could not load user data."); // Inform user
             }
+
+            // Load local privileged state AFTER basic user and Firestore data is set
+            loadUserLocalData();
 
             loadConversations();
             el.authOverlay.classList.add('hidden');
@@ -1370,11 +1959,58 @@
         // --- MAIN EVENT LISTENER ---
         document.body.addEventListener('click', (e) => {
             const target = e.target;
+
+            // 1. Handle navigation buttons FIRST
+            const navBtn = target.closest('.nav-btn');
+            if (navBtn && navBtn.dataset.page !== currentView) {
+                currentView = navBtn.dataset.page;
+                // Reset filters when changing main pages
+                activeFilter = 'All'; exploreFilter = { type: null, value: null }; rankingFilter = 'All'; // Reset all filters
+                renderView();
+                el.mainContent.scrollTop = 0; // Scroll to top on page change
+                e.preventDefault(); // Prevent default link behavior
+                return; // Stop processing
+            }
+
+            // 2. Handle the K button click (specific element, specific logic)
+            const kButton = target.closest('#privileged-unlock-btn');
+            if (kButton && currentUser.uid && !currentUser.isLocallyPrivileged) {
+                 const now = Date.now();
+                 if (now - lastKButtonClickTime > K_BUTTON_CLICK_RESET_DELAY) {
+                     kButtonClickCount = 0; // Reset if clicks are too slow
+                 }
+                 kButtonClickCount++;
+                 lastKButtonClickTime = now;
+
+                 // Clear any previous timeout and set a new one
+                 clearTimeout(kButtonClickTimeout);
+                 kButtonClickTimeout = setTimeout(() => {
+                     kButtonClickCount = 0; // Reset count after delay if no new click occurs
+                 }, K_BUTTON_CLICK_RESET_DELAY);
+
+                 console.log(`K button clicked: ${kButtonClickCount} times`);
+
+                 if (kButtonClickCount >= K_BUTTON_CLICK_THRESHOLD) {
+                     // Unlock privileged mode locally
+                     kButtonClickCount = 0; // Reset immediately after unlocking
+                     lastKButtonClickTime = 0;
+                     clearTimeout(kButtonClickTimeout); // Clear the reset timeout
+
+                     currentUser.isLocallyPrivileged = true; // Update local state
+                     saveUserLocalData(); // Save to local storage
+
+                     showToast(translations[currentLanguage].privilegedUnlocked);
+                     // Re-render the view to show the "Add Custom App" button and featured section
+                     renderView(); 
+                 }
+                 e.preventDefault(); // Prevent default button click behavior
+                 return; // Stop processing
+            }
+
+
+            // 3. Handle elements with data-action (excluding the K button which is handled above)
             const actionTarget = target.closest('[data-action]');
-            
-            // Handle actions first
-            if (actionTarget) {
-                // e.preventDefault(); // Prevent default only if necessary for the action
+            if (actionTarget && actionTarget.id !== 'privileged-unlock-btn') { // Explicitly exclude K button
                 const action = actionTarget.dataset.action;
                 
                 switch(action) {
@@ -1442,12 +2078,42 @@
                         renderView(); // Re-render to apply favorite filter
                         break;
 
-                    // Modals (Detail, Settings)
+                    // Modals (Detail, Settings, Add App, Replace Featured)
                     case 'close-modal': closeModal(); break;
                     case 'toggle-favorite': toggleFavorite(actionTarget.dataset.id); break;
                     case 'open-detail-modal': // For recommendation box in detail modal
                          window.openDetailModal(actionTarget.dataset.id);
                          break;
+                    case 'open-add-app-modal': // This action is now triggered by the "Add Custom App" button
+                         // We still need the privilege check here as a safeguard
+                         if (currentUser.uid && currentUser.isLocallyPrivileged) {
+                             openAddAppModal();
+                         } else if (currentUser.uid) {
+                             // Maybe show a message that they need to unlock privileged mode?
+                             showToast("Click the 'K' button 5 times to unlock this feature!");
+                         } else {
+                             triggerAuthFlow(); // Prompt login if not logged in
+                         }
+                         break;
+                    case 'toggle-user-featured': // Triggered by pencil on user featured apps in Library
+                         toggleUserFeatured(actionTarget.dataset.id);
+                         break;
+                    case 'replace-featured-static': // Triggered by pencil on static featured apps in Top AI
+                         if (currentUser.uid && currentUser.isLocallyPrivileged) {
+                             openReplaceFeaturedModal(actionTarget.dataset.id);
+                         } else if (currentUser.uid) {
+                             showToast("Click the 'K' button 5 times to unlock this feature!");
+                         } else {
+                             triggerAuthFlow();
+                         }
+                         break;
+                    case 'select-user-tool-for-featured': // Triggered by clicking a user app in the replace modal
+                         replaceFeaturedStatic(actionTarget.dataset.staticId, actionTarget.dataset.userId);
+                         break;
+                    case 'remove-featured-replacement': // Triggered by pencil on user-replaced featured apps in Top AI
+                         removeFeaturedReplacement(actionTarget.dataset.id);
+                         break;
+
 
                     // Auth Overlay actions are handled by attachAuthListeners on the overlay itself
                     case 'close-auth': // Handled by attachAuthListeners
@@ -1457,36 +2123,23 @@
                          // Let the specific auth overlay listener handle these
                          return; 
                 }
-                // Prevent default for actions that navigate or submit forms handled by JS
-                 if (action !== 'open-detail-modal' && action !== 'toggle-favorite' && action !== 'set-explore-filter' && action !== 'set-ranking-filter' && action !== 'set-favorite-filter' && action !== 'select-conversation') {
-                     e.preventDefault();
-                 }
-                return; // Stop processing if an action was handled
+                // Prevent default for any element with data-action
+                e.preventDefault(); 
+                return; // Stop processing after handling a data-action
             }
 
-            // Handle navigation buttons
-            const navBtn = target.closest('.nav-btn');
-            if (navBtn && navBtn.dataset.page !== currentView) {
-                currentView = navBtn.dataset.page;
-                // Reset filters when changing main pages
-                activeFilter = 'All'; rankingFilter = 'All'; exploreFilter = { type: null, value: null };
-                renderView();
-                el.mainContent.scrollTop = 0; // Scroll to top on page change
-                return;
-            }
-            
-            // Handle clicks on tool/ranking cards (excluding favorite icon which is an action)
+            // 4. Handle clicks on tool/ranking cards (excluding favorite icon and edit icon which have data-actions)
             const toolCard = target.closest('.tool-card-grid, .tool-card-list, .ranking-item');
-            if (toolCard && !target.closest('.favorite-icon')) { 
+            if (toolCard && !target.closest('.favorite-icon') && !target.closest('.edit-icon')) { 
                  window.openDetailModal(toolCard.dataset.id); 
                  return; 
             }
 
-            // Handle clicks outside side menu to close it
-            if (target.id === 'side-menu-overlay') { toggleSideMenu(false); }
-            
-            // Handle clicks outside modals to close them
-            if (target.matches('.modal-overlay')) { closeModal(); }
+            // 5. Handle clicks outside side menu/modals to close them
+            if (target.id === 'side-menu-overlay') { toggleSideMenu(false); return; } 
+            if (target.matches('.modal-overlay')) { closeModal(); return; } 
+
+            // If none of the above were clicked, let the default behavior happen
         });
 
         // --- SEARCH INPUT LISTENER ---
@@ -1496,10 +2149,14 @@
                 const contentArea = document.getElementById('content-area');
                 if (!contentArea) return;
 
-                const currentTools = window.getLocalizedToolsData(currentLanguage);
+                const allTools = getAllToolsForCurrentUser(); // Search across all tools
                 const t = translations[currentLanguage];
 
-                const toolsToShow = searchTerm.length > 1 ? currentTools.filter(tool => tool.name.toLowerCase().includes(searchTerm) || tool.description.toLowerCase().includes(searchTerm)) : [];
+                const toolsToShow = searchTerm.length > 1 ? allTools.filter(tool => 
+                    tool.name.toLowerCase().includes(searchTerm) || 
+                    (typeof tool.description === 'string' ? tool.description.toLowerCase().includes(searchTerm) : (typeof tool.description === 'object' ? (tool.description[currentLanguage] || tool.description['en'] || '').toLowerCase().includes(searchTerm) : false)) // Handle potential object descriptions
+                ) : [];
+
                 if (searchTerm.length > 1) {
                     contentArea.innerHTML = toolsToShow.length > 0 ? `<div class="list-container">${toolsToShow.map(createListCard).join('')}</div>` : `<div id="empty-state">${t.noResultsFor} "${searchTerm}"</div>`;
                 } else {
@@ -1514,10 +2171,47 @@
         onAuthStateChanged(auth, user => {
             if (user) {
                 console.log("User logged in:", user.uid);
-                initializeAppWithUser(user);
+                // Initialize currentUser with basic info from Firebase
+                currentUser = { uid: user.uid, name: user.email, favorites: [], userTools: [], userFeaturedTools: [], userFeaturedReplacements: {} }; 
+                // Load local privileged flag
+                loadUserLocalData();
+                // Fetch all user data (favorites, userTools, userFeaturedTools, userFeaturedReplacements) from Firestore
+                const userDocRef = doc(db, "users", user.uid);
+                 getDoc(userDocRef).then(userDocSnap => {
+                     if (userDocSnap.exists()) {
+                         const data = userDocSnap.data();
+                         currentUser.favorites = data.favorites || [];
+                         currentUser.userTools = data.userTools || [];
+                         currentUser.userFeaturedTools = data.userFeaturedTools || [];
+                         currentUser.userFeaturedReplacements = data.userFeaturedReplacements || {}; // Fetch replacements
+                     } else {
+                         // Create user doc if it doesn't exist with initial empty arrays
+                         const initialUserData = { 
+                             email: user.email, 
+                             favorites: [],
+                             userTools: [],
+                             userFeaturedTools: [],
+                             userFeaturedReplacements: {} // Initialize replacements
+                         };
+                         setDoc(userDocRef, initialUserData).catch(e => console.error("Error creating user doc:", e));
+                         // currentUser is already initialized with empty arrays above
+                     }
+                 }).catch(e => console.error("Error fetching user data:", e))
+                 .finally(() => {
+                     // Proceed with app initialization after attempting to load user data
+                     loadConversations();
+                     el.authOverlay.classList.add('hidden');
+                     el.authOverlay.addEventListener('transitionend', () => {
+                          el.authOverlay.style.display = 'none';
+                          el.authOverlay.innerHTML = ''; // Clear content after transition
+                     }, { once: true });
+                     el.appContainer.style.display = 'flex';
+                     renderView(); // Render the app view
+                 });
+
             } else {
                 console.log("User logged out or is guest.");
-                initializeAppForGuest();
+                initializeAppForGuest(); // Guest mode doesn't load/save local user data
             }
         });
         
