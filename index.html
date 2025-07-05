@@ -1687,11 +1687,13 @@
 
             } else if (currentView === 'explore') {
                 el.mainContent.insertAdjacentHTML('beforeend', `<div class="search-bar-container"><input type="text" id="search-input" placeholder="${t.searchPlaceholder}"></div>`);
+                // Filtro per eliminare duplicati per id
+                const uniqueTools = allTools.filter((tool, idx, arr) => arr.findIndex(t => t.id === tool.id) === idx);
                 if (!exploreFilter.type) {
                     contentArea.innerHTML = `<div class="section-title" data-translate="browseAll">${t.browseAll}</div><div class="category-grid">${categories.map(createCategoryCard).join('')}</div><div class="section-title" style="margin-top: 30px;" data-translate="browseByOrigin">${t.browseByOrigin}</div><div class="category-grid">${countries.map(c => createCountryCard(c)).join('')}</div>`;
                 } else {
-                    // Filter from all tools (static + user)
-                    const filteredTools = allTools.filter(t => t[exploreFilter.type] === exploreFilter.value);
+                    // Filter from all unique tools (static + user, senza duplicati)
+                    const filteredTools = uniqueTools.filter(t => t[exploreFilter.type] === exploreFilter.value);
                     const title = exploreFilter.type === 'category' ? getTranslatedCategoryName(exploreFilter.value) : `${t.toolsFrom} ${exploreFilter.value}`;
                     // Pass context 'explore' to createListCard for search results
                     contentArea.innerHTML = `<div class="back-button" data-action="back-to-explore">${t.backToSearch}</div><h2 class="section-title">${title}</h2><div class="list-container">${filteredTools.map(tool => createListCard(tool, 'explore')).join('')}</div>`;
