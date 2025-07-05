@@ -1554,7 +1554,7 @@
             const userInitial = isGuest ? '?' : (currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U');
             
             // The avatar is now always rendered in the top-bar, but its click action depends on login status
-            const avatarHTML = `<div class="user-avatar" ${!isGuest ? 'data-action="open-settings-modal"' : ''}>${userInitial}</div>`;
+            const avatarHTML = `<div class="user-avatar" data-action="profile-avatar-click">${userInitial}</div>`;
             
             const otherControlsHTML = `
                 <button id="theme-toggle-btn" class="global-btn" data-action="toggle-theme">${themeIcon}</button>
@@ -2376,6 +2376,13 @@
                     case 'show-forgot': // Handled by attachAuthListeners
                          // Let the specific auth overlay listener handle these
                          return; 
+                    case 'profile-avatar-click':
+                        if (!currentUser.uid) {
+                            triggerAuthFlow('register-card');
+                        } else {
+                            window.openSettingsModal();
+                        }
+                        break;
                 }
                 // Prevent default for any element with data-action
                 e.preventDefault(); 
