@@ -1613,19 +1613,17 @@
                     console.error("Chatbot mount function not found.");
                 }
             } else if (currentView === 'top-ai') {
-                const featuredTools = staticTools.filter(t => t.isFeatured); // Only static featured for TOP AI
+                // Limita a 4 le AI in evidenza
+                const featuredTools = staticTools.filter(t => t.isFeatured).slice(0, 4); // Solo 4 AI in evidenza
                 let contentHTML = `<div class="section-title" data-translate="featured">${t.featured}</div><div class="grid-container">`;
                 
                 // Render static featured tools, potentially replaced by user tools
                 contentHTML += featuredTools.map(staticTool => {
                     const replacementToolId = currentUser.uid && currentUser.userFeaturedReplacements ? currentUser.userFeaturedReplacements[staticTool.id] : null;
                     const toolToDisplay = replacementToolId ? (currentUser.userTools || []).find(ut => ut.id === replacementToolId) : staticTool;
-
-                    if (!toolToDisplay) return ''; // Should not happen if data is consistent
-
-                    // Pass context 'top-ai-featured' to createGridCard
+                    if (!toolToDisplay) return '';
+                    // Forza la visualizzazione dei controlli di modifica/rimozione per utenti privilegiati
                     return createGridCard(toolToDisplay, 'top-ai-featured');
-
                 }).join('');
 
                 contentHTML += `</div>`; // Close grid-container
