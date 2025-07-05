@@ -1257,7 +1257,9 @@
                  ...tool,
                  description: typeof tool.description === 'object' ? (tool.description[currentLanguage] || tool.description['en'] || '') : tool.description
              }));
-             return [...staticTools, ...localizedUserTools];
+             // Filtro per eliminare duplicati per id
+             const allTools = [...staticTools, ...localizedUserTools];
+             return allTools.filter((tool, idx, arr) => arr.findIndex(t => t.id === tool.id) === idx);
         };
 
 
@@ -1742,7 +1744,8 @@
                     // Main Library List (Static Favorites + All User Tools)
                     const staticFavorites = staticTools.filter(t => currentUser.favorites.includes(t.id));
                     const allUserTools = currentUser.userTools || []; // userTools now comes from currentUser (synced with Firestore)
-                    const combinedLibraryTools = [...staticFavorites, ...allUserTools];
+                    // Unisco e filtro per unicità
+                    const combinedLibraryTools = [...staticFavorites, ...allUserTools].filter((tool, idx, arr) => arr.findIndex(t => t.id === tool.id) === idx);
 
                     // Determine available categories for filtering (from static favorites + user tools)
                     const availableCategoriesInLibrary = [...new Set(combinedLibraryTools.map(t => t.category))];
