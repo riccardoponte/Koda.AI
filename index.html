@@ -58,12 +58,269 @@
         
         #app-container { height: 100vh; display: flex; flex-direction: column; }
         #main-content { flex: 1; overflow-y: auto; padding-bottom: var(--bottom-nav-height); }
-        .top-bar { padding: 16px; display: flex; align-items: center; gap: 8px; position: sticky; top: 0; background: linear-gradient(to bottom, var(--spotify-bg) 70%, transparent); z-index: 10; }
-        .page-title { font-size: 22px; font-weight: 700; flex-grow: 1; }
-        #global-controls { margin-left: auto; display: flex; align-items: center; gap: 8px; }
-        .global-btn { background: none; border: none; color: var(--spotify-text); font-size: 24px; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; }
-        #lang-toggle-btn { font-size: 14px; font-weight: bold; background: var(--spotify-card); border-radius: 50px; padding: 6px 10px; }
-        .user-avatar { width: 32px; height: 32px; border-radius: 50%; background-color: var(--spotify-accent); display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 16px; cursor: pointer; object-fit: cover; color: black; }
+        .top-bar { 
+            padding: 16px; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            position: sticky; 
+            top: 0; 
+            background: linear-gradient(to bottom, var(--spotify-bg) 70%, transparent); 
+            z-index: 10; 
+            width: 100%;
+        }
+        .page-title { 
+            font-size: 22px; 
+            font-weight: 700; 
+            flex-grow: 1; 
+            color: var(--spotify-text);
+            margin: 0;
+        }
+        #global-controls { 
+            margin-left: auto; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            flex-shrink: 0;
+        }
+        .global-btn { 
+            background: none; 
+            border: none; 
+            color: var(--spotify-text); 
+            font-size: 24px; 
+            cursor: pointer; 
+            padding: 4px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            transition: color 0.2s ease;
+        }
+        
+        .global-btn:hover {
+            color: var(--spotify-accent);
+        }
+        #lang-toggle-btn { 
+            font-size: 14px; 
+            font-weight: bold; 
+            background: var(--spotify-card); 
+            border-radius: 50px; 
+            padding: 6px 10px; 
+            transition: background-color 0.2s ease;
+        }
+        
+        #lang-toggle-btn:hover {
+            background: var(--spotify-bg-light);
+        }
+        .user-avatar { 
+            width: 32px; 
+            height: 32px; 
+            border-radius: 50%; 
+            background-color: var(--spotify-accent); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            font-weight: bold; 
+            font-size: 16px; 
+            cursor: pointer; 
+            object-fit: cover; 
+            color: black; 
+            position: relative;
+            transition: transform 0.2s ease;
+        }
+        
+        .user-avatar:hover {
+            transform: scale(1.05);
+        }
+
+        /* User Profile Dropdown Menu */
+        .user-profile-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .user-profile-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 8px;
+            background-color: var(--spotify-card);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            min-width: 200px;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(128, 128, 128, 0.2);
+        }
+
+        .user-profile-dropdown.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .user-profile-header {
+            padding: 16px;
+            border-bottom: 1px solid rgba(128, 128, 128, 0.2);
+            text-align: center;
+        }
+
+        .user-profile-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: var(--spotify-accent);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 20px;
+            margin: 0 auto 8px;
+            color: black;
+        }
+
+        .user-profile-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--spotify-text);
+            margin-bottom: 4px;
+        }
+
+        .user-profile-email {
+            font-size: 12px;
+            color: var(--spotify-text-secondary);
+        }
+
+        .user-profile-menu {
+            padding: 8px 0;
+        }
+
+        .user-profile-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: var(--spotify-text);
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .user-profile-item:hover {
+            background-color: var(--spotify-bg-light);
+        }
+
+        .user-profile-item svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        .user-profile-divider {
+            height: 1px;
+            background-color: rgba(128, 128, 128, 0.2);
+            margin: 8px 0;
+        }
+
+        .user-profile-logout {
+            color: #ff6b6b;
+        }
+
+        .user-profile-logout:hover {
+            background-color: rgba(255, 107, 107, 0.1);
+        }
+
+        /* Responsive adjustments for mobile */
+        @media (max-width: 768px) {
+            .user-profile-dropdown {
+                position: fixed;
+                top: auto;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                margin: 0;
+                border-radius: 12px 12px 0 0;
+                min-width: auto;
+                max-height: 80vh;
+                overflow-y: auto;
+            }
+
+            .user-profile-dropdown.visible {
+                transform: translateY(0);
+            }
+
+            .user-profile-header {
+                padding: 20px 16px;
+            }
+
+            .user-profile-avatar {
+                width: 56px;
+                height: 56px;
+                font-size: 24px;
+            }
+
+            .user-profile-name {
+                font-size: 18px;
+            }
+
+            .user-profile-item {
+                padding: 16px;
+                font-size: 16px;
+            }
+
+            .user-profile-item svg {
+                width: 20px;
+                height: 20px;
+            }
+        }
+
+                 @media (max-width: 480px) {
+             .top-bar {
+                 padding: 12px 16px;
+             }
+             
+             .page-title {
+                 font-size: 18px;
+             }
+             
+             .user-avatar {
+                 width: 28px;
+                 height: 28px;
+                 font-size: 14px;
+             }
+
+             .user-profile-dropdown {
+                 max-height: 70vh;
+             }
+
+             .user-profile-header {
+                 padding: 16px;
+             }
+
+             .user-profile-avatar {
+                 width: 48px;
+                 height: 48px;
+                 font-size: 20px;
+             }
+
+             .user-profile-item {
+                 padding: 14px 16px;
+                 font-size: 15px;
+             }
+             
+             .global-btn {
+                 font-size: 20px;
+                 padding: 6px;
+             }
+             
+             #lang-toggle-btn {
+                 font-size: 12px;
+                 padding: 4px 8px;
+             }
+         }
 
 
         .filters-container { padding: 8px 16px; position: sticky; top: 64px; background-color: var(--spotify-bg); z-index: 9; }
@@ -154,7 +411,16 @@
         /* --- STILI MIGLIORATI E NUOVI PER IL CHATBOT --- */
         #chatbot-container-wrapper { display: flex; flex-direction: column; height: 100%; position: relative; overflow: hidden; }
         #chatbot-app-container { display: flex; flex-direction: column; height: 100%; background-color: var(--spotify-bg); flex-grow: 1; }
-        .chat-header { padding: 16px; display: flex; align-items: center; width: 100%; z-index: 2; position: sticky; top: 0; background: linear-gradient(to bottom, var(--spotify-bg) 70%, transparent); }
+        .chat-header { 
+            padding: 16px; 
+            display: flex; 
+            align-items: center; 
+            width: 100%; 
+            z-index: 10; 
+            position: sticky; 
+            top: 0; 
+            background: linear-gradient(to bottom, var(--spotify-bg) 70%, transparent); 
+        }
         .chat-header-btn { background: none; border: none; color: var(--spotify-text-secondary); font-size: 24px; cursor: pointer; padding: 8px; }
         #menu-toggle-btn { margin-right: 8px; }
         #chatbot-app-container main { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; }
@@ -873,70 +1139,191 @@
              transform: scale(1.05);
          }
 
-         /* Form Styles for AI Suggestion Modal */
-         .form-group {
-             margin-bottom: 16px;
-         }
+                 /* Form Styles for AI Suggestion Modal */
+        .form-group {
+            margin-bottom: 20px;
+        }
 
-         .form-group label {
-             display: block;
-             margin-bottom: 6px;
-             font-weight: 500;
-             color: var(--spotify-text-primary);
-         }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--spotify-text);
+            font-size: 14px;
+        }
 
-         .form-group input,
-         .form-group textarea,
-         .form-group select {
-             width: 100%;
-             padding: 12px;
-             border: 2px solid var(--spotify-border);
-             border-radius: 8px;
-             background: var(--spotify-card-bg);
-             color: var(--spotify-text-primary);
-             font-size: 14px;
-             transition: all 0.3s ease;
-             box-sizing: border-box;
-         }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid rgba(128, 128, 128, 0.2);
+            border-radius: 8px;
+            background: var(--spotify-bg-light);
+            color: var(--spotify-text);
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            font-family: var(--font-family);
+        }
 
-         .form-group input:focus,
-         .form-group textarea:focus,
-         .form-group select:focus {
-             outline: none;
-             border-color: var(--spotify-green);
-             box-shadow: 0 0 0 3px rgba(30, 215, 96, 0.1);
-         }
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--spotify-accent);
+            box-shadow: 0 0 0 3px rgba(29, 185, 84, 0.1);
+            background: var(--spotify-card);
+        }
 
-         .form-row {
-             display: grid;
-             grid-template-columns: 1fr 1fr;
-             gap: 16px;
-         }
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+            line-height: 1.5;
+        }
 
-         .form-actions {
-             display: flex;
-             gap: 12px;
-             justify-content: flex-end;
-             margin-top: 24px;
-         }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
 
-         .button.secondary {
-             background: var(--spotify-text-secondary);
-             color: white;
-         }
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 32px;
+            flex-wrap: wrap;
+        }
 
-         .button.primary {
-             background: var(--spotify-green);
-             color: white;
-         }
+        .button.secondary {
+            background: var(--spotify-card);
+            color: var(--spotify-text);
+            border: 1px solid rgba(128, 128, 128, 0.2);
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
 
-         .button.secondary:hover {
-             background: var(--spotify-text-primary);
-         }
+        .button.primary {
+            background: var(--spotify-accent);
+            color: #000;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
 
-         .button.primary:hover {
-             background: var(--spotify-green-hover);
-         }
+        .button.secondary:hover {
+            background: var(--spotify-bg-light);
+            transform: translateY(-1px);
+        }
+
+        .button.primary:hover {
+            background: #1ed760;
+            transform: translateY(-1px);
+        }
+
+        .button.secondary:active,
+        .button.primary:active {
+            transform: translateY(0);
+        }
+
+        .button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .button:disabled:hover {
+            transform: none !important;
+        }
+
+        /* AI Suggestion Modal Specific Styles */
+        #add-ai-suggestion-modal .modal-content {
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 32px;
+        }
+
+        #add-ai-suggestion-modal h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: var(--spotify-text);
+            text-align: center;
+        }
+
+        #add-ai-suggestion-modal form {
+            margin-top: 24px;
+        }
+
+        /* Responsive adjustments for mobile */
+        @media (max-width: 768px) {
+            #add-ai-suggestion-modal .modal-content {
+                width: 95%;
+                padding: 24px;
+                margin: 20px;
+                max-height: 85vh;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .form-actions {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .button.secondary,
+            .button.primary {
+                width: 100%;
+                padding: 16px;
+                font-size: 16px;
+            }
+
+            .form-group input,
+            .form-group textarea,
+            .form-group select {
+                padding: 16px;
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #add-ai-suggestion-modal .modal-content {
+                width: 100%;
+                margin: 10px;
+                padding: 20px;
+                border-radius: 12px;
+            }
+
+            #add-ai-suggestion-modal h2 {
+                font-size: 20px;
+                margin-bottom: 20px;
+            }
+
+            .form-group {
+                margin-bottom: 16px;
+            }
+
+            .form-group label {
+                font-size: 13px;
+                margin-bottom: 6px;
+            }
+        }
 
          /* --- RESPONSIVE FIX PER MOBILE --- */
          @media (max-width: 480px) {
@@ -1923,10 +2310,21 @@
             el.modalContainer.innerHTML = modalHTML;
         };
         
-        const closeModal = () => el.modalContainer.innerHTML = '';
+        const closeModal = () => {
+            el.modalContainer.innerHTML = '';
+            closeUserProfileDropdown();
+        };
+
+        // Variable to store pending favorite action
+        let pendingFavoriteAction = null;
 
         const toggleFavorite = async (toolId) => {
-            if (!currentUser || !currentUser.uid) { triggerAuthFlow(); return; }
+            if (!currentUser || !currentUser.uid) { 
+                // Store the pending action and trigger auth flow
+                pendingFavoriteAction = toolId;
+                triggerAuthFlow(); 
+                return; 
+            }
             // Removed the check !toolId.startsWith('user-')
             // Now all tools can be favorited
 
@@ -2122,13 +2520,109 @@
             }
         };
 
+        // User Profile Dropdown Functions
+        const toggleUserProfileDropdown = () => {
+            const dropdown = document.getElementById('user-profile-dropdown');
+            if (dropdown) {
+                const isVisible = dropdown.classList.contains('visible');
+                if (isVisible) {
+                    closeUserProfileDropdown();
+                } else {
+                    openUserProfileDropdown();
+                }
+            }
+        };
+
+        const openUserProfileDropdown = () => {
+            const dropdown = document.getElementById('user-profile-dropdown');
+            if (dropdown) {
+                // Close any other open dropdowns first
+                closeUserProfileDropdown();
+                
+                // Update user info in dropdown
+                const nameElement = dropdown.querySelector('.user-profile-name');
+                const emailElement = dropdown.querySelector('.user-profile-email');
+                const avatarElement = dropdown.querySelector('.user-profile-avatar');
+                
+                if (nameElement) nameElement.textContent = currentUser.nickname || currentUser.name;
+                if (emailElement) emailElement.textContent = currentUser.name;
+                if (avatarElement) avatarElement.textContent = currentUser.nickname ? currentUser.nickname.charAt(0).toUpperCase() : currentUser.name.charAt(0).toUpperCase();
+                
+                // Apply translations
+                applyTranslations(currentLanguage);
+                
+                // Show dropdown
+                dropdown.classList.add('visible');
+                
+                // Add click outside listener
+                setTimeout(() => {
+                    document.addEventListener('click', closeUserProfileDropdownOnClickOutside);
+                }, 100);
+            }
+        };
+
+        const closeUserProfileDropdown = () => {
+            const dropdown = document.getElementById('user-profile-dropdown');
+            if (dropdown) {
+                dropdown.classList.remove('visible');
+                document.removeEventListener('click', closeUserProfileDropdownOnClickOutside);
+            }
+        };
+
+        const closeUserProfileDropdownOnClickOutside = (event) => {
+            const dropdown = document.getElementById('user-profile-dropdown');
+            const container = document.querySelector('.user-profile-container');
+            
+            if (dropdown && container && !container.contains(event.target)) {
+                closeUserProfileDropdown();
+            }
+        };
+
         const getGlobalControlsHTML = () => {
             const themeIcon = currentTheme === 'dark' ? sunIcon : moonIcon;
             const isGuest = !currentUser.uid;
             const userInitial = isGuest ? '?' : (currentUser.nickname ? currentUser.nickname.charAt(0).toUpperCase() : 'U');
             
             // The avatar is now always rendered in the top-bar, but its click action depends on login status
-            const avatarHTML = `<div class="user-avatar" data-action="profile-avatar-click">${userInitial}</div>`;
+            const avatarHTML = `
+            <div class="user-profile-container">
+                <div class="user-avatar" data-action="profile-avatar-click">${userInitial}</div>
+                <div class="user-profile-dropdown" id="user-profile-dropdown">
+                    <div class="user-profile-header">
+                        <div class="user-profile-avatar">${userInitial}</div>
+                        <div class="user-profile-name">${currentUser.nickname || currentUser.name}</div>
+                        <div class="user-profile-email">${currentUser.name}</div>
+                    </div>
+                    <div class="user-profile-menu">
+                        <div class="user-profile-item" data-action="open-settings">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                            </svg>
+                            <span data-translate="settingsTitle">Impostazioni Account</span>
+                        </div>
+                        <div class="user-profile-item" data-action="change-nickname">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                            </svg>
+                            <span data-translate="changeNicknameTitle">Cambia Nickname</span>
+                        </div>
+                        <div class="user-profile-item" data-action="change-password">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+                            </svg>
+                            <span data-translate="changePasswordTitle">Cambia Password</span>
+                        </div>
+                        <div class="user-profile-divider"></div>
+                        <div class="user-profile-item user-profile-logout" data-action="logout">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                            </svg>
+                            <span data-translate="logout">Logout</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
             
             const otherControlsHTML = `
                 <button id="theme-toggle-btn" class="global-btn" data-action="toggle-theme">${themeIcon}</button>
@@ -2140,6 +2634,8 @@
         };
 
         const renderView = () => {
+            // Close any open dropdowns when navigating
+            closeUserProfileDropdown();
             unmountReactApp(); 
             el.mainContent.innerHTML = '';
             
@@ -2353,7 +2849,7 @@
                         contentHTML += `
                             <div class="section-title" style="margin-top: 30px;" data-translate="aiSuggestionsTitle">${t.aiSuggestionsTitle}</div>
                             <div style="text-align: center; margin-bottom: 20px;">
-                                <button id="add-ai-suggestion-btn" class="button" data-translate="addAiSuggestionButton">${t.addAiSuggestionButton}</button>
+                                <button id="add-ai-suggestion-btn" class="button" data-action="add-ai-suggestion" data-translate="addAiSuggestionButton">${t.addAiSuggestionButton}</button>
                             </div>
                             <div id="ai-suggestions-list" class="suggestions-grid">
                                 ${(currentUser.aiSuggestions || []).map(suggestion => {
@@ -2437,15 +2933,22 @@
                     
                     // Add event listeners for AI suggestions buttons
                     if (currentUser.uid) {
-                        document.getElementById('add-ai-suggestion-btn')?.addEventListener('click', () => {
-                            if (currentUser.uid) {
-                                addAiSuggestion();
-                            } else {
-                                triggerAuthFlow();
-                            }
-                        });
-                        
-
+                        const addSuggestionBtn = document.getElementById('add-ai-suggestion-btn');
+                        if (addSuggestionBtn) {
+                            console.log('Adding event listener to add-ai-suggestion-btn');
+                            addSuggestionBtn.addEventListener('click', (e) => {
+                                e.preventDefault();
+                                console.log('Add suggestion button clicked');
+                                if (currentUser.uid) {
+                                    console.log('Calling addAiSuggestion function');
+                                    window.addAiSuggestion();
+                                } else {
+                                    triggerAuthFlow();
+                                }
+                            });
+                        } else {
+                            console.log('add-ai-suggestion-btn not found in DOM');
+                        }
                     }
                 }
                 el.mainContent.appendChild(contentArea);
@@ -2757,6 +3260,110 @@
              });
         };
 
+        // NEW FUNCTION: Open Change Nickname Modal
+        const openChangeNicknameModal = () => {
+            if (!currentUser.uid) return;
+            const t = translations[currentLanguage];
+            
+            const modalHTML = `
+                <div id="change-nickname-modal" class="modal-overlay visible">
+                    <div class="modal-content">
+                        <button class="modal-close-btn" data-action="close-modal">×</button>
+                        <h2 data-translate="changeNicknameTitle">${t.changeNicknameTitle}</h2>
+                        
+                        <div class="input-group" style="margin-top: 24px;">
+                            <label for="change-nickname-input" data-translate="registerNicknameLabel">${t.registerNicknameLabel}</label>
+                            <input type="text" id="change-nickname-input" placeholder="${t.registerNicknamePlaceholder}" value="${currentUser.nickname || ''}">
+                        </div>
+                        <button class="button" id="save-nickname-btn" data-translate="saveNicknameButton">${t.saveNicknameButton}</button>
+                    </div>
+                </div>`;
+            el.modalContainer.innerHTML = modalHTML;
+
+            // Attach listener to the save nickname button
+            document.getElementById('save-nickname-btn')?.addEventListener('click', handleChangeNickname);
+        };
+
+        // NEW FUNCTION: Open Change Password Modal
+        const openChangePasswordModal = () => {
+            if (!currentUser.uid) return;
+            const t = translations[currentLanguage];
+            
+            const modalHTML = `
+                <div id="change-password-modal" class="modal-overlay visible">
+                    <div class="modal-content">
+                        <button class="modal-close-btn" data-action="close-modal">×</button>
+                        <h2 data-translate="changePasswordTitle">${t.changePasswordTitle}</h2>
+                        
+                        <div class="input-group" style="margin-top: 24px;">
+                            <label for="change-new-password" data-translate="newPasswordLabel">${t.newPasswordLabel}</label>
+                            <input type="password" id="change-new-password" placeholder="${t.newPasswordPlaceholder}">
+                        </div>
+                        <div class="input-group">
+                            <label for="change-confirm-password" data-translate="confirmPasswordLabel">${t.confirmPasswordLabel}</label>
+                            <input type="password" id="change-confirm-password" placeholder="${t.confirmPasswordPlaceholder}">
+                        </div>
+                        <button class="button" id="save-password-btn" data-translate="savePasswordButton">${t.savePasswordButton}</button>
+                    </div>
+                </div>`;
+            el.modalContainer.innerHTML = modalHTML;
+
+            // Attach listener to the save password button
+            document.getElementById('save-password-btn')?.addEventListener('click', handleChangePassword);
+        };
+
+        // NEW FUNCTION: Handle Change Nickname
+        const handleChangeNickname = async () => {
+            const nicknameInput = document.getElementById('change-nickname-input');
+            const newNickname = nicknameInput.value.trim();
+            const t = translations[currentLanguage];
+
+            if (!newNickname) {
+                showToast(t.nicknameRequired);
+                return;
+            }
+
+            try {
+                const userDocRef = doc(db, "users", currentUser.uid);
+                await updateDoc(userDocRef, { nickname: newNickname });
+                currentUser.nickname = newNickname;
+                showToast(t.nicknameUpdateSuccess);
+                closeModal();
+            } catch (error) {
+                console.error("Error updating nickname:", error);
+                showToast(`Error: ${error.message}`);
+            }
+        };
+
+        // NEW FUNCTION: Handle Change Password
+        const handleChangePassword = async () => {
+            const newPasswordInput = document.getElementById('change-new-password');
+            const confirmPasswordInput = document.getElementById('change-confirm-password');
+            const newPassword = newPasswordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            const t = translations[currentLanguage];
+
+            if (newPassword.length < 6) {
+                showToast(t.passwordTooShort);
+                return;
+            }
+            if (newPassword !== confirmPassword) {
+                showToast(t.passwordsDoNotMatch);
+                return;
+            }
+
+            try {
+                await updatePassword(auth.currentUser, newPassword);
+                showToast(t.passwordUpdateSuccess);
+                newPasswordInput.value = '';
+                confirmPasswordInput.value = '';
+                closeModal();
+            } catch (error) {
+                console.error("Error updating password:", error);
+                showToast(t.updatePasswordError.replace('%s', error.message));
+            }
+        };
+
         // NEW FUNCTION: Open Replace Featured Modal
         const openReplaceFeaturedModal = (staticToolId) => {
              // Check privileged status loaded from Firestore
@@ -2853,15 +3460,20 @@
         };
 
         // NEW FUNCTION: Add AI Suggestion
-        const addAiSuggestion = async () => {
-            if (!currentUser.uid) return;
+        window.addAiSuggestion = async () => {
+            console.log('addAiSuggestion function called');
+            if (!currentUser.uid) {
+                console.log('No user logged in, returning');
+                return;
+            }
             
             const t = translations[currentLanguage];
+            console.log('Creating AI suggestion modal');
             
             // Create modal for AI suggestion form
             const modalHTML = `
                 <div id="add-ai-suggestion-modal" class="modal-overlay visible">
-                    <div class="modal-content" style="max-width: 500px;">
+                    <div class="modal-content">
                         <button class="modal-close-btn" data-action="close-modal">×</button>
                         <h2>${t.addAiSuggestionTitle}</h2>
                         
@@ -2873,7 +3485,7 @@
                             
                             <div class="form-group">
                                 <label for="app-description">${t.appDescriptionLabel} *</label>
-                                <textarea id="app-description" required placeholder="${t.appDescriptionPlaceholder}" rows="3"></textarea>
+                                <textarea id="app-description" required placeholder="${t.appDescriptionPlaceholder}" rows="4"></textarea>
                             </div>
                             
                             <div class="form-group">
@@ -2933,7 +3545,21 @@
                     return;
                 }
 
+                // Validate URL format
                 try {
+                    new URL(appWebsite);
+                } catch (e) {
+                    showToast("Inserisci un URL valido (es. https://example.com)");
+                    return;
+                }
+
+                try {
+                    // Show loading state
+                    const submitBtn = document.querySelector('#ai-suggestion-form button[type="submit"]');
+                    const originalText = submitBtn.textContent;
+                    submitBtn.textContent = 'Salvando...';
+                    submitBtn.disabled = true;
+
                     const userDocRef = doc(db, "users", currentUser.uid);
                     const newSuggestion = {
                         id: `suggestion-${currentUser.uid}-${Date.now()}`,
@@ -2958,6 +3584,13 @@
                 } catch (error) {
                     console.error("Error adding AI suggestion:", error);
                     showToast(`Error: ${error.message}`);
+                } finally {
+                    // Reset button state
+                    const submitBtn = document.querySelector('#ai-suggestion-form button[type="submit"]');
+                    if (submitBtn) {
+                        submitBtn.textContent = t.addAiSuggestionButton;
+                        submitBtn.disabled = false;
+                    }
                 }
             });
         };
@@ -3492,13 +4125,16 @@
                              showToast("You need privileged access for this action.");
                          }
                          break;
-                    case 'add-ai-suggestion': // Triggered by add AI suggestion button
-                         if (currentUser.uid) {
-                             addAiSuggestion();
-                         } else {
-                             triggerAuthFlow();
-                         }
-                         break;
+                                        case 'add-ai-suggestion': // Triggered by add AI suggestion button
+                        console.log('add-ai-suggestion action triggered');
+                        if (currentUser.uid) {
+                            console.log('User logged in, calling addAiSuggestion');
+                            window.addAiSuggestion();
+                        } else {
+                            console.log('No user logged in, triggering auth flow');
+                            triggerAuthFlow();
+                        }
+                        break;
                     case 'remove-ai-suggestion': // Triggered by remove AI suggestion button
                          if (currentUser.uid) {
                              removeAiSuggestion(actionTarget.dataset.id);
@@ -3533,8 +4169,29 @@
                         if (!currentUser.uid) {
                             triggerAuthFlow('register-card');
                         } else {
-                            window.openSettingsModal();
+                            toggleUserProfileDropdown();
                         }
+                        break;
+                    case 'open-settings':
+                        closeUserProfileDropdown();
+                        window.openSettingsModal();
+                        break;
+                    case 'change-nickname':
+                        closeUserProfileDropdown();
+                        openChangeNicknameModal();
+                        break;
+                    case 'change-password':
+                        closeUserProfileDropdown();
+                        openChangePasswordModal();
+                        break;
+                    case 'logout':
+                        closeUserProfileDropdown();
+                        signOut(auth).then(() => {
+                            showToast("Logout effettuato con successo!");
+                        }).catch((error) => {
+                            console.error("Logout error:", error);
+                            showToast("Errore durante il logout");
+                        });
                         break;
                 }
                 // Prevent default for any element with data-action
@@ -3551,7 +4208,10 @@
 
             // 5. Handle clicks outside side menu/modals to close them
             if (target.id === 'side-menu-overlay') { toggleSideMenu(false); return; } 
-            if (target.matches('.modal-overlay')) { closeModal(); return; } 
+            if (target.matches('.modal-overlay')) { closeModal(); return; }
+            
+            // 6. Close user profile dropdown when clicking outside
+            closeUserProfileDropdown(); 
 
             // If none of the above were clicked, let the default behavior happen
         });
