@@ -556,22 +556,28 @@
         
         /* --- STILI PER MODALE IMPOSTAZIONI (AGGIUNTI) --- */
         #settings-modal .input-group,
-        #add-app-modal .input-group,
-        #replace-featured-modal .input-group { /* Added replace modal */
-            margin-bottom: 16px; text-align: left;
-        }
-        #settings-modal label,
-        #add-app-modal label,
-        #replace-featured-modal label { /* Added replace modal */
-            display: block; font-weight: 500; margin-bottom: 8px; font-size: 14px;
-        }
-        #settings-modal input,
-        #add-app-modal input:not([type="file"]), /* Exclude file input */
-        #add-app-modal textarea,
-        #replace-featured-modal input { /* Added replace modal */
-             width: 100%; padding: 14px 16px; font-size: 16px; background-color: var(--spotify-bg-light); border: 1px solid rgba(128,128,128,0.2); border-radius: 8px; color: var(--spotify-text);
-             box-sizing: border-box; /* Ensure padding doesn't affect width */
-        }
+#add-app-modal .input-group,
+#replace-featured-modal .input-group,
+#change-password-modal .input-group, /* AGGIUNTO */
+#change-nickname-modal .input-group { /* AGGIUNTO */
+    margin-bottom: 16px; text-align: left;
+}
+#settings-modal label,
+#add-app-modal label,
+#replace-featured-modal label,
+#change-password-modal label, /* AGGIUNTO */
+#change-nickname-modal label { /* AGGIUNTO */
+    display: block; font-weight: 500; margin-bottom: 8px; font-size: 14px;
+}
+#settings-modal input,
+#add-app-modal input:not([type="file"]),
+#add-app-modal textarea,
+#replace-featured-modal input,
+#change-password-modal input, /* AGGIUNTO */
+#change-nickname-modal input { /* AGGIUNTO */
+     width: 100%; padding: 14px 16px; font-size: 16px; background-color: var(--spotify-bg-light); border: 1px solid rgba(128,128,128,0.2); border-radius: 8px; color: var(--spotify-text);
+     box-sizing: border-box; /* Ensure padding doesn't affect width */
+}
          #add-app-modal textarea {
              min-height: 80px;
              resize: vertical;
@@ -1400,13 +1406,13 @@
         <div id="side-menu" class="hidden">
             <div class="menu-header">
                 <h3 data-translate="history">Cronologia</h3>
-                <button class="new-chat-btn" data-action="new-chat" data-translate="newChat">Nuova Chat</button>
+                <button class="new-chat-btn" data-action="new-chat" data-translate="newChat">Nuova chat</button>
             </div>
             <div id="conversation-list-container" class="conversation-list">
                 <!-- Le conversazioni verranno popolate da JS -->
             </div>
             <div class="menu-footer">
-                <button id="delete-all-btn" data-action="delete-all-chats" data-translate="deleteAll">Elimina Tutto</button>
+                <button id="delete-all-btn" data-action="delete-all-chats" data-translate="deleteAll">Elimina tutto</button>
             </div>
         </div>
     </div>
@@ -1418,7 +1424,7 @@
             <button class="nav-btn active" data-page="home"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></span><span data-translate="navHome">Home</span></button>
             <button class="nav-btn" data-page="top-ai"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M5 9.2h3V19H5zM10.6 5h3v14h-3zm5.6 8H19v6h-2.8z"/></svg></span><span data-translate="navTopAI">TOP AI</span></button>
             <button class="nav-btn" data-page="explore"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></span><span data-translate="navSearch">Cerca</span></button>
-            <button class="nav-btn" data-page="search-users"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A1.5 1.5 0 0 0 18.54 8H15.46c-.84 0-1.61.5-1.96 1.37L11 18h2v6h7zM12.5 11.5c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5S11 9.17 11 10s.67 1.5 1.5 1.5zM5.5 6c1.11 0 2-.89 2-2s-.89-2-2-2-2 .89-2 2 .89 2 2 2zm2 16v-7H9V9c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v6h1.5v7h4z"/></svg></span><span data-translate="navSearchUsers">Cerca Utenti</span></button>
+            <button class="nav-btn" data-page="search-users"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A1.5 1.5 0 0 0 18.54 8H15.46c-.84 0-1.61.5-1.96 1.37L11 18h2v6h7zM12.5 11.5c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5S11 9.17 11 10s.67 1.5 1.5 1.5zM5.5 6c1.11 0 2-.89 2-2s-.89-2-2-2-2 .89-2 2 .89 2 2 2zm2 16v-7H9V9c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v6h1.5v7h4z"/></svg></span><span data-translate="navSearchUsers">Utenti</span></button>
             <button class="nav-btn" data-page="favorites"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg></span><span data-translate="navLibrary">La tua libreria</span></button>
         </nav>
     </div>
@@ -1776,7 +1782,7 @@
         const translations = {
             it: {
                 // Auth
-                createAccount: "Crea il tuo Account", registerEmailLabel: "Email", registerEmailPlaceholder: "nome@esempio.com",
+                createAccount: "Crea il tuo account", registerEmailLabel: "Email", registerEmailPlaceholder: "nome@esempio.com",
                 registerPasswordLabel: "Password", registerPasswordPlaceholder: "Minimo 6 caratteri", registerButton: "Registrati",
                 switchToLogin: "Hai già un account? Accedi", loginTitle: "Accedi", loginButton: "Accedi",
                 switchToRegister: "Non hai un account? Registrati", forgotPasswordLink: "Password dimenticata?",
@@ -1785,7 +1791,7 @@
                 passwordResetSent: "Se l'utente esiste, un link per il reset è stato inviato a %s.",
                 // App
                 navHome: "Home", navTopAI: "TOP AI", navSearch: "Cerca", navSearchUsers: "Utenti", navLibrary: "Libreria",
-                pageTitleHome: "Koda.AI Chatbot", pageTitleTopAI: "TOP AI", pageTitleSearch: "Cerca", pageTitleSearchUsers: "Cerca Utenti", pageTitleLibrary: "La tua libreria",
+                pageTitleHome: "Koda.AI Chatbot", pageTitleTopAI: "TOP AI", pageTitleSearch: "Cerca", pageTitleSearchUsers: "Utenti", pageTitleLibrary: "La tua libreria",
                 logout: "Logout", featured: "In evidenza", rankingsTitle: "Classifiche TOP AI", filterAll: "Tutti",
                 searchPlaceholder: "Cerca strumenti, categorie...", browseAll: "Sfoglia tutto", browseByOrigin: "Sfoglia per nazionalità",
                 backToSearch: "‹ Torna a cercare", toolsFrom: "Strumenti da", libraryPromptTitle: "Salva i tuoi preferiti",
@@ -1798,15 +1804,15 @@
                 detailModalRemoveFavorite: "Rimuovi dai Preferiti", detailModalAddFavorite: "Aggiungi ai Preferiti",
                 visitWebsite: "Visita Sito Web", alternativeSuggestion: "In alternativa prova:",
                  // Settings Modal
-                settingsTitle: "Impostazioni Account", changePasswordTitle: "Cambia Password", newPasswordLabel: "Nuova Password",
-                newPasswordPlaceholder: "Minimo 6 caratteri", confirmPasswordLabel: "Conferma Password", confirmPasswordPlaceholder: "Reinserisci la nuova password",
+                settingsTitle: "Impostazioni account", changePasswordTitle: "Cambia password", newPasswordLabel: "Nuova password",
+                newPasswordPlaceholder: "Minimo 6 caratteri", confirmPasswordLabel: "Conferma password", confirmPasswordPlaceholder: "Reinserisci la Nuova password",
                 savePasswordButton: "Salva Password", passwordUpdateSuccess: "Password aggiornata con successo!",
                 passwordTooShort: "La password deve contenere almeno 6 caratteri.", passwordsDoNotMatch: "Le password non coincidono.",
                 updatePasswordError: "Errore: %s. Potrebbe essere necessario effettuare nuovamente il login.",
                 // Side Menu
-                history: "Cronologia", newChat: "Nuova Chat", deleteAll: "Elimina Tutto",
+                history: "Cronologia", newChat: "Nuova chat", deleteAll: "Elimina tutto",
                 confirmDeleteAll: "Sei sicuro di voler eliminare tutte le conversazioni? Questa azione è irreversibile.",
-                newChatTitle: "Nuova Chat",
+                newChatTitle: "Nuova chat",
                 // New Privileged User Translations (Local Storage)
                 privilegedUnlocked: "Modalità privilegiata sbloccata!",
                 addCustomApp: "Aggiungi App Custom", // New translation for the button
@@ -1835,7 +1841,7 @@
                 registerNicknameLabel: "Nickname",
                 registerNicknamePlaceholder: "Es. Koda",
                 nicknameRequired: "Il nickname è obbligatorio.",
-                changeNicknameTitle: "Cambia Nickname",
+                changeNicknameTitle: "Cambia nickname",
                 saveNicknameButton: "Salva Nickname",
                 nicknameUpdateSuccess: "Nickname aggiornato con successo!",
                 aiSuggestionsTitle: "I tuoi suggerimenti AI",
@@ -1850,7 +1856,7 @@
                 removeAiSuggestion: "Rimuovi suggerimento",
                 aiSuggestionAdded: "Suggerimento aggiunto con successo!",
                 aiSuggestionRemoved: "Suggerimento rimosso con successo!",
-                searchUsersTitle: "Cerca Utenti",
+                searchUsersTitle: "Utenti",
                 searchUsersSubtitle: "Trova altri utenti e scopri i loro suggerimenti AI",
                 searchUsersPlaceholder: "Cerca per nickname o email...",
                 searchUsersButton: "Cerca",
@@ -2599,19 +2605,19 @@
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                             </svg>
-                            <span data-translate="settingsTitle">Impostazioni Account</span>
+                            <span data-translate="settingsTitle">Impostazioni account</span>
                         </div>
                         <div class="user-profile-item" data-action="change-nickname">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                 <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                             </svg>
-                            <span data-translate="changeNicknameTitle">Cambia Nickname</span>
+                            <span data-translate="changeNicknameTitle">Cambia nickname</span>
                         </div>
                         <div class="user-profile-item" data-action="change-password">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                 <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
                             </svg>
-                            <span data-translate="changePasswordTitle">Cambia Password</span>
+                            <span data-translate="changePasswordTitle">Cambia password</span>
                         </div>
                         <div class="user-profile-divider"></div>
                         <div class="user-profile-item user-profile-logout" data-action="logout">
@@ -3100,7 +3106,7 @@
                         <button class="modal-close-btn" data-action="close-modal">×</button>
                         <h2 data-translate="settingsTitle">${t.settingsTitle}</h2>
                         
-                        <p style="font-size: 16px; color: var(--spotify-text-secondary); margin-top: 16px; margin-bottom: 24px;">${currentUser.email}</p>
+                        <p style="font-size: 16px; color: var(--spotify-text-secondary); margin-top: 16px; margin-bottom: 24px;">${currentUser.name}</p>
                         
                         <hr class="modal-divider">
 
