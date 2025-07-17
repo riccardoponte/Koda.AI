@@ -2213,12 +2213,23 @@
                 }
             };
 
-            const handleStartChat = (userId, userNickname) => {
-                const chatId = window.createChatId(currentUser.uid, userId);
-                setSelectedChatId(chatId);
-                setSelectedUser({ uid: userId, nickname: userNickname });
-                setView('chat');
-            };
+            const handleStartChat = async (userId, userNickname) => {
+    // Aggiungi un blocco try-catch per gestire eventuali errori durante la creazione
+    try {
+        // Usa la funzione che crea il documento se non esiste
+        const chatId = await window.getOrCreateChat(currentUser.uid, userId); 
+        
+        // Se tutto va bene, imposta lo stato e cambia la vista
+        setSelectedChatId(chatId);
+        setSelectedUser({ uid: userId, nickname: userNickname });
+        setView('chat');
+    } catch (error) {
+        // Mostra un errore se non è possibile avviare la chat
+        console.error("Error creating or getting chat:", error);
+        window.showToast("Impossibile avviare la chat. Riprova.");
+    }
+};
+
 
             const handleSelectChat = (chat) => {
                 setSelectedChatId(chat.id);
