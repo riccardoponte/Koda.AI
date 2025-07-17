@@ -1435,8 +1435,9 @@
         }
 
         .user-chat-input {
-            flex: 1;
-            padding: 12px 16px;
+    width: 100%;
+    flex: 1 1 auto;
+    padding: 12px 16px;
             border: 1px solid var(--spotify-card);
             border-radius: 20px;
             background: var(--spotify-card);
@@ -1444,7 +1445,6 @@
             font-size: 16px;
             resize: none;
             max-height: 120px;
-            min-height: 44px;
             line-height: 1.4;
             font-family: var(--font-family);
         }
@@ -1537,10 +1537,36 @@
             white-space: nowrap;
         }
 
+        .user-chat-item-meta {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        
         .user-chat-item-time {
             font-size: 12px;
             color: var(--spotify-text-secondary);
-            flex-shrink: 0;
+        }
+        
+        .user-chat-item-delete-btn {
+            background: none;
+            border: none;
+            color: var(--spotify-text-secondary);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1; /* << MODIFICA: Always visible */
+            transition: background-color 0.2s, color 0.2s;
+        }
+        
+        .user-chat-item-delete-btn:hover {
+            background-color: var(--spotify-bg-light);
+            color: #ff6b6b; /* Red color on hover */
         }
 
         .user-chat-item-unread {
@@ -1577,10 +1603,100 @@
             fill: currentColor;
         }
 
-        .user-actions {
+                .user-actions {
             display: flex;
             align-items: center;
             gap: 8px;
+        }
+
+        .floating-action-btn {
+            position: fixed;
+            bottom: calc(var(--bottom-nav-height) + 16px); /* Si posiziona 16px sopra la barra di navigazione */
+            right: 16px;
+            width: 56px;
+            height: 56px;
+            background-color: var(--spotify-accent);
+            color: #000; /* Colore dell'icona (il +) nero */
+            border-radius: 50%;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            z-index: 1001; /* Assicura che sia sopra la lista delle chat */
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+
+        .floating-action-btn:hover {
+            background-color: #1ed760; /* Colore leggermente più chiaro al passaggio del mouse */
+            transform: scale(1.05);
+        }
+
+        .chat-search-container {
+            padding: 0 16px 16px 16px;
+            background-color: var(--spotify-bg);
+        }
+
+        .chat-search-input {
+            width: 100%;
+            padding: 14px 16px;
+            font-size: 16px;
+            background-color: var(--spotify-card);
+            border: 1px solid var(--spotify-card);
+            border-radius: 8px;
+            color: var(--spotify-text);
+        }
+
+        .chat-search-input::placeholder {
+            color: var(--spotify-text-secondary);
+        }
+
+        .floating-action-btn {
+            position: fixed;
+            bottom: calc(var(--bottom-nav-height) + 16px); /* Si posiziona 16px sopra la barra di navigazione */
+            right: 16px;
+            width: 56px;
+            height: 56px;
+            background-color: var(--spotify-accent);
+            color: #000; /* Colore dell'icona (il +) nero */
+            border-radius: 50%;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            z-index: 1001; /* Assicura che sia sopra la lista delle chat */
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+
+        .floating-action-btn:hover {
+            background-color: #1ed760; /* Colore leggermente più chiaro al passaggio del mouse */
+            transform: scale(1.05);
+        }
+
+        .chat-search-container {
+            padding: 0 16px 16px 16px;
+            background-color: var(--spotify-bg);
+        }
+
+        .chat-search-input {
+            width: 100%;
+            padding: 14px 16px;
+            font-size: 16px;
+            background-color: var(--spotify-card);
+            border: 1px solid var(--spotify-card);
+            border-radius: 8px;
+            color: var(--spotify-text);
+        }
+
+        .chat-search-input::placeholder {
+            color: var(--spotify-text-secondary);
         }
 
         /* --- RESPONSIVE FIX PER MOBILE --- */
@@ -1687,7 +1803,6 @@
             <button class="nav-btn active" data-page="home"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></span><span data-translate="navHome">Home</span></button>
             <button class="nav-btn" data-page="top-ai"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M5 9.2h3V19H5zM10.6 5h3v14h-3zm5.6 8H19v6h-2.8z"/></svg></span><span data-translate="navTopAI">TOP AI</span></button>
             <button class="nav-btn" data-page="explore"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></span><span data-translate="navSearch">Cerca</span></button>
-            <button class="nav-btn" data-page="search-users"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A1.5 1.5 0 0 0 18.54 8H15.46c-.84 0-1.61.5-1.96 1.37L11 18h2v6h7zM12.5 11.5c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5S11 9.17 11 10s.67 1.5 1.5 1.5zM5.5 6c1.11 0 2-.89 2-2s-.89-2-2-2-2 .89-2 2 .89 2 2 2zm2 16v-7H9V9c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v6h1.5v7h4z"/></svg></span><span data-translate="navSearchUsers">Utenti</span></button>
             <button class="nav-btn" data-page="user-chats"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg></span><span data-translate="navUserChats">Chat</span></button>
             <button class="nav-btn" data-page="favorites"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg></span><span data-translate="navLibrary">La tua libreria</span></button>
         </nav>
@@ -2017,19 +2132,36 @@
 
         // --- COMPONENTI REACT PER LA CHAT UTENTE-UTENTE ---
         const UserChatApp = ({ currentUser, onOpenDetail, lang, globalControlsHTML }) => {
-            const [view, setView] = useState('list'); // 'list' | 'chat'
+            // **NUOVO:** Stato locale per la lingua per consentire l'aggiornamento in tempo reale
+            const [language, setLanguage] = useState(lang);
+
+            const [view, setView] = useState('list'); // 'list' | 'chat' | 'search'
             const [selectedChatId, setSelectedChatId] = useState(null);
             const [selectedUser, setSelectedUser] = useState(null);
             const [chats, setChats] = useState([]);
             const [messages, setMessages] = useState([]);
             const [messageInput, setMessageInput] = useState('');
             const [isLoading, setIsLoading] = useState(false);
+            const [chatSearchTerm, setChatSearchTerm] = useState(''); // NUOVO STATO PER LA RICERCA
             const messagesEndRef = useRef(null);
+            const textareaRef = useRef(null); // Aggiunto per l'auto-grow
+
+            // **NUOVO:** Crea un "ponte" per aggiornare la lingua dall'esterno
+            useEffect(() => {
+                window.updateUserChatLanguage = (newLang) => {
+                    setLanguage(newLang);
+                };
+                // Pulisce la funzione globale quando il componente viene smontato
+                return () => {
+                    delete window.updateUserChatLanguage;
+                };
+            }, []); // L'array vuoto assicura che questo effetto venga eseguito solo una volta
 
             useEffect(() => {
                 if (currentUser.uid) {
                     loadUserChats();
                 }
+                window.handleReactChatStart = handleStartChat;
             }, [currentUser.uid]);
 
             useEffect(() => {
@@ -2042,13 +2174,36 @@
                 messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
             }, [messages]);
 
-                        const loadUserChats = async () => {
-                try {
-                    // getUserChats already returns the clean array of chat objects.
-                    const chatsData = await window.getUserChats(currentUser.uid);
+            // Effetto per l'auto-grow della textarea
+            useEffect(() => {
+                const textarea = textareaRef.current;
+                if (textarea) {
+                    textarea.style.height = 'auto'; // Resetta l'altezza
+                    textarea.style.height = `${textarea.scrollHeight}px`; // Imposta l'altezza in base al contenuto
+                }
+            }, [messageInput]);
 
-                    // Simply sort the data and set it to the state.
-                    setChats(chatsData.sort((a, b) => b.lastMessageTime - a.lastMessageTime));
+            const getHiddenChatIds = () => {
+                const hidden = localStorage.getItem(`hidden_chats_${currentUser.uid}`);
+                return hidden ? JSON.parse(hidden) : [];
+            };
+
+            const handleHideChat = (e, chatId) => {
+                e.stopPropagation();
+                const hiddenIds = getHiddenChatIds();
+                if (!hiddenIds.includes(chatId)) {
+                    const newHiddenIds = [...hiddenIds, chatId];
+                    localStorage.setItem(`hidden_chats_${currentUser.uid}`, JSON.stringify(newHiddenIds));
+                    setChats(prevChats => prevChats.filter(chat => chat.id !== chatId));
+                }
+            };
+
+            const loadUserChats = async () => {
+                try {
+                    const hiddenChatIds = getHiddenChatIds();
+                    const chatsData = await window.getUserChats(currentUser.uid);
+                    const visibleChats = chatsData.filter(chat => !hiddenChatIds.includes(chat.id));
+                    setChats(visibleChats.sort((a, b) => b.lastMessageTime - a.lastMessageTime));
                 } catch (error) {
                     console.error("Error loading user chats:", error);
                 }
@@ -2056,14 +2211,11 @@
 
             const loadChatMessages = async (chatId) => {
                 try {
-                    // getChatMessages returns the raw Firestore QuerySnapshot, so we must loop it.
                     const messagesSnapshot = await window.getChatMessages(chatId);
                     const messagesData = [];
                     messagesSnapshot.forEach(doc => {
-                        // Correctly call .data() on each Firestore document
                         messagesData.push({ id: doc.id, ...doc.data() });
                     });
-                    // Sort by converting the timestamp to milliseconds for a proper comparison
                     setMessages(messagesData.sort((a, b) => a.timestamp.toMillis() - b.timestamp.toMillis()));
                 } catch (error) {
                     console.error("Error loading chat messages:", error);
@@ -2079,7 +2231,6 @@
 
             const handleSelectChat = (chat) => {
                 setSelectedChatId(chat.id);
-                // Find the other user in the chat
                 const otherUserId = chat.participants.find(uid => uid !== currentUser.uid);
                 setSelectedUser({ uid: otherUserId, nickname: chat.otherUserNickname });
                 setView('chat');
@@ -2087,7 +2238,6 @@
 
             const handleSendMessage = async () => {
                 if (!messageInput.trim() || !selectedChatId || isLoading) return;
-
                 setIsLoading(true);
                 try {
                     await window.sendChatMessage(selectedChatId, currentUser.uid, messageInput.trim(), selectedUser.uid);
@@ -2109,77 +2259,139 @@
                 }
             };
 
-                        const formatMessageTime = (timestamp) => {
-                // Check if the timestamp object exists and has the .toDate method
+            const formatMessageTime = (timestamp) => {
                 if (timestamp && typeof timestamp.toDate === 'function') {
-                    // Convert the Firestore Timestamp to a standard JavaScript Date
                     const date = timestamp.toDate();
                     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                 }
-                
-                // If it's a regular number (like from Date.now() for optimistic UI), use it
                 if (typeof timestamp === 'number') {
                     const date = new Date(timestamp);
                     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                 }
-
-                // Return a placeholder if the timestamp is invalid or missing
                 return '...';
             };
-
+            
+            // **MODIFICA:** Usa lo stato locale `language` invece della prop `lang` per i testi
             if (view === 'list') {
+                // NUOVA LOGICA DI FILTRAGGIO
+                const filteredChats = chats.filter(chat => 
+                    chat.otherUserNickname?.toLowerCase().includes(chatSearchTerm.toLowerCase())
+                );
+
                 return (
                     <div className="user-chat-container">
                         <div className="user-chat-header">
                             <div id="profile-avatar-menu" style={{ marginLeft: 8 }}>
                                 <span dangerouslySetInnerHTML={{ __html: globalControlsHTML.avatar }} />
                             </div>
-                            <div className="user-chat-info">
-                                <h3>{lang === 'it' ? 'Le tue chat' : 'Your chats'}</h3>
+                            <div className="user-chat-info" style={{ flexGrow: 1 }}>
+                                <h3>{language === 'it' ? 'Le tue chat' : 'Your chats'}</h3>
                             </div>
                             <div id="global-controls" dangerouslySetInnerHTML={{ __html: globalControlsHTML.otherControls }}></div>
                         </div>
+
+                        {/* NUOVA BARRA DI RICERCA */}
+                        <div className="chat-search-container">
+                            <input 
+                                type="text"
+                                className="chat-search-input"
+                                placeholder={language === 'it' ? 'Cerca per nickname...' : 'Search by nickname...'}
+                                value={chatSearchTerm}
+                                onChange={(e) => setChatSearchTerm(e.target.value)}
+                            />
+                        </div>
+
                         <div className="user-chat-list">
-                            {chats.length === 0 ? (
+                            {filteredChats.length === 0 ? (
                                 <div id="empty-state">
-                                    {lang === 'it' ? 'Nessuna chat trovata. Inizia una nuova conversazione dalla sezione Utenti.' : 'No chats found. Start a new conversation from the Users section.'}
+                                    {language === 'it' ? 'Nessuna chat trovata.' : 'No chats found.'}
                                 </div>
                             ) : (
-                                chats.map(chat => (
-                                    <div key={chat.id} className="user-chat-item" onClick={() => handleSelectChat(chat)}>
-                                        <div className="user-chat-item-avatar">
+                                filteredChats.map(chat => (
+                                    <div key={chat.id} className="user-chat-item" onClick={(e) => {
+                                        // Prevents chat from opening if a data-action is clicked
+                                        if (!e.target.closest('[data-action="view-user-suggestions"]') && !e.target.closest('.user-chat-item-delete-btn')) {
+                                            handleSelectChat(chat);
+                                        }
+                                    }}>
+                                        <div className="user-chat-item-avatar" data-action="view-user-suggestions" data-uid={chat.otherUserId} data-nickname={chat.otherUserNickname} style={{ cursor: 'pointer' }}>
                                             {chat.otherUserNickname ? chat.otherUserNickname.charAt(0).toUpperCase() : 'U'}
                                         </div>
                                         <div className="user-chat-item-info">
-                                            <div className="user-chat-item-name">{chat.otherUserNickname || 'Utente'}</div>
+                                            <div className="user-chat-item-name" data-action="view-user-suggestions" data-uid={chat.otherUserId} data-nickname={chat.otherUserNickname} style={{ cursor: 'pointer' }}>{chat.otherUserNickname || 'Utente'}</div>
                                             <div className="user-chat-item-preview">{chat.lastMessage}</div>
                                         </div>
-                                        <div className="user-chat-item-time">
-                                            {formatMessageTime(chat.lastMessageTime)}
+                                        <div className="user-chat-item-meta">
+                                            <div className="user-chat-item-time">
+                                                {formatMessageTime(chat.lastMessageTime)}
+                                            </div>
+                                            <button 
+                                                className="user-chat-item-delete-btn" 
+                                                onClick={(e) => handleHideChat(e, chat.id)}
+                                                title={language === 'it' ? 'Nascondi chat' : 'Hide chat'}
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18" fill="currentColor">
+                                                    <path d="M0 0h24v24H0z" fill="none"/>
+                                                    <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                                                </svg>
+                                            </button>
                                         </div>
                                     </div>
                                 ))
                             )}
                         </div>
+                        
+                        <button 
+                            className="floating-action-btn" 
+                            onClick={() => setView('search')} 
+                            title={language === 'it' ? 'Nuova chat' : 'New chat'}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-5 9h-4v4h-2v-4H5V9h4V5h2v4h4v2z"/></svg>
+                        </button>
                     </div>
                 );
             }
+            
+            if (view === 'search') {
+    return (
+        <div className="user-chat-container">
+            <div className="user-chat-header">
+                <button className="user-chat-back-btn" onClick={() => setView('list')}>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+                </button>
+                <div className="user-chat-info">
+                    <h3>{language === 'it' ? 'Nuova Chat' : 'New Chat'}</h3>
+                </div>
+                <div id="global-controls" dangerouslySetInnerHTML={{ __html: globalControlsHTML.otherControls }}></div>
+            </div>
+            {/* Input di ricerca utenti */}
+            <div style={{ padding: '16px' }}>
+                <input
+                    type="text"
+                    id="user-chat-search-input"
+                    className="chat-search-input"
+                    placeholder={language === 'it' ? 'Cerca utenti per nickname...' : 'Search users by nickname...'}
+                    style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #ccc', marginBottom: '12px' }}
+                    onChange={e => {
+                        const val = e.target.value;
+                        window.searchUsersForChat(val, currentUser.uid);
+                    }}
+                    autoFocus
+                />
+            </div>
+            <div id="user-chat-search-results" style={{ padding: '0 16px', overflowY: 'auto', flex: 1 }}></div>
+        </div>
+    );
+}
 
             return (
                 <div className="user-chat-container">
                     <div className="user-chat-header">
                         <button className="user-chat-back-btn" onClick={() => setView('list')}>
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor">
-                                <path d="M0 0h24v24H0z" fill="none"/>
-                                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
-                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
                         </button>
-                        <div className="user-chat-avatar">
-                            {selectedUser?.nickname ? selectedUser.nickname.charAt(0).toUpperCase() : 'U'}
-                        </div>
-                        <div className="user-chat-info">
-                            <h3>{selectedUser?.nickname || 'Utente'}</h3>
-                        </div>
+                        <div className="user-chat-avatar" data-action="view-user-suggestions" data-uid={selectedUser?.uid} data-nickname={selectedUser?.nickname} style={{ cursor: 'pointer' }}>{selectedUser?.nickname ? selectedUser.nickname.charAt(0).toUpperCase() : 'U'}</div>
+                        <div className="user-chat-info" data-action="view-user-suggestions" data-uid={selectedUser?.uid} data-nickname={selectedUser?.nickname} style={{ cursor: 'pointer' }}><h3>{selectedUser?.nickname || 'Utente'}</h3></div>
                         <div id="global-controls" dangerouslySetInnerHTML={{ __html: globalControlsHTML.otherControls }}></div>
                     </div>
                     <div className="user-chat-messages">
@@ -2191,24 +2403,22 @@
                         ))}
                         <div ref={messagesEndRef} />
                     </div>
-                    <div className="user-chat-input-container">
+                      <div className="user-chat-input-container">
                         <textarea
                             className="user-chat-input"
                             value={messageInput}
                             onChange={(e) => setMessageInput(e.target.value)}
                             onKeyDown={handleKeyPress}
-                            placeholder={lang === 'it' ? 'Scrivi un messaggio...' : 'Write a message...'}
+                            placeholder={language === 'it' ? 'Scrivi un messaggio...' : 'Write a message...'}
+                            rows="1"
+                            onInput={(e) => {
+                                e.target.style.height = 'auto';
+                                e.target.style.height = (e.target.scrollHeight) + 'px';
+                            }}
                             disabled={isLoading}
                         />
-                        <button
-                            className="user-chat-send-btn"
-                            onClick={handleSendMessage}
-                            disabled={isLoading || !messageInput.trim()}
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18" fill="currentColor">
-                                <path d="M0 0h24v24H0z" fill="none"/>
-                                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-                            </svg>
+                        <button className="user-chat-send-btn" onClick={handleSendMessage} disabled={isLoading || !messageInput.trim()}>
+                            <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
                         </button>
                     </div>
                 </div>
@@ -2221,6 +2431,9 @@
             root.render(<React.StrictMode><UserChatApp {...props} /></React.StrictMode>);
             return root;
         };
+
+        // Espone il componente UserChatApp per poterlo ri-renderizzare dall'esterno
+        window.UserChatApp = UserChatApp;
 
         // Esporre la funzione per iniziare una chat
         window.startUserChat = (userId, userNickname) => {
@@ -2437,6 +2650,10 @@
                 suggestions: "suggerimenti",
                 startChat: "Inizia Chat",
                 chatWith: "Chatta con %s",
+                hideChat: "Nascondi chat",
+                noChatsFound: "Nessuna chat trovata. Inizia una nuova conversazione.",
+                writeMessage: "Scrivi un messaggio...",
+                sendError: "Errore nell'invio del messaggio",
             },
             en: {
                 // Auth
@@ -2526,6 +2743,10 @@
                 suggestions: "suggestions",
                 startChat: "Start Chat",
                 chatWith: "Chat with %s",
+                hideChat: "Hide chat",
+                noChatsFound: "No chats found. Start a new conversation.",
+                writeMessage: "Write a message...",
+                sendError: "Error sending message",
             }
         };
         
@@ -3160,7 +3381,9 @@
             }
         };
 
-        const getGlobalControlsHTML = () => {
+        const getGlobalControlsHTML = (options = {}) => {
+            const { includeLangToggle = true } = options;
+
             const themeIcon = currentTheme === 'dark' ? sunIcon : moonIcon;
             const isGuest = !currentUser.uid;
             const userInitial = isGuest ? '?' : (currentUser.nickname ? currentUser.nickname.charAt(0).toUpperCase() : 'U');
@@ -3206,10 +3429,15 @@
             </div>
         `;
             
-            const otherControlsHTML = `
+            let otherControlsHTML = `
                 <button id="theme-toggle-btn" class="global-btn" data-action="toggle-theme">${themeIcon}</button>
-                <button id="lang-toggle-btn" class="global-btn" data-action="toggle-lang">${currentLanguage.toUpperCase()}</button>
             `;
+
+            if (includeLangToggle) {
+                otherControlsHTML += `
+                    <button id="lang-toggle-btn" class="global-btn" data-action="toggle-lang">${currentLanguage.toUpperCase()}</button>
+                `;
+            }
 
             // Return as an object to pass to React
             return { avatar: avatarHTML, otherControls: otherControlsHTML };
@@ -3419,7 +3647,7 @@
                             currentUser: currentUser,
                             onOpenDetail: window.openDetailModal,
                             lang: currentLanguage,
-                            globalControlsHTML: getGlobalControlsHTML()
+                            globalControlsHTML: getGlobalControlsHTML({ includeLangToggle: false })
                         });
                     } else {
                         console.error("User chat mount function not found.");
@@ -4391,7 +4619,7 @@
 
                 const usersHTML = limitedUsers.map(user => `
                     <div class="user-search-result" data-uid="${user.uid}">
-                        <div class="user-info">
+                        
                             <div class="user-nickname">${user.nickname}</div>
                             <div class="user-email">${user.email}</div>
                             <div class="user-suggestions-count">${user.aiSuggestions.length} ${user.aiSuggestions.length === 1 ? t.suggestion : t.suggestions}</div>
@@ -4422,7 +4650,59 @@
         };
 
         // NEW FUNCTION: View User Suggestions
-        const viewUserSuggestions = async (userId, userNickname) => {
+                // NEW FUNCTION: Search Users for Chat
+        const searchUsersForChat = async (searchTerm, currentUserId) => {
+            const resultsContainer = document.getElementById('user-chat-search-results');
+            if (!resultsContainer) return;
+
+            const t = translations[currentLanguage];
+            if (!searchTerm || searchTerm.trim().length < 2) {
+                resultsContainer.innerHTML = '';
+                return;
+            }
+
+            try {
+                const usersRef = collection(db, "users");
+                const searchTermLower = searchTerm.toLowerCase();
+                const querySnapshot = await getDocs(usersRef);
+
+                const users = [];
+                querySnapshot.forEach((doc) => {
+                    const userData = doc.data();
+                    if (doc.id !== currentUserId) { // Escludi l'utente corrente
+                        const nickname = userData.nickname || '';
+                        if (nickname.toLowerCase().includes(searchTermLower)) {
+                            users.push({
+                                uid: doc.id,
+                                nickname: userData.nickname,
+                            });
+                        }
+                    }
+                });
+
+                if (users.length === 0) {
+                    resultsContainer.innerHTML = `<div id="empty-state">${t.noUsersFound}</div>`;
+                    return;
+                }
+                
+                // **MODIFICA APPLICATA QUI**
+                // Usiamo lo stesso stile della lista chat principale per un look pulito e coerente.
+                resultsContainer.innerHTML = users.slice(0, 10).map(user => `
+                    <div class="simple-chat-search-item" onclick="window.handleReactChatStart('${user.uid}', '${user.nickname}')">
+                        ${user.nickname}
+                    </div>
+                `).join('');
+
+            } catch (error) {
+                console.error("Error searching users for chat:", error);
+                resultsContainer.innerHTML = `<div id="empty-state">Error searching users.</div>`;
+            }
+        };
+        window.searchUsersForChat = searchUsersForChat;
+
+
+// NEW FUNCTION: View User Suggestions
+const viewUserSuggestions = async (userId, userNickname) => {
             if (!currentUser.uid) return;
             
             const t = translations[currentLanguage];
@@ -4497,8 +4777,9 @@
                 const chatId = await getOrCreateChat(currentUser.uid, userId);
                 
                 // Navigate to user-chats view
-                currentView = 'user-chats';
-                renderView();
+                document.getElementById('user-chat-search-results')?.remove();
+currentView = 'user-chats';
+renderView();
                 
                 // If the user chat app is mounted, trigger the start chat function
                 if (window.startUserChat) {
@@ -4644,16 +4925,39 @@
                 switch(action) {
                     // Global Controls
                     case 'toggle-theme':
+                        // Cambia il tema
                         currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
                         document.body.classList.toggle('light-mode', currentTheme === 'light');
                         localStorage.setItem('koda-theme', currentTheme);
-                        renderView(); // Re-render to update icons/styles
+                        
+                        // Aggiorna l'icona del tema manualmente senza ri-renderizzare tutto
+                        const themeBtn = document.getElementById('theme-toggle-btn');
+                        if (themeBtn) {
+                            themeBtn.innerHTML = currentTheme === 'dark' ? sunIcon : moonIcon;
+                        }
                         break;
                     case 'toggle-lang':
+                        // Cambia la lingua a livello globale
                         currentLanguage = currentLanguage === 'it' ? 'en' : 'it';
                         localStorage.setItem('koda-lang', currentLanguage);
-                        applyTranslations(currentLanguage); // Apply translations immediately
-                        renderView(); // Re-render views to update content
+                        
+                        // Aggiorna il testo del pulsante stesso
+                        const langBtn = document.getElementById('lang-toggle-btn');
+                        if(langBtn) {
+                           langBtn.textContent = currentLanguage.toUpperCase();
+                        }
+
+                        // Applica le traduzioni agli elementi HTML non gestiti da React
+                        applyTranslations(currentLanguage);
+
+                        // **NUOVA LOGICA:** Se siamo nella vista chat e la funzione-ponte esiste,
+                        // la usiamo per aggiornare lo stato interno di React senza ricaricare.
+                        if (currentView === 'user-chats' && typeof window.updateUserChatLanguage === 'function') {
+                            window.updateUserChatLanguage(currentLanguage);
+                        } else {
+                            // Altrimenti, per tutte le altre pagine, eseguiamo un re-render completo
+                            renderView();
+                        }
                         break;
                     case 'toggle-menu':
                          toggleSideMenu(true);
