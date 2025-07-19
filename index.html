@@ -337,6 +337,33 @@
         .tool-card-grid .logo-container { width: 100%; aspect-ratio: 1 / 1; border-radius: 8px; background-color: var(--spotify-card); margin-bottom: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; /* Needed for absolute positioning of edit icon */ }
         .tool-card-grid .tool-logo { width: 100%; height: 100%; object-fit: cover; }
         .tool-card-grid .tool-name { font-size: 14px; font-weight: 600; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+        
+        /* NUOVO: Stile per la card "+" per aggiungere app */
+        .add-app-card {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            aspect-ratio: 1 / 1;
+            border-radius: 8px;
+            border: 2px dashed var(--spotify-text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .add-app-card:hover {
+            border-color: var(--spotify-accent);
+            background-color: var(--spotify-card);
+        }
+        .add-app-card svg {
+            width: 40px;
+            height: 40px;
+            fill: var(--spotify-text-secondary);
+            transition: all 0.2s ease;
+        }
+        .add-app-card:hover svg {
+            fill: var(--spotify-accent);
+            transform: scale(1.1);
+        }
+
         .list-container { display: flex; flex-direction: column; gap: 12px; }
         .tool-card-list { display: flex; align-items: center; gap: 12px; cursor: pointer; }
         .tool-card-list .logo-container { width: 56px; height: 56px; flex-shrink: 0; background-color: var(--spotify-card); display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; /* Needed for absolute positioning of edit icon */ }
@@ -680,25 +707,7 @@
              text-align: center;
          }
 
-         /* Style for the new K button */
-         #privileged-unlock-btn {
-             background-color: var(--spotify-card);
-             color: var(--spotify-accent);
-             border: 1px solid rgba(128,128,128,0.2);
-             border-radius: 50px;
-             padding: 8px 16px;
-             font-size: 18px; /* Larger font for K */
-             font-weight: bold;
-             cursor: pointer;
-             white-space: nowrap;
-             transition: background-color 0.2s, color 0.2s;
-             margin: 16px auto 24px; /* Center and add spacing */
-             display: block; /* Ensure it's on its own line */
-             width: fit-content; /* Shrink to fit content */
-         }
-         #privileged-unlock-btn:hover {
-             background-color: var(--spotify-bg-light);
-         }
+
 
          /* Style for the edit icon on featured user apps */
          .edit-icon {
@@ -1677,7 +1686,7 @@
         }
 
         /* --- RESPONSIVE FIX PER MOBILE --- */
-         @media (max-width: 480px) {
+        @media (max-width: 480px) {
              .top-bar {
                  padding: 8px 4px;
                  gap: 4px;
@@ -1737,6 +1746,133 @@
                  padding: 12px;
              }
          }
+
+        /* --- STILI PER LA NUOVA PAGINA PROFILO (Libreria) --- */
+        .profile-page-container {
+            padding: 16px;
+            color: var(--spotify-text);
+        }
+
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .profile-username {
+            font-size: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .profile-info {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 12px;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: var(--spotify-accent);
+            color: var(--spotify-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 20px;
+            flex-grow: 1;
+            justify-content: space-around;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            display: block;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .stat-label {
+            display: block;
+            font-size: 14px;
+            color: var(--spotify-text-secondary);
+        }
+
+        .profile-details {
+            margin-bottom: 16px;
+        }
+
+        .profile-fullname {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .profile-actions-buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .profile-btn {
+            flex: 1;
+            padding: 8px 12px;
+            background-color: var(--spotify-card);
+            border: none;
+            border-radius: 8px;
+            color: var(--spotify-text);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .profile-tabs {
+            display: flex;
+            justify-content: space-around;
+            border-bottom: 1px solid var(--spotify-card);
+            margin-bottom: 1px;
+        }
+
+        .tab-item {
+            padding: 12px;
+            color: var(--spotify-text-secondary);
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+        }
+
+        .tab-item.active {
+    color: var(--spotify-accent); /* Colora l'icona di verde */
+    border-bottom-color: var(--spotify-accent); /* Colora il bordo di verde */
+}
+
+        .profile-content-grid {
+            padding-top: 16px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+        }
+
+        .profile-content-grid .tool-card-grid .logo-container {
+            aspect-ratio: 1 / 1;
+            border-radius: 2px;
+        }
+
+        .profile-content-grid .tool-card-grid .tool-name {
+           display: none;
+        }
 
     </style>
     <!-- SCRIPT AGGIUNTI PER REACT E BABEL -->
@@ -2711,6 +2847,12 @@
                 noChatsFound: "Nessuna chat trovata. Inizia una nuova conversazione.",
                 writeMessage: "Scrivi un messaggio...",
                 sendError: "Errore nell'invio del messaggio",
+                // NUOVE TRADUZIONI LIBRERIA
+                libraryFavorites: "preferiti",
+                libraryCustom: "custom",
+                librarySuggested: "suggeriti",
+                editProfile: "Modifica profilo",
+                viewChats: "Visualizza chat",
             },
             en: {
                 // Auth
@@ -2804,6 +2946,12 @@
                 noChatsFound: "No chats found. Start a new conversation.",
                 writeMessage: "Write a message...",
                 sendError: "Error sending message",
+                // NEW LIBRARY TRANSLATIONS
+                libraryFavorites: "favorites",
+                libraryCustom: "custom",
+                librarySuggested: "suggested",
+                editProfile: "Edit profile",
+                viewChats: "View chats",
             }
         };
         
@@ -2968,10 +3116,11 @@
         // currentUser will now include Firestore data (favorites, userTools, userFeaturedTools, userFeaturedReplacements)
         // and the privileged status loaded from Firestore
         let currentUser = {}; 
-        let currentView = 'home';
+                let currentView = 'home';
         let activeFilter = 'All'; // Filter for Favorites page
         let exploreFilter = { type: null, value: null }; // Filter for Explore page
         let rankingFilter = 'All'; // Filter for Top AI page
+        let libraryTab = 'favorites'; // Variabile per la scheda attiva in Libreria
         let reactRoot = null;
         let conversations = {};
         let activeConversationId = null;
@@ -3079,8 +3228,8 @@
         // Modified createGridCard to optionally show an edit icon and specify its action
         const createGridCard = (tool, context) => {
             let editIconHTML = '';
-            // Check if user is logged in AND privileged (status loaded from Firestore)
-            if (currentUser.uid && currentUser.isPrivileged) {
+            // Check if user is logged in
+            if (currentUser.uid) {
                 const isUserTool = tool.id.startsWith('user-');
                 let action = '';
                 let title = '';
@@ -3712,6 +3861,7 @@
                 }
                 el.mainContent.appendChild(contentArea);
             } else if (currentView === 'favorites') {
+                el.mainContent.innerHTML = '';
                 if (isGuest) {
                     contentArea.innerHTML = `
                         <div class="auth-prompt-card">
@@ -3724,127 +3874,122 @@
                         </div>
                     `;
                 } else {
-                    let contentHTML = '';
+                    const userInitial = currentUser.nickname ? currentUser.nickname.charAt(0).toUpperCase() : 'P';
+                    const userNickname = currentUser.nickname || 'rickiponte';
+                    const userFullName = currentUser.fullName || currentUser.nickname; // Fallback sul nickname
 
-                    // Add the K button for logged-in users (only if not already privileged)
-                    if (currentUser.uid && !currentUser.isPrivileged) {
-                         contentHTML += `<button id="privileged-unlock-btn" data-action="unlock-privileged">K</button>`;
-                    }
+                    // Logica per determinare il contenuto della griglia e i pulsanti di azione
+                    let gridContentHTML = '';
+                    let contentGridClass = 'profile-content-grid';
+                    let actionButtonsHTML = '';
 
-                    // Add "Add Custom App" Button for privileged users
-                    if (isPrivileged) {
-                         contentHTML += `<div style="text-align: center; margin-bottom: 20px;">
-                             <button id="add-app-button" class="button" data-action="open-add-app-modal" data-translate="addCustomApp">${t.addCustomApp}</button>
-                         </div>`;
-                    }
-
-
-                    // AI Suggestions Section for all logged-in users
-                    if (currentUser.uid) {
-                        contentHTML += `
-                            <div class="section-title" style="margin-top: 30px;" data-translate="aiSuggestionsTitle">${t.aiSuggestionsTitle}</div>
-                            <div style="text-align: center; margin-bottom: 20px;">
-                                <button id="add-ai-suggestion-btn" class="button" data-action="add-ai-suggestion" data-translate="addAiSuggestionButton">${t.addAiSuggestionButton}</button>
-                            </div>
-                            <div id="ai-suggestions-list" class="suggestions-grid">
-                                ${(currentUser.aiSuggestions || []).map(suggestion => {
-                                    // Handle both old format (text) and new format (appName, description, etc.)
-                                    if (suggestion.text) {
-                                        // Old format - show as simple text
-                                        return `
-                                            <div class="suggestion-item old-format" data-id="${suggestion.id}">
-                                                <div class="suggestion-text">${suggestion.text}</div>
-                                                <div class="suggestion-actions">
-                                                    <div class="suggestion-date">${new Date(suggestion.timestamp).toLocaleDateString()}</div>
-                                                    <button class="remove-suggestion-btn" data-action="remove-ai-suggestion" data-id="${suggestion.id}" title="${t.removeAiSuggestion}">×</button>
-                                                </div>
-                                            </div>
-                                        `;
-                                    } else {
-                                        // New format - show as app card
-                                        return `
-                                            <div class="suggestion-item new-format" data-id="${suggestion.id}">
-                                                <div class="suggestion-header">
-                                                    <h3 class="suggestion-app-name">${suggestion.appName}</h3>
-                                                    <div class="suggestion-meta">
-                                                        <span class="suggestion-category">${suggestion.category}</span>
-                                                        <span class="suggestion-country">${suggestion.country}</span>
-                                                    </div>
-                                                </div>
-                                                <div class="suggestion-description">${suggestion.description}</div>
-                                                <div class="suggestion-actions">
-                                                    <a href="${suggestion.website}" target="_blank" class="suggestion-website-btn">
-                                                        🌐 ${t.visitWebsite}
-                                                    </a>
-                                                    <div class="suggestion-date">${new Date(suggestion.timestamp).toLocaleDateString()}</div>
-                                                    <button class="remove-suggestion-btn" data-action="remove-ai-suggestion" data-id="${suggestion.id}" title="${t.removeAiSuggestion}">🗑️</button>
-                                                </div>
-                                            </div>
-                                        `;
-                                    }
-                                }).join('')}
-                            </div>
+                    if (libraryTab === 'favorites') {
+                        const favoriteTools = allTools.filter(t => currentUser.favorites.includes(t.id));
+                        gridContentHTML = favoriteTools.length > 0
+                            ? favoriteTools.map(tool => createGridCard(tool, 'library')).join('')
+                            : `<div id="empty-state" style="grid-column: 1 / -1;">${t.emptyFavorites}</div>`;
+                    } else if (libraryTab === 'custom') {
+                        const userTools = currentUser.userTools || [];
+                        
+                        // NUOVO: Definiamo il pulsante fluttuante "+" per questa sezione, identico a quello dei suggerimenti
+                        actionButtonsHTML = `
+                            <button class="floating-action-btn" data-action="open-add-app-modal" title="${t.addCustomApp}">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                            </button>
                         `;
+
+                        // La griglia ora contiene solo le app dell'utente o il messaggio di stato vuoto.
+                        gridContentHTML = userTools.length > 0
+                            ? userTools.map(tool => createGridCard(tool, 'library')).join('')
+                            : `<div id="empty-state" style="grid-column: 1 / -1;">${t.emptyUserTools}</div>`;
+                    } else if (libraryTab === 'suggestions') {
+                        contentGridClass = 'suggestions-grid';
+                        const suggestions = currentUser.aiSuggestions || [];
+                        // <!-- NUOVO: Pulsante Aggiungi Suggerimento (FAB) -->
+                        actionButtonsHTML = `
+                            <button class="floating-action-btn" data-action="add-ai-suggestion" title="${t.addAiSuggestionTitle}">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                            </button>
+                        `;
+                        gridContentHTML = suggestions.length > 0
+                            ? suggestions.map(suggestion => `
+                                <div class="suggestion-item new-format" style="grid-column: 1 / -1; max-width: 100%;">
+                                    <div class="suggestion-header">
+                                        <h3 class="suggestion-app-name">${suggestion.appName}</h3>
+                                        <div class="suggestion-meta">
+                                            <span class="suggestion-category">${suggestion.category}</span>
+                                            <span class="suggestion-country">${suggestion.country}</span>
+                                        </div>
+                                    </div>
+                                    <div class="suggestion-description">${suggestion.description}</div>
+                                    <div class="suggestion-actions">
+                                        <a href="${suggestion.website}" target="_blank" class="suggestion-website-btn">
+                                            🌐 ${t.visitWebsite}
+                                        </a>
+                                        <button class="remove-suggestion-btn" data-action="remove-ai-suggestion" data-id="${suggestion.id}">
+                                            ${t.removeAiSuggestion}
+                                        </button>
+                                    </div>
+                                </div>
+                            `).join('')
+                            : `<div id="empty-state" style="grid-column: 1 / -1;">${t.noSuggestions}</div>`;
                     }
-
-                    // User Featured Section for privileged users
-                    // userFeaturedTools now comes from currentUser (synced with Firestore)
-                    const userFeaturedTools = (currentUser.userTools || []).filter(tool => currentUser.userFeaturedTools?.includes(tool.id));
-                    if (isPrivileged) {
-                         contentHTML += `
-                             <div class="user-featured-section">
-                                 <div class="section-title" data-translate="featuredByYou">${t.featuredByYou}</div>
-                                 <div class="grid-container">
-                                     ${userFeaturedTools.length > 0 ? userFeaturedTools.map(tool => createGridCard(tool, 'user-featured-section')).join('') : '' /* Removed empty state text */}
-                                 </div>
-                             </div>
-                         `;
-                    }
-
-                    // Main Library List (Static Favorites + All User Tools)
-                    const staticFavorites = staticTools.filter(t => currentUser.favorites.includes(t.id));
-                    const allUserTools = currentUser.userTools || []; // userTools now comes from currentUser (synced with Firestore)
-                    // Unisco e filtro per unicità
-                    const combinedLibraryTools = [...staticFavorites, ...allUserTools].filter((tool, idx, arr) => arr.findIndex(t => t.id === tool.id) === idx);
-
-                    // Determine available categories for filtering (from static favorites + user tools)
-                    const availableCategoriesInLibrary = [...new Set(combinedLibraryTools.map(t => t.category))];
-                    const filterPills = ['All', ...availableCategoriesInLibrary.filter(cat => cat)]; // Filter out undefined/null categories
-                    const filtersHTML = `<div class="filters-container"><div class="filter-pills">${filterPills.map(f_id => `<button class="pill-btn ${activeFilter === f_id ? 'active' : ''}" data-action="set-favorite-filter" data-filter="${f_id}">${f_id === 'All' ? t.filterAll : getTranslatedCategoryName(f_id)}</button>`).join('')}</div></div>`;
-                    el.mainContent.insertAdjacentHTML('beforeend', filtersHTML);
-
-                    let filteredLibraryTools = activeFilter === 'All' ? combinedLibraryTools : combinedLibraryTools.filter(t => t.category === activeFilter);
-
-                    // Exclude user featured tools from the main list if they are shown in the featured section AND the user is privileged
-                    if (isPrivileged) {
-                         const userFeaturedIds = userFeaturedTools.map(t => t.id);
-                         filteredLibraryTools = filteredLibraryTools.filter(tool => !userFeaturedIds.includes(tool.id));
-                    }
-
-                    // Pass context 'library' to createListCard
-                    contentHTML += filteredLibraryTools.length > 0 ? `<div class="list-container">${filteredLibraryTools.map(tool => createListCard(tool, 'library')).join('')}</div>` : `<div id="empty-state">${t.emptyFavorites}</div>`; // Use emptyFavorites for now, could add emptyUserTools state
-
-                    contentArea.innerHTML = contentHTML;
                     
-                    // Add event listeners for AI suggestions buttons
-                    if (currentUser.uid) {
-                        const addSuggestionBtn = document.getElementById('add-ai-suggestion-btn');
-                        if (addSuggestionBtn) {
-                            console.log('Adding event listener to add-ai-suggestion-btn');
-                            addSuggestionBtn.addEventListener('click', (e) => {
-                                e.preventDefault();
-                                console.log('Add suggestion button clicked');
-                                if (currentUser.uid) {
-                                    console.log('Calling addAiSuggestion function');
-                                    window.addAiSuggestion();
-                                } else {
-                                    triggerAuthFlow();
-                                }
-                            });
-                        } else {
-                            console.log('add-ai-suggestion-btn not found in DOM');
-                        }
-                    }
+                    const globalControls = getGlobalControlsHTML();
+
+                    contentArea.innerHTML = `
+                        <div class="top-bar-library" style="position: absolute; top: 16px; right: 16px; display: flex; gap: 8px;">
+                            ${globalControls.otherControls}
+                        </div>
+                        <div class="profile-page-container">
+                             <div class="profile-header">
+                                <div class="profile-username">${userNickname} <svg height="16" width="16" viewBox="0 0 24 24"><path fill="currentColor" d="M7 10l5 5 5-5z"></path></svg></div>
+                            </div>
+
+                            <div class="profile-info">
+                                <div class="profile-avatar">${userInitial}</div>
+                                <div class="profile-stats">
+                                    <div class="stat-item">
+                                        <span class="stat-number">${currentUser.favorites.length}</span>
+                                        <span class="stat-label" data-translate="libraryFavorites">${t.libraryFavorites}</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-number">${currentUser.userTools.length}</span>
+                                        <span class="stat-label" data-translate="libraryCustom">${t.libraryCustom}</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-number">${currentUser.aiSuggestions.length}</span>
+                                        <span class="stat-label" data-translate="librarySuggested">${t.librarySuggested}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="profile-details">
+                                <div class="profile-fullname">${userFullName}</div>
+                            </div>
+
+                            <div class="profile-actions-buttons">
+                                <button class="profile-btn" data-action="open-settings" data-translate="editProfile">${t.editProfile}</button>
+                                <button class="profile-btn" data-action="navigate" data-page="user-chats" data-translate="viewChats">${t.viewChats}</button>
+                            </div>
+
+                            <div class="profile-tabs">
+                                <div class="tab-item ${libraryTab === 'favorites' ? 'active' : ''}" data-action="set-library-tab" data-tab="favorites">
+                                    <svg height="24" width="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
+                                </div>
+                                <div class="tab-item ${libraryTab === 'custom' ? 'active' : ''}" data-action="set-library-tab" data-tab="custom">
+                                    <svg height="24" width="24" viewBox="0 0 24 24" fill="currentColor"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"></path></svg>
+                                </div>
+                                <div class="tab-item ${libraryTab === 'suggestions' ? 'active' : ''}" data-action="set-library-tab" data-tab="suggestions">
+                                    <svg height="24" width="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"></path></svg>
+                                </div>
+                            </div>
+                            ${libraryTab === 'custom' ? actionButtonsHTML : ''}
+                            <div class="${contentGridClass}">
+                                ${gridContentHTML}
+                            </div>
+                        </div>
+                        ${libraryTab === 'suggestions' ? actionButtonsHTML : ''}
+                    `;
                 }
                 el.mainContent.appendChild(contentArea);
             }
@@ -3863,8 +4008,9 @@
             <div id="register-card" class="auth-card">
                 <button class="auth-close-btn" data-action="close-auth">×</button>
                 <svg class="auth-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="48" stroke="currentColor" stroke-width="4" fill="none"/><text x="50" y="62" font-size="40" font-weight="bold" text-anchor="middle" fill="currentColor">AI</text></svg>
-                <h2 data-translate="createAccount">${t.createAccount}</h2>
+                                <h2 data-translate="createAccount">${t.createAccount}</h2>
                 <div class="input-group"><label for="register-nickname" data-translate="registerNicknameLabel">${t.registerNicknameLabel}</label><input type="text" id="register-nickname" placeholder="${t.registerNicknamePlaceholder}"></div>
+                <div class="input-group"><label for="register-fullname" data-translate="registerFullNameLabel">${t.registerFullNameLabel}</label><input type="text" id="register-fullname" placeholder="${t.registerFullNamePlaceholder}"></div>
                 <div class="input-group"><label for="register-email" data-translate="registerEmailLabel">${t.registerEmailLabel}</label><input type="email" id="register-email" placeholder="${t.registerEmailPlaceholder}"></div>
                 <div class="input-group"><label for="register-password" data-translate="registerPasswordLabel">${t.registerPasswordLabel}</label><input type="password" id="register-password" placeholder="${t.registerPasswordPlaceholder}"></div>
                 <button id="register-btn" class="button" data-translate="registerButton">${t.registerButton}</button>
@@ -4930,47 +5076,7 @@ const viewUserSuggestions = async (userId, userNickname) => {
                 return; // Stop processing
             }
 
-            // 2. Handle the K button click (specific element, specific logic)
-            const kButton = target.closest('#privileged-unlock-btn');
-            // Check if user is logged in AND NOT already privileged (status loaded from Firestore)
-            if (kButton && currentUser.uid && !currentUser.isPrivileged) {
-                 const now = Date.now();
-                 if (now - lastKButtonClickTime > K_BUTTON_CLICK_RESET_DELAY) {
-                     kButtonClickCount = 0; // Reset if clicks are too slow
-                 }
-                 kButtonClickCount++;
-                 lastKButtonClickTime = now;
 
-                 // Clear any previous timeout and set a new one
-                 clearTimeout(kButtonClickTimeout);
-                 kButtonClickTimeout = setTimeout(() => {
-                     kButtonClickCount = 0; // Reset count after delay if no new click occurs
-                 }, K_BUTTON_CLICK_RESET_DELAY);
-
-                 console.log(`K button clicked: ${kButtonClickCount} times`);
-
-                 if (kButtonClickCount >= K_BUTTON_CLICK_THRESHOLD) {
-                     kButtonClickCount = 0; // Reset immediately after unlocking
-                     lastKButtonClickTime = 0;
-                     clearTimeout(kButtonClickTimeout); // Clear the reset timeout
-
-                     // Unlock privileged mode in Firestore
-                     const userDocRef = doc(db, "users", currentUser.uid);
-                     updateDoc(userDocRef, { isPrivileged: true })
-                         .then(() => {
-                             currentUser.isPrivileged = true; // Update local state after successful Firestore update
-                             showToast(translations[currentLanguage].privilegedUnlocked);
-                             // Re-render the view to show the "Add Custom App" button and featured section
-                             renderView(); 
-                         })
-                         .catch(error => {
-                             console.error("Error unlocking privileged mode:", error);
-                             showToast(`Error unlocking feature: ${error.message}`);
-                         });
-                 }
-                 e.preventDefault(); // Prevent default button click behavior
-                 return; // Stop processing
-            }
 
 
             // 3. Handle elements with data-action (excluding the K button which is handled above)
@@ -4978,7 +5084,14 @@ const viewUserSuggestions = async (userId, userNickname) => {
             if (actionTarget && actionTarget.id !== 'privileged-unlock-btn') { // Explicitly exclude K button
                 const action = actionTarget.dataset.action;
                 
-                switch(action) {
+                                switch(action) {
+                    case 'set-library-tab':
+                        const tab = actionTarget.dataset.tab;
+                        if (tab && tab !== libraryTab) {
+                            libraryTab = tab;
+                            renderView();
+                        }
+                        break;
                     // Global Controls
                     case 'toggle-theme':
                         // Cambia il tema
@@ -5066,22 +5179,26 @@ const viewUserSuggestions = async (userId, userNickname) => {
                         renderView(); // Re-render to apply favorite filter
                         break;
 
+                    case 'navigate':
+                        const page = actionTarget.dataset.page;
+                        if (page && page !== currentView) {
+                            currentView = page;
+                            renderView();
+                        }
+                        break;
                     // Modals (Detail, Settings, Add App, Replace Featured)
                     case 'close-modal': closeModal(); break;
                     case 'toggle-favorite': toggleFavorite(actionTarget.dataset.id); break;
                     case 'open-detail-modal': // For recommendation box in detail modal
                          window.openDetailModal(actionTarget.dataset.id);
                          break;
-                    case 'open-add-app-modal': // This action is now triggered by the "Add Custom App" button
-                         // We still need the privilege check here as a safeguard
-                         // Check privileged status loaded from Firestore
-                         if (currentUser.uid && currentUser.isPrivileged) {
+                                        case 'open-add-app-modal':
+                         // MODIFICATO: Rimosso il controllo isPrivileged.
+                         // Ora qualsiasi utente loggato può aggiungere un'app.
+                         if (currentUser.uid) {
                              openAddAppModal();
-                         } else if (currentUser.uid) {
-                             // Maybe show a message that they need to unlock privileged mode?
-                             showToast("Click the 'K' button 5 times to unlock this feature!");
                          } else {
-                             triggerAuthFlow(); // Prompt login if not logged in
+                             triggerAuthFlow(); // Se non è loggato, chiedi di accedere.
                          }
                          break;
                     case 'toggle-user-featured': // Triggered by pencil on user featured apps in Library
@@ -5277,52 +5394,62 @@ const viewUserSuggestions = async (userId, userNickname) => {
         onAuthStateChanged(auth, user => {
             if (user) {
                 console.log("User logged in:", user.uid);
-                // Initialize currentUser with basic info from Firebase
-                currentUser = { uid: user.uid, name: user.email, nickname: user.email.split('@')[0], favorites: [], userTools: [], userFeaturedTools: [], userFeaturedReplacements: {}, isPrivileged: false, aiSuggestions: [] }; 
-                // Fetch all user data (favorites, userTools, userFeaturedTools, userFeaturedReplacements, isPrivileged, nickname, aiSuggestions) from Firestore
                 const userDocRef = doc(db, "users", user.uid);
-                 getDoc(userDocRef).then(userDocSnap => {
-                     if (userDocSnap.exists()) {
-                         const data = userDocSnap.data();
-                         currentUser.favorites = data.favorites || [];
-                         currentUser.userTools = data.userTools || [];
-                         currentUser.userFeaturedTools = data.userFeaturedTools || [];
-                         currentUser.userFeaturedReplacements = data.userFeaturedReplacements || {}; // Fetch replacements
-                         currentUser.isPrivileged = data.isPrivileged || false; // Load privileged status
-                         currentUser.nickname = data.nickname || user.email.split('@')[0]; // Load nickname
-                         currentUser.aiSuggestions = data.aiSuggestions || []; // Load AI suggestions
-                     } else {
-                         // Create user doc if it doesn't exist with initial empty arrays and non-privileged status
-                         const initialUserData = { 
-                             email: user.email,
-                             nickname: user.email.split('@')[0], // Use email prefix as default nickname
-                             favorites: [],
-                             userTools: [],
-                             userFeaturedTools: [],
-                             userFeaturedReplacements: {}, // Initialize replacements
-                             isPrivileged: false, // Default to non-privileged
-                             aiSuggestions: [] // Initialize AI suggestions
-                         };
-                         setDoc(userDocRef, initialUserData).catch(e => console.error("Error creating user doc:", e));
-                         // currentUser is already initialized with empty arrays above
-                         currentUser.isPrivileged = false; // Ensure local state reflects default
-                     }
-                 }).catch(e => console.error("Error fetching user data:", e))
-                 .finally(() => {
-                     // Proceed with app initialization after attempting to load user data
-                     loadConversations();
-                     el.authOverlay.classList.add('hidden');
-                     el.authOverlay.addEventListener('transitionend', () => {
-                          el.authOverlay.style.display = 'none';
-                          el.authOverlay.innerHTML = ''; // Clear content after transition
-                     }, { once: true });
-                     el.appContainer.style.display = 'flex';
-                     renderView(); // Render the app view
-                 });
+
+                // Carica i dati dell'utente e il conteggio delle chat in parallelo
+                Promise.all([
+                    getDoc(userDocRef),
+                    getUserChats(user.uid)
+                ]).then(([userDocSnap, chatsData]) => {
+                    if (userDocSnap.exists()) {
+                        const data = userDocSnap.data();
+                        currentUser = {
+                            uid: user.uid,
+                            name: user.email,
+                            nickname: data.nickname || user.email.split('@')[0],
+                            fullName: data.fullName || '', // <-- CARICA IL NOME COMPLETO
+                            favorites: data.favorites || [],
+                            userTools: data.userTools || [],
+                            userFeaturedTools: data.userFeaturedTools || [],
+                            userFeaturedReplacements: data.userFeaturedReplacements || {},
+                            isPrivileged: data.isPrivileged || false,
+                            aiSuggestions: data.aiSuggestions || [],
+                            chatCount: chatsData.length // Salva il conteggio delle chat
+                        };
+                    } else {
+                        // Se l'utente non esiste, crealo
+                        const initialUserData = {
+                            email: user.email,
+                            nickname: user.email.split('@')[0],
+                            favorites: [],
+                            userTools: [],
+                            userFeaturedTools: [],
+                            userFeaturedReplacements: {},
+                            isPrivileged: false,
+                            aiSuggestions: []
+                        };
+                        setDoc(userDocRef, initialUserData).catch(e => console.error("Error creating user doc:", e));
+                        currentUser = { uid: user.uid, name: user.email, ...initialUserData, chatCount: 0 };
+                    }
+                }).catch(e => {
+                    console.error("Error fetching user data or chats:", e);
+                    // Fallback in caso di errore
+                    currentUser = { uid: user.uid, name: user.email, nickname: user.email.split('@')[0], favorites: [], userTools: [], userFeaturedTools: [], userFeaturedReplacements: {}, isPrivileged: false, aiSuggestions: [], chatCount: 0 };
+                }).finally(() => {
+                    // Questa parte viene eseguita sempre, sia in caso di successo che di errore
+                    loadConversations();
+                    el.authOverlay.classList.add('hidden');
+                    el.authOverlay.addEventListener('transitionend', () => {
+                         el.authOverlay.style.display = 'none';
+                         el.authOverlay.innerHTML = '';
+                    }, { once: true });
+                    el.appContainer.style.display = 'flex';
+                    renderView();
+                });
 
             } else {
                 console.log("User logged out or is guest.");
-                initializeAppForGuest(); // Guest mode doesn't load/save user data
+                initializeAppForGuest();
             }
         });
         
