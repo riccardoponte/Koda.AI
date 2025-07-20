@@ -3160,6 +3160,12 @@
                 resetPasswordTitle: "Reimposta Password", resetPasswordInfo: "Inserisci la tua email e ti invieremo un link per reimpostare la password.",
                 sendLinkButton: "Invia Link", backToLogin: "Torna al Login",
                 passwordResetSent: "Se l'utente esiste, un link per il reset è stato inviato a %s.",
+                registerNicknameLabel: "Nickname",
+                registerNicknamePlaceholder: "Es. Koda",
+                registerFullNameLabel: "Nome Completo",
+                registerFullNamePlaceholder: "Es. Mario Rossi",
+                nicknameRequired: "Il nickname è obbligatorio.",
+                fullNameRequired: "Il nome completo è obbligatorio.",
                 // App
                 navHome: "Home", navTopAI: "TOP AI", navSearch: "Cerca", navSearchUsers: "Utenti", navUserChats: "Chat", navLibrary: "Libreria",
                 pageTitleHome: "Koda.AI Chatbot", pageTitleTopAI: "TOP AI", pageTitleSearch: "Cerca", pageTitleSearchUsers: "Utenti", pageTitleUserChats: "Chat Utenti", pageTitleLibrary: "La tua libreria",
@@ -3209,9 +3215,6 @@
                 noUserApps: "Non hai ancora aggiunto app custom.", // New translation
                 removeFeaturedReplacement: "Rimuovi Sostituzione", // New translation
                 removeUserTool: "Rimuovi App Custom", // New translation for removing user tools
-                registerNicknameLabel: "Nickname",
-                registerNicknamePlaceholder: "Es. Koda",
-                nicknameRequired: "Il nickname è obbligatorio.",
                 changeNicknameTitle: "Cambia nickname",
                 saveNicknameButton: "Salva Nickname",
                 nicknameUpdateSuccess: "Nickname aggiornato con successo!",
@@ -3259,6 +3262,12 @@
                 resetPasswordTitle: "Reset Password", resetPasswordInfo: "Enter your email and we'll send you a link to reset your password.",
                 sendLinkButton: "Send Link", backToLogin: "Back to Login",
                 passwordResetSent: "If the user exists, a reset link has been sent to %s.",
+                registerNicknameLabel: "Nickname",
+                registerNicknamePlaceholder: "Ex. Koda",
+                registerFullNameLabel: "Full Name",
+                registerFullNamePlaceholder: "Ex. John Doe",
+                nicknameRequired: "Nickname is required.",
+                fullNameRequired: "Full name is required.",
                 // App
                 navHome: "Home", navTopAI: "TOP AI", navSearch: "Search", navSearchUsers: "Users", navUserChats: "Chats", navLibrary: "Library",
                 pageTitleHome: "Koda.AI Chatbot", pageTitleTopAI: "TOP AI", pageTitleSearch: "Search", pageTitleSearchUsers: "Search Users", pageTitleUserChats: "User Chats", pageTitleLibrary: "Your Library",
@@ -3308,9 +3317,6 @@
                 noUserApps: "You haven't added any custom apps yet.", // New translation
                 removeFeaturedReplacement: "Remove Replacement", // New translation
                 removeUserTool: "Remove Custom App", // New translation for removing user tools
-                registerNicknameLabel: "Nickname",
-                registerNicknamePlaceholder: "Ex. Koda",
-                nicknameRequired: "Nickname is required.",
                 changeNicknameTitle: "Change Nickname",
                 saveNicknameButton: "Save Nickname",
                 nicknameUpdateSuccess: "Nickname updated successfully!",
@@ -4466,17 +4472,22 @@
                 // Handle button clicks directly (delegation is better but keeping original structure)
                 if (target.id === 'register-btn') {
                     const nickname = el.authOverlay.querySelector('#register-nickname').value.trim();
+                    const fullName = el.authOverlay.querySelector('#register-fullname').value.trim();
                     const email = el.authOverlay.querySelector('#register-email').value;
                     const password = el.authOverlay.querySelector('#register-password').value;
                     const t = translations[currentLanguage];
+
                     if (!nickname) { showToast(t.nicknameRequired); return; }
+                    if (!fullName) { showToast(t.fullNameRequired); return; }
                     if (!email.includes('@') || password.length < 6) { showToast(t.passwordTooShort); return; }
+                    
                     createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
-                        // After successful registration, save nickname to Firestore
+                        // After successful registration, save nickname and full name to Firestore
                         const userDocRef = doc(db, "users", userCredential.user.uid);
                         const initialUserData = { 
                             email: email,
                             nickname: nickname,
+                            fullName: fullName,
                             favorites: [],
                             userTools: [],
                             userFeaturedTools: [],
