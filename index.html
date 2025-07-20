@@ -411,6 +411,28 @@
         .nav-btn { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; background: none; border: none; color: var(--spotify-text-secondary); font-size: 12px; font-weight: 500; cursor: pointer; transition: color 0.2s; }
         .nav-btn .icon { font-size: 24px; margin-bottom: 4px; }
         .nav-btn.active { color: var(--spotify-accent); }
+
+        /* Badge di notifica per messaggi non letti */
+        .notification-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background-color: #ff4444;
+            color: white;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            border: 2px solid var(--spotify-bg);
+        }
+
+        .nav-btn .icon {
+            position: relative;
+        }
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
         body.light-mode .modal-overlay { background: rgba(255, 255, 255, 0.6); }
         .modal-overlay.visible { opacity: 1; visibility: visible; }
@@ -1383,6 +1405,18 @@
             font-weight: bold;
             color: black;
             font-size: 18px;
+            position: relative;
+        }
+
+        .online-indicator {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 12px;
+            height: 12px;
+            background-color: #4CAF50;
+            border-radius: 50%;
+            border: 2px solid var(--spotify-bg-light);
         }
 
         .user-chat-info h3 {
@@ -1432,6 +1466,48 @@
             font-size: 12px;
             opacity: 0.7;
             margin-top: 4px;
+        }
+
+        /* Stili per l'indicatore di typing */
+        .typing-indicator {
+            opacity: 0.8;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .typing-dots span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--spotify-text-secondary);
+            animation: typing-pulse 1.4s infinite ease-in-out;
+        }
+
+        .typing-dots span:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .typing-dots span:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+
+        .typing-dots span:nth-child(3) {
+            animation-delay: 0s;
+        }
+
+        @keyframes typing-pulse {
+            0%, 80%, 100% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
 
         .user-chat-input-container {
@@ -1916,7 +1992,13 @@
             <button class="nav-btn active" data-page="home"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></span><span data-translate="navHome">Home</span></button>
             <button class="nav-btn" data-page="top-ai"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M5 9.2h3V19H5zM10.6 5h3v14h-3zm5.6 8H19v6h-2.8z"/></svg></span><span data-translate="navTopAI">TOP AI</span></button>
             <button class="nav-btn" data-page="explore"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></span><span data-translate="navSearch">Cerca</span></button>
-            <button class="nav-btn" data-page="user-chats"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg></span><span data-translate="navUserChats">Chat</span></button>
+            <button class="nav-btn" data-page="user-chats">
+                <span class="icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
+                    <span id="chat-notification-badge" class="notification-badge" style="display: none;"></span>
+                </span>
+                <span data-translate="navUserChats">Chat</span>
+            </button>
             <button class="nav-btn" data-page="favorites"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg></span><span data-translate="navLibrary">La tua libreria</span></button>
         </nav>
     </div>
@@ -2271,18 +2353,47 @@
                 };
             }, []); // L'array vuoto assicura che questo effetto venga eseguito solo una volta
 
+            const [messagesUnsubscribe, setMessagesUnsubscribe] = useState(null);
+            const [chatsUnsubscribe, setChatsUnsubscribe] = useState(null);
+            const [typingUnsubscribe, setTypingUnsubscribe] = useState(null);
+            const [isOtherUserTyping, setIsOtherUserTyping] = useState(false);
+            const [typingTimeout, setTypingTimeout] = useState(null);
+            const [onlineUnsubscribe, setOnlineUnsubscribe] = useState(null);
+            const [isOtherUserOnline, setIsOtherUserOnline] = useState(false);
+
             useEffect(() => {
                 if (currentUser.uid) {
-                    loadUserChats();
+                    setupRealtimeChatsListener();
                 }
                 window.handleReactChatStart = handleStartChat;
+                
+                // Cleanup function
+                return () => {
+                    if (messagesUnsubscribe) {
+                        messagesUnsubscribe();
+                    }
+                    if (chatsUnsubscribe) {
+                        chatsUnsubscribe();
+                    }
+                    if (typingUnsubscribe) {
+                        typingUnsubscribe();
+                    }
+                    if (typingTimeout) {
+                        clearTimeout(typingTimeout);
+                    }
+                    if (onlineUnsubscribe) {
+                        onlineUnsubscribe();
+                    }
+                };
             }, [currentUser.uid]);
 
             useEffect(() => {
-                if (selectedChatId) {
-                    loadChatMessages(selectedChatId);
+                if (selectedChatId && selectedUser) {
+                    setupRealtimeMessagesListener(selectedChatId);
+                    setupRealtimeTypingListener(selectedChatId);
+                    setupRealtimeOnlineListener(selectedUser.uid);
                 }
-            }, [selectedChatId]);
+                          }, [selectedChatId, selectedUser]);
 
             useEffect(() => {
                 messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -2336,6 +2447,120 @@
                 }
             };
 
+            // Setup realtime listener for user chats
+            const setupRealtimeChatsListener = () => {
+                if (chatsUnsubscribe) {
+                    chatsUnsubscribe();
+                }
+                
+                const unsubscribe = window.setupChatsListener(currentUser.uid, (chatsData) => {
+                    const hiddenChatIds = getHiddenChatIds();
+                    const visibleChats = chatsData.filter(chat => !hiddenChatIds.includes(chat.id));
+                    setChats(visibleChats.sort((a, b) => (b.lastMessageTime?.seconds || 0) - (a.lastMessageTime?.seconds || 0)));
+                });
+                
+                setChatsUnsubscribe(() => unsubscribe);
+            };
+
+            // Setup realtime listener for messages in a specific chat
+            const setupRealtimeMessagesListener = (chatId) => {
+                if (messagesUnsubscribe) {
+                    messagesUnsubscribe();
+                }
+                
+                let isFirstLoad = true;
+                const unsubscribe = window.setupMessagesListener(chatId, (messagesData) => {
+                    const currentMessageCount = messages.length;
+                    setMessages(messagesData);
+                    
+                    // Play notification sound for new messages (not on first load)
+                    if (!isFirstLoad && messagesData.length > currentMessageCount) {
+                        const latestMessage = messagesData[messagesData.length - 1];
+                        if (latestMessage.senderId !== currentUser.uid) {
+                            playNotificationSound();
+                        }
+                    }
+                    isFirstLoad = false;
+                    
+                    // Auto-scroll to bottom when new messages arrive
+                    setTimeout(() => {
+                        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+                    }, 100);
+                });
+                
+                setMessagesUnsubscribe(() => unsubscribe);
+            };
+
+            // Play notification sound
+            const playNotificationSound = () => {
+                try {
+                    // Create a simple beep sound using Web Audio API
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.value = 800;
+                    oscillator.type = 'sine';
+                    
+                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                    
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.5);
+                } catch (error) {
+                    console.log('Could not play notification sound:', error);
+                }
+            };
+
+            // Setup realtime listener for typing status
+            const setupRealtimeTypingListener = (chatId) => {
+                if (typingUnsubscribe) {
+                    typingUnsubscribe();
+                }
+                
+                const unsubscribe = window.setupTypingListener(chatId, currentUser.uid, (isTyping) => {
+                    setIsOtherUserTyping(isTyping);
+                });
+                
+                setTypingUnsubscribe(() => unsubscribe);
+            };
+
+            // Handle typing indicator
+            const handleTyping = () => {
+                if (!selectedChatId) return;
+                
+                // Clear previous timeout
+                if (typingTimeout) {
+                    clearTimeout(typingTimeout);
+                }
+                
+                // Set typing to true
+                window.updateTypingStatus(selectedChatId, currentUser.uid, true);
+                
+                // Set timeout to clear typing status after 3 seconds of inactivity
+                const timeout = setTimeout(() => {
+                    window.updateTypingStatus(selectedChatId, currentUser.uid, false);
+                }, 3000);
+                
+                setTypingTimeout(timeout);
+            };
+
+            // Setup realtime listener for user online status
+            const setupRealtimeOnlineListener = (userId) => {
+                if (onlineUnsubscribe) {
+                    onlineUnsubscribe();
+                }
+                
+                const unsubscribe = window.setupUserOnlineListener(userId, (status) => {
+                    setIsOtherUserOnline(status.isOnline);
+                });
+                
+                setOnlineUnsubscribe(() => unsubscribe);
+            };
+
             const loadChatMessages = async (chatId) => {
                 try {
                     const messagesSnapshot = await window.getChatMessages(chatId);
@@ -2380,8 +2605,7 @@
                 try {
                     await window.sendChatMessage(selectedChatId, currentUser.uid, messageInput.trim(), selectedUser.uid);
                     setMessageInput('');
-                    await loadChatMessages(selectedChatId);
-                    await loadUserChats();
+                    // Non serve più ricaricare manualmente - i listener in tempo reale si occuperanno dell'aggiornamento
                 } catch (error) {
                     console.error("Error sending message:", error);
                     window.showToast("Errore nell'invio del messaggio");
@@ -2578,8 +2802,18 @@
                         <button className="user-chat-back-btn" onClick={() => setView('list')}>
                             <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
                         </button>
-                        <div className="user-chat-avatar" data-action="view-user-suggestions" data-uid={selectedUser?.uid} data-nickname={selectedUser?.nickname} style={{ cursor: 'pointer' }}>{selectedUser?.nickname ? selectedUser.nickname.charAt(0).toUpperCase() : 'U'}</div>
-                        <div className="user-chat-info" data-action="view-user-suggestions" data-uid={selectedUser?.uid} data-nickname={selectedUser?.nickname} style={{ cursor: 'pointer' }}><h3>{selectedUser?.nickname || 'Utente'}</h3></div>
+                        <div className="user-chat-avatar" data-action="view-user-suggestions" data-uid={selectedUser?.uid} data-nickname={selectedUser?.nickname} style={{ cursor: 'pointer', position: 'relative' }}>
+                            {selectedUser?.nickname ? selectedUser.nickname.charAt(0).toUpperCase() : 'U'}
+                            {isOtherUserOnline && (
+                                <div className="online-indicator"></div>
+                            )}
+                        </div>
+                        <div className="user-chat-info" data-action="view-user-suggestions" data-uid={selectedUser?.uid} data-nickname={selectedUser?.nickname} style={{ cursor: 'pointer' }}>
+                            <h3>{selectedUser?.nickname || 'Utente'}</h3>
+                            <p style={{ margin: 0, fontSize: '12px', color: 'var(--spotify-text-secondary)' }}>
+                                {isOtherUserOnline ? (language === 'it' ? 'Online' : 'Online') : (language === 'it' ? 'Offline' : 'Offline')}
+                            </p>
+                        </div>
                         <div id="global-controls" dangerouslySetInnerHTML={{ __html: globalControlsHTML.otherControls }}></div>
                     </div>
                     <div className="user-chat-messages">
@@ -2589,13 +2823,26 @@
                                 <div className="user-chat-message-time">{formatMessageTime(message.timestamp)}</div>
                             </div>
                         ))}
+                        {isOtherUserTyping && (
+                            <div className="user-chat-message received typing-indicator">
+                                <div className="typing-dots">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                                <div className="user-chat-message-time">{language === 'it' ? 'sta scrivendo...' : 'is typing...'}</div>
+                            </div>
+                        )}
                         <div ref={messagesEndRef} />
                     </div>
                       <div className="user-chat-input-container">
                         <textarea
                             className="user-chat-input"
                             value={messageInput}
-                            onChange={(e) => setMessageInput(e.target.value)}
+                            onChange={(e) => {
+                                setMessageInput(e.target.value);
+                                handleTyping();
+                            }}
                             onKeyDown={handleKeyPress}
                             placeholder={language === 'it' ? 'Scrivi un messaggio...' : 'Write a message...'}
                             rows="1"
@@ -2712,6 +2959,68 @@
             lastMessage: text,
             lastMessageTime: serverTimestamp()
         });
+        
+        // Rimuovi lo stato di "typing" dopo l'invio
+        await updateTypingStatus(chatId, senderId, false);
+    };
+
+    // Gestisce lo stato di "typing" per un utente in una chat
+    const updateTypingStatus = async (chatId, userId, isTyping) => {
+        const chatRef = doc(db, 'userChats', chatId);
+        const typingField = `typing.${userId}`;
+        
+        if (isTyping) {
+            await updateDoc(chatRef, {
+                [typingField]: serverTimestamp()
+            });
+        } else {
+            await updateDoc(chatRef, {
+                [typingField]: null
+            });
+        }
+    };
+
+    // Setup listener per lo stato di typing
+    const setupTypingListener = (chatId, currentUserId, callback) => {
+        const chatRef = doc(db, 'userChats', chatId);
+        
+        return onSnapshot(chatRef, (doc) => {
+            const data = doc.data();
+            if (data && data.typing) {
+                // Controlla se qualcun altro sta scrivendo
+                const typingUsers = Object.keys(data.typing).filter(userId => 
+                    userId !== currentUserId && 
+                    data.typing[userId] && 
+                    data.typing[userId].toDate() > new Date(Date.now() - 5000) // Ultimi 5 secondi
+                );
+                callback(typingUsers.length > 0);
+            } else {
+                callback(false);
+            }
+        });
+    };
+
+    // Aggiorna lo stato online dell'utente
+    const updateUserOnlineStatus = async (userId, isOnline) => {
+        const userRef = doc(db, 'users', userId);
+        await updateDoc(userRef, {
+            isOnline: isOnline,
+            lastSeen: serverTimestamp()
+        });
+    };
+
+    // Setup listener per lo stato online di un utente
+    const setupUserOnlineListener = (userId, callback) => {
+        const userRef = doc(db, 'users', userId);
+        
+        return onSnapshot(userRef, (doc) => {
+            const data = doc.data();
+            if (data) {
+                const isOnline = data.isOnline || false;
+                const lastSeen = data.lastSeen?.toDate();
+                callback({ isOnline, lastSeen });
+            }
+        });
     };
 
     // Recupera i messaggi di una chat
@@ -2744,12 +3053,99 @@
         return chats;
     };
 
+    // Setup realtime listener for messages in a specific chat
+    const setupMessagesListener = (chatId, callback) => {
+        const messagesRef = collection(db, 'userChats', chatId, 'messages');
+        const q = query(messagesRef, orderBy('timestamp', 'asc'));
+        
+        return onSnapshot(q, (snapshot) => {
+            const messagesData = [];
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                messagesData.push({
+                    id: doc.id,
+                    ...data,
+                    timestamp: data.timestamp?.toDate() || new Date()
+                });
+            });
+            callback(messagesData);
+        }, (error) => {
+            console.error("Error in messages listener:", error);
+        });
+    };
+
+    // Setup realtime listener for user chats
+    const setupChatsListener = (userId, callback) => {
+        const chatsRef = collection(db, 'userChats');
+        const q = query(chatsRef, where('participants', 'array-contains', userId));
+        
+        return onSnapshot(q, async (snapshot) => {
+            const chats = [];
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                const otherUserId = data.participants.find(id => id !== userId);
+                const otherUserNickname = data.participants[0] === userId ? data.user2Nickname : data.user1Nickname;
+                
+                chats.push({
+                    id: doc.id,
+                    ...data,
+                    otherUserId: otherUserId,
+                    otherUserNickname: otherUserNickname
+                });
+            });
+            callback(chats);
+        }, (error) => {
+            console.error("Error in chats listener:", error);
+        });
+    };
+
     // Espone le funzioni globalmente
     window.createChatId = createChatId;
     window.getOrCreateChat = getOrCreateChat;
     window.sendChatMessage = sendChatMessage;
     window.getChatMessages = getChatMessages;
     window.getUserChats = getUserChats;
+    window.setupMessagesListener = setupMessagesListener;
+    window.setupChatsListener = setupChatsListener;
+    window.updateTypingStatus = updateTypingStatus;
+    window.setupTypingListener = setupTypingListener;
+    window.updateUserOnlineStatus = updateUserOnlineStatus;
+    window.setupUserOnlineListener = setupUserOnlineListener;
+
+    // Setup listener globale per notifiche di chat
+    const setupGlobalChatNotifications = (userId) => {
+        const chatsRef = collection(db, 'userChats');
+        const q = query(chatsRef, where('participants', 'array-contains', userId));
+        
+        return onSnapshot(q, async (snapshot) => {
+            let totalUnreadCount = 0;
+            
+            for (const chatDoc of snapshot.docs) {
+                const chatData = chatDoc.data();
+                const messagesRef = collection(db, 'userChats', chatDoc.id, 'messages');
+                const unreadQuery = query(messagesRef, where('read', '==', false), where('senderId', '!=', userId));
+                const unreadSnapshot = await getDocs(unreadQuery);
+                totalUnreadCount += unreadSnapshot.size;
+            }
+            
+            // Aggiorna il badge di notifica
+            updateChatNotificationBadge(totalUnreadCount);
+        });
+    };
+
+    const updateChatNotificationBadge = (count) => {
+        const badge = document.getElementById('chat-notification-badge');
+        if (badge) {
+            if (count > 0) {
+                badge.textContent = count > 99 ? '99+' : count.toString();
+                badge.style.display = 'flex';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+    };
+
+    window.setupGlobalChatNotifications = setupGlobalChatNotifications;
 
     document.addEventListener('DOMContentLoaded', () => {
     
@@ -5394,6 +5790,23 @@ const viewUserSuggestions = async (userId, userNickname) => {
         onAuthStateChanged(auth, user => {
             if (user) {
                 console.log("User logged in:", user.uid);
+                
+                // Imposta l'utente come online
+                updateUserOnlineStatus(user.uid, true);
+                
+                // Imposta l'utente come offline quando la pagina viene chiusa
+                window.addEventListener('beforeunload', () => {
+                    updateUserOnlineStatus(user.uid, false);
+                });
+                
+                // Aggiorna periodicamente lo stato online (heartbeat ogni 30 secondi)
+                setInterval(() => {
+                    updateUserOnlineStatus(user.uid, true);
+                }, 30000);
+                
+                // Attiva le notifiche globali per le chat
+                setupGlobalChatNotifications(user.uid);
+                
                 const userDocRef = doc(db, "users", user.uid);
 
                 // Carica i dati dell'utente e il conteggio delle chat in parallelo
