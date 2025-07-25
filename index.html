@@ -3887,10 +3887,10 @@
                 // New Privileged User Translations (Local Storage)
                 privilegedUnlocked: "Modalità privilegiata sbloccata!",
                 addCustomApp: "Aggiungi app personalizzata", // New translation for the button
-                addAppTitle: "Aggiungi Nuova App",
+                addAppTitle: "Aggiungi nuova app",
                 appNameLabel: "Nome App", appNamePlaceholder: "Es. Tun tun tun saur",
                 appDescriptionLabel: "Descrizione", appDescriptionPlaceholder: "Breve descrizione dell'app...",
-                appWebsiteLabel: "Link Web", appWebsitePlaceholder: "https://tuasito.com",
+                appWebsiteLabel: "Link Web", appWebsitePlaceholder: "https://sito.com",
                 appLogoLabel: "Logo (File Immagine)", // Updated label for file input
                 addAppButton: "Aggiungi app",
                 addAppSuccess: "App aggiunta con successo!",
@@ -5632,8 +5632,8 @@
 
         // NEW FUNCTION: Handle Add App submission (Firestore)
         const handleAddApp = async () => { // Made async again for Firestore
-             // Check privileged status loaded from Firestore
-             if (!currentUser.uid || !currentUser.isPrivileged) return;
+             // Only allow logged-in users to submit the form
+             if (!currentUser.uid) return;
 
              const nameInput = document.getElementById('add-app-name');
              const descInput = document.getElementById('add-app-description');
@@ -5746,7 +5746,7 @@
                                         <option value="USA">USA</option>
                                         <option value="Cina">Cina</option>
                                         <option value="Europe">Europe</option>
-                                        <option value="Italia">Italia</option>
+                                        
                                         <option value="Altro">Altro</option>
                                     </select>
                                 </div>
