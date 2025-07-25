@@ -4127,7 +4127,7 @@
             { id: 'tool-021', name: 'Claude', description: {it: 'Specializzato in codice e creazione di applicazioni web. Può anche scrivere testi e ricercare informazioni sul web.', en: 'Specialized in code and web app creation. Can also write text and search for information on the web.'}, category: 'Codice', country: 'USA', website: 'https://claude.ai/new', isFeatured: true, logoUrl: 'https://logo.svgcdn.com/l/claude-icon-8x.png', recommendationId: 'tool-022' }, 
             { id: 'tool-022', name: 'Gamma AI', description: {it: "Genera presentazioni, documenti e pagine web statiche partendo da un'idea.", en: 'Generates presentations, documents, and static web pages from an idea.'}, category: 'Presentazioni', country: 'USA', website: 'https://gamma.app/', isFeatured: false, logoUrl: 'https://www.fahimai.com/wp-content/uploads/2025/03/GAMMA-cta.png', recommendationId: 'tool-021' }, 
             { id: 'tool-023', name: 'Napkin AI', description: {it: 'Converte dati testuali e concetti in grafici statici e diagrammi chiari.', en: 'Converts text data and concepts into clear static charts and diagrams.'}, category: 'Presentazioni', country: 'USA', website: 'https://www.napkin.ai/', isFeatured: false, logoUrl: 'https://media.licdn.com/dms/image/v2/D560BAQEYfmQKrdByPg/company-logo_200_200/company-logo_200_200/0/1723039432148/napkin_ai_logo?e=2147483647&v=beta&t=Nsr22RG3uiy9usBNh55leGVf8ES5YJQwUANW-2N7yEA', recommendationId: 'tool-022' }, 
-            { id: 'tool-024', name: 'Google AI Studio', description: {it: "Crea app, siti e prototipi basati sui modelli Gemini di Google.", en: "Creates apps, sites, and prototypes based on Google's Gemini models."}, category: 'Codice', country: 'USA', website: 'https://aistudio.google.com/prompts/new_chat', isFeatured: true, logoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRanTHTxbnByd8heqLVawRfT24UAfvkyxTO5WskXGtfX7q5dMix9XKe8hzeXv8oq1U9gAE&usqp=CAU', recommendationId: 'tool-026' }, 
+            { id: 'tool-024', name: 'Google AI Studio', description: {it: "Crea app, siti e prototipi basati sui modelli Gemini di Google.", en: "Creates apps, sites, and prototypes based on Google's Gemini models."}, category: 'Codice', country: 'USA', website: 'https://aistudio.google.com/prompts/new_chat', isFeatured: true, logoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRanTHTxbnByd8heqLVawRfT24UAfvkyxTO5WskXGtfX7q5dMix9XKe8hzeXv8oq1U9gAE&usqp=CAU', recommendationId: 'tool-001' }, 
             { 
                 id: 'tool-025', 
                 name: 'Manus', 
@@ -6530,6 +6530,51 @@ const viewUserSuggestions = async (userId, userNickname) => {
             // If none of the above were clicked, let the default behavior happen
         });
 
+        const getExploreFeedHTML = () => {
+            const t = translations[currentLanguage];
+            const toolsByCategory = {};
+            const allTools = getAllToolsForCurrentUser();
+            allTools.forEach(tool => {
+                const category = tool.category;
+                if (!toolsByCategory[category]) {
+                    toolsByCategory[category] = [];
+                }
+                toolsByCategory[category].push(tool);
+            });
+
+            let feedHTML = '';
+            categories.forEach(category => {
+                const categoryId = category.id;
+                const categoryName = getTranslatedCategoryName(categoryId);
+                const tools = toolsByCategory[categoryId] || [];
+
+                if (tools.length > 0) {
+                    const seeAllText = (t && t.browseAll) ? t.browseAll : 'Vedi tutti';
+                    feedHTML += `
+                        <div class="feed-section">
+                            <div class="feed-section-header">
+                                <h2 class="feed-section-title">${categoryName}</h2>
+                                <button class="see-all-btn" data-action="set-explore-filter" data-filter-type="category" data-filter-value="${categoryId}">
+                                    ${seeAllText} >
+                                </button>
+                            </div>
+                            <div class="horizontal-scroll-container">
+                                ${tools.map(tool => `
+                                    <div class="tool-item-horizontal" data-id="${tool.id}">
+                                        <div class="tool-item-logo-container">
+                                            <img src="${tool.logoUrl}" class="tool-logo" alt="${tool.name}" loading="lazy">
+                                        </div>
+                                        <div class="tool-item-name">${tool.name}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+            return feedHTML;
+        };
+
         // --- SEARCH INPUT LISTENER ---
         el.mainContent.addEventListener('input', e => {
             if (e.target.id === 'search-input') {
@@ -6540,18 +6585,17 @@ const viewUserSuggestions = async (userId, userNickname) => {
                 const allTools = getAllToolsForCurrentUser(); // Search across all tools
                 const t = translations[currentLanguage];
 
-                const toolsToShow = searchTerm.length > 1 ? allTools.filter(tool => 
-                    tool.name.toLowerCase().includes(searchTerm) || 
-                    (typeof tool.description === 'string' ? tool.description.toLowerCase().includes(searchTerm) : (typeof tool.description === 'object' ? (tool.description[currentLanguage] || tool.description['en'] || '').toLowerCase().includes(searchTerm) : false)) // Handle potential object descriptions
-                ) : [];
-
                 if (searchTerm.length > 1) {
+                    const toolsToShow = allTools.filter(tool =>
+                        tool.name.toLowerCase().includes(searchTerm) ||
+                        (typeof tool.description === 'string' ? tool.description.toLowerCase().includes(searchTerm) : (typeof tool.description === 'object' ? (tool.description[currentLanguage] || tool.description['en'] || '').toLowerCase().includes(searchTerm) : false))
+                    );
+                    
                     // Pass context 'explore' to createListCard for search results
                     contentArea.innerHTML = toolsToShow.length > 0 ? `<div class="list-container">${toolsToShow.map(tool => createListCard(tool, 'explore')).join('')}</div>` : `<div id="empty-state">${t.noResultsFor} "${searchTerm}"</div>`;
                 } else {
-                    // If search term is cleared, re-render the 'explore' view
-                    // to show the "Curated Feed" again.
-                    renderView();
+                    // If search term is cleared, restore the original feed view WITHOUT a full re-render
+                    contentArea.innerHTML = getExploreFeedHTML();
                 }
                 applyTranslations(currentLanguage); // Apply translations to search results/empty state
             }
