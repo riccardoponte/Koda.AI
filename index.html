@@ -2608,7 +2608,7 @@
         };
 
         // --- Main App Component ---
-        const App = ({ tools, initialConversations, initialActiveId, onConversationsChange, onOpenDetail, lang, globalControlsHTML }) => {
+        const App = ({ tools, initialConversations, initialActiveId, onConversationsChange, onOpenDetail, lang, pageTitle, globalControlsHTML }) => {
             const [conversations, setConversations] = useState(initialConversations);
             const [activeConversationId, setActiveConversationId] = useState(initialActiveId);
             const [isLoading, setIsLoading] = useState(false);
@@ -2705,14 +2705,16 @@
 
             return (
                 <div id="chatbot-app-container">
-                    <header className="chat-header">
+                    <header className="user-chat-header">
                         <button id="menu-toggle-btn" className="chat-header-btn" title="Chat History" data-action="toggle-menu">
                             <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
                         </button>
-                        {/* Sostituisci il titolo con l'avatar utente */}
                         <div id="profile-avatar-menu" style={{ marginLeft: 8 }}>
                             {/* Avatar HTML is now passed as a prop */}
                             <span dangerouslySetInnerHTML={{ __html: globalControlsHTML.avatar }} />
+                        </div>
+                        <div className="user-chat-info" style={{ flexGrow: 1, marginLeft: '8px' }}>
+                            <h3>{pageTitle}</h3>
                         </div>
                         {/* Other global controls are passed as a prop */}
                         <div id="global-controls" dangerouslySetInnerHTML={{ __html: globalControlsHTML.otherControls }}></div>
@@ -2809,6 +2811,7 @@
         const UserChatApp = ({ currentUser, onOpenDetail, lang, globalControlsHTML }) => {
             // **NUOVO:** Stato locale per la lingua per consentire l'aggiornamento in tempo reale
             const [language, setLanguage] = useState(lang);
+            const [globalControls, setGlobalControls] = useState(globalControlsHTML); // AGGIUNTO: Stato per i controlli
 
             const [view, setView] = useState('list'); // 'list' | 'chat' | 'search'
             const [selectedChatId, setSelectedChatId] = useState(null);
@@ -2851,6 +2854,8 @@
             useEffect(() => {
                 window.updateUserChatLanguage = (newLang) => {
                     setLanguage(newLang);
+                    // AGGIUNTO: Rigenera e aggiorna anche l'HTML dei controlli
+                    setGlobalControls(window.getGlobalControlsHTML({ includeLangToggle: true }));
                 };
                 // Pulisce la funzione globale quando il componente viene smontato
                 return () => {
@@ -3269,12 +3274,12 @@
                     <div className="user-chat-container">
                         <div className="user-chat-header">
                             <div id="profile-avatar-menu" style={{ marginLeft: 8 }}>
-                                <span dangerouslySetInnerHTML={{ __html: globalControlsHTML.avatar }} />
+                                <span dangerouslySetInnerHTML={{ __html: globalControls.avatar }} />
                             </div>
                             <div className="user-chat-info" style={{ flexGrow: 1 }}>
                                 <h3>{language === 'it' ? 'Le tue chat' : 'Your chats'}</h3>
                             </div>
-                            <div id="global-controls" dangerouslySetInnerHTML={{ __html: globalControlsHTML.otherControls }}></div>
+                            <div id="global-controls" dangerouslySetInnerHTML={{ __html: globalControls.otherControls }}></div>
                         </div>
 
                         {/* NUOVA BARRA DI RICERCA */}
@@ -3300,7 +3305,7 @@
                                 className={`pill-btn ${chatFilter === 'unread' ? 'active' : ''}`}
                                 onClick={() => setChatFilter('unread')}
                             >
-                                {language === 'it' ? 'Da leggere' : 'Unread'}
+                                {language === 'it' ? 'Nuovi' : 'New'}
                             </button>
                         </div>
 
@@ -3365,7 +3370,7 @@
                             <div className="user-chat-info">
                                 <h3>{language === 'it' ? 'Nuova Chat' : 'New Chat'}</h3>
                             </div>
-                            <div id="global-controls" dangerouslySetInnerHTML={{ __html: globalControlsHTML.otherControls }}></div>
+                            <div id="global-controls" dangerouslySetInnerHTML={{ __html: globalControls.otherControls }}></div>
                         </div>
                         
                         {/* **NUOVO:** Aggiungi input di ricerca */}
@@ -3420,7 +3425,7 @@
                                 {isOtherUserOnline ? (language === 'it' ? 'Online' : 'Online') : (language === 'it' ? 'Offline' : 'Offline')}
                             </p>
                         </div>
-                        <div id="global-controls" dangerouslySetInnerHTML={{ __html: globalControlsHTML.otherControls }}></div>
+                        <div id="global-controls" dangerouslySetInnerHTML={{ __html: globalControls.otherControls }}></div>
                     </div>
                     <div className="user-chat-messages">
                         {messages.map(message => {
@@ -4791,10 +4796,11 @@
             if (currentView !== 'home') {
                 const globalControls = getGlobalControlsHTML();
                 const pageTitle = pageTitles[currentView] || currentView;
-                const topBarHTML = `<div class="top-bar" style="display: flex; align-items: center; gap: 8px;">
-                    <div id="profile-avatar-menu" style="margin-right: 8px;">${globalControls.avatar}</div>
-                    <div class="page-title">${pageTitle}</div>
-                    <div id="global-controls" style="margin-left: auto;">${globalControls.otherControls}</div>
+                // MODIFICATO: Usa la stessa struttura e classi della barra della chat per coerenza
+                const topBarHTML = `<div class="user-chat-header">
+                    <div id="profile-avatar-menu" style="margin-left: 8px;">${globalControls.avatar}</div>
+                    <div class="user-chat-info" style="flex-grow: 1;"><h3>${pageTitle}</h3></div>
+                    <div id="global-controls">${globalControls.otherControls}</div>
                 </div>`;
                 el.mainContent.insertAdjacentHTML('beforeend', topBarHTML);
             }
@@ -4819,6 +4825,7 @@
                         },
                         onOpenDetail: window.openDetailModal,
                         lang: currentLanguage,
+                        pageTitle: pageTitles[currentView], // <-- RIGA AGGIUNTA
                         globalControlsHTML: getGlobalControlsHTML() // Pass controls HTML to React app
                     });
                 } else {
@@ -5022,14 +5029,14 @@
                             currentUser: currentUser,
                             onOpenDetail: window.openDetailModal,
                             lang: currentLanguage,
-                            globalControlsHTML: getGlobalControlsHTML({ includeLangToggle: false })
+                            globalControlsHTML: getGlobalControlsHTML({ includeLangToggle: true })
                         });
                     } else {
                         console.error("User chat mount function not found.");
                     }
                 }
             } else if (currentView === 'favorites') { // Questa vista è la nostra nuova Libreria
-                el.mainContent.innerHTML = '';
+                // Rimosso `el.mainContent.innerHTML = '';` per consentire l'aggiunta della top bar prima.
                 if (isGuest) {
                     contentArea.innerHTML = `
                         <div class="auth-prompt-card">
@@ -5042,16 +5049,13 @@
                         </div>
                     `;
                 } else {
-                    // --- Informazioni Profilo (rimane invariato) ---
+                    // --- Informazioni Profilo (ora senza l'header personalizzato) ---
                     const userInitial = currentUser.nickname ? currentUser.nickname.charAt(0).toUpperCase() : 'P';
                     const userNickname = currentUser.nickname || 'rickiponte';
                     const userFullName = currentUser.fullName || currentUser.nickname;
-                    const globalControls = getGlobalControlsHTML();
-
-                    const profileHeaderHTML = `
-                        <div class="top-bar-library" style="position: absolute; top: 16px; right: 16px; display: flex; gap: 8px;">
-                            ${globalControls.otherControls}
-                        </div>
+                    
+                    // L'HTML del profilo ora parte dal contenitore della pagina, la top-bar è gestita sopra.
+                    const profileContentHTML = `
                         <div class="profile-page-container">
                              <div class="profile-header">
                                 <div class="profile-username" data-action="open-settings">${userNickname} <svg height="16" width="16" viewBox="0 0 24 24"><path fill="currentColor" d="M7 10l5 5 5-5z"></path></svg></div>
@@ -5164,7 +5168,7 @@
                     `;
 
                     // Assembla il tutto
-                    contentArea.innerHTML = profileHeaderHTML + `<div class="library-shelves-container">${shelvesHTML}</div>` + actionButtonsHTML;
+                    contentArea.innerHTML = profileContentHTML + `<div class="library-shelves-container">${shelvesHTML}</div>` + actionButtonsHTML;
                 }
                 el.mainContent.appendChild(contentArea);
             }
