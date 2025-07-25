@@ -1366,7 +1366,7 @@
         .user-chat-container {
             display: flex;
             flex-direction: column;
-            height: 100vh;
+            height: 100%; /* Modificato da 100vh a 100% */
             background-color: var(--spotify-bg);
         }
 
@@ -1377,6 +1377,9 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            position: sticky; /* Aggiunto */
+            top: 0; /* Aggiunto */
+            z-index: 10; /* Aggiunto */
         }
 
         .user-chat-back-btn {
@@ -2054,7 +2057,19 @@
              }
          }
 
-        /* --- STILI PER LA NUOVA PAGINA PROFILO (Libreria) --- */
+        /* NUOVO: Stili per l'iniziale nelle card dei suggerimenti */
+        .suggestion-initial-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .suggestion-initial {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--spotify-text);
+            line-height: 1;
+        }
         .profile-page-container {
             padding: 16px;
             color: var(--spotify-text);
@@ -2066,13 +2081,14 @@
             align-items: center;
             margin-bottom: 24px;
         }
-
+        
         .profile-username {
             font-size: 20px;
             font-weight: 700;
             display: flex;
             align-items: center;
             gap: 4px;
+            cursor: pointer; /* Aggiunto per indicare che è cliccabile */
         }
 
         .profile-info {
@@ -2144,41 +2160,208 @@
             font-size: 14px;
             font-weight: 500;
             cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .profile-btn:hover {
+            background-color: var(--spotify-bg-light);
         }
 
-        .profile-tabs {
-            display: flex;
-            justify-content: space-around;
-            border-bottom: 1px solid var(--spotify-card);
-            margin-bottom: 1px;
+        .library-shelves-container {
+            padding-top: 24px;
         }
 
-        .tab-item {
-            padding: 12px;
-            color: var(--spotify-text-secondary);
-            border-bottom: 2px solid transparent;
+        .library-shelf {
+            margin-bottom: 40px;
+        }
+
+        .library-shelf-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--spotify-text);
+            margin: 0 0 20px 16px;
+        }
+
+        /* Stile per gli item sullo scaffale (verticale, tipo carta) */
+        .tool-shelf-item {
+            flex: 0 0 130px;
             cursor: pointer;
+            scroll-snap-align: start;
+            transition: background-color 0.2s ease-in-out;
+            border-radius: 8px;
+            padding: 8px;
+        }
+        .tool-shelf-item:hover {
+            background-color: var(--spotify-bg-light);
         }
 
-        .tab-item.active {
-    color: var(--spotify-accent); /* Colora l'icona di verde */
-    border-bottom-color: var(--spotify-accent); /* Colora il bordo di verde */
-}
-
-        .profile-content-grid {
-            padding-top: 16px;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 4px;
+        .tool-shelf-logo-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 2 / 3;
+            border-radius: 6px;
+            background-color: var(--spotify-card);
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+        .tool-shelf-logo-container .tool-logo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .tool-shelf-logo-container .edit-icon {
+            width: 28px;
+            height: 28px;
+            font-size: 16px;
         }
 
-        .profile-content-grid .tool-card-grid .logo-container {
+        .tool-shelf-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--spotify-text);
+            line-height: 1.3;
+        }
+
+        /* Stile specifico per le card dei suggerimenti */
+        .suggestion-shelf-item {
+            flex: 0 0 220px; /* Suggerimenti più larghi */
+            height: 195px; /* Altezza fissa per allineare le card */
+            cursor: pointer;
+            scroll-snap-align: start;
+            border-radius: 8px;
+            padding: 16px;
+            background-color: var(--spotify-card);
+            border: 1px solid var(--spotify-bg-light);
+            display: flex;
+            flex-direction: column;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+        .suggestion-shelf-item:hover {
+            border-color: var(--spotify-accent);
+            transform: translateY(-2px);
+        }
+
+        .suggestion-shelf-app-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--spotify-text);
+            margin-bottom: 8px;
+        }
+
+        .suggestion-shelf-desc {
+            font-size: 13px;
+            color: var(--spotify-text-secondary);
+            line-height: 1.4;
+            flex-grow: 1; /* Occupa lo spazio disponibile */
+            overflow: hidden;
+            /* Tronca la descrizione per non farla debordare */
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 4; /* Limita a 4 righe */
+            -webkit-box-orient: vertical;
+        }
+
+        .suggestion-shelf-category {
+            margin-top: auto;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--spotify-text);
+            background-color: var(--spotify-bg-light);
+            padding: 4px 8px;
+            border-radius: 20px;
+            align-self: flex-start;
+        }
+
+        /* --- STILI PER IL "CURATED FEED" (NUOVO LAYOUT DI RICERCA) --- */
+
+        .feed-section {
+            margin-bottom: 48px; /* Ampio spazio tra le sezioni */
+        }
+
+        .feed-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 16px; /* Allineato con il padding generale dell'app */
+            margin-bottom: 20px;
+        }
+
+        .feed-section-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--spotify-text);
+            margin: 0;
+        }
+
+        .see-all-btn {
+            background: none;
+            border: none;
+            color: var(--spotify-text-secondary);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.2s ease-in-out;
+            padding: 8px; /* Area cliccabile più grande */
+        }
+        .see-all-btn:hover {
+            color: var(--spotify-accent);
+        }
+
+        .horizontal-scroll-container {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            padding: 0 16px 16px 16px; /* Aggiunge padding sotto per lo scroll snap e l'ombra */
+            /* Nasconde la barra di scorrimento per un look pulito */
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+            scroll-snap-type: x mandatory; /* Abilita lo snapping orizzontale */
+            scroll-padding: 0 16px; /* Assicura che lo snap non tagli gli elementi ai bordi */
+        }
+        .horizontal-scroll-container::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, and Opera */
+        }
+
+        .tool-item-horizontal {
+            flex: 0 0 140px; /* Base di 140px, non si restringe, non si allarga */
+            cursor: pointer;
+            scroll-snap-align: start; /* Aggancia l'inizio dell'elemento allo scroll */
+            transition: background-color 0.2s ease-in-out;
+            border-radius: 8px;
+            padding: 8px;
+        }
+        .tool-item-horizontal:hover {
+            background-color: var(--spotify-bg-light); /* Feedback visivo standard al hover */
+        }
+
+        .tool-item-logo-container {
+            width: 100%;
             aspect-ratio: 1 / 1;
-            border-radius: 2px;
+            border-radius: 8px;
+            background-color: var(--spotify-card);
+            margin-bottom: 12px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .profile-content-grid .tool-card-grid .tool-name {
-           display: none;
+        .tool-item-logo-container .tool-logo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .tool-item-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--spotify-text);
+            line-height: 1.3;
+            /* Gestisce il testo su massimo 2 righe con troncamento */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
         }
 
     </style>
@@ -2642,6 +2825,27 @@
             const [searchResults, setSearchResults] = useState([]); // NUOVO STATO PER I RISULTATI DI RICERCA
             const messagesEndRef = useRef(null);
             const textareaRef = useRef(null); // Aggiunto per l'auto-grow
+                        // NUOVO: Effetto per gestire la visibilità della barra di navigazione
+            useEffect(() => {
+                const bottomNav = document.getElementById('bottom-nav');
+                const mainContent = document.getElementById('main-content');
+
+                if (view === 'chat') {
+                    // Nascondi la nav bar quando si è in una chat singola
+                    if (bottomNav) bottomNav.style.display = 'none';
+                    if (mainContent) mainContent.style.paddingBottom = '0';
+                } else {
+                    // Mostra la nav bar nella lista chat o nella ricerca
+                    if (bottomNav) bottomNav.style.display = 'flex';
+                    if (mainContent) mainContent.style.paddingBottom = `var(--bottom-nav-height)`;
+                }
+
+                // Funzione di pulizia: assicura che la nav bar sia visibile quando si lascia la pagina Chat
+                return () => {
+                    if (bottomNav) bottomNav.style.display = 'flex';
+                    if (mainContent) mainContent.style.paddingBottom = `var(--bottom-nav-height)`;
+                };
+            }, [view]); // Questo effetto si attiva ogni volta che la 'view' interna cambia
 
             // **NUOVO:** Crea un "ponte" per aggiornare la lingua dall'esterno
             useEffect(() => {
@@ -3117,7 +3321,7 @@
                                             {chat.otherUserNickname ? chat.otherUserNickname.charAt(0).toUpperCase() : 'U'}
                                         </div>
                                         <div className="user-chat-item-info">
-                                            <div className="user-chat-item-name" data-action="view-user-suggestions" data-uid={chat.otherUserId} data-nickname={chat.otherUserNickname} style={{ cursor: 'pointer' }}>{chat.otherUserNickname || 'Utente'}</div>
+                                            <div className="user-chat-item-name">{chat.otherUserNickname || 'Utente'}</div>
                                             <div className="user-chat-item-preview">{chat.lastMessage}</div>
                                         </div>
                                         <div className="user-chat-item-meta">
@@ -3210,7 +3414,7 @@
                                 <div className="online-indicator"></div>
                             )}
                         </div>
-                        <div className="user-chat-info" data-action="view-user-suggestions" data-uid={selectedUser?.uid} data-nickname={selectedUser?.nickname} style={{ cursor: 'pointer' }}>
+                        <div className="user-chat-info">
                             <h3>{selectedUser?.nickname || 'Utente'}</h3>
                             <p style={{ margin: 0, fontSize: '12px', color: 'var(--spotify-text-secondary)' }}>
                                 {isOtherUserOnline ? (language === 'it' ? 'Online' : 'Online') : (language === 'it' ? 'Offline' : 'Offline')}
@@ -3682,13 +3886,13 @@
                 newChatTitle: "Nuova chat",
                 // New Privileged User Translations (Local Storage)
                 privilegedUnlocked: "Modalità privilegiata sbloccata!",
-                addCustomApp: "Aggiungi App Custom", // New translation for the button
+                addCustomApp: "Aggiungi app personalizzata", // New translation for the button
                 addAppTitle: "Aggiungi Nuova App",
-                appNameLabel: "Nome App", appNamePlaceholder: "Es. La mia AI fantastica",
+                appNameLabel: "Nome App", appNamePlaceholder: "Es. Tun tun tun saur",
                 appDescriptionLabel: "Descrizione", appDescriptionPlaceholder: "Breve descrizione dell'app...",
-                appWebsiteLabel: "Link Sito Web", appWebsitePlaceholder: "https://tuasito.com",
+                appWebsiteLabel: "Link Web", appWebsitePlaceholder: "https://tuasito.com",
                 appLogoLabel: "Logo (File Immagine)", // Updated label for file input
-                addAppButton: "Aggiungi App",
+                addAppButton: "Aggiungi app",
                 addAppSuccess: "App aggiunta con successo!",
                 addAppError: "Errore nell'aggiunta dell'app: %s",
                 markAsFeatured: "Segna come In evidenza",
@@ -3700,23 +3904,24 @@
                 appWebsiteRequired: "Il link del sito web è obbligatorio.",
                 appLogoRequired: "Il logo è obbligatorio.", // Updated required message
                 category: "Categoria", // Added missing category translation
+                country: "Paese",
                 replaceFeaturedTitle: "Sostituisci AI In evidenza", // New translation
                 selectAppToFeature: "Seleziona un'app dalLibreria per metterla In evidenza:", // New translation
-                noUserApps: "Non hai ancora aggiunto app custom.", // New translation
+                noUserApps: "Non hai ancora aggiunto app person.", // New translation
                 removeFeaturedReplacement: "Rimuovi Sostituzione", // New translation
                 removeUserTool: "Rimuovi App Custom", // New translation for removing user tools
                 changeNicknameTitle: "Cambia nickname",
                 saveNicknameButton: "Salva Nickname",
                 nicknameUpdateSuccess: "Nickname aggiornato con successo!",
                 aiSuggestionsTitle: "I tuoi suggerimenti AI",
-                addAiSuggestionTitle: "Aggiungi Suggerimento AI",
+                addAiSuggestionTitle: "Aggiungi suggerimento AI",
                 aiSuggestionLabel: "Suggerimento AI",
                 aiSuggestionPlaceholder: "Scrivi il tuo suggerimento per un'AI...",
                 selectCategory: "Seleziona categoria",
                 selectCountry: "Seleziona paese",
                 cancel: "Annulla",
                 allFieldsRequired: "Tutti i campi sono obbligatori",
-                addAiSuggestionButton: "Aggiungi Suggerimento",
+                addAiSuggestionButton: "Aggiungi suggerimento",
                 removeAiSuggestion: "Rimuovi suggerimento",
                 aiSuggestionAdded: "Suggerimento aggiunto con successo!",
                 aiSuggestionRemoved: "Suggerimento rimosso con successo!",
@@ -3739,11 +3944,14 @@
                 writeMessage: "Scrivi un messaggio...",
                 sendError: "Errore nell'invio del messaggio",
                 // NUOVE TRADUZIONI LIBRERIA
-                libraryFavorites: "preferiti",
-                libraryCustom: "custom",
-                librarySuggested: "suggeriti",
+                libraryFavorites: "Preferiti",
+                libraryCustom: "Custom",
+                librarySuggested: "Suggeriti",
                 editProfile: "Modifica profilo",
                 viewChats: "Visualizza chat",
+                // NUOVE TRADUZIONI PER PROMPT CHAT
+                chatPromptTitle: "Chatta con altri utenti",
+                chatPromptText: "Accedi o registrati per iniziare a chattare e scoprire i suggerimenti degli altri.",
             },
             en: {
                 // Auth
@@ -3788,7 +3996,7 @@
                 privilegedUnlocked: "Privileged mode unlocked!",
                 addCustomApp: "Add Custom App", // New translation for the button
                 addAppTitle: "Add New App",
-                appNameLabel: "App Name", appNamePlaceholder: "Ex. My Awesome AI",
+                appNameLabel: "App Name", appNamePlaceholder: "Ex. Tun tun saur",
                 appDescriptionLabel: "Description", appDescriptionPlaceholder: "Brief description of the app...",
                 appWebsiteLabel: "Website Link", appWebsitePlaceholder: "https://yourwebsite.com",
                 appLogoLabel: "Logo (Image File)", // Updated label for file input
@@ -3804,6 +4012,7 @@
                 appWebsiteRequired: "Website link is required.",
                 appLogoRequired: "Logo is required.", // Updated required message
                 category: "Category", // Added missing category translation
+                country: "Country",
                 replaceFeaturedTitle: "Replace Featured AI", // New translation
                 selectAppToFeature: "Select an app from your library to feature it:", // New translation
                 noUserApps: "You haven't added any custom apps yet.", // New translation
@@ -3843,11 +4052,14 @@
                 writeMessage: "Write a message...",
                 sendError: "Error sending message",
                 // NEW LIBRARY TRANSLATIONS
-                libraryFavorites: "favorites",
-                libraryCustom: "custom",
-                librarySuggested: "suggested",
+                libraryFavorites: "Favorites",
+                libraryCustom: "Custom",
+                librarySuggested: "Suggested",
                 editProfile: "Edit profile",
                 viewChats: "View chats",
+                // NEW TRANSLATIONS FOR CHAT PROMPT
+                chatPromptTitle: "Chat with other users",
+                chatPromptText: "Log in or sign up to start chatting and discover others' suggestions.",
             }
         };
         
@@ -4020,8 +4232,15 @@
             // For simplicity, let's allow user to pick from existing categories
         ];
         const countries = [...new Set(aiToolsData.map(t => t.country))]
-            .filter(c => c !== 'Global')
-            .map(c => ({ name: c, flag: { 'USA': '🇺🇸', 'Cina': '🇨🇳', 'Europe': '🇪🇺' }[c] || '🏳️' }));
+            .filter(c => c !== 'Global' && c !== 'Italia') // <-- Rimuove anche "Italia"
+            .map(c => {
+                // Se il paese è 'undefined', lo rinominiamo in "Nazione" e gli diamo una bandiera generica
+                if (c === undefined) {
+                    return { name: 'Nazione', flag: '🏳️' };
+                }
+                // Altrimenti, procediamo come prima
+                return { name: c, flag: { 'USA': '🇺🇸', 'Cina': '🇨🇳', 'Europe': '🇪🇺' }[c] || '🏳️' };
+            });
 
         // currentUser will now include Firestore data (favorites, userTools, userFeaturedTools, userFeaturedReplacements)
         // and the privileged status loaded from Firestore
@@ -4561,6 +4780,11 @@
         };
 
         const renderView = () => {
+            // GESTIONE VISIBILITÀ BARRA DI NAVIGAZIONE E PADDING
+            // La visibilità della nav bar nella sezione chat è ora gestita dal componente React UserChatApp.
+            el.bottomNav.style.display = 'flex';
+            el.mainContent.style.paddingBottom = `var(--bottom-nav-height)`;
+
             // Close any open dropdowns when navigating
             closeUserProfileDropdown();
             unmountReactApp(); 
@@ -4686,17 +4910,61 @@
 
             } else if (currentView === 'explore') {
                 el.mainContent.insertAdjacentHTML('beforeend', `<div class="search-bar-container"><input type="text" id="search-input" placeholder="${t.searchPlaceholder}"></div>`);
-                // Filtro per eliminare duplicati per id
-                const uniqueTools = allTools.filter((tool, idx, arr) => arr.findIndex(t => t.id === tool.id) === idx);
-                if (!exploreFilter.type) {
-                    contentArea.innerHTML = `<div class="section-title" data-translate="browseAll">${t.browseAll}</div><div class="category-grid">${categories.map(createCategoryCard).join('')}</div><div class="section-title" style="margin-top: 30px;" data-translate="browseByOrigin">${t.browseByOrigin}</div><div class="category-grid">${countries.map(c => createCountryCard(c)).join('')}</div>`;
-                } else {
-                    // Filter from all unique tools (static + user, senza duplicati)
+                
+                if (exploreFilter.type) {
+                    const allTools = getAllToolsForCurrentUser();
+                    const uniqueTools = allTools.filter((tool, idx, arr) => arr.findIndex(t => t.id === tool.id) === idx);
                     const filteredTools = uniqueTools.filter(t => t[exploreFilter.type] === exploreFilter.value);
                     const title = exploreFilter.type === 'category' ? getTranslatedCategoryName(exploreFilter.value) : `${t.toolsFrom} ${exploreFilter.value}`;
-                    // Pass context 'explore' to createListCard for search results
+                    
                     contentArea.innerHTML = `<div class="back-button" data-action="back-to-explore">${t.backToSearch}</div><h2 class="section-title">${title}</h2><div class="list-container">${filteredTools.map(tool => createListCard(tool, 'explore')).join('')}</div>`;
+                
+                } else {
+                    const toolsByCategory = {};
+                    const allTools = getAllToolsForCurrentUser();
+                    allTools.forEach(tool => {
+                        const category = tool.category;
+                        if (!toolsByCategory[category]) {
+                            toolsByCategory[category] = [];
+                        }
+                        toolsByCategory[category].push(tool);
+                    });
+
+                    let feedHTML = '';
+                    categories.forEach(category => {
+                        const categoryId = category.id;
+                        const categoryName = getTranslatedCategoryName(categoryId);
+                        const tools = toolsByCategory[categoryId] || [];
+
+                        if (tools.length > 0) {
+                            // Cambiato t.browseAll in una stringa fissa per evitare errori se t non è definito qui
+                            const seeAllText = (t && t.browseAll) ? t.browseAll : 'Vedi tutti';
+                            feedHTML += `
+                                <div class="feed-section">
+                                    <div class="feed-section-header">
+                                        <h2 class="feed-section-title">${categoryName}</h2>
+                                        <button class="see-all-btn" data-action="set-explore-filter" data-filter-type="category" data-filter-value="${categoryId}">
+                                            ${seeAllText} >
+                                        </button>
+                                    </div>
+                                    <div class="horizontal-scroll-container">
+                                        ${tools.map(tool => `
+                                            <div class="tool-item-horizontal" data-id="${tool.id}">
+                                                <div class="tool-item-logo-container">
+                                                    <img src="${tool.logoUrl}" class="tool-logo" alt="${tool.name}" loading="lazy">
+                                                </div>
+                                                <div class="tool-item-name">${tool.name}</div>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    });
+
+                    contentArea.innerHTML = feedHTML;
                 }
+                
                 el.mainContent.appendChild(contentArea);
             } else if (currentView === 'search-users') {
                 if (isGuest) {
@@ -4747,16 +5015,17 @@
                 if (isGuest) {
                     contentArea.innerHTML = `
                         <div class="auth-prompt-card">
-                            <h3 data-translate="libraryPromptTitle">${t.libraryPromptTitle}</h3>
-                            <p data-translate="libraryPromptText">${t.libraryPromptText}</p>
+                            <h3 data-translate="chatPromptTitle">${t.chatPromptTitle}</h3>
+                            <p data-translate="chatPromptText">${t.chatPromptText}</p>
                             <div class="auth-prompt-actions">
                                 <button class="button" data-action="prompt-login" data-translate="loginButton">${t.loginButton}</button>
                                 <button class="pill-btn" data-action="prompt-register" data-translate="registerButton">${t.registerButton}</button>
                             </div>
                         </div>
                     `;
+                    el.mainContent.appendChild(contentArea); // Aggiungi il prompt solo se l'utente è ospite
                 } else {
-                    // Render user chat app
+                    // Per l'utente loggato, monta l'app React direttamente senza aggiungere altro
                     el.mainContent.innerHTML = `<div id="user-chat-container-wrapper"></div>`;
                     const userChatContainer = document.getElementById('user-chat-container-wrapper');
                     if (window.mountUserChatApp) {
@@ -4770,8 +5039,7 @@
                         console.error("User chat mount function not found.");
                     }
                 }
-                el.mainContent.appendChild(contentArea);
-            } else if (currentView === 'favorites') {
+            } else if (currentView === 'favorites') { // Questa vista è la nostra nuova Libreria
                 el.mainContent.innerHTML = '';
                 if (isGuest) {
                     contentArea.innerHTML = `
@@ -4785,78 +5053,20 @@
                         </div>
                     `;
                 } else {
+                    // --- Informazioni Profilo (rimane invariato) ---
                     const userInitial = currentUser.nickname ? currentUser.nickname.charAt(0).toUpperCase() : 'P';
                     const userNickname = currentUser.nickname || 'rickiponte';
-                    const userFullName = currentUser.fullName || currentUser.nickname; // Fallback sul nickname
-
-                    // Logica per determinare il contenuto della griglia e i pulsanti di azione
-                    let gridContentHTML = '';
-                    let contentGridClass = 'profile-content-grid';
-                    let actionButtonsHTML = '';
-
-                    if (libraryTab === 'favorites') {
-                        const favoriteTools = allTools.filter(t => currentUser.favorites.includes(t.id));
-                        gridContentHTML = favoriteTools.length > 0
-                            ? favoriteTools.map(tool => createGridCard(tool, 'library')).join('')
-                            : `<div id="empty-state" style="grid-column: 1 / -1;">${t.emptyFavorites}</div>`;
-                    } else if (libraryTab === 'custom') {
-                        const userTools = currentUser.userTools || [];
-                        
-                        // NUOVO: Definiamo il pulsante fluttuante "+" per questa sezione, identico a quello dei suggerimenti
-                        actionButtonsHTML = `
-                            <button class="floating-action-btn" data-action="open-add-app-modal" title="${t.addCustomApp}">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-                            </button>
-                        `;
-
-                        // La griglia ora contiene solo le app dell'utente o il messaggio di stato vuoto.
-                        gridContentHTML = userTools.length > 0
-                            ? userTools.map(tool => createGridCard(tool, 'library')).join('')
-                            : `<div id="empty-state" style="grid-column: 1 / -1;">${t.emptyUserTools}</div>`;
-                    } else if (libraryTab === 'suggestions') {
-                        contentGridClass = 'suggestions-grid';
-                        const suggestions = currentUser.aiSuggestions || [];
-                        // <!-- NUOVO: Pulsante Aggiungi Suggerimento (FAB) -->
-                        actionButtonsHTML = `
-                            <button class="floating-action-btn" data-action="add-ai-suggestion" title="${t.addAiSuggestionTitle}">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-                            </button>
-                        `;
-                        gridContentHTML = suggestions.length > 0
-                            ? suggestions.map(suggestion => `
-                                <div class="suggestion-item new-format" style="grid-column: 1 / -1; max-width: 100%;">
-                                    <div class="suggestion-header">
-                                        <h3 class="suggestion-app-name">${suggestion.appName}</h3>
-                                        <div class="suggestion-meta">
-                                            <span class="suggestion-category">${suggestion.category}</span>
-                                            <span class="suggestion-country">${suggestion.country}</span>
-                                        </div>
-                                    </div>
-                                    <div class="suggestion-description">${suggestion.description}</div>
-                                    <div class="suggestion-actions">
-                                        <a href="${suggestion.website}" target="_blank" class="suggestion-website-btn">
-                                            🌐 ${t.visitWebsite}
-                                        </a>
-                                        <button class="remove-suggestion-btn" data-action="remove-ai-suggestion" data-id="${suggestion.id}">
-                                            ${t.removeAiSuggestion}
-                                        </button>
-                                    </div>
-                                </div>
-                            `).join('')
-                            : `<div id="empty-state" style="grid-column: 1 / -1;">${t.noSuggestions}</div>`;
-                    }
-                    
+                    const userFullName = currentUser.fullName || currentUser.nickname;
                     const globalControls = getGlobalControlsHTML();
 
-                    contentArea.innerHTML = `
+                    const profileHeaderHTML = `
                         <div class="top-bar-library" style="position: absolute; top: 16px; right: 16px; display: flex; gap: 8px;">
                             ${globalControls.otherControls}
                         </div>
                         <div class="profile-page-container">
                              <div class="profile-header">
-                                <div class="profile-username">${userNickname} <svg height="16" width="16" viewBox="0 0 24 24"><path fill="currentColor" d="M7 10l5 5 5-5z"></path></svg></div>
+                                <div class="profile-username" data-action="open-settings">${userNickname} <svg height="16" width="16" viewBox="0 0 24 24"><path fill="currentColor" d="M7 10l5 5 5-5z"></path></svg></div>
                             </div>
-
                             <div class="profile-info">
                                 <div class="profile-avatar">${userInitial}</div>
                                 <div class="profile-stats">
@@ -4865,11 +5075,11 @@
                                         <span class="stat-label" data-translate="libraryFavorites">${t.libraryFavorites}</span>
                                     </div>
                                     <div class="stat-item">
-                                        <span class="stat-number">${currentUser.userTools.length}</span>
+                                        <span class="stat-number">${(currentUser.userTools || []).length}</span>
                                         <span class="stat-label" data-translate="libraryCustom">${t.libraryCustom}</span>
                                     </div>
                                     <div class="stat-item">
-                                        <span class="stat-number">${currentUser.aiSuggestions.length}</span>
+                                        <span class="stat-number">${(currentUser.aiSuggestions || []).length}</span>
                                         <span class="stat-label" data-translate="librarySuggested">${t.librarySuggested}</span>
                                     </div>
                                 </div>
@@ -4877,30 +5087,95 @@
                             <div class="profile-details">
                                 <div class="profile-fullname">${userFullName}</div>
                             </div>
-
                             <div class="profile-actions-buttons">
                                 <button class="profile-btn" data-action="open-settings" data-translate="editProfile">${t.editProfile}</button>
                                 <button class="profile-btn" data-action="navigate" data-page="user-chats" data-translate="viewChats">${t.viewChats}</button>
                             </div>
-
-                            <div class="profile-tabs">
-                                <div class="tab-item ${libraryTab === 'favorites' ? 'active' : ''}" data-action="set-library-tab" data-tab="favorites">
-                                    <svg height="24" width="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
-                                </div>
-                                <div class="tab-item ${libraryTab === 'custom' ? 'active' : ''}" data-action="set-library-tab" data-tab="custom">
-                                    <svg height="24" width="24" viewBox="0 0 24 24" fill="currentColor"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"></path></svg>
-                                </div>
-                                <div class="tab-item ${libraryTab === 'suggestions' ? 'active' : ''}" data-action="set-library-tab" data-tab="suggestions">
-                                    <svg height="24" width="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"></path></svg>
-                                </div>
-                            </div>
-                            ${libraryTab === 'custom' ? actionButtonsHTML : ''}
-                            <div class="${contentGridClass}">
-                                ${gridContentHTML}
-                            </div>
                         </div>
-                        ${libraryTab === 'suggestions' ? actionButtonsHTML : ''}
                     `;
+
+                    // --- NUOVA LOGICA PER GLI "SCAFFALI" ---
+                    let shelvesHTML = '';
+                    
+                    // Scaffale 1: Preferiti
+                    const favoriteTools = allTools.filter(tool => currentUser.favorites.includes(tool.id));
+                    if (favoriteTools.length > 0) {
+                        shelvesHTML += `
+                            <div class="library-shelf">
+                                <h3 class="library-shelf-title">${t.libraryFavorites}</h3>
+                                <div class="horizontal-scroll-container">
+                                    ${favoriteTools.map(tool => `
+                                        <div class="tool-shelf-item" data-id="${tool.id}">
+                                            <div class="tool-shelf-logo-container"><img src="${tool.logoUrl}" class="tool-logo" alt="${tool.name}" loading="lazy"></div>
+                                            <div class="tool-shelf-name">${tool.name}</div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                    // Scaffale 2: App Custom
+                    const userTools = currentUser.userTools || [];
+                    if (userTools.length > 0) {
+                         shelvesHTML += `
+                            <div class="library-shelf">
+                                <h3 class="library-shelf-title">${t.libraryCustom}</h3>
+                                <div class="horizontal-scroll-container">
+                                    ${userTools.map(tool => `
+                                        <div class="tool-shelf-item" data-id="${tool.id}">
+                                            <div class="tool-shelf-logo-container">
+                                                <img src="${tool.logoUrl}" class="tool-logo" alt="${tool.name}" loading="lazy">
+                                                <div class="edit-icon" data-action="remove-user-tool" data-id="${tool.id}" title="${t.removeUserTool}"> ${pencilIcon} </div>
+                                            </div>
+                                            <div class="tool-shelf-name">${tool.name}</div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }
+                    
+                                        // Scaffale 3: Suggerimenti (con il nuovo layout unificato)
+                    const suggestions = currentUser.aiSuggestions || [];
+                    if (suggestions.length > 0) {
+                        shelvesHTML += `
+                            <div class="library-shelf">
+                                <h3 class="library-shelf-title">${t.librarySuggested}</h3>
+                                <div class="horizontal-scroll-container">
+                                    ${suggestions.map(suggestion => {
+                                        // Prendi la prima lettera del nome dell'app, o '?' se non disponibile
+                                        const initial = suggestion.appName ? suggestion.appName.charAt(0).toUpperCase() : '?';
+                                        
+                                        return `
+                                            <div class="tool-shelf-item" title="${suggestion.appName}">
+                                                <div class="tool-shelf-logo-container suggestion-initial-container">
+                                                    <span class="suggestion-initial">${initial}</span>
+                                                    <div class="edit-icon" data-action="remove-ai-suggestion" data-id="${suggestion.id}" title="Rimuovi suggerimento: ${suggestion.appName}">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" height="14" viewBox="0 0 24 24" width="14" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                                                    </div>
+                                                </div>
+                                                <div class="tool-shelf-name">${suggestion.appName}</div>
+                                            </div>
+                                        `;
+                                    }).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }
+                    
+                    // Pulsanti Fluttuanti (FABs)
+                    const actionButtonsHTML = `
+                        <button class="floating-action-btn" data-action="open-add-app-modal" title="${t.addCustomApp}" style="bottom: calc(var(--bottom-nav-height) + 16px);">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"></path></svg>
+                        </button>
+                        <button class="floating-action-btn" data-action="add-ai-suggestion" title="${t.addAiSuggestionTitle}" style="bottom: calc(var(--bottom-nav-height) + 88px);">
+                             <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"></path></svg>
+                        </button>
+                    `;
+
+                    // Assembla il tutto
+                    contentArea.innerHTML = profileHeaderHTML + `<div class="library-shelves-container">${shelvesHTML}</div>` + actionButtonsHTML;
                 }
                 el.mainContent.appendChild(contentArea);
             }
@@ -5920,7 +6195,7 @@ const viewUserSuggestions = async (userId, userNickname) => {
             el.appContainer.style.display = 'flex';
             el.authOverlay.style.display = 'none';
             el.authOverlay.innerHTML = ''; // Ensure auth overlay is empty
-            renderView();
+            setTimeout(renderView, 0);
         };
 
         const initializeAppWithUser = async (user) => {
@@ -6239,7 +6514,7 @@ const viewUserSuggestions = async (userId, userNickname) => {
             }
 
             // 4. Handle clicks on tool/ranking cards (excluding favorite icon and edit icon which have data-actions)
-            const toolCard = target.closest('.tool-card-grid, .tool-card-list, .ranking-item');
+            const toolCard = target.closest('.tool-card-grid, .tool-card-list, .ranking-item, .tool-item-horizontal, .tool-shelf-item');
             if (toolCard && !target.closest('.favorite-icon') && !target.closest('.edit-icon')) { 
                  window.openDetailModal(toolCard.dataset.id); 
                  return; 
@@ -6274,8 +6549,9 @@ const viewUserSuggestions = async (userId, userNickname) => {
                     // Pass context 'explore' to createListCard for search results
                     contentArea.innerHTML = toolsToShow.length > 0 ? `<div class="list-container">${toolsToShow.map(tool => createListCard(tool, 'explore')).join('')}</div>` : `<div id="empty-state">${t.noResultsFor} "${searchTerm}"</div>`;
                 } else {
-                    // If search term is cleared, show default explore view
-                    contentArea.innerHTML = `<div class="section-title" data-translate="browseAll">${t.browseAll}</div><div class="category-grid">${categories.map(c => createCategoryCard(c)).join('')}</div><div class="section-title" style="margin-top: 30px;" data-translate="browseByOrigin">${t.browseByOrigin}</div><div class="category-grid">${countries.map(c => createCountryCard(c)).join('')}</div>`;
+                    // If search term is cleared, re-render the 'explore' view
+                    // to show the "Curated Feed" again.
+                    renderView();
                 }
                 applyTranslations(currentLanguage); // Apply translations to search results/empty state
             }
@@ -6304,9 +6580,13 @@ const viewUserSuggestions = async (userId, userNickname) => {
             }
         });
         
+        // NUOVO: Inizializza subito l'app per l'ospite per un caricamento istantaneo
+        initializeAppForGuest();
+
         // --- FIREBASE AUTH STATE CHANGE LISTENER ---
         onAuthStateChanged(auth, user => {
             if (user) {
+                // Se viene trovato un utente, sovrascrivi la vista ospite con quella dell'utente loggato.
                 console.log("User logged in:", user.uid);
                 
                 // Imposta l'utente come online
@@ -6379,8 +6659,12 @@ const viewUserSuggestions = async (userId, userNickname) => {
                 });
 
             } else {
-                console.log("User logged out or is guest.");
-                initializeAppForGuest();
+                // Se l'utente fa il logout, re-inizializza l'app per l'ospite.
+                // Questo non viene eseguito al primo caricamento, ma solo dopo un'azione di logout.
+                if (currentUser && currentUser.uid) { // Controlla se c'era un utente prima
+                    console.log("User logged out.");
+                    initializeAppForGuest();
+                }
             }
         });
         
