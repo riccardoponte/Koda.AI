@@ -4486,8 +4486,8 @@
 
         // NEW FUNCTION: Toggle user-added tool featured status (Firestore)
         const toggleUserFeatured = async (toolId) => {
-             // Check privileged status loaded from Firestore
-             if (!currentUser || !currentUser.uid || !currentUser.isPrivileged) return;
+             // Allow any logged-in user to perform this action
+             if (!currentUser || !currentUser.uid) return;
              // Ensure it is a user-added tool
              if (!toolId.startsWith('user-')) return;
 
@@ -4513,8 +4513,8 @@
 
         // NEW FUNCTION: Replace static featured tool with user tool (Firestore)
         const replaceFeaturedStatic = async (staticToolId, userToolId) => {
-             // Check privileged status loaded from Firestore
-             if (!currentUser || !currentUser.uid || !currentUser.isPrivileged) return;
+             // Allow any logged-in user to perform this action
+             if (!currentUser || !currentUser.uid) return;
              if (!staticToolId || !userToolId) return;
 
              const userDocRef = doc(db, "users", currentUser.uid);
@@ -4559,7 +4559,8 @@
 
         // NEW FUNCTION: Remove user-added tool entirely (Firestore)
         const removeUserTool = async (toolId) => {
-            if (!currentUser || !currentUser.uid || !currentUser.isPrivileged || !toolId.startsWith('user-')) {
+            // Allow any logged-in user to perform this action on their own tools
+            if (!currentUser || !currentUser.uid || !toolId.startsWith('user-')) {
                 showToast("Action not allowed."); // Or a more specific message
                 return;
             }
@@ -5598,8 +5599,8 @@
 
         // NEW FUNCTION: Open Replace Featured Modal
         const openReplaceFeaturedModal = (staticToolId) => {
-             // Check privileged status loaded from Firestore
-             if (!currentUser.uid || !currentUser.isPrivileged) return;
+             // Allow any logged-in user to perform this action
+             if (!currentUser.uid) return;
              const t = translations[currentLanguage];
              const userTools = currentUser.userTools || [];
 
@@ -6392,16 +6393,16 @@ const viewUserSuggestions = async (userId, userNickname) => {
                              triggerAuthFlow(); // Se non è loggato, chiedi di accedere.
                          }
                          break;
-                    case 'toggle-user-featured': // Triggered by pencil on user featured apps in Library
-                         // Check privileged status loaded from Firestore
-                         if (currentUser.uid && currentUser.isPrivileged) {
+                                        case 'toggle-user-featured': // Triggered by pencil on user featured apps in Library
+                         // Allow any logged-in user to perform this action
+                         if (currentUser.uid) {
                              toggleUserFeatured(actionTarget.dataset.id);
                          } else {
-                             showToast("You need privileged access for this action.");
+                             triggerAuthFlow();
                          }
                          break;
                     case 'replace-featured-static': // Triggered by pencil on static featured apps in Top AI
-                         // MODIFICATO: Ora disponibile per tutti gli utenti loggati
+                         // Allow any logged-in user to perform this action
                          if (currentUser.uid) {
                              openReplaceFeaturedModal(actionTarget.dataset.id);
                          } else {
@@ -6409,27 +6410,19 @@ const viewUserSuggestions = async (userId, userNickname) => {
                          }
                          break;
                     case 'select-user-tool-for-featured': // Triggered by clicking a user app in the replace modal
-                         // Check privileged status loaded from Firestore
-                         if (currentUser.uid && currentUser.isPrivileged) {
-                             replaceFeaturedStatic(actionTarget.dataset.staticId, actionTarget.dataset.userId);
-                         } else {
-                             showToast("You need privileged access for this action.");
-                         }
-                         break;
-                    case 'remove-featured-replacement': // Triggered by pencil on user-replaced featured apps in Top AI
-                         // MODIFICATO: Ora disponibile per tutti gli utenti loggati
+                         // Allow any logged-in user to perform this action
                          if (currentUser.uid) {
-                             removeFeaturedReplacement(actionTarget.dataset.id);
+                             replaceFeaturedStatic(actionTarget.dataset.staticId, actionTarget.dataset.userId);
                          } else {
                              triggerAuthFlow();
                          }
                          break;
                     case 'remove-user-tool': // Triggered by pencil on user apps in the main Library list
-                         // Check privileged status loaded from Firestore
-                         if (currentUser.uid && currentUser.isPrivileged) {
+                         // Allow any logged-in user to perform this action
+                         if (currentUser.uid) {
                              removeUserTool(actionTarget.dataset.id);
                          } else {
-                             showToast("You need privileged access for this action.");
+                             triggerAuthFlow();
                          }
                          break;
                                         case 'add-ai-suggestion': // Triggered by add AI suggestion button
