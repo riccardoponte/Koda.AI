@@ -5425,8 +5425,8 @@
 
         // NEW FUNCTION: Open Add App Modal
         const openAddAppModal = () => {
-             // Check privileged status loaded from Firestore
-             if (!currentUser.uid || !currentUser.isPrivileged) return;
+             // Only allow logged-in users to open this modal.
+             if (!currentUser.uid) return;
              const t = translations[currentLanguage];
 
              // Get available categories for the dropdown
