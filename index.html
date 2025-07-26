@@ -1465,10 +1465,29 @@
             border-bottom-left-radius: 4px;
         }
 
+        /* Contenitore per orario e ricevuta di lettura */
+        .user-chat-message-meta {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end; /* Allinea a destra nel fumetto */
+            gap: 6px;
+            margin-top: 4px;
+            opacity: 0.8;
+        }
+        
         .user-chat-message-time {
             font-size: 12px;
-            opacity: 0.7;
-            margin-top: 4px;
+            /* Rimuoviamo il margine perché gestito dal contenitore flex */
+        }
+
+        /* Stile per l'icona dell'occhio */
+        .message-read-receipt {
+            display: flex;
+            align-items: center;
+        }
+        
+        .message-read-receipt svg {
+            fill: currentColor; /* Eredita il colore del testo (nero nel fumetto verde) */
         }
 
         /* Stili per l'indicatore di typing */
@@ -2742,17 +2761,69 @@
         };
 
         // --- COMPONENTI REACT PER LA CHAT UTENTE-UTENTE ---
-        // NUOVO COMPONENTE PER LA CARD DEL MESSAGGIO AI-LINK
+        // NUOVO COMPONENTE PER LA CARD DEL MESSAGGIO AI-LINK (con fetch on-demand)
         const AiLinkMessageCard = ({ message, onOpenDetail, lang }) => {
-            const allTools = window.getAllToolsForCurrentUser ? window.getAllToolsForCurrentUser() : [];
-            const tool = allTools.find(t => t.id === message.toolId);
+            const [tool, setTool] = useState(null);
+            const [isLoading, setIsLoading] = useState(true);
+
+            useEffect(() => {
+                const fetchToolData = async () => {
+                    setIsLoading(true);
+                    const toolId = message.toolId;
+                    let foundTool = null;
+
+                    // 1. Controlla gli strumenti disponibili localmente (statici + custom dell'utente corrente)
+                    const localTools = window.getAllToolsForCurrentUser ? window.getAllToolsForCurrentUser() : [];
+                    foundTool = localTools.find(t => t.id === toolId);
+
+                    // 2. Se non trovato, e si tratta di un'app custom di un altro utente, recuperala da Firestore
+                    if (!foundTool && toolId.startsWith('user-') && message.senderId) {
+                        try {
+                            const userDocRef = window.doc(window.db, "users", message.senderId);
+                            const userDocSnap = await window.getDoc(userDocRef);
+                            if (userDocSnap.exists()) {
+                                const senderTools = userDocSnap.data().userTools || [];
+                                const remoteTool = senderTools.find(t => t.id === toolId);
+                                
+                                if (remoteTool) {
+                                    // Localizza la descrizione se è un oggetto, altrimenti usa la stringa
+                                    const description = typeof remoteTool.description === 'object'
+                                        ? (remoteTool.description[lang] || remoteTool.description['en'])
+                                        : remoteTool.description;
+                                    foundTool = { ...remoteTool, description };
+                                }
+                            }
+                        } catch (error) {
+                            console.error("Errore nel recuperare l'app custom remota:", error);
+                        }
+                    }
+                    
+                    setTool(foundTool);
+                    setIsLoading(false);
+                };
+
+                fetchToolData();
+            }, [message.toolId, message.senderId, lang]); // Ricarica se il messaggio o la lingua cambiano
+
+            if (isLoading) {
+                return (
+                     <div className={`user-chat-message ai-link-card ${message.senderId === window.currentUser?.uid ? 'sent' : 'received'}`}>
+                        <div className="ai-link-message-content" style={{alignItems: 'center', justifyContent: 'center', minHeight: '80px'}}>
+                            <div className="chat-bubble loading" style={{background: 'transparent', padding: '0'}}><span></span><span></span><span></span></div>
+                        </div>
+                    </div>
+                );
+            }
 
             if (!tool) {
-                return <div className="user-chat-message received">Contenuto non disponibile.</div>;
+                return (
+                    <div className={`user-chat-message received`}>
+                        Contenuto non più disponibile.
+                    </div>
+                );
             }
-            
-            // Prende solo la prima frase della descrizione
-            const shortDescription = tool.description.split('.')[0] + '.';
+
+            const shortDescription = tool.description ? (tool.description.split('.')[0] + '.') : '';
 
             return (
                 <div className={`user-chat-message ai-link-card ${message.senderId === window.currentUser?.uid ? 'sent' : 'received'}`}>
@@ -3434,11 +3505,22 @@
                                 return <AiLinkMessageCard key={message.id} message={message} onOpenDetail={onOpenDetail} lang={language} />;
                             }
                             
-                            // Vecchia logica per messaggi di testo
+                            // Logica per messaggi di testo con ricevuta di lettura
                             return (
                                 <div key={message.id} className={`user-chat-message ${message.senderId === currentUser.uid ? 'sent' : 'received'}`}>
                                     {message.text}
-                                    <div className="user-chat-message-time">{formatMessageTime(message.timestamp)}</div>
+                                    <div className="user-chat-message-meta">
+                                        <div className="user-chat-message-time">{formatMessageTime(message.timestamp)}</div>
+                                        {/* Mostra l'icona dell'occhio solo se il messaggio è stato inviato da me ed è stato letto */}
+                                        {message.senderId === currentUser.uid && message.read && (
+                                            <span className="message-read-receipt" title="Letto">
+                                                <svg xmlns="http://www.w3.org/2000/svg" height="14" viewBox="0 0 24 24" width="14" fill="currentColor">
+                                                    <path d="M0 0h24v24H0V0z" fill="none"/>
+                                                    <path d="M12 6c3.79 0 7.17 2.13 8.82 5.5C19.17 14.87 15.79 17 12 17s-7.17-2.13-8.82-5.5C4.83 8.13 8.21 6 12 6m0-2C7 4 2.73 7.11 1 11.5 2.73 15.89 7 19 12 19s9.27-3.11 11-7.5C21.27 7.11 17 4 12 4zm0 5c1.38 0 2.5 1.12 2.5 2.5S13.38 14 12 14s-2.5-1.12-2.5-2.5S10.62 9 12 9m0-2c-2.48 0-4.5 2.02-4.5 4.5S9.52 16 12 16s4.5-2.02 4.5-4.5S14.48 7 12 7z"/>
+                                                </svg>
+                                            </span>
+                                        )}
+                                    </div>
                                 </div>
                             );
                         })}
@@ -3558,9 +3640,11 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // **NUOVO:** Espone db e getDocs globalmente per il componente React
+    // **NUOVO:** Espone funzioni e oggetti Firestore globalmente per i componenti React
     window.db = db;
     window.getDocs = getDocs;
+    window.getDoc = getDoc; // Aggiunto per recuperare singoli documenti
+    window.doc = doc; // Aggiunto per creare riferimenti a documenti
     window.collection = collection;
 
     // --- FUNZIONI PER LA CHAT UTENTE-UTENTE ---
@@ -5652,7 +5736,7 @@
 
 
         // NEW FUNCTION: Handle Add App submission (Firestore)
-        const handleAddApp = async () => { // Assicuriamoci che sia asincrona per Firestore
+                const handleAddApp = async () => { // Assicuriamoci che sia asincrona per Firestore
              // Permetti solo agli utenti loggati di inviare il form
              if (!currentUser.uid) return;
 
@@ -5686,7 +5770,11 @@
              const newTool = {
                  id: `user-${currentUser.uid}-${Date.now()}`, // ID univoco per le app utente
                  name: name,
-                 description: description || { it: 'Descrizione non fornita.', en: 'Description not provided.' },
+                 // CORREZIONE: La descrizione è sempre un oggetto per coerenza
+                 description: {
+                    it: description || 'Descrizione non fornita.',
+                    en: description || 'Description not provided.'
+                 },
                  website: website,
                  logoUrl: logoUrl, // Stringa Base64 dell'immagine
                  category: category,
@@ -6272,6 +6360,24 @@ const viewUserSuggestions = async (userId, userNickname) => {
         // Apply theme on initial load
         document.body.classList.toggle('light-mode', currentTheme === 'light');
 
+        // NUOVA FUNZIONE PER APRIRE IL MODALE DI CONFERMA
+        const openConfirmDeleteAllModal = () => {
+            const t = translations[currentLanguage];
+            const modalHTML = `
+                <div id="confirm-delete-modal" class="modal-overlay visible">
+                    <div class="modal-content" style="text-align: left; max-width: 400px;">
+                        <h2 style="font-size: 20px; margin-bottom: 16px;">${t.deleteAll}</h2>
+                        <p style="color: var(--spotify-text-secondary); line-height: 1.5; margin-bottom: 24px;">${t.confirmDeleteAll}</p>
+                        <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                            <button class="pill-btn" data-action="close-modal">${t.cancel || 'Annulla'}</button>
+                            <button class="button" data-action="confirm-delete-all-chats" style="background-color: #ff4444; color: white;">${t.deleteAll}</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            el.modalContainer.innerHTML = modalHTML;
+        };
+        
         // --- MAIN EVENT LISTENER ---
         document.body.addEventListener('click', (e) => {
             const target = e.target;
@@ -6311,7 +6417,7 @@ const viewUserSuggestions = async (userId, userNickname) => {
                         document.body.classList.toggle('light-mode', currentTheme === 'light');
                         localStorage.setItem('koda-theme', currentTheme);
                         
-                        // Aggiorna l'icona del tema manualmente senza ri-renderizzare tutto
+                        // Aggiorna l'icona del tema manually senza ri-renderizzare tutto
                         const themeBtn = document.getElementById('theme-toggle-btn');
                         if (themeBtn) {
                             themeBtn.innerHTML = currentTheme === 'dark' ? sunIcon : moonIcon;
@@ -6353,13 +6459,14 @@ const viewUserSuggestions = async (userId, userNickname) => {
                     // Side Menu
                     case 'new-chat': startNewChat(); break;
                     case 'delete-all-chats':
-                        const t = translations[currentLanguage];
-                        if (confirm(t.confirmDeleteAll)) {
-                            conversations = {};
-                            localStorage.removeItem(getStorageKey());
-                            localStorage.removeItem(`activeConversationId_${currentUser.uid || 'guest'}`);
-                            startNewChat(true); // Start a new chat and re-render
-                        }
+                        openConfirmDeleteAllModal(); // Ora apre il modale personalizzato
+                        break;
+                    case 'confirm-delete-all-chats': // NUOVA AZIONE
+                        conversations = {};
+                        localStorage.removeItem(getStorageKey());
+                        localStorage.removeItem(`activeConversationId_${currentUser.uid || 'guest'}`);
+                        startNewChat(true); // Esegue la cancellazione
+                        closeModal(); // Chiude il modale di conferma
                         break;
                     case 'select-conversation':
                         const newActiveId = actionTarget.dataset.id;
