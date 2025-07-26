@@ -4509,38 +4509,102 @@
         };
         const createCountryCard = (country) => `<div class="category-card" style="background-color: #333;" data-action="set-explore-filter" data-filter-type="country" data-filter-value="${country.name}"><h3 style="font-size: 24px;">${country.flag} ${country.name}</h3></div>`;
 
-        window.openDetailModal = (toolId) => {
-            const allTools = getAllToolsForCurrentUser(); // Use combined list
-            const tool = allTools.find(t => t.id === toolId);
-            if (!tool) return;
+        window.openDetailModal = async (toolId) => {
+            // Mostra un caricamento immediato per una migliore UX
+            el.modalContainer.innerHTML = `
+                <div id="detail-modal" class="modal-overlay visible">
+                    <div class="modal-content" style="display: flex; align-items: center; justify-content: center; min-height: 200px;">
+                        <div class="chat-bubble loading"><span></span><span></span><span></span></div>
+                    </div>
+                </div>
+            `;
+
+            let tool = null;
+
+            // 1. Cerca lo strumento nella lista locale dell'utente corrente
+            const localTools = getAllToolsForCurrentUser();
+            tool = localTools.find(t => t.id === toolId);
+
+            // 2. Se non è stato trovato ed è un'app utente, recuperala da Firestore
+            if (!tool && toolId && toolId.startsWith('user-')) {
+                try {
+                    // L'ID dell'utente che ha creato l'app è incorporato nell'ID dell'app stessa
+                    const creatorId = toolId.split('-')[1]; 
+                    if (creatorId) {
+                        const userDocRef = doc(db, "users", creatorId);
+                        const userDocSnap = await getDoc(userDocRef);
+                        if (userDocSnap.exists()) {
+                            const creatorTools = userDocSnap.data().userTools || [];
+                            const remoteTool = creatorTools.find(t => t.id === toolId);
+                            if (remoteTool) {
+                                // Traduci la descrizione prima di assegnarla
+                                const description = typeof remoteTool.description === 'object'
+                                    ? (remoteTool.description[currentLanguage] || remoteTool.description['en'])
+                                    : remoteTool.description;
+                                tool = { ...remoteTool, description };
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.error("Errore nel recupero dello strumento remoto:", error);
+                }
+            }
+
+            // 3. Se lo strumento non è ancora stato trovato, esci
+            if (!tool) {
+                showToast("Dettagli dello strumento non trovati.");
+                closeModal();
+                return;
+            }
+
+            // 4. Ora che abbiamo lo strumento, costruisci e renderizza il modale completo
             const t = translations[currentLanguage];
             const isFavorited = currentUser.uid && currentUser.favorites.includes(toolId);
             const isUserTool = tool.id.startsWith('user-');
-            // Check privileged status loaded from Firestore
-            const isUserFeatured = currentUser.uid && currentUser.isPrivileged && currentUser.userFeaturedTools?.includes(toolId);
+            const isMyUserTool = isUserTool && tool.id.includes(currentUser.uid); // Controlla se è la MIA app custom
+            const isUserFeatured = isMyUserTool && currentUser.userFeaturedTools?.includes(toolId);
 
             let recommendationHTML = '';
             let recommendedTool = null;
+            const allToolsForRec = getAllToolsForCurrentUser(); // Usa la lista locale per le raccomandazioni
             if (tool.recommendationId) {
-                recommendedTool = allTools.find(t => t.id === tool.recommendationId); // Check in all tools
+                recommendedTool = allToolsForRec.find(t => t.id === tool.recommendationId);
             } else {
-                // Trova una AI alternativa della stessa categoria, diversa dalla selezionata
-                const sameCategory = allTools.filter(t => t.category === tool.category && t.id !== tool.id);
+                const sameCategory = allToolsForRec.filter(t => t.category === tool.category && t.id !== tool.id);
                 if (sameCategory.length > 0) {
-                    // Scegli una a caso
                     recommendedTool = sameCategory[Math.floor(Math.random() * sameCategory.length)];
                 }
             }
             if (recommendedTool) {
                 recommendationHTML = `<div class="recommendation-box" data-action="open-detail-modal" data-id="${recommendedTool.id}"><img src="${recommendedTool.logoUrl}" alt="${recommendedTool.name}" class="recommendation-logo" loading="lazy"><div class="recommendation-text">${t.alternativeSuggestion}<strong>${recommendedTool.name}</strong></div></div>`;
             }
+            
             let userToolActionsHTML = '';
-            // Show Mark Featured button only for user's own tools if privileged
-            if (isUserTool && currentUser.uid && currentUser.isPrivileged) {
+            // I pulsanti di modifica/evidenza appaiono solo se sono loggato e sto guardando una delle MIE app custom
+            if (isMyUserTool && currentUser.isPrivileged) {
                  userToolActionsHTML = `<button class="button" data-action="toggle-user-featured" data-id="${tool.id}">${isUserFeatured ? t.unmarkAsFeatured : t.markAsFeatured}</button>`;
             }
 
-            const modalHTML = `<div id="detail-modal" class="modal-overlay visible"><div class="modal-content"><button class="modal-close-btn" data-action="close-modal">×</button><div id="detail-content"><h2>${tool.name}</h2><p>${tool.description}</p><div class="detail-tags"><span class="tag">🌍 ${tool.country || 'N/A'}</span><span class="tag">${getTranslatedCategoryName(tool.category || 'N/A')}</span></div><div class="detail-actions">${userToolActionsHTML}${currentUser.uid ? `<button class="button" data-action="toggle-favorite" data-id="${tool.id}">${isFavorited ? t.detailModalRemoveFavorite : t.detailModalAddFavorite}</button>` : ''}<a href="${tool.website}" target="_blank" class="button" style="text-decoration: none; display: flex; justify-content: center; align-items: center;">${t.visitWebsite}</a></div>${recommendationHTML}</div></div></div>`;
+            const modalHTML = `
+                <div id="detail-modal" class="modal-overlay visible">
+                    <div class="modal-content">
+                        <button class="modal-close-btn" data-action="close-modal">×</button>
+                        <div id="detail-content">
+                            <h2>${tool.name}</h2>
+                            <p>${tool.description}</p>
+                            <div class="detail-tags">
+                                <span class="tag">🌍 ${tool.country || 'N/A'}</span>
+                                <span class="tag">${getTranslatedCategoryName(tool.category || 'N/A')}</span>
+                            </div>
+                            <div class="detail-actions">
+                                ${userToolActionsHTML}
+                                ${currentUser.uid ? `<button class="button" data-action="toggle-favorite" data-id="${tool.id}">${isFavorited ? t.detailModalRemoveFavorite : t.detailModalAddFavorite}</button>` : ''}
+                                <a href="${tool.website}" target="_blank" class="button" style="text-decoration: none; display: flex; justify-content: center; align-items: center;">${t.visitWebsite}</a>
+                            </div>
+                            ${recommendationHTML}
+                        </div>
+                    </div>
+                </div>`;
             el.modalContainer.innerHTML = modalHTML;
         };
         
@@ -5130,7 +5194,6 @@
                     }
                 }
             } else if (currentView === 'favorites') { // Questa vista è la nostra nuova Libreria
-                // Rimosso `el.mainContent.innerHTML = '';` per consentire l'aggiunta della top bar prima.
                 if (isGuest) {
                     contentArea.innerHTML = `
                         <div class="auth-prompt-card">
@@ -5143,12 +5206,11 @@
                         </div>
                     `;
                 } else {
-                    // --- Informazioni Profilo (ora senza l'header personalizzato) ---
+                    // --- Informazioni Profilo ---
                     const userInitial = currentUser.nickname ? currentUser.nickname.charAt(0).toUpperCase() : 'P';
                     const userNickname = currentUser.nickname || 'rickiponte';
                     const userFullName = currentUser.fullName || currentUser.nickname;
                     
-                    // L'HTML del profilo ora parte dal contenitore della pagina, la top-bar è gestita sopra.
                     const profileContentHTML = `
                         <div class="profile-page-container">
                              <div class="profile-header">
@@ -5180,77 +5242,124 @@
                             </div>
                         </div>
                     `;
+                    contentArea.innerHTML = profileContentHTML;
 
-                    // --- NUOVA LOGICA PER GLI "SCAFFALI" ---
-                    let shelvesHTML = '';
-                    
-                    // Scaffale 1: Preferiti
-                    const favoriteTools = allTools.filter(tool => currentUser.favorites.includes(tool.id));
-                    if (favoriteTools.length > 0) {
-                        shelvesHTML += `
-                            <div class="library-shelf">
-                                <h3 class="library-shelf-title">${t.libraryFavorites}</h3>
-                                <div class="horizontal-scroll-container">
-                                    ${favoriteTools.map(tool => `
-                                        <div class="tool-shelf-item" data-id="${tool.id}">
-                                            <div class="tool-shelf-logo-container"><img src="${tool.logoUrl}" class="tool-logo" alt="${tool.name}" loading="lazy"></div>
-                                            <div class="tool-shelf-name">${tool.name}</div>
-                                        </div>
-                                    `).join('')}
-                                </div>
-                            </div>
-                        `;
-                    }
+                    // Aggiungi un contenitore per gli scaffali che verrà riempito dopo il fetch
+                    const shelvesContainer = document.createElement('div');
+                    shelvesContainer.className = 'library-shelves-container';
+                    contentArea.appendChild(shelvesContainer);
 
-                    // Scaffale 2: App Custom
-                    const userTools = currentUser.userTools || [];
-                    if (userTools.length > 0) {
-                         shelvesHTML += `
-                            <div class="library-shelf">
-                                <h3 class="library-shelf-title">${t.libraryCustom}</h3>
-                                <div class="horizontal-scroll-container">
-                                    ${userTools.map(tool => `
-                                        <div class="tool-shelf-item" data-id="${tool.id}">
-                                            <div class="tool-shelf-logo-container">
-                                                <img src="${tool.logoUrl}" class="tool-logo" alt="${tool.name}" loading="lazy">
-                                                <div class="edit-icon" data-action="remove-user-tool" data-id="${tool.id}" title="${t.removeUserTool}"> ${pencilIcon} </div>
+                    // --- NUOVA LOGICA ASINCRONA PER GLI SCAFFALI ---
+                    (async () => {
+                        shelvesContainer.innerHTML = `<div class="chat-bubble loading" style="margin: 40px auto; background: transparent;"><span></span><span></span><span></span></div>`;
+
+                        let shelvesHTML = '';
+                        const localTools = getAllToolsForCurrentUser();
+                        const favoriteIds = currentUser.favorites || [];
+
+                        // Mappa per memorizzare i dati degli utenti recuperati ed evitare chiamate duplicate
+                        const fetchedUsersCache = new Map();
+
+                        // Recupera tutti i dati degli strumenti preferiti in un'unica operazione
+                        const favoriteToolsPromises = favoriteIds.map(async (toolId) => {
+                            // Cerca prima localmente
+                            let tool = localTools.find(t => t.id === toolId);
+                            if (tool) return tool;
+
+                            // Se non trovato e è un'app utente, recuperala
+                            if (toolId.startsWith('user-')) {
+                                const creatorId = toolId.split('-')[1];
+                                if (!creatorId) return null;
+
+                                let creatorData;
+                                if (fetchedUsersCache.has(creatorId)) {
+                                    creatorData = fetchedUsersCache.get(creatorId);
+                                } else {
+                                    const userDocRef = doc(db, "users", creatorId);
+                                    const userDocSnap = await getDoc(userDocRef);
+                                    creatorData = userDocSnap.exists() ? userDocSnap.data() : null;
+                                    fetchedUsersCache.set(creatorId, creatorData);
+                                }
+                                
+                                if (creatorData) {
+                                    const remoteTool = (creatorData.userTools || []).find(t => t.id === toolId);
+                                    if(remoteTool) return remoteTool;
+                                }
+                            }
+                            return null; // Strumento non trovato
+                        });
+
+                        const resolvedFavoriteTools = (await Promise.all(favoriteToolsPromises)).filter(Boolean);
+
+                        // Scaffale 1: Preferiti (ora con tutti i dati)
+                        if (resolvedFavoriteTools.length > 0) {
+                            shelvesHTML += `
+                                <div class="library-shelf">
+                                    <h3 class="library-shelf-title">${t.libraryFavorites}</h3>
+                                    <div class="horizontal-scroll-container">
+                                        ${resolvedFavoriteTools.map(tool => `
+                                            <div class="tool-shelf-item" data-id="${tool.id}">
+                                                <div class="tool-shelf-logo-container"><img src="${tool.logoUrl}" class="tool-logo" alt="${tool.name}" loading="lazy"></div>
+                                                <div class="tool-shelf-name">${tool.name}</div>
                                             </div>
-                                            <div class="tool-shelf-name">${tool.name}</div>
-                                        </div>
-                                    `).join('')}
+                                        `).join('')}
+                                    </div>
                                 </div>
-                            </div>
-                        `;
-                    }
-                    
-                                        // Scaffale 3: Suggerimenti (con il nuovo layout unificato)
-                    const suggestions = currentUser.aiSuggestions || [];
-                    if (suggestions.length > 0) {
-                        shelvesHTML += `
-                            <div class="library-shelf">
-                                <h3 class="library-shelf-title">${t.librarySuggested}</h3>
-                                <div class="horizontal-scroll-container">
-                                    ${suggestions.map(suggestion => {
-                                        // Prendi la prima lettera del nome dell'app, o '?' se non disponibile
-                                        const initial = suggestion.appName ? suggestion.appName.charAt(0).toUpperCase() : '?';
-                                        
-                                        return `
-                                            <div class="tool-shelf-item" title="${suggestion.appName}">
-                                                <div class="tool-shelf-logo-container suggestion-initial-container">
-                                                    <span class="suggestion-initial">${initial}</span>
-                                                    <div class="edit-icon" data-action="remove-ai-suggestion" data-id="${suggestion.id}" title="Rimuovi suggerimento: ${suggestion.appName}">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="14" viewBox="0 0 24 24" width="14" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
-                                                    </div>
+                            `;
+                        }
+
+                        // Scaffale 2: App Custom (logica invariata)
+                        const userTools = currentUser.userTools || [];
+                        if (userTools.length > 0) {
+                            shelvesHTML += `
+                                <div class="library-shelf">
+                                    <h3 class="library-shelf-title">${t.libraryCustom}</h3>
+                                    <div class="horizontal-scroll-container">
+                                        ${userTools.map(tool => `
+                                            <div class="tool-shelf-item" data-id="${tool.id}">
+                                                <div class="tool-shelf-logo-container">
+                                                    <img src="${tool.logoUrl}" class="tool-logo" alt="${tool.name}" loading="lazy">
+                                                    <div class="edit-icon" data-action="remove-user-tool" data-id="${tool.id}" title="${t.removeUserTool}"> ${pencilIcon} </div>
                                                 </div>
-                                                <div class="tool-shelf-name">${suggestion.appName}</div>
+                                                <div class="tool-shelf-name">${tool.name}</div>
                                             </div>
-                                        `;
-                                    }).join('')}
+                                        `).join('')}
+                                    </div>
                                 </div>
-                            </div>
-                        `;
-                    }
-                    
+                            `;
+                        }
+                        
+                        // Scaffale 3: Suggerimenti (logica invariata)
+                        const suggestions = currentUser.aiSuggestions || [];
+                        if (suggestions.length > 0) {
+                             shelvesHTML += `
+                                <div class="library-shelf">
+                                    <h3 class="library-shelf-title">${t.librarySuggested}</h3>
+                                    <div class="horizontal-scroll-container">
+                                        ${suggestions.map(suggestion => {
+                                            const initial = suggestion.appName ? suggestion.appName.charAt(0).toUpperCase() : '?';
+                                            return `
+                                                <div class="tool-shelf-item" title="${suggestion.appName}">
+                                                    <div class="tool-shelf-logo-container suggestion-initial-container">
+                                                        <span class="suggestion-initial">${initial}</span>
+                                                        <div class="edit-icon" data-action="remove-ai-suggestion" data-id="${suggestion.id}" title="Rimuovi suggerimento: ${suggestion.appName}">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" height="14" viewBox="0 0 24 24" width="14" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                                                        </div>
+                                                    </div>
+                                                    <div class="tool-shelf-name">${suggestion.appName}</div>
+                                                </div>
+                                            `;
+                                        }).join('')}
+                                    </div>
+                                </div>
+                            `;
+                        }
+
+                        // Sostituisci il loader con il contenuto finale
+                        shelvesContainer.innerHTML = shelvesHTML;
+
+                    })(); // Chiusura e esecuzione della funzione asincrona
+
                     // Pulsanti Fluttuanti (FABs)
                     const actionButtonsHTML = `
                         <button class="floating-action-btn" data-action="open-add-app-modal" title="${t.addCustomApp}" style="bottom: calc(var(--bottom-nav-height) + 16px);">
@@ -5260,9 +5369,7 @@
                              <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"></path></svg>
                         </button>
                     `;
-
-                    // Assembla il tutto
-                    contentArea.innerHTML = profileContentHTML + `<div class="library-shelves-container">${shelvesHTML}</div>` + actionButtonsHTML;
+                    contentArea.insertAdjacentHTML('beforeend', actionButtonsHTML);
                 }
                 el.mainContent.appendChild(contentArea);
             }
