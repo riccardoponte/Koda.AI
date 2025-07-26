@@ -1366,7 +1366,7 @@
         .user-chat-container {
             display: flex;
             flex-direction: column;
-            height: 100%; /* Modificato da 100vh a 100% */
+            height: 100vh; /* Modificato a 100vh per occupare l'intera altezza dello schermo */
             background-color: var(--spotify-bg);
         }
 
@@ -3676,16 +3676,34 @@
         });
     };
 
-    // Setup listener per lo stato online di un utente
+        // Setup listener per lo stato online di un utente (CON LOGICA DI TIMEOUT)
     const setupUserOnlineListener = (userId, callback) => {
-        const userRef = doc(db, 'users', userId);
+        const userRef = doc(db, "users", userId);
         
         return onSnapshot(userRef, (doc) => {
             const data = doc.data();
             if (data) {
-                const isOnline = data.isOnline || false;
+                // Se l'utente ha fatto logout esplicito, è offline.
+                if (data.isOnline === false) {
+                    callback({ isOnline: false, lastSeen: data.lastSeen?.toDate() });
+                    return;
+                }
+
+                // Altrimenti, controlliamo quando è stato visto l'ultima volta.
                 const lastSeen = data.lastSeen?.toDate();
-                callback({ isOnline, lastSeen });
+                if (lastSeen) {
+                    // Calcoliamo la differenza in millisecondi tra ora e l'ultimo accesso.
+                    const timeDifference = new Date().getTime() - lastSeen.getTime();
+                    
+                    // Se l'utente è stato visto negli ultimi 60 secondi, è considerato online.
+                    // (60000 millisecondi = 60 secondi)
+                    const isConsideredOnline = timeDifference < 60000;
+                    
+                    callback({ isOnline: isConsideredOnline, lastSeen: lastSeen });
+                } else {
+                    // Se non c'è un timestamp, consideralo offline per sicurezza.
+                    callback({ isOnline: false, lastSeen: null });
+                }
             }
         });
     };
@@ -4552,9 +4570,9 @@
 
         // NEW FUNCTION: Remove user-added tool entirely (Firestore)
         const removeUserTool = async (toolId) => {
-            // Allow any logged-in user to perform this action on their own tools
+            // Permetti solo agli utenti loggati di rimuovere le proprie app
             if (!currentUser || !currentUser.uid || !toolId.startsWith('user-')) {
-                showToast("Action not allowed."); // Or a more specific message
+                showToast("Azione non permessa.");
                 return;
             }
 
@@ -4562,58 +4580,50 @@
             const t = translations[currentLanguage];
 
             try {
-                // 1. Read the current user document
+                // 1. Leggi lo stato attuale del documento utente da Firestore
                 const userDocSnap = await getDoc(userDocRef);
                 if (!userDocSnap.exists()) {
-                    showToast("User data not found.");
+                    showToast("Dati utente non trovati.");
                     return;
                 }
                 const userData = userDocSnap.data();
 
-                // 2. Filter the userTools array in memory
+                // 2. Filtra l'array 'userTools' per rimuovere l'app specificata
                 const updatedUserTools = (userData.userTools || []).filter(tool => tool.id !== toolId);
 
-                // 3. Filter the userFeaturedTools array
+                // 3. Rimuovi l'app anche da altri array correlati (preferiti, in evidenza, etc.)
                 const updatedUserFeaturedTools = (userData.userFeaturedTools || []).filter(id => id !== toolId);
-
-                // 4. Remove the tool from userFeaturedReplacements if it was used as a replacement
+                const updatedFavorites = (userData.favorites || []).filter(id => id !== toolId);
                 const updatedUserFeaturedReplacements = { ...(userData.userFeaturedReplacements || {}) };
-                let replacementRemoved = false;
                 for (const staticId in updatedUserFeaturedReplacements) {
                     if (updatedUserFeaturedReplacements[staticId] === toolId) {
                         delete updatedUserFeaturedReplacements[staticId];
-                        replacementRemoved = true;
-                        break; // Assuming a user tool can only replace one static tool at a time
                     }
                 }
-                
-                // 5. Remove the tool from favorites if it was favorited
-                const updatedFavorites = (userData.favorites || []).filter(id => id !== toolId);
 
-
-                // 6. Prepare the update object
+                // 4. Prepara l'oggetto con tutti i dati aggiornati da scrivere su Firestore
                 const updateData = {
                     userTools: updatedUserTools,
                     userFeaturedTools: updatedUserFeaturedTools,
                     userFeaturedReplacements: updatedUserFeaturedReplacements,
-                    favorites: updatedFavorites // Update favorites as well
+                    favorites: updatedFavorites
                 };
 
-                // 7. Write the updated data back to Firestore
+                // 5. Scrivi i dati aggiornati su Firestore in un'unica operazione
                 await updateDoc(userDocRef, updateData);
 
-                // 8. Update local state
+                // 6. Aggiorna lo stato locale per riflettere la rimozione nella UI
                 currentUser.userTools = updatedUserTools;
                 currentUser.userFeaturedTools = updatedUserFeaturedTools;
                 currentUser.userFeaturedReplacements = updatedUserFeaturedReplacements;
-                currentUser.favorites = updatedFavorites; // Update local favorites
+                currentUser.favorites = updatedFavorites;
 
-                showToast(t.removeUserTool + " Success!"); // Need this translation
-                renderView(); // Re-render the Library view
-                closeModal(); // Close any open modal (like detail modal)
+                showToast(t.removeUserTool + " - Successo!");
+                renderView();
+                closeModal();
             } catch (error) {
-                console.error("Error removing user tool:", error);
-                showToast(`Error: ${error.message}`);
+                console.error("Errore nella rimozione dell'app utente:", error);
+                showToast(`Errore: ${error.message}`);
             }
         };
 
@@ -5361,8 +5371,8 @@
             document.getElementById('update-password-btn')?.addEventListener('click', handlePasswordUpdate);
              // Attach listener to the logout button inside the modal
             document.getElementById('logout-btn-modal')?.addEventListener('click', () => {
-                 signOut(auth).catch(error => console.error("Logout Error:", error));
-                 closeModal(); // Close modal on logout attempt
+                 handleLogout(); // Usa la nuova funzione centralizzata
+                 closeModal(); 
             });
         };
         
@@ -5589,6 +5599,24 @@
             }
         };
 
+        const handleLogout = async () => {
+            if (currentUser && currentUser.uid) {
+                try {
+                    // 1. Imposta lo stato a 'offline' su Firebase e attende il completamento
+                    await updateUserOnlineStatus(currentUser.uid, false);
+                    
+                    // 2. Solo dopo, esegue il logout da Firebase Auth
+                    await signOut(auth);
+                    
+                    // 3. Mostra un messaggio di successo
+                    showToast(translations[currentLanguage].logout + " effettuato."); 
+                } catch (error) {
+                    console.error("Logout Error:", error);
+                    showToast("Errore durante il logout.");
+                }
+            }
+        };
+
         // NEW FUNCTION: Open Replace Featured Modal
         const openReplaceFeaturedModal = (staticToolId) => {
              // Allow any logged-in user to perform this action
@@ -5624,28 +5652,29 @@
 
 
         // NEW FUNCTION: Handle Add App submission (Firestore)
-        const handleAddApp = async () => { // Made async again for Firestore
-             // Only allow logged-in users to submit the form
+        const handleAddApp = async () => { // Assicuriamoci che sia asincrona per Firestore
+             // Permetti solo agli utenti loggati di inviare il form
              if (!currentUser.uid) return;
 
              const nameInput = document.getElementById('add-app-name');
              const descInput = document.getElementById('add-app-description');
              const websiteInput = document.getElementById('add-app-website');
-             const logoInput = document.getElementById('add-app-logo'); // This is now the file input
+             const logoInput = document.getElementById('add-app-logo'); // Input di tipo file
              const categorySelect = document.getElementById('add-app-category');
 
              const name = nameInput.value.trim();
              const description = descInput.value.trim();
              const website = websiteInput.value.trim();
-             const file = logoInput.files[0]; // Get the selected file
+             const file = logoInput.files[0]; // Ottieni il file selezionato
              const category = categorySelect.value;
              const t = translations[currentLanguage];
 
+             // Validazione campi
              if (!name) { showToast(t.appNameRequired); return; }
              if (!website) { showToast(t.appWebsiteRequired); return; }
-             if (!file) { showToast(t.appLogoRequired); return; } // Check if a file is selected
+             if (!file) { showToast(t.appLogoRequired); return; }
 
-             // Read the file as a Data URL (Base64)
+             // Converti il file immagine in una stringa Base64 per salvarla su Firestore
              const logoUrl = await new Promise((resolve, reject) => {
                  const reader = new FileReader();
                  reader.onloadend = () => resolve(reader.result);
@@ -5653,34 +5682,33 @@
                  reader.readAsDataURL(file);
              });
 
+             // Crea il nuovo oggetto 'tool'
              const newTool = {
-                 id: `user-${currentUser.uid}-${Date.now()}`, // Unique ID for user tools
+                 id: `user-${currentUser.uid}-${Date.now()}`, // ID univoco per le app utente
                  name: name,
-                 description: description || { it: 'Descrizione non fornita.', en: 'Description not provided.' }, // Allow empty desc, provide default
+                 description: description || { it: 'Descrizione non fornita.', en: 'Description not provided.' },
                  website: website,
-                 logoUrl: logoUrl, // This is now the Base64 string
+                 logoUrl: logoUrl, // Stringa Base64 dell'immagine
                  category: category,
-                 country: 'User Added', // Indicate origin
-                 // isFeatured: false, // This flag is not used for user tools featured status
-                 // recommendationId: null // User tools don't recommend others by default
+                 country: 'User Added', // Identifica l'origine
              };
 
              const userDocRef = doc(db, "users", currentUser.uid);
 
              try {
-                 // Add the new tool to the userTools array in Firestore
+                 // Usa arrayUnion per aggiungere il nuovo tool all'array 'userTools' in Firestore
                  await updateDoc(userDocRef, {
                      userTools: arrayUnion(newTool)
                  });
-                 // Update local state after successful Firestore update
+                 // Aggiorna lo stato locale per riflettere immediatamente la modifica nella UI
                  currentUser.userTools = [...(currentUser.userTools || []), newTool];
 
                  showToast(t.addAppSuccess);
-                 closeModal(); // Close modal on success
-                 renderView(); // Re-render Library view
+                 closeModal();
+                 renderView(); // Ri-disegna la vista per mostrare la nuova app
              } catch (error) {
-                 console.error("Error adding user tool:", error);
-                 showToast(t.addAppError.replace('%s', error.message)); // Use generic error message
+                 console.error("Errore nell'aggiungere l'app utente:", error);
+                 showToast(t.addAppError.replace('%s', error.message));
              }
         };
 
@@ -6485,12 +6513,7 @@ const viewUserSuggestions = async (userId, userNickname) => {
                         break;
                     case 'logout':
                         closeUserProfileDropdown();
-                        signOut(auth).then(() => {
-                            showToast("Logout effettuato con successo!");
-                        }).catch((error) => {
-                            console.error("Logout error:", error);
-                            showToast("Errore durante il logout");
-                        });
+                        handleLogout(); // Usa la nuova funzione centralizzata
                         break;
                 }
                 // Prevent default for any element with data-action
