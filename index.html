@@ -332,6 +332,30 @@
         .pill-btn.active { background-color: var(--spotify-text); color: var(--spotify-bg); font-weight: bold; }
         body.light-mode .pill-btn.active { color: var(--spotify-bg); background-color: #333; }
         
+        /* NUOVO: Stili per l'icona mostra/nascondi password */
+        .password-input-wrapper {
+            position: relative;
+        }
+        .password-toggle-icon {
+            position: absolute;
+            top: 50%;
+            right: 16px;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--spotify-text-secondary);
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+        .password-toggle-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+        
         #content-area { padding: 16px; }
         .section-title { font-size: 22px; font-weight: 700; margin-bottom: 20px; }
         .grid-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
@@ -435,7 +459,7 @@
         .nav-btn .icon {
             position: relative;
         }
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; z-index: 1600; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
         body.light-mode .modal-overlay { background: rgba(255, 255, 255, 0.6); }
         .modal-overlay.visible { opacity: 1; visibility: visible; }
         .modal-content { background: var(--spotify-card); padding: 24px; border-radius: 16px; width: 90%; max-width: 500px; text-align: center; position: relative; }
@@ -2421,7 +2445,11 @@
     </div>
 
     <div id="app-container">
-        <div id="main-content"></div>
+        <div id="main-content">
+            <div id="initial-loader" style="display: flex; justify-content: center; align-items: center; height: 100%;">
+                <div class="chat-bubble loading"><span></span><span></span><span></span></div>
+            </div>
+        </div>
         <nav id="bottom-nav">
             <!-- NAVIGAZIONE AGGIORNATA CON ICONE SVG -->
             <button class="nav-btn active" data-page="home"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></span><span data-translate="navHome">Home</span></button>
@@ -3641,6 +3669,25 @@
     const analytics = getAnalytics(app);
     const auth = getAuth(app);
     const db = getFirestore(app);
+
+    // NUOVO: Definizioni SVG per le icone della password
+    const eyeIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5C21.27 7.61 17 4.5 12 4.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>`;
+    const eyeSlashIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/></svg>`;
+
+    // NUOVO: Funzione per gestire il toggle della visibilità della password
+    const handlePasswordVisibilityToggle = (button) => {
+        const inputId = button.dataset.toggleFor;
+        const input = document.getElementById(inputId);
+        if (!input) return;
+
+        if (input.type === "password") {
+            input.type = "text";
+            button.innerHTML = eyeSlashIconSVG;
+        } else {
+            input.type = "password";
+            button.innerHTML = eyeIconSVG;
+        }
+    };
 
     // **NUOVO:** Espone funzioni e oggetti Firestore globalmente per i componenti React
     window.db = db;
@@ -4960,6 +5007,11 @@
         };
 
         const renderView = () => {
+            const initialLoader = document.getElementById('initial-loader');
+            if (initialLoader) {
+                initialLoader.remove();
+            }
+
             // GESTIONE VISIBILITÀ BARRA DI NAVIGAZIONE E PADDING
             // La visibilità della nav bar nella sezione chat è ora gestita dal componente React UserChatApp.
             el.bottomNav.style.display = 'flex';
@@ -5420,7 +5472,13 @@
                 <div class="input-group"><label for="register-nickname" data-translate="registerNicknameLabel">${t.registerNicknameLabel}</label><input type="text" id="register-nickname" placeholder="${t.registerNicknamePlaceholder}"></div>
                 <div class="input-group"><label for="register-fullname" data-translate="registerFullNameLabel">${t.registerFullNameLabel}</label><input type="text" id="register-fullname" placeholder="${t.registerFullNamePlaceholder}"></div>
                 <div class="input-group"><label for="register-email" data-translate="registerEmailLabel">${t.registerEmailLabel}</label><input type="email" id="register-email" placeholder="${t.registerEmailPlaceholder}"></div>
-                <div class="input-group"><label for="register-password" data-translate="registerPasswordLabel">${t.registerPasswordLabel}</label><input type="password" id="register-password" placeholder="${t.registerPasswordPlaceholder}"></div>
+                <div class="input-group">
+                    <label for="register-password" data-translate="registerPasswordLabel">${t.registerPasswordLabel}</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="register-password" placeholder="${t.registerPasswordPlaceholder}">
+                        <button type="button" class="password-toggle-icon" data-action="toggle-password-visibility" data-toggle-for="register-password">${eyeIconSVG}</button>
+                    </div>
+                </div>
                 <button id="register-btn" class="button" data-translate="registerButton">${t.registerButton}</button>
                 <div class="auth-links"><a class="auth-switch-link" data-action="show-login" data-translate="switchToLogin">${t.switchToLogin}</a></div>
             </div>
@@ -5429,7 +5487,13 @@
                 <svg class="auth-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="48" stroke="currentColor" stroke-width="4" fill="none"/><text x="50" y="62" font-size="40" font-weight="bold" text-anchor="middle" fill="currentColor">AI</text></svg>
                 <h2 data-translate="loginTitle">${t.loginTitle}</h2>
                 <div class="input-group"><label for="login-email" data-translate="registerEmailLabel">${t.registerEmailLabel}</label><input type="email" id="login-email" placeholder="${t.registerEmailPlaceholder}"></div>
-                <div class="input-group"><label for="login-password" data-translate="registerPasswordLabel">${t.registerPasswordLabel}</label><input type="password" id="login-password" placeholder="${t.registerPasswordPlaceholder}"></div>
+                <div class="input-group">
+                    <label for="login-password" data-translate="registerPasswordLabel">${t.registerPasswordLabel}</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="login-password" placeholder="${t.registerPasswordPlaceholder}">
+                        <button type="button" class="password-toggle-icon" data-action="toggle-password-visibility" data-toggle-for="login-password">${eyeIconSVG}</button>
+                    </div>
+                </div>
                 <button id="login-btn" class="button" data-translate="loginButton">${t.loginButton}</button>
                 <div class="auth-links"><a class="auth-switch-link" data-action="show-register" data-translate="switchToRegister">${t.switchToRegister}</a><a class="forgot-password-link" data-action="show-forgot" data-translate="forgotPasswordLink">${t.forgotPasswordLink}</a></div>
             </div>
@@ -5569,11 +5633,17 @@
                         <h4 data-translate="changePasswordTitle">${t.changePasswordTitle}</h4>
                         <div class="input-group" style="margin-top: 16px;">
                             <label for="profile-new-password" data-translate="newPasswordLabel">${t.newPasswordLabel}</label>
-                            <input type="password" id="profile-new-password" placeholder="${t.newPasswordPlaceholder}">
+                            <div class="password-input-wrapper">
+                                <input type="password" id="profile-new-password" placeholder="${t.newPasswordPlaceholder}">
+                                <button type="button" class="password-toggle-icon" data-action="toggle-password-visibility" data-toggle-for="profile-new-password">${eyeIconSVG}</button>
+                            </div>
                         </div>
                         <div class="input-group">
                             <label for="profile-confirm-password" data-translate="confirmPasswordLabel">${t.confirmPasswordLabel}</label>
-                            <input type="password" id="profile-confirm-password" placeholder="${t.confirmPasswordPlaceholder}">
+                             <div class="password-input-wrapper">
+                                <input type="password" id="profile-confirm-password" placeholder="${t.confirmPasswordPlaceholder}">
+                                <button type="button" class="password-toggle-icon" data-action="toggle-password-visibility" data-toggle-for="profile-confirm-password">${eyeIconSVG}</button>
+                            </div>
                         </div>
                         <button class="button" id="update-password-btn" data-translate="savePasswordButton">${t.savePasswordButton}</button>
 
@@ -5751,11 +5821,17 @@
                         
                         <div class="input-group" style="margin-top: 24px;">
                             <label for="change-new-password" data-translate="newPasswordLabel">${t.newPasswordLabel}</label>
-                            <input type="password" id="change-new-password" placeholder="${t.newPasswordPlaceholder}">
+                            <div class="password-input-wrapper">
+                                <input type="password" id="change-new-password" placeholder="${t.newPasswordPlaceholder}">
+                                <button type="button" class="password-toggle-icon" data-action="toggle-password-visibility" data-toggle-for="change-new-password">${eyeIconSVG}</button>
+                            </div>
                         </div>
                         <div class="input-group">
                             <label for="change-confirm-password" data-translate="confirmPasswordLabel">${t.confirmPasswordLabel}</label>
-                            <input type="password" id="change-confirm-password" placeholder="${t.confirmPasswordPlaceholder}">
+                            <div class="password-input-wrapper">
+                                <input type="password" id="change-confirm-password" placeholder="${t.confirmPasswordPlaceholder}">
+                                <button type="button" class="password-toggle-icon" data-action="toggle-password-visibility" data-toggle-for="change-confirm-password">${eyeIconSVG}</button>
+                            </div>
                         </div>
                         <button class="button" id="save-password-btn" data-translate="savePasswordButton">${t.savePasswordButton}</button>
                     </div>
@@ -6439,7 +6515,7 @@ const viewUserSuggestions = async (userId, userNickname) => {
             el.appContainer.style.display = 'flex';
             el.authOverlay.style.display = 'none';
             el.authOverlay.innerHTML = ''; // Ensure auth overlay is empty
-            setTimeout(renderView, 0);
+            renderView();
         };
 
         const initializeAppWithUser = async (user) => {
@@ -6538,6 +6614,10 @@ const viewUserSuggestions = async (userId, userNickname) => {
                 const action = actionTarget.dataset.action;
                 
                                 switch(action) {
+                    // NUOVO: Gestisce il click sull'icona della password
+                    case 'toggle-password-visibility':
+                        handlePasswordVisibilityToggle(actionTarget);
+                        break;
                     case 'set-library-tab':
                         const tab = actionTarget.dataset.tab;
                         if (tab && tab !== libraryTab) {
@@ -6874,91 +6954,16 @@ const viewUserSuggestions = async (userId, userNickname) => {
             }
         });
         
-        // NUOVO: Inizializza subito l'app per l'ospite per un caricamento istantaneo
-        initializeAppForGuest();
-
         // --- FIREBASE AUTH STATE CHANGE LISTENER ---
         onAuthStateChanged(auth, user => {
             if (user) {
-                // Se viene trovato un utente, sovrascrivi la vista ospite con quella dell'utente loggato.
-                console.log("User logged in:", user.uid);
-                
-                // Imposta l'utente come online
-                updateUserOnlineStatus(user.uid, true);
-                
-                // Imposta l'utente come offline quando la pagina viene chiusa
-                window.addEventListener('beforeunload', () => {
-                    updateUserOnlineStatus(user.uid, false);
-                });
-                
-                // Aggiorna periodicamente lo stato online (heartbeat ogni 30 secondi)
-                setInterval(() => {
-                    updateUserOnlineStatus(user.uid, true);
-                }, 30000);
-                
-                // Attiva le notifiche globali per le chat
-                setupGlobalChatNotifications(user.uid);
-                
-                const userDocRef = doc(db, "users", user.uid);
-
-                // Carica i dati dell'utente e il conteggio delle chat in parallelo
-                Promise.all([
-                    getDoc(userDocRef),
-                    getUserChats(user.uid)
-                ]).then(([userDocSnap, chatsData]) => {
-                    if (userDocSnap.exists()) {
-                        const data = userDocSnap.data();
-                        currentUser = {
-                            uid: user.uid,
-                            name: user.email,
-                            nickname: data.nickname || user.email.split('@')[0],
-                            fullName: data.fullName || '', // <-- CARICA IL NOME COMPLETO
-                            favorites: data.favorites || [],
-                            userTools: data.userTools || [],
-                            userFeaturedTools: data.userFeaturedTools || [],
-                            userFeaturedReplacements: data.userFeaturedReplacements || {},
-                            isPrivileged: data.isPrivileged || false,
-                            aiSuggestions: data.aiSuggestions || [],
-                            chatCount: chatsData.length // Salva il conteggio delle chat
-                        };
-                    } else {
-                        // Se l'utente non esiste, crealo
-                        const initialUserData = {
-                            email: user.email,
-                            nickname: user.email.split('@')[0],
-                            favorites: [],
-                            userTools: [],
-                            userFeaturedTools: [],
-                            userFeaturedReplacements: {},
-                            isPrivileged: false,
-                            aiSuggestions: []
-                        };
-                        setDoc(userDocRef, initialUserData).catch(e => console.error("Error creating user doc:", e));
-                        currentUser = { uid: user.uid, name: user.email, ...initialUserData, chatCount: 0 };
-                    }
-                }).catch(e => {
-                    console.error("Error fetching user data or chats:", e);
-                    // Fallback in caso di errore
-                    currentUser = { uid: user.uid, name: user.email, nickname: user.email.split('@')[0], favorites: [], userTools: [], userFeaturedTools: [], userFeaturedReplacements: {}, isPrivileged: false, aiSuggestions: [], chatCount: 0 };
-                }).finally(() => {
-                    // Questa parte viene eseguita sempre, sia in caso di successo che di errore
-                    loadConversations();
-                    el.authOverlay.classList.add('hidden');
-                    el.authOverlay.addEventListener('transitionend', () => {
-                         el.authOverlay.style.display = 'none';
-                         el.authOverlay.innerHTML = '';
-                    }, { once: true });
-                    el.appContainer.style.display = 'flex';
-                    renderView();
-                });
-
+                // L'utente è loggato, avvia l'app con i suoi dati.
+                console.log("User is logged in:", user.uid);
+                initializeAppWithUser(user); // Funzione già esistente, la usiamo qui
             } else {
-                // Se l'utente fa il logout, re-inizializza l'app per l'ospite.
-                // Questo non viene eseguito al primo caricamento, ma solo dopo un'azione di logout.
-                if (currentUser && currentUser.uid) { // Controlla se c'era un utente prima
-                    console.log("User logged out.");
-                    initializeAppForGuest();
-                }
+                // L'utente non è loggato (o ha fatto logout), avvia l'app in modalità ospite.
+                console.log("User is a guest or logged out.");
+                initializeAppForGuest();
             }
         });
         
