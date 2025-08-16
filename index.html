@@ -3003,6 +3003,11 @@
                     setupRealtimeMessagesListener(selectedChatId);
                     setupRealtimeTypingListener(selectedChatId);
                     setupRealtimeOnlineListener(selectedUser.uid);
+                    
+                    // NUOVO: Contrassegna i messaggi come letti quando si apre la chat
+                    if (currentUser && currentUser.uid) {
+                        window.markMessagesAsRead(selectedChatId, selectedUser.uid);
+                    }
                 }
                           }, [selectedChatId, selectedUser]);
 
@@ -3018,6 +3023,27 @@
                     textarea.style.height = `${textarea.scrollHeight}px`; // Imposta l'altezza in base al contenuto
                 }
             }, [messageInput]);
+            
+            // NUOVO: Effetto per aggiornare lo stato online quando l'utente interagisce con la chat
+            useEffect(() => {
+                if (view === 'chat' && currentUser && currentUser.uid) {
+                    const handleChatInteraction = () => {
+                        updateUserOnlineStatus(currentUser.uid, true);
+                    };
+                    
+                    // Aggiungi listener per scroll e click nella chat
+                    const chatContainer = document.querySelector('.user-chat-messages');
+                    if (chatContainer) {
+                        chatContainer.addEventListener('scroll', handleChatInteraction);
+                        chatContainer.addEventListener('click', handleChatInteraction);
+                        
+                        return () => {
+                            chatContainer.removeEventListener('scroll', handleChatInteraction);
+                            chatContainer.removeEventListener('click', handleChatInteraction);
+                        };
+                    }
+                }
+            }, [view, currentUser]);
 
             // **NUOVO:** Effetto per gestire la ricerca utenti in tempo reale
             useEffect(() => {
@@ -3031,6 +3057,13 @@
                     setSearchResults([]);
                 }
             }, [chatSearchTerm, view]);
+            
+            // NUOVO: Effetto per aggiornare lo stato online quando si cambia vista
+            useEffect(() => {
+                if (currentUser && currentUser.uid && (view === 'list' || view === 'search')) {
+                    updateUserOnlineStatus(currentUser.uid, true);
+                }
+            }, [view, currentUser]);
 
             const getHiddenChatIds = () => {
                 const hidden = localStorage.getItem(`hidden_chats_${currentUser.uid}`);
@@ -3049,6 +3082,11 @@
 
             const loadUserChats = async () => {
                 try {
+                    // NUOVO: Aggiorna lo stato online quando l'utente carica le chat
+                    if (currentUser && currentUser.uid) {
+                        updateUserOnlineStatus(currentUser.uid, true);
+                    }
+                    
                     const hiddenChatIds = getHiddenChatIds();
                     const chatsData = await window.getUserChats(currentUser.uid);
                     const visibleChats = chatsData.filter(chat => !hiddenChatIds.includes(chat.id));
@@ -3083,6 +3121,11 @@
                 const unsubscribe = window.setupMessagesListener(chatId, (messagesData) => {
                     const currentMessageCount = messages.length;
                     setMessages(messagesData);
+                    
+                    // NUOVO: Aggiorna lo stato online quando l'utente riceve messaggi
+                    if (currentUser && currentUser.uid && !isFirstLoad && messagesData.length > currentMessageCount) {
+                        updateUserOnlineStatus(currentUser.uid, true);
+                    }
                     
                     // Play notification sound for new messages (not on first load)
                     if (!isFirstLoad && messagesData.length > currentMessageCount) {
@@ -3134,6 +3177,11 @@
                 
                 const unsubscribe = window.setupTypingListener(chatId, currentUser.uid, (isTyping) => {
                     setIsOtherUserTyping(isTyping);
+                    
+                    // NUOVO: Aggiorna lo stato online quando l'altro utente digita
+                    if (currentUser && currentUser.uid) {
+                        updateUserOnlineStatus(currentUser.uid, true);
+                    }
                 });
                 
                 setTypingUnsubscribe(() => unsubscribe);
@@ -3142,6 +3190,11 @@
             // Handle typing indicator
             const handleTyping = () => {
                 if (!selectedChatId) return;
+                
+                // NUOVO: Aggiorna lo stato online quando l'utente digita
+                if (currentUser && currentUser.uid) {
+                    updateUserOnlineStatus(currentUser.uid, true);
+                }
                 
                 // Clear previous timeout
                 if (typingTimeout) {
@@ -3174,6 +3227,11 @@
 
             const loadChatMessages = async (chatId) => {
                 try {
+                    // NUOVO: Aggiorna lo stato online quando l'utente carica i messaggi
+                    if (currentUser && currentUser.uid) {
+                        updateUserOnlineStatus(currentUser.uid, true);
+                    }
+                    
                     const messagesSnapshot = await window.getChatMessages(chatId);
                     const messagesData = [];
                     messagesSnapshot.forEach(doc => {
@@ -3188,6 +3246,11 @@
             const handleStartChat = async (userId, userNickname) => {
     // Aggiungi un blocco try-catch per gestire eventuali errori durante la creazione
     try {
+        // NUOVO: Aggiorna lo stato online quando l'utente avvia una nuova chat
+        if (currentUser && currentUser.uid) {
+            updateUserOnlineStatus(currentUser.uid, true);
+        }
+        
         // Usa la funzione che crea il documento se non esiste
         const chatId = await window.getOrCreateChat(currentUser.uid, userId); 
         
@@ -3202,10 +3265,23 @@
     }
 };
 
+            // NUOVO: Gestisce il ritorno alla lista chat con aggiornamento stato online
+            const handleBackToList = () => {
+                if (currentUser && currentUser.uid) {
+                    updateUserOnlineStatus(currentUser.uid, true);
+                }
+                setView('list');
+            };
+
 
                         const handleSelectChat = (chat) => {
                 // Troviamo subito l'ID dell'altro utente.
                 const otherUserId = chat.participants.find(uid => uid !== currentUser.uid);
+
+                // NUOVO: Aggiorna lo stato online quando l'utente seleziona una chat
+                if (currentUser && currentUser.uid) {
+                    updateUserOnlineStatus(currentUser.uid, true);
+                }
 
                 // Se la chat ha messaggi non letti, esegui l'aggiornamento.
                 if (chat.unreadCount > 0) {
@@ -3254,6 +3330,12 @@
 
             const handleSendMessage = async () => {
                 if (!messageInput.trim() || !selectedChatId || isLoading) return;
+                
+                // NUOVO: Aggiorna immediatamente lo stato online quando l'utente invia un messaggio
+                if (currentUser && currentUser.uid) {
+                    updateUserOnlineStatus(currentUser.uid, true);
+                }
+                
                 setIsLoading(true);
                 
                 // Crea l'oggetto per un messaggio di testo standard
@@ -3329,6 +3411,11 @@
                     return;
                 }
 
+                // NUOVO: Aggiorna lo stato online quando l'utente cerca altri utenti
+                if (currentUser && currentUser.uid) {
+                    updateUserOnlineStatus(currentUser.uid, true);
+                }
+
                 try {
                     const usersRef = window.db ? window.collection(window.db, "users") : null;
                     if (!usersRef) return;
@@ -3390,7 +3477,21 @@
                                 className="chat-search-input"
                                 placeholder={language === 'it' ? 'Filtra le tue chat...' : 'Filter your chat...'}
                                 value={chatSearchTerm}
-                                onChange={(e) => setChatSearchTerm(e.target.value)}
+                                onChange={(e) => {
+                                    const searchTerm = e.target.value;
+                                    setChatSearchTerm(searchTerm);
+                                    
+                                    // NUOVO: Aggiorna lo stato online quando l'utente filtra le chat
+                                    if (currentUser && currentUser.uid && searchTerm.trim()) {
+                                        updateUserOnlineStatus(currentUser.uid, true);
+                                    }
+                                }}
+                                onFocus={() => {
+                                    // NUOVO: Aggiorna lo stato online quando l'utente focalizza la ricerca
+                                    if (currentUser && currentUser.uid) {
+                                        updateUserOnlineStatus(currentUser.uid, true);
+                                    }
+                                }}
                             />
                         </div>
 
@@ -3398,13 +3499,25 @@
                         <div className="chat-filters-container">
                             <button 
                                 className={`pill-btn ${chatFilter === 'all' ? 'active' : ''}`}
-                                onClick={() => setChatFilter('all')}
+                                onClick={() => {
+                                    // NUOVO: Aggiorna lo stato online quando l'utente cambia filtro
+                                    if (currentUser && currentUser.uid) {
+                                        updateUserOnlineStatus(currentUser.uid, true);
+                                    }
+                                    setChatFilter('all');
+                                }}
                             >
                                 {language === 'it' ? 'Tutte' : 'All'}
                             </button>
                             <button 
                                 className={`pill-btn ${chatFilter === 'unread' ? 'active' : ''}`}
-                                onClick={() => setChatFilter('unread')}
+                                onClick={() => {
+                                    // NUOVO: Aggiorna lo stato online quando l'utente cambia filtro
+                                    if (currentUser && currentUser.uid) {
+                                        updateUserOnlineStatus(currentUser.uid, true);
+                                    }
+                                    setChatFilter('unread');
+                                }}
                             >
                                 {language === 'it' ? 'Nuovi' : 'New'}
                             </button>
@@ -3420,6 +3533,10 @@
                                     <div key={chat.id} className={`user-chat-item ${chat.unreadCount > 0 ? 'unread' : ''}`} onClick={(e) => {
                                         // Prevents chat from opening if a data-action is clicked
                                         if (!e.target.closest('[data-action="view-user-suggestions"]') && !e.target.closest('.user-chat-item-delete-btn')) {
+                                            // NUOVO: Aggiorna lo stato online quando l'utente clicca su una chat
+                                            if (currentUser && currentUser.uid) {
+                                                updateUserOnlineStatus(currentUser.uid, true);
+                                            }
                                             handleSelectChat(chat);
                                         }
                                     }}>
@@ -3436,7 +3553,14 @@
                                             </div>
                                             <button 
                                                 className="user-chat-item-delete-btn" 
-                                                onClick={(e) => handleHideChat(e, chat.id)}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    // NUOVO: Aggiorna lo stato online quando l'utente nasconde una chat
+                                                    if (currentUser && currentUser.uid) {
+                                                        updateUserOnlineStatus(currentUser.uid, true);
+                                                    }
+                                                    handleHideChat(e, chat.id);
+                                                }}
                                                 title={language === 'it' ? 'Nascondi chat' : 'Hide chat'}
                                             >
                                                 <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18" fill="currentColor">
@@ -3452,7 +3576,13 @@
                         
                         <button 
                             className="floating-action-btn" 
-                            onClick={() => setView('search')} 
+                            onClick={() => {
+                                // NUOVO: Aggiorna lo stato online quando l'utente clicca su nuova chat
+                                if (currentUser && currentUser.uid) {
+                                    updateUserOnlineStatus(currentUser.uid, true);
+                                }
+                                setView('search');
+                            }} 
                             title={language === 'it' ? 'Nuova chat' : 'New chat'}
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-5 9h-4v4h-2v-4H5V9h4V5h2v4h4v2z"/></svg>
@@ -3465,7 +3595,13 @@
                 return (
                     <div className="user-chat-container">
                         <div className="user-chat-header">
-                            <button className="user-chat-back-btn" onClick={() => setView('list')}>
+                            <button className="user-chat-back-btn" onClick={() => {
+                                // NUOVO: Aggiorna lo stato online quando l'utente torna alla lista
+                                if (currentUser && currentUser.uid) {
+                                    updateUserOnlineStatus(currentUser.uid, true);
+                                }
+                                setView('list');
+                            }}>
                                 <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
                             </button>
                             <div className="user-chat-info">
@@ -3481,7 +3617,21 @@
                                 className="chat-search-input"
                                 placeholder={language === 'it' ? 'Cerca utenti per nickname...' : 'Search users by nickname...'}
                                 value={chatSearchTerm}
-                                onChange={(e) => setChatSearchTerm(e.target.value)}
+                                onChange={(e) => {
+                                    const searchTerm = e.target.value;
+                                    setChatSearchTerm(searchTerm);
+                                    
+                                    // NUOVO: Aggiorna lo stato online quando l'utente cerca
+                                    if (currentUser && currentUser.uid && searchTerm.trim()) {
+                                        updateUserOnlineStatus(currentUser.uid, true);
+                                    }
+                                }}
+                                onFocus={() => {
+                                    // NUOVO: Aggiorna lo stato online quando l'utente focalizza la ricerca
+                                    if (currentUser && currentUser.uid) {
+                                        updateUserOnlineStatus(currentUser.uid, true);
+                                    }
+                                }}
                                 autoFocus
                             />
                         </div>
@@ -3497,7 +3647,13 @@
                                     <div 
                                         key={user.uid} 
                                         className="simple-chat-search-item"
-                                        onClick={() => handleStartChat(user.uid, user.nickname)}
+                                        onClick={() => {
+                                            // NUOVO: Aggiorna lo stato online quando l'utente clicca su un risultato di ricerca
+                                            if (currentUser && currentUser.uid) {
+                                                updateUserOnlineStatus(currentUser.uid, true);
+                                            }
+                                            handleStartChat(user.uid, user.nickname);
+                                        }}
                                     >
                                         {user.nickname}
                                     </div>
@@ -3511,7 +3667,7 @@
             return (
                 <div className="user-chat-container">
                     <div className="user-chat-header">
-                        <button className="user-chat-back-btn" onClick={() => setView('list')}>
+                        <button className="user-chat-back-btn" onClick={handleBackToList}>
                             <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
                         </button>
                         <div className="user-chat-avatar" data-action="view-user-suggestions" data-uid={selectedUser?.uid} data-nickname={selectedUser?.nickname} style={{ cursor: 'pointer', position: 'relative' }}>
@@ -3592,9 +3748,20 @@
                             <textarea
                                 className="user-chat-input"
                                 value={messageInput}
+                                onFocus={() => {
+                                    // NUOVO: Aggiorna lo stato online quando l'utente focalizza l'input
+                                    if (currentUser && currentUser.uid) {
+                                        updateUserOnlineStatus(currentUser.uid, true);
+                                    }
+                                }}
                                 onChange={(e) => {
                                     const newText = e.target.value;
                                     setMessageInput(newText);
+                                    
+                                    // NUOVO: Aggiorna lo stato online quando l'utente digita
+                                    if (currentUser && currentUser.uid && newText.trim()) {
+                                        updateUserOnlineStatus(currentUser.uid, true);
+                                    }
                                     
                                     // Logica per mostrare e filtrare la palette dei comandi
                                     if (newText.startsWith('/')) {
@@ -3828,9 +3995,9 @@
                     // Calcoliamo la differenza in millisecondi tra ora e l'ultimo accesso.
                     const timeDifference = new Date().getTime() - lastSeen.getTime();
                     
-                    // Se l'utente è stato visto negli ultimi 60 secondi, è considerato online.
-                    // (60000 millisecondi = 60 secondi)
-                    const isConsideredOnline = timeDifference < 60000;
+                    // Se l'utente è stato visto negli ultimi 30 secondi, è considerato online.
+                    // (30000 millisecondi = 30 secondi) - più responsivo
+                    const isConsideredOnline = timeDifference < 30000;
                     
                     callback({ isOnline: isConsideredOnline, lastSeen: lastSeen });
                 } else {
@@ -7114,6 +7281,25 @@ const viewUserSuggestions = async (userId, userNickname) => {
                          if (!currentUser.uid) { triggerAuthFlow(); } else { window.openSettingsModal(); }
                          break;
                     case 'logout':
+                         // NUOVO: Imposta lo stato offline prima del logout
+                         if (currentUser && currentUser.uid) {
+                             updateUserOnlineStatus(currentUser.uid, false);
+                         }
+                         
+                         // NUOVO: Rimuovi i listener di stato
+                         if (window.userStatusListeners) {
+                             document.removeEventListener('visibilitychange', window.userStatusListeners.visibilitychange);
+                             window.removeEventListener('focus', window.userStatusListeners.focus);
+                             window.removeEventListener('blur', window.userStatusListeners.blur);
+                             window.userStatusListeners = null;
+                         }
+                         
+                         // NUOVO: Pulisci l'interval dello stato online
+                         if (window.onlineStatusInterval) {
+                             clearInterval(window.onlineStatusInterval);
+                             window.onlineStatusInterval = null;
+                         }
+                         
                          signOut(auth).catch(error => console.error("Logout Error:", error));
                          break; // Rimuovi il logout dal global controls
 
@@ -7413,9 +7599,67 @@ const viewUserSuggestions = async (userId, userNickname) => {
                 // L'utente è loggato, avvia l'app con i suoi dati.
                 console.log("User is logged in:", user.uid);
                 initializeAppWithUser(user); // Funzione già esistente, la usiamo qui
+                
+                // NUOVO: Imposta lo stato online quando l'utente si autentica
+                updateUserOnlineStatus(user.uid, true);
+                
+                // NUOVO: Aggiungi listener per la visibilità della pagina e focus della finestra
+                const handleVisibilityChange = () => {
+                    if (document.visibilityState === 'visible') {
+                        updateUserOnlineStatus(user.uid, true);
+                    }
+                };
+                
+                const handleWindowFocus = () => {
+                    updateUserOnlineStatus(user.uid, true);
+                };
+                
+                const handleWindowBlur = () => {
+                    // Non impostare subito offline, aspetta un po' per evitare falsi positivi
+                    setTimeout(() => {
+                        if (document.visibilityState === 'hidden') {
+                            updateUserOnlineStatus(user.uid, false);
+                        }
+                    }, 30000); // 30 secondi di delay
+                };
+                
+                // Aggiungi gli event listener
+                document.addEventListener('visibilitychange', handleVisibilityChange);
+                window.addEventListener('focus', handleWindowFocus);
+                window.addEventListener('blur', handleWindowBlur);
+                
+                // Salva i listener per poterli rimuovere al logout
+                window.userStatusListeners = {
+                    visibilitychange: handleVisibilityChange,
+                    focus: handleWindowFocus,
+                    blur: handleWindowBlur
+                };
+                
+                // NUOVO: Aggiorna lo stato online ogni 30 secondi quando l'utente è attivo
+                window.onlineStatusInterval = setInterval(() => {
+                    if (document.visibilityState === 'visible') {
+                        updateUserOnlineStatus(user.uid, true);
+                    }
+                }, 30000); // 30 secondi - più responsivo
+                
             } else {
                 // L'utente non è loggato (o ha fatto logout), avvia l'app in modalità ospite.
                 console.log("User is a guest or logged out.");
+                
+                                 // NUOVO: Rimuovi i listener di stato se esistono
+                 if (window.userStatusListeners) {
+                     document.removeEventListener('visibilitychange', window.userStatusListeners.visibilitychange);
+                     window.removeEventListener('focus', window.userStatusListeners.focus);
+                     window.removeEventListener('blur', window.userStatusListeners.blur);
+                     window.userStatusListeners = null;
+                 }
+                 
+                 // NUOVO: Pulisci l'interval dello stato online
+                 if (window.onlineStatusInterval) {
+                     clearInterval(window.onlineStatusInterval);
+                     window.onlineStatusInterval = null;
+                 }
+                
                 initializeAppForGuest();
             }
         });
