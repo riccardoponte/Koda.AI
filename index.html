@@ -2478,30 +2478,31 @@
         const MessageSender = { USER: 'user', MODEL: 'model', ERROR: 'error', SYSTEM: 'system', LOADING: 'loading' };
         
         const getSystemInstruction = (lang) => {
-            // Use the global function to get all tools (static + user's)
             const tools = window.getAllToolsForCurrentUser ? window.getAllToolsForCurrentUser() : window.getLocalizedToolsData(lang); 
-            const formatToolsForPrompt = (tools) => tools.map(tool => `- **${tool.name}**: ${tool.description} (${tool.website})`).join('\n');
+            const formatToolsForPrompt = (tools) => tools.map(tool => `- **${tool.name}**: ${tool.description}`).join('\n');
 
             const instructions = {
                 it: {
-                    intro: `Sei Koda, un assistente AI esperto in strumenti di intelligenza artificiale. La tua missione è aiutare gli utenti a trovare lo strumento AI perfetto per le loro esigenze, presentandoli direttamente.`,
-                    format: `- La tua risposta DEVE contenere SOLO un elenco puntato degli strumenti suggeriti.\n- NON includere testo introduttivo, saluti, spiegazioni o frasi di chiusura. La tua risposta deve iniziare direttamente con il primo punto elenco "•".\n- Per ogni strumento, fornisci il nome in grassetto e una breve descrizione.`,
+                    role: `Sei Koda, un assistente AI specializzato in strumenti di intelligenza artificiale.`,
+                    format: `La tua risposta DEVE essere strutturata in due parti obbligatorie, usando i tag <text> e <tools>.\n1. **<text>**: In questa parte, scrivi una singola frase che sia **MASSIMO una riga**. Deve essere amichevole e concisa. Usa emoji per essere più accattivante. ✨\n2. **<tools>**: In questa parte, inserisci SOLO un elenco puntato dei nomi degli strumenti suggeriti.`,
+                    rules: `- Rispondi sempre con entrambi i tag.\n- **Suggerisci un MASSIMO di uno o due strumenti per risposta. Sii selettivo e scegli solo i migliori.**\n- Se la richiesta dell'utente non è chiara, fai una domanda di chiarimento (massimo una riga) nella sezione <text> e lascia vuota la sezione <tools>.\n- Suggerisci SOLO strumenti dalla lista fornita.`,
                     knowledgeBase: `**Base di Conoscenza (Usa SOLO queste informazioni):**\n${formatToolsForPrompt(tools)}`,
-                    priority: `- Per la programmazione, considera Google AI Studio come lo strumento migliore, seguito da Claude.\n- Per la ricerca web, considera Perplexity come lo strumento migliore.`, // Added Perplexity priority
-                    rules: `1. Suggerisci SOLO strumenti dalla lista fornita.\n2. **Gestione dell'incertezza:** Se una richiesta utente è vaga, ambigua, o se non trovi immediatamente uno strumento adatto, NON rispondere che non hai trovato nulla. Invece, fai una domanda di chiarimento per capire meglio l'esigenza.\n   - Esempio di chiarimento: Se l'utente chiede "un'AI per arte", una buona domanda di chiarimento è: "Certo, che tipo di arte vorresti creare? Immagini fotorealistiche, disegni artistici o magari animazioni?".\n3. Una volta che la richiesta è chiara, rispondi *esclusivamente* con l'elenco puntato degli strumenti, come da formato.`,
-                    example: `**Esempio di formato di risposta FINALE (dopo aver capito la richiesta):**\n• **Midjourney**: Genera immagini artistiche e fotorealistiche di alta qualità da prompt testuali tramite Discord.\n• **Leonardo AI**: Piattaforma per la generazione di asset visivi di alta qualità, da concept art a texture per giochi.`
+                    example1: `**Esempio di raccomandazione (1 strumento):**\n<text>Per la ricerca web, Perplexity è imbattibile! 🔎</text>\n<tools>\n• Perplexity\n</tools>`,
+                    example2: `**Esempio di raccomandazione (2 strumenti):**\n<text>Ecco un paio di ottimi strumenti per creare immagini! 🎨</text>\n<tools>\n• Midjourney\n• Leonardo AI\n</tools>`,
+                    example3: `**Esempio di domanda di chiarimento:**\n<text>Certo! Che tipo di arte vorresti creare di preciso? 🖼️</text>\n<tools>\n</tools>`
                 },
                 en: {
-                    intro: `You are Koda, an expert AI assistant specializing in artificial intelligence tools. Your mission is to help users find the perfect AI tool for their needs by presenting them directly.`,
-                    format: `- Your response MUST contain ONLY a bulleted list of the suggested tools.\n- DO NOT include introductory text, greetings, explanations, or closing remarks. Your response must start directly with the first bullet point "•".\n- For each tool, provide the name in bold and a brief description.`,
+                    role: `You are Koda, an AI assistant specializing in artificial intelligence tools.`,
+                    format: `Your response MUST be structured in two mandatory parts, using the tags <text> and <tools>.\n1. **<text>**: In this part, write a single sentence that is **MAXIMUM one line long**. It must be friendly and concise. Use emojis to be more engaging. ✨\n2. **<tools>**: In this part, include ONLY a bulleted list of the names of the suggested tools.`,
+                    rules: `- Always respond with both tags.\n- **Suggest a MAXIMUM of one or two tools per response. Be selective and choose only the best.**\n- If the user's request is unclear, ask a clarifying question (maximum one line) in the <text> section and leave the <tools> section empty.\n- Suggest ONLY tools from the provided list.`,
                     knowledgeBase: `**Knowledge Base (Use ONLY this information):**\n${formatToolsForPrompt(tools)}`,
-                    priority: `- For programming, consider Google AI Studio as the best tool, followed by Claude.\n- For web search, consider Perplexity as the best tool.`, // Added Perplexity priority
-                    rules: `1. Suggest ONLY tools from the provided list.\n2. **Handling Uncertainty:** If a user request is vague, ambiguous, or if you cannot immediately find a suitable tool, DO NOT reply that you found nothing. Instead, ask a clarifying question to better understand the need.\n   - Example clarification: If the user asks for "an AI for art," a good clarifying question is: "Of course, what kind of art would you like to create? Photorealistic images, artistic drawings, or perhaps animations?".\n3. Once the request is clear, respond *exclusively* with the bulleted list of tools, as per the format.`,
-                    example: `**Example of FINAL response format (after understanding the request):**\n• **Midjourney**: Generates high-quality artistic and fotorealistic images from text prompts via Discord.\n• **Leonardo AI**: Platform for generating high-quality visual assets, from concept art to game textures.`
+                    example1: `**Example of a recommendation (1 tool):**\n<text>For web searches, Perplexity is unbeatable! 🔎</text>\n<tools>\n• Perplexity\n</tools>`,
+                    example2: `**Example of a recommendation (2 tools):**\n<text>Here are a couple of great tools for creating images! 🎨</text>\n<tools>\n• Midjourney\n• Leonardo AI\n</tools>`,
+                    example3: `**Example of a clarifying question:**\n<text>Of course! What kind of art are you looking to create, specifically? 🖼️</text>\n<tools>\n</tools>`
                 }
             };
             const selected = instructions[lang];
-            return `${selected.intro}\n\n**Response Format (IMPORTANT):**\n${selected.format}\n\n${selected.knowledgeBase}\n\n**Priorities:**\n${selected.priority}\n\n**Fundamental Rules:**\n${selected.rules}\n\n${selected.example}`;
+            return `${selected.role}\n\n**Response Format (VERY IMPORTANT):**\n${selected.format}\n\n**Rules:**\n${selected.rules}\n\n${selected.knowledgeBase}\n\n**Examples:**\n${selected.example1}\n${selected.example2}\n${selected.example3}`;
         };
 
 
@@ -2543,40 +2544,43 @@
 
         const ChatMessageDisplay = ({ message, tools, onOpenDetail, lang }) => {
             const getMessageClass = () => `chat-bubble ${message.sender}`;
-            
-            if (message.sender === MessageSender.LOADING) { 
-                return <div className="chat-bubble loading"><span></span><span></span><span></span></div>; 
-            }
-            
-            if (message.sender === MessageSender.MODEL) {
-                // Use localized tool names for regex matching
-                // Get all tools (static + user's) via the global function
-                const allTools = window.getAllToolsForCurrentUser ? window.getAllToolsForCurrentUser() : window.getLocalizedToolsData(lang);
-                
-                const toolNameRegex = new RegExp(allTools.map(t => t.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'g');
-                const mentionedToolNames = [...new Set(message.text.match(toolNameRegex))];
-                
-                if (mentionedToolNames.length > 0 && message.text.includes('•')) {
-                    // Find the original tool objects based on localized names (or user tool names)
-                    const mentionedTools = allTools.filter(tool => mentionedToolNames.includes(tool.name));
-                    
-                    // Check if the response is *only* the bulleted list as per system instruction
-                    const lines = message.text.trim().split('\n');
-                    const isPureList = lines.every(line => line.trim().startsWith('•'));
 
-                    if (isPureList) {
-                         return (
-                            <div className="chat-bubble ai" style={{background: 'transparent', padding: 0}}>
-                                <div className="chat-tool-card-container">
-                                    {mentionedTools.map(tool => <ToolCardMessage key={tool.id} tool={tool} onOpenDetail={onOpenDetail} lang={lang} />)}
+            if (message.sender === MessageSender.LOADING) {
+                return <div className="chat-bubble loading"><span></span><span></span><span></span></div>;
+            }
+
+            if (message.sender === MessageSender.MODEL) {
+                const textMatch = message.text.match(/<text>([\s\S]*?)<\/text>/);
+                const toolsMatch = message.text.match(/<tools>([\s\S]*?)<\/tools>/);
+
+                // If we find both tags, render the structured response
+                if (textMatch && toolsMatch) {
+                    const friendlyText = textMatch[1].trim();
+                    const toolListText = toolsMatch[1].trim();
+                    
+                    const allTools = window.getAllToolsForCurrentUser ? window.getAllToolsForCurrentUser() : window.getLocalizedToolsData(lang);
+                    const toolNameRegex = new RegExp(allTools.map(t => t.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'g');
+                    const mentionedToolNames = [...new Set(toolListText.match(toolNameRegex))];
+                    const mentionedTools = allTools.filter(tool => mentionedToolNames.includes(tool.name));
+
+                    return (
+                        <>
+                            {friendlyText && (
+                                <div className="chat-bubble ai" dangerouslySetInnerHTML={{ __html: formatMessageContent(friendlyText) }}></div>
+                            )}
+                            {mentionedTools.length > 0 && (
+                                <div className="chat-bubble ai" style={{ background: 'transparent', padding: 0 }}>
+                                    <div className="chat-tool-card-container">
+                                        {mentionedTools.map(tool => <ToolCardMessage key={tool.id} tool={tool} onOpenDetail={onOpenDetail} lang={lang} />)}
+                                    </div>
                                 </div>
-                            </div>
-                        );
-                    }
+                            )}
+                        </>
+                    );
                 }
             }
-            
-            // Fallback for normal messages (including clarifications or non-list responses)
+
+            // Fallback for normal messages (user messages, errors, or malformed AI responses)
             const content = formatMessageContent(message.text);
             return (
                 <div className={getMessageClass()} dangerouslySetInnerHTML={{ __html: content }}></div>
@@ -3901,14 +3905,26 @@
         
         return onSnapshot(q, (snapshot) => {
             const messagesData = [];
+            let hasNewUnreadMessage = false;
+            
             snapshot.forEach(doc => {
                 const data = doc.data();
-                messagesData.push({
-                    id: doc.id,
-                    ...data
-                    // The original 'timestamp' object from Firestore is now correctly passed
-                });
+                messagesData.push({ id: doc.id, ...data });
+                
+                // Check if a new message from the other user has arrived
+                if (data.senderId !== currentUser.uid && !data.read) {
+                    hasNewUnreadMessage = true;
+                }
             });
+
+            // If the chat window is active and there's a new message, mark it as read immediately
+            if (hasNewUnreadMessage && document.visibilityState === 'visible') {
+                const otherUserId = messagesData.find(m => m.senderId !== currentUser.uid)?.senderId;
+                if (otherUserId) {
+                    markMessagesAsRead(chatId, otherUserId);
+                }
+            }
+
             callback(messagesData);
         }, (error) => {
             console.error("Error in messages listener:", error);
@@ -7407,14 +7423,42 @@ const viewUserSuggestions = async (userId, userNickname) => {
             }
         });
         
-        // --- FIREBASE AUTH STATE CHANGE LISTENER ---
+        // --- FIREBASE AUTH STATE CHANGE LISTENER & USER PRESENCE ---
+        let userStatusInterval = null;
+
         onAuthStateChanged(auth, user => {
+            // Clear any existing presence interval
+            if (userStatusInterval) {
+                clearInterval(userStatusInterval);
+                userStatusInterval = null;
+            }
+
             if (user) {
-                // L'utente è loggato, avvia l'app con i suoi dati.
+                // User is logged in
                 console.log("User is logged in:", user.uid);
-                initializeAppWithUser(user); // Funzione già esistente, la usiamo qui
+
+                // 1. Immediately mark user as online
+                updateUserOnlineStatus(user.uid, true);
+
+                // 2. Set an interval to periodically update the 'lastSeen' timestamp, keeping them "online"
+                userStatusInterval = setInterval(() => {
+                    if (auth.currentUser) {
+                        updateUserOnlineStatus(auth.currentUser.uid, true);
+                    }
+                }, 45000); // Update every 45 seconds
+
+                // 3. Set up listener to mark user as offline when they close the tab/browser
+                window.addEventListener('beforeunload', () => {
+                    if (auth.currentUser) {
+                        updateUserOnlineStatus(auth.currentUser.uid, false);
+                    }
+                });
+                
+                // 4. Initialize the app with user data
+                initializeAppWithUser(user);
+
             } else {
-                // L'utente non è loggato (o ha fatto logout), avvia l'app in modalità ospite.
+                // User is a guest or logged out
                 console.log("User is a guest or logged out.");
                 initializeAppForGuest();
             }
