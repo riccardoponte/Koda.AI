@@ -1446,6 +1446,20 @@
             background-color: #4CAF50;
             border-radius: 50%;
             border: 2px solid var(--spotify-bg-light);
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(76, 175, 80, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
+            }
         }
 
         .user-chat-info h3 {
@@ -2891,13 +2905,29 @@
                                 className="ai-link-search-input"
                                 placeholder="Cerca un'AI da inviare..."
                                 value={searchTerm}
-                                onChange={e => setSearchTerm(e.target.value)}
+                                onChange={e => {
+                                    setSearchTerm(e.target.value);
+                                    
+                                    // Update online status when searching in link modal
+                                    if (window.currentUser && window.currentUser.uid) {
+                                        window.updateUserOnlineStatus(window.currentUser.uid, true);
+                                        window.updateUserActivity && window.updateUserActivity();
+                                    }
+                                }}
                                 autoFocus
                             />
                         </div>
                         <div className="ai-link-tool-list">
                             {filteredTools.map(tool => (
-                                <div key={tool.id} className="ai-link-tool-item" onClick={() => onSelect(tool)}>
+                                <div key={tool.id} className="ai-link-tool-item" onClick={() => {
+                                    onSelect(tool);
+                                    
+                                    // Update online status when selecting a tool
+                                    if (window.currentUser && window.currentUser.uid) {
+                                        window.updateUserOnlineStatus(window.currentUser.uid, true);
+                                        window.updateUserActivity && window.updateUserActivity();
+                                    }
+                                }}>
                                     <img src={tool.logoUrl} alt={tool.name} />
                                     <div className="tool-name">{tool.name}</div>
                                 </div>
@@ -3089,6 +3119,12 @@
                         const latestMessage = messagesData[messagesData.length - 1];
                         if (latestMessage.senderId !== currentUser.uid) {
                             playNotificationSound();
+                            
+                            // Update online status when receiving messages
+                            if (currentUser && currentUser.uid) {
+                                updateUserOnlineStatus(currentUser.uid, true);
+                                updateUserActivity(); // Reset inactivity timeout
+                            }
                         }
                     }
                     isFirstLoad = false;
@@ -3134,9 +3170,23 @@
                 
                 const unsubscribe = window.setupTypingListener(chatId, currentUser.uid, (isTyping) => {
                     setIsOtherUserTyping(isTyping);
+                    
+                    // Update online status when other user is typing
+                    if (currentUser && currentUser.uid) {
+                        updateUserOnlineStatus(currentUser.uid, true);
+                        updateUserActivity(); // Reset inactivity timeout
+                    }
                 });
                 
                 setTypingUnsubscribe(() => unsubscribe);
+            };
+            
+            // Handle message input changes to keep user online
+            const handleMessageInputChange = (e) => {
+                if (currentUser && currentUser.uid) {
+                    updateUserOnlineStatus(currentUser.uid, true);
+                    updateUserActivity(); // Reset inactivity timeout
+                }
             };
 
             // Handle typing indicator
@@ -3150,6 +3200,12 @@
                 
                 // Set typing to true
                 window.updateTypingStatus(selectedChatId, currentUser.uid, true);
+                
+                // Update online status when typing
+                if (currentUser && currentUser.uid) {
+                    updateUserOnlineStatus(currentUser.uid, true);
+                    updateUserActivity(); // Reset inactivity timeout
+                }
                 
                 // Set timeout to clear typing status after 3 seconds of inactivity
                 const timeout = setTimeout(() => {
@@ -3191,6 +3247,12 @@
         // Usa la funzione che crea il documento se non esiste
         const chatId = await window.getOrCreateChat(currentUser.uid, userId); 
         
+        // Update online status when starting a chat
+        if (currentUser && currentUser.uid) {
+            updateUserOnlineStatus(currentUser.uid, true);
+            updateUserActivity(); // Reset inactivity timeout
+        }
+        
         // Se tutto va bene, imposta lo stato e cambia la vista
         setSelectedChatId(chatId);
         setSelectedUser({ uid: userId, nickname: userNickname });
@@ -3222,6 +3284,12 @@
                     }
                 }
 
+                // Update online status when selecting a chat
+                if (currentUser && currentUser.uid) {
+                    updateUserOnlineStatus(currentUser.uid, true);
+                    updateUserActivity(); // Reset inactivity timeout
+                }
+
                 // Logica per cambiare la vista e visualizzare la chat selezionata
                 setSelectedChatId(chat.id);
                 setSelectedUser({ uid: otherUserId, nickname: chat.otherUserNickname });
@@ -3233,6 +3301,20 @@
                 setIsLinkModalOpen(true);    // Apre il modale di selezione AI
                 setMessageInput('');        // Svuota l'input
                 setShowLinkPreview(false);  // Nasconde l'anteprima
+                
+                // Update online status when selecting link preview
+                if (currentUser && currentUser.uid) {
+                    updateUserOnlineStatus(currentUser.uid, true);
+                    updateUserActivity(); // Reset inactivity timeout
+                }
+            };
+            
+            // Handle link modal interactions to keep user online
+            const handleLinkModalInteraction = () => {
+                if (currentUser && currentUser.uid) {
+                    updateUserOnlineStatus(currentUser.uid, true);
+                    updateUserActivity(); // Reset inactivity timeout
+                }
             };
 
             // Funzione da eseguire quando il comando /link viene selezionato
@@ -3240,6 +3322,12 @@
                 setIsLinkModalOpen(true);    // Apre il modale di selezione AI
                 setMessageInput('');        // Svuota l'input
                 setShowCommandPalette(false); // Nasconde la palette dei comandi
+                
+                // Update online status when executing link command
+                if (currentUser && currentUser.uid) {
+                    updateUserOnlineStatus(currentUser.uid, true);
+                    updateUserActivity(); // Reset inactivity timeout
+                }
             };
 
             // Lista di tutti i comandi disponibili (scalabile per il futuro)
@@ -3251,10 +3339,24 @@
                 }
                 // Potresti aggiungere altri comandi qui: { command: '/help', ... }
             ];
+            
+            // Handle command palette interactions to keep user online
+            const handleCommandPaletteInteraction = () => {
+                if (currentUser && currentUser.uid) {
+                    updateUserOnlineStatus(currentUser.uid, true);
+                    updateUserActivity(); // Reset inactivity timeout
+                }
+            };
 
             const handleSendMessage = async () => {
                 if (!messageInput.trim() || !selectedChatId || isLoading) return;
                 setIsLoading(true);
+                
+                // Update online status when sending message
+                if (currentUser && currentUser.uid) {
+                    updateUserOnlineStatus(currentUser.uid, true);
+                    updateUserActivity(); // Reset inactivity timeout
+                }
                 
                 // Crea l'oggetto per un messaggio di testo standard
                 const contentObject = {
@@ -3287,6 +3389,12 @@
 
                 try {
                     await window.sendChatMessage(selectedChatId, currentUser.uid, contentObject, selectedUser.uid);
+                    
+                    // Update online status when sending AI link
+                    if (currentUser && currentUser.uid) {
+                        updateUserOnlineStatus(currentUser.uid, true);
+                        updateUserActivity(); // Reset inactivity timeout
+                    }
                 } catch (error) {
                     console.error("Error sending AI link:", error);
                     window.showToast("Errore nell'invio del suggerimento");
@@ -3372,47 +3480,119 @@
                     });
 
                 return (
-                    <div className="user-chat-container">
-                        <div className="user-chat-header">
-                            <div id="profile-avatar-menu" style={{ marginLeft: 8 }}>
+                    <div className="user-chat-container" onClick={() => {
+                        // Update online status when interacting with chat list container
+                        if (currentUser && currentUser.uid) {
+                            updateUserOnlineStatus(currentUser.uid, true);
+                            updateUserActivity(); // Reset inactivity timeout
+                        }
+                    }}>
+                        <div className="user-chat-header" onClick={() => {
+                            // Update online status when interacting with chat header
+                            if (currentUser && currentUser.uid) {
+                                updateUserOnlineStatus(currentUser.uid, true);
+                                updateUserActivity(); // Reset inactivity timeout
+                            }
+                        }}>
+                            <div id="profile-avatar-menu" style={{ marginLeft: 8 }} onClick={() => {
+                                // Update online status when interacting with profile avatar menu
+                                if (currentUser && currentUser.uid) {
+                                    updateUserOnlineStatus(currentUser.uid, true);
+                                    updateUserActivity(); // Reset inactivity timeout
+                                }
+                            }}>
                                 <span dangerouslySetInnerHTML={{ __html: globalControls.avatar }} />
                             </div>
                             <div className="user-chat-info" style={{ flexGrow: 1 }}>
                                 <h3>{language === 'it' ? 'Le tue chat' : 'Your chats'}</h3>
                             </div>
-                            <div id="global-controls" dangerouslySetInnerHTML={{ __html: globalControls.otherControls }}></div>
+                            <div id="global-controls" dangerouslySetInnerHTML={{ __html: globalControls.otherControls }} onClick={() => {
+                                // Update online status when interacting with global controls
+                                if (currentUser && currentUser.uid) {
+                                    updateUserOnlineStatus(currentUser.uid, true);
+                                    updateUserActivity(); // Reset inactivity timeout
+                                }
+                            }}></div>
                         </div>
 
                         {/* NUOVA BARRA DI RICERCA */}
-                        <div className="chat-search-container">
+                        <div className="chat-search-container" onClick={() => {
+                            // Update online status when interacting with chat search container
+                            if (currentUser && currentUser.uid) {
+                                updateUserOnlineStatus(currentUser.uid, true);
+                                updateUserActivity(); // Reset inactivity timeout
+                            }
+                        }}>
                             <input 
                                 type="text"
                                 className="chat-search-input"
                                 placeholder={language === 'it' ? 'Filtra le tue chat...' : 'Filter your chat...'}
                                 value={chatSearchTerm}
-                                onChange={(e) => setChatSearchTerm(e.target.value)}
+                                onChange={(e) => {
+                                    setChatSearchTerm(e.target.value);
+                                    
+                                    // Update online status when searching in chat list
+                                    if (currentUser && currentUser.uid) {
+                                        updateUserOnlineStatus(currentUser.uid, true);
+                                        updateUserActivity(); // Reset inactivity timeout
+                                    }
+                                }}
                             />
                         </div>
 
                         {/* NUOVI PULSANTI DI FILTRO */}
-                        <div className="chat-filters-container">
+                        <div className="chat-filters-container" onClick={() => {
+                            // Update online status when interacting with chat filters container
+                            if (currentUser && currentUser.uid) {
+                                updateUserOnlineStatus(currentUser.uid, true);
+                                updateUserActivity(); // Reset inactivity timeout
+                            }
+                        }}>
                             <button 
                                 className={`pill-btn ${chatFilter === 'all' ? 'active' : ''}`}
-                                onClick={() => setChatFilter('all')}
+                                onClick={() => {
+                                    setChatFilter('all');
+                                    
+                                    // Update online status when changing chat filter
+                                    if (currentUser && currentUser.uid) {
+                                        updateUserOnlineStatus(currentUser.uid, true);
+                                        updateUserActivity(); // Reset inactivity timeout
+                                    }
+                                }}
                             >
                                 {language === 'it' ? 'Tutte' : 'All'}
                             </button>
                             <button 
                                 className={`pill-btn ${chatFilter === 'unread' ? 'active' : ''}`}
-                                onClick={() => setChatFilter('unread')}
+                                onClick={() => {
+                                    setChatFilter('unread');
+                                    
+                                    // Update online status when changing chat filter
+                                    if (currentUser && currentUser.uid) {
+                                        updateUserOnlineStatus(currentUser.uid, true);
+                                        updateUserActivity(); // Reset inactivity timeout
+                                    }
+                                }}
                             >
                                 {language === 'it' ? 'Nuovi' : 'New'}
                             </button>
                         </div>
 
-                        <div className="user-chat-list">
+                        <div className="user-chat-list" onClick={() => {
+                            // Update online status when interacting with chat list
+                            if (currentUser && currentUser.uid) {
+                                updateUserOnlineStatus(currentUser.uid, true);
+                                updateUserActivity(); // Reset inactivity timeout
+                            }
+                        }}>
                             {filteredChats.length === 0 ? (
-                                <div id="empty-state">
+                                <div id="empty-state" onClick={() => {
+                                    // Update online status when interacting with empty state
+                                    if (currentUser && currentUser.uid) {
+                                        updateUserOnlineStatus(currentUser.uid, true);
+                                        updateUserActivity(); // Reset inactivity timeout
+                                    }
+                                }}>
                                     {language === 'it' ? 'Nessuna chat trovata.' : 'No chats found.'}
                                 </div>
                             ) : (
@@ -3422,8 +3602,20 @@
                                         if (!e.target.closest('[data-action="view-user-suggestions"]') && !e.target.closest('.user-chat-item-delete-btn')) {
                                             handleSelectChat(chat);
                                         }
+                                        
+                                        // Update online status when interacting with chat list
+                                        if (currentUser && currentUser.uid) {
+                                            updateUserOnlineStatus(currentUser.uid, true);
+                                            updateUserActivity(); // Reset inactivity timeout
+                                        }
                                     }}>
-                                        <div className="user-chat-item-avatar" data-action="view-user-suggestions" data-uid={chat.otherUserId} data-nickname={chat.otherUserNickname} style={{ cursor: 'pointer' }}>
+                                        <div className="user-chat-item-avatar" data-action="view-user-suggestions" data-uid={chat.otherUserId} data-nickname={chat.otherUserNickname} style={{ cursor: 'pointer' }} onClick={() => {
+                                            // Update online status when viewing user suggestions
+                                            if (currentUser && currentUser.uid) {
+                                                updateUserOnlineStatus(currentUser.uid, true);
+                                                updateUserActivity(); // Reset inactivity timeout
+                                            }
+                                        }}>
                                             {chat.otherUserNickname ? chat.otherUserNickname.charAt(0).toUpperCase() : 'U'}
                                         </div>
                                         <div className="user-chat-item-info">
@@ -3436,7 +3628,15 @@
                                             </div>
                                             <button 
                                                 className="user-chat-item-delete-btn" 
-                                                onClick={(e) => handleHideChat(e, chat.id)}
+                                                onClick={(e) => {
+                                                    handleHideChat(e, chat.id);
+                                                    
+                                                    // Update online status when hiding chat
+                                                    if (currentUser && currentUser.uid) {
+                                                        updateUserOnlineStatus(currentUser.uid, true);
+                                                        updateUserActivity(); // Reset inactivity timeout
+                                                    }
+                                                }}
                                                 title={language === 'it' ? 'Nascondi chat' : 'Hide chat'}
                                             >
                                                 <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18" fill="currentColor">
@@ -3452,7 +3652,15 @@
                         
                         <button 
                             className="floating-action-btn" 
-                            onClick={() => setView('search')} 
+                            onClick={() => {
+                                setView('search');
+                                
+                                // Update online status when starting new chat
+                                if (currentUser && currentUser.uid) {
+                                    updateUserOnlineStatus(currentUser.uid, true);
+                                    updateUserActivity(); // Reset inactivity timeout
+                                }
+                            }} 
                             title={language === 'it' ? 'Nuova chat' : 'New chat'}
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-5 9h-4v4h-2v-4H5V9h4V5h2v4h4v2z"/></svg>
@@ -3463,33 +3671,79 @@
             
             if (view === 'search') {
                 return (
-                    <div className="user-chat-container">
+                    <div className="user-chat-container" onClick={() => {
+                        // Update online status when interacting with search container
+                        if (currentUser && currentUser.uid) {
+                            updateUserOnlineStatus(currentUser.uid, true);
+                            updateUserActivity(); // Reset inactivity timeout
+                        }
+                    }}>
                         <div className="user-chat-header">
-                            <button className="user-chat-back-btn" onClick={() => setView('list')}>
+                            <button className="user-chat-back-btn" onClick={() => {
+                                setView('list');
+                                
+                                // Update online status when going back to chat list
+                                if (currentUser && currentUser.uid) {
+                                    updateUserOnlineStatus(currentUser.uid, true);
+                                    updateUserActivity(); // Reset inactivity timeout
+                                }
+                            }}>
                                 <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
                             </button>
                             <div className="user-chat-info">
                                 <h3>{language === 'it' ? 'Nuova Chat' : 'New Chat'}</h3>
                             </div>
-                            <div id="global-controls" dangerouslySetInnerHTML={{ __html: globalControls.otherControls }}></div>
+                            <div id="global-controls" dangerouslySetInnerHTML={{ __html: globalControls.otherControls }} onClick={() => {
+                            // Update online status when interacting with global controls
+                            if (currentUser && currentUser.uid) {
+                                updateUserOnlineStatus(currentUser.uid, true);
+                                updateUserActivity(); // Reset inactivity timeout
+                            }
+                        }}></div>
                         </div>
                         
                         {/* **NUOVO:** Aggiungi input di ricerca */}
-                        <div className="chat-search-container">
+                        <div className="chat-search-container" onClick={() => {
+                            // Update online status when interacting with chat search container
+                            if (currentUser && currentUser.uid) {
+                                updateUserOnlineStatus(currentUser.uid, true);
+                                updateUserActivity(); // Reset inactivity timeout
+                            }
+                        }}>
                             <input 
                                 type="text"
                                 className="chat-search-input"
                                 placeholder={language === 'it' ? 'Cerca utenti per nickname...' : 'Search users by nickname...'}
                                 value={chatSearchTerm}
-                                onChange={(e) => setChatSearchTerm(e.target.value)}
+                                onChange={(e) => {
+                                    setChatSearchTerm(e.target.value);
+                                    
+                                    // Update online status when searching for new users
+                                    if (currentUser && currentUser.uid) {
+                                        updateUserOnlineStatus(currentUser.uid, true);
+                                        updateUserActivity(); // Reset inactivity timeout
+                                    }
+                                }}
                                 autoFocus
                             />
                         </div>
                         
                         {/* **NUOVO:** Mostra risultati di ricerca */}
-                        <div className="chat-search-results">
+                        <div className="chat-search-results" onClick={() => {
+                            // Update online status when interacting with chat search results
+                            if (currentUser && currentUser.uid) {
+                                updateUserOnlineStatus(currentUser.uid, true);
+                                updateUserActivity(); // Reset inactivity timeout
+                            }
+                        }}>
                             {searchResults.length === 0 && chatSearchTerm.trim() ? (
-                                <div id="empty-state">
+                                <div id="empty-state" onClick={() => {
+                                    // Update online status when interacting with empty state
+                                    if (currentUser && currentUser.uid) {
+                                        updateUserOnlineStatus(currentUser.uid, true);
+                                        updateUserActivity(); // Reset inactivity timeout
+                                    }
+                                }}>
                                     {language === 'it' ? 'Nessun utente trovato.' : 'No users found.'}
                                 </div>
                             ) : (
@@ -3497,7 +3751,15 @@
                                     <div 
                                         key={user.uid} 
                                         className="simple-chat-search-item"
-                                        onClick={() => handleStartChat(user.uid, user.nickname)}
+                                        onClick={() => {
+                                            handleStartChat(user.uid, user.nickname);
+                                            
+                                            // Update online status when selecting user from search
+                                            if (currentUser && currentUser.uid) {
+                                                updateUserOnlineStatus(currentUser.uid, true);
+                                                updateUserActivity(); // Reset inactivity timeout
+                                            }
+                                        }}
                                     >
                                         {user.nickname}
                                     </div>
@@ -3508,13 +3770,39 @@
                 );
             }
 
-            return (
-                <div className="user-chat-container">
-                    <div className="user-chat-header">
-                        <button className="user-chat-back-btn" onClick={() => setView('list')}>
+                        return (
+                <div className="user-chat-container" onClick={() => {
+                    // Update online status when interacting with chat container
+                    if (currentUser && currentUser.uid) {
+                        updateUserOnlineStatus(currentUser.uid, true);
+                        updateUserActivity(); // Reset inactivity timeout
+                    }
+                }}>
+                    <div className="user-chat-header" onClick={() => {
+                        // Update online status when interacting with chat header
+                        if (currentUser && currentUser.uid) {
+                            updateUserOnlineStatus(currentUser.uid, true);
+                            updateUserActivity(); // Reset inactivity timeout
+                        }
+                    }}>
+                        <button className="user-chat-back-btn" onClick={() => {
+                            setView('list');
+                            
+                            // Update online status when going back to chat list
+                            if (currentUser && currentUser.uid) {
+                                updateUserOnlineStatus(currentUser.uid, true);
+                                updateUserActivity(); // Reset inactivity timeout
+                            }
+                        }}>
                             <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
                         </button>
-                        <div className="user-chat-avatar" data-action="view-user-suggestions" data-uid={selectedUser?.uid} data-nickname={selectedUser?.nickname} style={{ cursor: 'pointer', position: 'relative' }}>
+                        <div className="user-chat-avatar" data-action="view-user-suggestions" data-uid={selectedUser?.uid} data-nickname={selectedUser?.nickname} style={{ cursor: 'pointer', position: 'relative' }} onClick={() => {
+                            // Update online status when viewing user suggestions
+                            if (currentUser && currentUser.uid) {
+                                updateUserOnlineStatus(currentUser.uid, true);
+                                updateUserActivity(); // Reset inactivity timeout
+                            }
+                        }}>
                             {selectedUser?.nickname ? selectedUser.nickname.charAt(0).toUpperCase() : 'U'}
                             {isOtherUserOnline && (
                                 <div className="online-indicator"></div>
@@ -3526,9 +3814,21 @@
                                 {isOtherUserOnline ? (language === 'it' ? 'Online' : 'Online') : (language === 'it' ? 'Offline' : 'Offline')}
                             </p>
                         </div>
-                        <div id="global-controls" dangerouslySetInnerHTML={{ __html: globalControls.otherControls }}></div>
+                        <div id="global-controls" dangerouslySetInnerHTML={{ __html: globalControls.otherControls }} onClick={() => {
+                            // Update online status when interacting with global controls
+                            if (currentUser && currentUser.uid) {
+                                updateUserOnlineStatus(currentUser.uid, true);
+                                updateUserActivity(); // Reset inactivity timeout
+                            }
+                        }}></div>
                     </div>
-                    <div className="user-chat-messages">
+                    <div className="user-chat-messages" onClick={() => {
+                        // Update online status when interacting with chat messages
+                        if (currentUser && currentUser.uid) {
+                            updateUserOnlineStatus(currentUser.uid, true);
+                            updateUserActivity(); // Reset inactivity timeout
+                        }
+                    }}>
                         {messages.map(message => {
                             // NUOVA LOGICA DI RENDERIZZAZIONE
                             if (message.type === 'ai_link') {
@@ -3567,9 +3867,17 @@
                         <div ref={messagesEndRef} />
                     </div>
                     {/* NUOVO: Render del modale /link */}
-                    <AiLinkModal 
-                        isOpen={isLinkModalOpen}
-                        onClose={() => setIsLinkModalOpen(false)}
+                                                <AiLinkModal
+                                isOpen={isLinkModalOpen}
+                                onClose={() => {
+                                    setIsLinkModalOpen(false);
+                                    
+                                    // Update online status when closing link modal
+                                    if (currentUser && currentUser.uid) {
+                                        updateUserOnlineStatus(currentUser.uid, true);
+                                        updateUserActivity(); // Reset inactivity timeout
+                                    }
+                                }}
                         onSelect={handleSendAiLink}
                     />
 
@@ -3578,7 +3886,15 @@
                             <div className="command-palette-container">
                                 <div className="command-palette-header">COMANDI</div>
                                 {filteredCommands.map(cmd => (
-                                    <div key={cmd.command} className="command-palette-item" onClick={cmd.action}>
+                                    <div key={cmd.command} className="command-palette-item" onClick={() => {
+                                        cmd.action();
+                                        
+                                        // Update online status when selecting a command
+                                        if (currentUser && currentUser.uid) {
+                                            updateUserOnlineStatus(currentUser.uid, true);
+                                            updateUserActivity(); // Reset inactivity timeout
+                                        }
+                                    }}>
                                         <div className="command-palette-icon">#</div>
                                         <div className="command-palette-info">
                                             <div className="command-palette-name">{cmd.command.substring(1)}</div>
@@ -3609,17 +3925,52 @@
                                     }
                                     
                                     handleTyping();
+                                    
+                                    // Update online status when typing in message input
+                                    if (currentUser && currentUser.uid) {
+                                        updateUserOnlineStatus(currentUser.uid, true);
+                                        updateUserActivity(); // Reset inactivity timeout
+                                    }
                                 }}
-                                onKeyDown={handleKeyPress}
+                                onKeyDown={(e) => {
+                                    handleKeyPress(e);
+                                    
+                                    // Update online status when pressing keys in message input
+                                    if (currentUser && currentUser.uid) {
+                                        updateUserOnlineStatus(currentUser.uid, true);
+                                        updateUserActivity(); // Reset inactivity timeout
+                                    }
+                                }}
                                 placeholder={language === 'it' ? 'Scrivi un messaggio...' : 'Write a message...'}
                                 rows="1"
                                 onInput={(e) => {
                                     e.target.style.height = 'auto';
                                     e.target.style.height = (e.target.scrollHeight) + 'px';
+                                    
+                                    // Update online status when interacting with message input
+                                    if (currentUser && currentUser.uid) {
+                                        updateUserOnlineStatus(currentUser.uid, true);
+                                        updateUserActivity(); // Reset inactivity timeout
+                                    }
                                 }}
                                 disabled={isLoading}
+                                onFocus={() => {
+                                    // Update online status when focusing on message input
+                                    if (currentUser && currentUser.uid) {
+                                        updateUserOnlineStatus(currentUser.uid, true);
+                                        updateUserActivity(); // Reset inactivity timeout
+                                    }
+                                }}
                             />
-                            <button className="user-chat-send-btn" onClick={handleSendMessage} disabled={isLoading || !messageInput.trim()}>
+                            <button className="user-chat-send-btn" onClick={(e) => {
+                                handleSendMessage();
+                                
+                                // Update online status when clicking send button
+                                if (currentUser && currentUser.uid) {
+                                    updateUserOnlineStatus(currentUser.uid, true);
+                                    updateUserActivity(); // Reset inactivity timeout
+                                }
+                            }} disabled={isLoading || !messageInput.trim()}>
                                 <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
                             </button>
                         </div>
@@ -3683,9 +4034,11 @@
         if (input.type === "password") {
             input.type = "text";
             button.innerHTML = eyeSlashIconSVG;
+            button.setAttribute('aria-label', 'Hide password');
         } else {
             input.type = "password";
             button.innerHTML = eyeIconSVG;
+            button.setAttribute('aria-label', 'Show password');
         }
     };
 
@@ -3837,7 +4190,14 @@
                     // Se non c'è un timestamp, consideralo offline per sicurezza.
                     callback({ isOnline: false, lastSeen: null });
                 }
+            } else {
+                // Se non ci sono dati dell'utente, consideralo offline
+                callback({ isOnline: false, lastSeen: null });
             }
+        }, (error) => {
+            console.error("Error in online status listener:", error);
+            // In case of error, assume user is offline
+            callback({ isOnline: false, lastSeen: null });
         });
     };
 
@@ -6997,6 +7357,22 @@ const viewUserSuggestions = async (userId, userNickname) => {
                          await setDoc(userDocRef, initialUserData).catch(e => console.error("Error creating user doc:", e));
                          currentUser = { uid: user.uid, name: user.email, ...initialUserData }; 
                 }
+                
+                // Update user online status when logging in
+                await updateUserOnlineStatus(user.uid, true);
+                
+                // Set up periodic online status updates while user is active
+                const onlineStatusInterval = setInterval(async () => {
+                    if (currentUser && currentUser.uid === user.uid) {
+                        await updateUserOnlineStatus(user.uid, true);
+                    } else {
+                        clearInterval(onlineStatusInterval);
+                    }
+                }, 30000); // Update every 30 seconds
+                
+                // Store the interval ID for cleanup
+                window.onlineStatusInterval = onlineStatusInterval;
+                
             } catch (error) {
                  console.error("Error fetching user data:", error);
                  // Fallback to minimal user data if Firestore fails
@@ -7035,9 +7411,44 @@ const viewUserSuggestions = async (userId, userNickname) => {
             el.modalContainer.innerHTML = modalHTML;
         };
         
+        // --- USER ACTIVITY TRACKING FOR ONLINE STATUS ---
+        let userActivityTimeout;
+        let inactivityTimeout;
+        
+        const updateUserActivity = () => {
+            if (currentUser && currentUser.uid) {
+                updateUserOnlineStatus(currentUser.uid, true);
+            }
+            
+            // Clear existing timeouts
+            if (userActivityTimeout) {
+                clearTimeout(userActivityTimeout);
+            }
+            if (inactivityTimeout) {
+                clearTimeout(inactivityTimeout);
+            }
+            
+            // Set new timeout for next activity update
+            userActivityTimeout = setTimeout(() => {
+                if (currentUser && currentUser.uid) {
+                    updateUserOnlineStatus(currentUser.uid, true);
+                }
+            }, 60000); // Update every minute on activity
+            
+            // Set inactivity timeout (5 minutes of no activity = offline)
+            inactivityTimeout = setTimeout(() => {
+                if (currentUser && currentUser.uid) {
+                    updateUserOnlineStatus(currentUser.uid, false);
+                }
+            }, 300000); // 5 minutes
+        };
+
         // --- MAIN EVENT LISTENER ---
         document.body.addEventListener('click', (e) => {
             const target = e.target;
+            
+            // Update user activity on any click
+            updateUserActivity();
 
             // 1. Handle navigation buttons FIRST
             const navBtn = target.closest('.nav-btn');
@@ -7045,6 +7456,13 @@ const viewUserSuggestions = async (userId, userNickname) => {
                 currentView = navBtn.dataset.page;
                 // Reset filters when changing main pages
                 activeFilter = 'All'; exploreFilter = { type: null, value: null }; rankingFilter = 'All'; // Reset all filters
+                
+                // Update online status when navigating
+                if (currentUser && currentUser.uid) {
+                    updateUserOnlineStatus(currentUser.uid, true);
+                    updateUserActivity(); // Reset inactivity timeout
+                }
+                
                 renderView();
                 el.mainContent.scrollTop = 0; // Scroll to top on page change
                 e.preventDefault(); // Prevent default link behavior
@@ -7114,6 +7532,20 @@ const viewUserSuggestions = async (userId, userNickname) => {
                          if (!currentUser.uid) { triggerAuthFlow(); } else { window.openSettingsModal(); }
                          break;
                     case 'logout':
+                         // Clean up online status interval before logout
+                         if (window.onlineStatusInterval) {
+                             clearInterval(window.onlineStatusInterval);
+                             window.onlineStatusInterval = null;
+                         }
+                         
+                         // Clean up activity timeouts
+                         if (userActivityTimeout) {
+                             clearTimeout(userActivityTimeout);
+                         }
+                         if (inactivityTimeout) {
+                             clearTimeout(inactivityTimeout);
+                         }
+                         
                          signOut(auth).catch(error => console.error("Logout Error:", error));
                          break; // Rimuovi il logout dal global controls
 
@@ -7381,6 +7813,12 @@ const viewUserSuggestions = async (userId, userNickname) => {
                     contentArea.innerHTML = getExploreFeedHTML();
                 }
                 applyTranslations(currentLanguage); // Apply translations to search results/empty state
+                
+                // Update online status when searching
+                if (currentUser && currentUser.uid) {
+                    updateUserOnlineStatus(currentUser.uid, true);
+                    updateUserActivity(); // Reset inactivity timeout
+                }
             }
         });
 
@@ -7404,6 +7842,55 @@ const viewUserSuggestions = async (userId, userNickname) => {
                 } else {
                     searchResults.innerHTML = '';
                 }
+                
+                // Update online status when searching for users
+                if (currentUser && currentUser.uid) {
+                    updateUserOnlineStatus(currentUser.uid, true);
+                    updateUserActivity(); // Reset inactivity timeout
+                }
+            }
+        });
+        
+        // --- USER ACTIVITY LISTENERS FOR ONLINE STATUS ---
+        document.addEventListener('keydown', updateUserActivity);
+        document.addEventListener('scroll', updateUserActivity);
+        document.addEventListener('mousemove', updateUserActivity);
+        
+        // Handle page visibility changes (tab switching, minimizing)
+        document.addEventListener('visibilitychange', () => {
+            if (currentUser && currentUser.uid) {
+                if (document.hidden) {
+                    // User switched tabs or minimized - update status but don't mark as offline yet
+                    updateUserActivity();
+                } else {
+                    // User returned to tab - update online status and reset inactivity
+                    updateUserOnlineStatus(currentUser.uid, true);
+                    updateUserActivity(); // Reset inactivity timeout
+                }
+            }
+        });
+        
+        // Handle window focus/blur events
+        window.addEventListener('focus', () => {
+            if (currentUser && currentUser.uid) {
+                updateUserOnlineStatus(currentUser.uid, true);
+                updateUserActivity(); // Reset inactivity timeout
+            }
+        });
+        
+        window.addEventListener('blur', () => {
+            if (currentUser && currentUser.uid) {
+                updateUserActivity();
+            }
+        });
+        
+        // Handle page unload to set user as offline
+        window.addEventListener('beforeunload', () => {
+            if (currentUser && currentUser.uid) {
+                // Use synchronous method to ensure it executes before page unload
+                navigator.sendBeacon ? 
+                    navigator.sendBeacon('/api/offline', JSON.stringify({ userId: currentUser.uid })) :
+                    updateUserOnlineStatus(currentUser.uid, false);
             }
         });
         
