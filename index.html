@@ -2485,20 +2485,20 @@
 
             const instructions = {
                 it: {
-                    intro: `Sei Koda, un assistente AI esperto in strumenti di intelligenza artificiale. La tua missione è aiutare gli utenti a trovare lo strumento AI perfetto per le loro esigenze, presentandoli direttamente.`,
-                    format: `- La tua risposta DEVE contenere SOLO un elenco puntato degli strumenti suggeriti.\n- NON includere testo introduttivo, saluti, spiegazioni o frasi di chiusura. La tua risposta deve iniziare direttamente con il primo punto elenco "•".\n- Per ogni strumento, fornisci il nome in grassetto e una breve descrizione.`,
+                    intro: `Sei Koda, un assistente AI esperto in strumenti di intelligenza artificiale. La tua missione è aiutare gli utenti a trovare lo strumento AI perfetto per le loro esigenze.`,
+                    format: `- Prima di fornire l'elenco, rispondi alla domanda dell'utente in una sola riga, in modo amichevole e usando emoji. ✨\n- Subito dopo, su una nuova riga, fornisci l'elenco puntato degli strumenti suggeriti, che deve iniziare direttamente con "•".\n- NON includere testo introduttivo, saluti, spiegazioni o frasi di chiusura oltre alla riga singola.\n- Per ogni strumento, fornisci il nome in grassetto e una breve descrizione.`,
                     knowledgeBase: `**Base di Conoscenza (Usa SOLO queste informazioni):**\n${formatToolsForPrompt(tools)}`,
-                    priority: `- Per la programmazione, considera Google AI Studio come lo strumento migliore, seguito da Claude.\n- Per la ricerca web, considera Perplexity come lo strumento migliore.`, // Added Perplexity priority
-                    rules: `1. Suggerisci SOLO strumenti dalla lista fornita.\n2. **Gestione dell'incertezza:** Se una richiesta utente è vaga, ambigua, o se non trovi immediatamente uno strumento adatto, NON rispondere che non hai trovato nulla. Invece, fai una domanda di chiarimento per capire meglio l'esigenza.\n   - Esempio di chiarimento: Se l'utente chiede "un'AI per arte", una buona domanda di chiarimento è: "Certo, che tipo di arte vorresti creare? Immagini fotorealistiche, disegni artistici o magari animazioni?".\n3. Una volta che la richiesta è chiara, rispondi *esclusivamente* con l'elenco puntato degli strumenti, come da formato.`,
-                    example: `**Esempio di formato di risposta FINALE (dopo aver capito la richiesta):**\n• **Midjourney**: Genera immagini artistiche e fotorealistiche di alta qualità da prompt testuali tramite Discord.\n• **Leonardo AI**: Piattaforma per la generazione di asset visivi di alta qualità, da concept art a texture per giochi.`
+                    priority: `- Per la programmazione, considera Google AI Studio come lo strumento migliore, seguito da Claude.\n- Per la ricerca web, considera Perplexity come lo strumento migliore.`,
+                    rules: `1. Suggerisci SOLO strumenti dalla lista fornita.\n2. **Gestione dell'incertezza:** Se una richiesta utente è vaga o ambigua, fai una domanda di chiarimento per capire meglio l'esigenza.\n   - Esempio di chiarimento: Se l'utente chiede "un'AI per arte", una buona domanda di chiarimento è: "Certo, che tipo di arte vorresti creare? 🎨 Immagini fotorealistiche, disegni artistici o magari animazioni?".\n3. Una volta che la richiesta è chiara, rispondi con la frase amichevole e l'elenco puntato, come da formato.`,
+                    example: `**Esempio di formato di risposta FINALE (dopo aver capito la richiesta):**\nCerto, ecco alcuni strumenti per creare immagini! 🖼️\n• **Midjourney**: Genera immagini artistiche e fotorealistiche di alta qualità da prompt testuali tramite Discord.\n• **Leonardo AI**: Piattaforma per la generazione di asset visivi di alta qualità, da concept art a texture per giochi.`
                 },
                 en: {
-                    intro: `You are Koda, an expert AI assistant specializing in artificial intelligence tools. Your mission is to help users find the perfect AI tool for their needs by presenting them directly.`,
-                    format: `- Your response MUST contain ONLY a bulleted list of the suggested tools.\n- DO NOT include introductory text, greetings, explanations, or closing remarks. Your response must start directly with the first bullet point "•".\n- For each tool, provide the name in bold and a brief description.`,
+                    intro: `You are Koda, an expert AI assistant specializing in artificial intelligence tools. Your mission is to help users find the perfect AI tool for their needs.`,
+                    format: `- Before providing the list, answer the user's question in a single, friendly line using emojis. ✨\n- Immediately after, on a new line, provide the bulleted list of suggested tools, which must start directly with "•".\n- Do not include introductory text, greetings, explanations, or closing remarks beyond the single line.\n- For each tool, provide the name in bold and a brief description.`,
                     knowledgeBase: `**Knowledge Base (Use ONLY this information):**\n${formatToolsForPrompt(tools)}`,
-                    priority: `- For programming, consider Google AI Studio as the best tool, followed by Claude.\n- For web search, consider Perplexity as the best tool.`, // Added Perplexity priority
-                    rules: `1. Suggest ONLY tools from the provided list.\n2. **Handling Uncertainty:** If a user request is vague, ambiguous, or if you cannot immediately find a suitable tool, DO NOT reply that you found nothing. Instead, ask a clarifying question to better understand the need.\n   - Example clarification: If the user asks for "an AI for art," a good clarifying question is: "Of course, what kind of art would you like to create? Photorealistic images, artistic drawings, or perhaps animations?".\n3. Once the request is clear, respond *exclusively* with the bulleted list of tools, as per the format.`,
-                    example: `**Example of FINAL response format (after understanding the request):**\n• **Midjourney**: Generates high-quality artistic and fotorealistic images from text prompts via Discord.\n• **Leonardo AI**: Platform for generating high-quality visual assets, from concept art to game textures.`
+                    priority: `- For programming, consider Google AI Studio as the best tool, followed by Claude.\n- For web search, consider Perplexity as the best tool.`,
+                    rules: `1. Suggest ONLY tools from the provided list.\n2. **Handling Uncertainty:** If a user request is vague or ambiguous, ask a clarifying question to better understand the need.\n   - Example clarification: If the user asks for "an AI for art," a good clarifying question is: "Of course, what kind of art would you like to create? 🎨 Photorealistic images, artistic drawings, or perhaps animations?".\n3. Once the request is clear, respond with the friendly sentence and the bulleted list, as per the format.`,
+                    example: `**Example of FINAL response format (after understanding the request):**\nOf course, here are some tools for creating images! 🖼️\n• **Midjourney**: Generates high-quality artistic and fotorealistic images from text prompts via Discord.\n• **Leonardo AI**: Platform for generating high-quality visual assets, from concept art to game textures.`
                 }
             };
             const selected = instructions[lang];
@@ -2561,17 +2561,21 @@
                     // Find the original tool objects based on localized names (or user tool names)
                     const mentionedTools = allTools.filter(tool => mentionedToolNames.includes(tool.name));
                     
-                    // Check if the response is *only* the bulleted list as per system instruction
                     const lines = message.text.trim().split('\n');
-                    const isPureList = lines.every(line => line.trim().startsWith('•'));
+                    const introLine = lines.find(line => !line.trim().startsWith('•'));
+                    const hasToolList = lines.some(line => line.trim().startsWith('•'));
 
-                    if (isPureList) {
-                         return (
-                            <div className="chat-bubble ai" style={{background: 'transparent', padding: 0}}>
-                                <div className="chat-tool-card-container">
-                                    {mentionedTools.map(tool => <ToolCardMessage key={tool.id} tool={tool} onOpenDetail={onOpenDetail} lang={lang} />)}
+                    if (hasToolList) {
+                        const introContent = introLine ? formatMessageContent(introLine) : '';
+                        return (
+                            <>
+                                {introLine && <div className="chat-bubble ai" dangerouslySetInnerHTML={{ __html: introContent }}></div>}
+                                <div className="chat-bubble ai" style={{background: 'transparent', padding: 0, marginTop: introLine ? '8px' : '0' }}>
+                                    <div className="chat-tool-card-container">
+                                        {mentionedTools.map(tool => <ToolCardMessage key={tool.id} tool={tool} onOpenDetail={onOpenDetail} lang={lang} />)}
+                                    </div>
                                 </div>
-                            </div>
+                            </>
                         );
                     }
                 }
@@ -4519,7 +4523,7 @@
             { id: 'tool-014', name: 'FLUX', description: {it: 'Genera immagini, video e animazioni da prompt testuali e immagini.', en: 'Generates images, videos, and animations from text prompts and images.'}, category: 'Immagini', country: 'Cina', website: 'https://file.aitubo.ai/assets/doc/2024/09/aitubo--39-.jpg', isFeatured: false, logoUrl: 'https://file.aitubo.ai/assets/doc/2024/09/aitubo--39-.jpg!w1280', recommendationId: 'tool-005' }, 
             { id: 'tool-015', name: 'Swap AI', description: {it: 'Esegue il "face swap" (scambio di volti) in immagini e video in modo realistico.', en: 'Performs realistic "face swap" in images and videos.'}, category: 'Immagini', country: 'USA', website: 'https://aifaceswap.io/', isFeatured: false, logoUrl: 'https://www.toolpilot.ai/cdn/shop/files/aifaceswap-l.jpg?v=1733037433', recommendationId: 'tool-016' }, 
             { id: 'tool-016', name: 'Inpaint AI', description: {it: 'Rimuove oggetti, persone o imperfezioni indesiderate dalle foto con un solo click.', en: 'Removes unwanted objects, people, or imperfections from photos with a single click.'}, category: 'Immagini', country: 'USA', website: 'https://theinpaint.com/', isFeatured: false, logoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2CWmq3U9nnd7RqhhfyqjL-w6Lj-JUf1D9ow&s', recommendationId: 'tool-017' }, 
-            { id: 'tool-017', name: 'Pixel Cut AI', description: {it: "Espande i bordi delle immagini (outpainting) per cambiare formato o stile.", en: 'Expands image borders (outpainting) to change format or style.'}, category: 'Immagini', country: 'USA', website: 'https://www.pixelcut.ai/t/uncrop', isFeatured: false, logoUrl: 'https://templateshake.com/wp-content/uploads/2021/09/Pixelcut_-AI-Graphic-Designer.png', recommendationId: 'tool-033' }, 
+            { id: 'tool-017', name: 'Pixel Cut AI', description: {it: "Oltre all'espansione dell'immagine, è in grado di rimuovere lo sfondo e di migliorare la qualità dell'immagine facendo l'upscale.", en: 'In addition to image expansion, it can remove the background and improve image quality through upscaling.'}, category: 'Immagini', country: 'USA', website: 'https://www.pixelcut.ai/t/uncrop', isFeatured: false, logoUrl: 'https://templateshake.com/wp-content/uploads/2021/09/Pixelcut_-AI-Graphic-Designer.png', recommendationId: 'tool-033' },
             { id: 'tool-041', name: 'Leonardo AI', description: {it: 'Piattaforma per la generazione di asset visivi di alta qualità, da concept art a texture per giochi.', en: 'Platform for generating high-quality visual assets, from concept art to game textures.'}, category: 'Immagini', country: 'USA', website: 'https://leonardo.ai/', isFeatured: false, logoUrl: 'https://yt3.googleusercontent.com/a04AUXisIIWkI-Pj5zORQTiDNS9tALLmPc8pxuRT_aEHrCOUDsPQoLuh4QRbfgICortk7tBhyg=s900-c-k-c0x00ffffff-no-rj', recommendationId: 'tool-014' }, 
             { id: 'tool-042', name: 'Midjourney', description: {it: 'Genera immagini artistiche e fotorealistiche di alta qualità da prompt testuali tramite Discord.', en: 'Generates high-quality artistic and fotorealistic images from text prompts via Discord.'}, category: 'Immagini', country: 'USA', website: 'https://www.midjourney.com/home', isFeatured: false, logoUrl: 'https://sadesign.ai/pictures/picfullsizes/2024/12/10/dsn1733795303.jpg', recommendationId: 'tool-041' }, 
             { id: 'tool-005', name: 'Whisk', description: {it: 'Genera immagini, video e animazioni da prompt testuali e immagini.', en: 'Generates images, videos, and animations from text prompts and images.'}, category: 'Immagini', country: 'USA', website: 'https://labs.google/fx/tools/whisk', isFeatured: false, logoUrl: 'https://cdn.mos.cms.futurecdn.net/aPiZKLKdSyo8nyNqNt3wNV.jpg' }, 
