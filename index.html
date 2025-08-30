@@ -485,7 +485,43 @@
 
         /* --- STILI MIGLIORATI E NUOVI PER IL CHATBOT --- */
         #chatbot-container-wrapper { display: flex; flex-direction: column; height: 100%; position: relative; overflow: hidden; }
-        #chatbot-app-container { display: flex; flex-direction: column; height: 100%; background-color: var(--spotify-bg); flex-grow: 1; }
+        /* NUOVO: Keyframes per l'animazione di zoom lento dello sfondo */
+@keyframes kenburnsZoom {
+    0%, 100% {
+        transform: scale(1.0) translate(0, 0);
+    }
+    50% {
+        transform: scale(1.1) translate(-1%, 1%);
+    }
+}
+
+#chatbot-app-container { 
+    display: flex; 
+    flex-direction: column; 
+    height: 100%; 
+    background-color: var(--spotify-bg); 
+    flex-grow: 1;
+    position: relative; /* Necessario per posizionare lo sfondo animato */
+    overflow: hidden;   /* Nasconde le parti dell'immagine che escono durante lo zoom */
+}
+
+/* NUOVO: Pseudo-elemento per contenere e animare lo sfondo in modo isolato */
+#chatbot-app-container::before {
+    content: '';
+    position: absolute;
+    top: -5%; left: -5%; right: -5%; bottom: -5%; /* Leggermente più grande per evitare bordi bianchi durante l'animazione */
+    z-index: 0;
+    background-image: linear-gradient(rgba(18, 18, 18, 0.7), rgba(18, 18, 18, 0.7)), url('https://i.postimg.cc/bN4DrwdT/Sfondo-website-koda.png');
+    background-size: cover;
+    background-position: center center;
+    animation: kenburnsZoom 30s ease-in-out infinite; /* Applica l'animazione con durata 30s */
+}
+
+/* NUOVO: Assicura che il contenuto della chat stia sempre sopra lo sfondo */
+#chatbot-app-container > * {
+    position: relative;
+    z-index: 1;
+}
         .chat-header { 
             padding: 16px; 
             display: flex; 
@@ -501,6 +537,11 @@
         #chatbot-app-container main { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; }
         #welcome-screen { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: 24px; padding: 20px; padding-bottom: 15%; }
         .welcome-logo { font-size: 2.5rem; font-weight: 700; text-align: center; margin-bottom: 16px; }
+
+/* NUOVO: Mantiene la scritta "Koda" bianca in modalità giorno */
+body.light-mode .welcome-logo span:first-child {
+    color: #ffffff !important;
+}
         .welcome-logo svg { width: 50px; height: 50px; }
         .prompt-starter-container { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; max-width: 400px; }
         .prompt-starter-btn { background-color: var(--spotify-card); color: var(--spotify-text); border: 1px solid rgba(128,128,128,0.2); border-radius: 8px; padding: 12px 16px; font-size: 14px; font-weight: 500; cursor: pointer; width: 100%; text-align: left; transition: background-color 0.2s; }
@@ -2641,8 +2682,8 @@
         
         const WelcomeScreen = ({ onSendMessage, lang }) => {
             const suggestions = {
-                it: [ "Consigliami un'AI per creare immagini", "Qual è la migliore AI per programmare?", "Quali sono le migliori AI del momento?"],
-                en: [ "Suggest an AI for creating images", "What's the best AI for coding?", "What are the top AIs right now?" ]
+                it: [ "Consigliami un'AI per creare immagini", "Quali sono le migliori AI per programmare?", "Quali sono le alternative a ChatGPT?"],
+                en: [ "Suggest an AI for creating images", "Which are the best AI for coding?", "What are ChatGPT's alternatives?" ]
             };
 
             return (
@@ -4654,7 +4695,7 @@
             { id: 'tool-042', name: 'Midjourney', description: {it: 'Genera immagini artistiche e fotorealistiche di alta qualità da prompt testuali tramite Discord.', en: 'Generates high-quality artistic and fotorealistic images from text prompts via Discord.'}, category: 'Immagini', country: 'USA', website: 'https://www.midjourney.com/home', isFeatured: false, logoUrl: 'https://sadesign.ai/pictures/picfullsizes/2024/12/10/dsn1733795303.jpg', recommendationId: 'tool-041' }, 
             { id: 'tool-005', name: 'Whisk', description: {it: 'Genera immagini, video e animazioni da prompt testuali e immagini.', en: 'Generates images, videos, and animations from text prompts and images.'}, category: 'Immagini', country: 'USA', website: 'https://labs.google/fx/tools/whisk', isFeatured: false, logoUrl: 'https://artsology.com/blog/wp-content/uploads/2025/01/Iconic-Banksy-in-Manila-2025-01-17T161547.202.png' }, 
             { id: 'tool-034', name: 'Kling', description: {it: 'Genera video di alta qualità da prompt testuali, concentrandosi sul realismo e sul movimento complesso.', en: 'Generates high-quality videos from text prompts, focusing on realism and complex motion.'}, category: 'Video', country: 'Cina', website: 'https://klingai.com/global/', isFeatured: false, logoUrl: 'https://play-lh.googleusercontent.com/JOfjXqsShK8j1aGBc1xlHBnatoRKRwLsGuoFZUAvKksaEPvK71eLwSg4FbKlky9Es-s', recommendationId: 'tool-035' }, 
-            { id: 'tool-035', name: 'Veo', description: {it: "Il modello di generazione video più capace di Google, che crea video realistici e di alta qualità da prompt di testo e immagini.", en: "Google's most capable video generation model, creating realistic, high-quality videos from text and image prompts."}, category: 'Video', country: 'USA', website: 'https://deepmind.google/models/veo/', isFeatured: false, logoUrl: 'https://storage.googleapis.com/gweb-uniblog-publish-prod/images/IO25_Gemini_MOD_v33_PART_1_DG_FINAL_54.max-1440x810.png', isFeatured: false, recommendationId: 'tool-seedance' }, 
+            { id: 'tool-035', name: 'Veo', description: {it: "Il modello di generazione video più capace di Google, che crea video realistici e di alta qualità da prompt di testo e immagini.", en: "Google's most capable video generation model, creating realistic, high-quality videos from text and image prompts."}, category: 'Video', country: 'USA', website: 'https://deepmind.google/models/veo/', isFeatured: false, logoUrl: 'https://storage.googleapis.com/gweb-uniblog-publish-prod/images/IO25_Gemini_MOD_v33_PART_1_DG_FINAL_54.max-1440x810.png', isFeatured: false, recommendationId: 'Sora' }, 
             { id: 'tool-021', name: 'Claude', description: {it: 'Specializzato in codice e creazione di applicazioni web. Può anche scrivere testi e ricercare informazioni sul web.', en: 'Specialized in code and web app creation. Can also write text and search for information on the web.'}, category: 'Codice', country: 'USA', website: 'https://claude.ai/new', isFeatured: true, logoUrl: 'https://logo.svgcdn.com/l/claude-icon-8x.png', recommendationId: 'tool-022' }, 
             { id: 'tool-022', name: 'Gamma AI', description: {it: "Genera presentazioni, documenti e pagine web statiche partendo da un'idea.", en: 'Generates presentations, documents, and static web pages from an idea.'}, category: 'Presentazioni', country: 'USA', website: 'https://gamma.app/', isFeatured: false, logoUrl: 'https://www.fahimai.com/wp-content/uploads/2025/03/GAMMA-cta.png', recommendationId: 'tool-021' }, 
             { id: 'tool-023', name: 'Napkin AI', description: {it: 'Converte dati testuali e concetti in grafici statici e diagrammi chiari.', en: 'Converts text data and concepts into clear static charts and diagrams.'}, category: 'Presentazioni', country: 'USA', website: 'https://www.napkin.ai/', isFeatured: false, logoUrl: 'https://media.licdn.com/dms/image/v2/D560BAQEYfmQKrdByPg/company-logo_200_200/company-logo_200_200/0/1723039432148/napkin_ai_logo?e=2147483647&v=beta&t=Nsr22RG3uiy9usBNh55leGVf8ES5YJQwUANW-2N7yEA', recommendationId: 'tool-022' }, 
@@ -4887,7 +4928,6 @@
                 recommendationId: 'tool-044'
             },
             { id: 'tool-034', name: 'Kling', description: {it: 'Genera video di alta qualità da prompt testuali, concentrandosi sul realismo e sul movimento complesso.', en: 'Generates high-quality videos from text prompts, focusing on realism and complex motion.'}, category: 'Video', country: 'Cina', website: 'https://klingai.com/global/', isFeatured: false, logoUrl: 'https://play-lh.googleusercontent.com/JOfjXqsShK8j1aGBc1xlHBnatoRKRwLsGuoFZUAvKksaEPvK71eLwSg4FbKlky9Es-s', recommendationId: 'tool-035' }, 
-            { id: 'tool-seedance', name: 'Seedance', description: {it: 'AI cinese specializzata nella creazione di video, alternativa a Veo3.', en: 'Chinese AI specialized in video creation, alternative to Veo3.'}, category: 'Video', country: 'Cina', website: 'https://seedance.net/seedance', isFeatured: false, logoUrl: 'https://seedance.net/logo.png', recommendationId: 'tool-035' }, // Seedance
             { id: 'tool-heygen', name: 'HeyGen', description: {it: 'AI americana specializzata nella creazione di avatar virtuali e video.', en: 'American AI specialized in virtual avatar and video creation.'}, category: 'Video', country: 'USA', website: 'https://www.heygen.com', isFeatured: false, logoUrl: 'https://img.icons8.com/fluent/512/heygen.png', recommendationId: 'tool-034' }, // HeyGen
             {
                 id: 'tool-opus-clip',
