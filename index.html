@@ -553,6 +553,322 @@ body.light-mode .welcome-logo span:first-child {
         .prompt-starter-container { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; max-width: 400px; }
         .prompt-starter-btn { background-color: var(--spotify-card); color: var(--spotify-text); border: 1px solid rgba(128,128,128,0.2); border-radius: 8px; padding: 12px 16px; font-size: 14px; font-weight: 500; cursor: pointer; width: 100%; text-align: left; transition: background-color 0.2s; }
         .prompt-starter-btn:hover { background-color: var(--spotify-bg-light); }
+        
+        /* NUOVI STILI PER I PULSANTI AZIONE */
+        .action-buttons-container {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+            max-width: 400px;
+            margin-top: 8px;
+        }
+        
+        .action-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background-color: var(--spotify-accent);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .action-btn:hover {
+            background-color: #1ed760;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(29, 185, 84, 0.3);
+        }
+        
+        .action-btn:active {
+            transform: translateY(0);
+        }
+        
+        .action-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+        
+        /* STILI PER L'OTTIMIZZATORE PROMPT */
+        .prompt-optimizer-screen {
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .optimizer-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        
+        .back-btn {
+            background: none;
+            border: none;
+            color: var(--spotify-text-secondary);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+        
+        .back-btn:hover {
+            background-color: var(--spotify-card);
+            color: var(--spotify-text);
+        }
+        
+        .optimizer-header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0;
+        }
+        
+        .optimizer-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .form-group label {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--spotify-text);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .form-group input {
+            padding: 12px 16px;
+            background-color: var(--spotify-card);
+            border: 1px solid rgba(128, 128, 128, 0.2);
+            border-radius: 8px;
+            color: var(--spotify-text);
+            font-size: 16px;
+            transition: border-color 0.2s ease;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--spotify-accent);
+        }
+        
+        .form-group input::placeholder {
+            color: var(--spotify-text-secondary);
+        }
+        
+        .optimize-submit-btn {
+            background-color: var(--spotify-accent);
+            color: #000;
+            border: none;
+            padding: 16px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 16px;
+        }
+        
+        .optimize-submit-btn:hover:not(:disabled) {
+            background-color: #1ed760;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(29, 185, 84, 0.3);
+        }
+        
+        .optimize-submit-btn:disabled {
+            background-color: var(--spotify-bg-light);
+            color: var(--spotify-text-secondary);
+            cursor: not-allowed;
+        }
+        
+        /* STILI PER LA GALLERIA */
+        .gallery-screen {
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .gallery-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        
+        .gallery-header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0;
+        }
+        
+        .category-filters {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        
+        .category-filter {
+            background-color: var(--spotify-card);
+            color: var(--spotify-text);
+            border: 1px solid rgba(128, 128, 128, 0.2);
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .category-filter:hover {
+            background-color: var(--spotify-bg-light);
+        }
+        
+        .category-filter.active {
+            background-color: var(--spotify-accent);
+            color: #000;
+            border-color: var(--spotify-accent);
+        }
+        
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .template-card {
+            background-color: var(--spotify-card);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(128, 128, 128, 0.1);
+            transition: all 0.2s ease;
+        }
+        
+        .template-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+        
+        .template-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        
+        .template-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+            flex: 1;
+        }
+        
+        .template-category {
+            background-color: var(--spotify-accent);
+            color: #000;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .template-description {
+            color: var(--spotify-text-secondary);
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+        
+        .template-preview {
+            background-color: var(--spotify-bg-light);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 16px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .template-preview pre {
+            margin: 0;
+            font-size: 12px;
+            line-height: 1.4;
+            color: var(--spotify-text);
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        
+        .use-template-btn {
+            background-color: var(--spotify-accent);
+            color: #000;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+        
+        .use-template-btn:hover {
+            background-color: #1ed760;
+        }
+        
+        /* STILI RESPONSIVE PER I NUOVI COMPONENTI */
+        @media (max-width: 768px) {
+            .action-buttons-container {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .prompt-optimizer-screen,
+            .gallery-screen {
+                padding: 16px;
+            }
+            
+            .templates-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .category-filters {
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .action-btn {
+                font-size: 12px;
+                padding: 10px 12px;
+            }
+            
+            .optimizer-header h2,
+            .gallery-header h2 {
+                font-size: 20px;
+            }
+            
+            .form-group input {
+                font-size: 14px;
+                padding: 10px 12px;
+            }
+        }
         #chat-messages { width: 100%; display: flex; flex-direction: column; gap: 12px; padding-top: 16px; /* NUOVO: Aggiunge spazio per evitare che il primo messaggio sia coperto dall'header */ }
         .chat-bubble { padding: 12px 16px; border-radius: 20px; max-width: 85%; line-height: 1.5; word-wrap: break-word; }
         .chat-bubble.ai { background-color: var(--spotify-ai-bubble-bg); align-self: flex-start; border-bottom-left-radius: 4px; }
@@ -2559,6 +2875,61 @@ body.light-mode .welcome-logo span:first-child {
         const ai = new GoogleGenAI({ apiKey: API_KEY });
         const modelName = 'gemini-1.5-flash';
         
+        // --- FUNZIONE PARSING TEMPLATE ---
+        const parseTemplateToData = (templateText) => {
+            const lines = templateText.split('\n');
+            const data = {};
+            
+            lines.forEach(line => {
+                const trimmedLine = line.trim();
+                if (trimmedLine.includes(':')) {
+                    const [key, ...valueParts] = trimmedLine.split(':');
+                    const cleanKey = key.trim().toLowerCase();
+                    const value = valueParts.join(':').trim();
+                    
+                    // Mappa le chiavi italiane alle chiavi del form
+                    const keyMap = {
+                        'ruolo': 'ruolo',
+                        'pubblico': 'pubblico',
+                        'tipo di contenuto': 'tipoContenuto',
+                        'obiettivo': 'obiettivo',
+                        'tipo': 'tipoContenuto',
+                        'tono': 'tono',
+                        'vincoli': 'vincoli',
+                        'riferimenti': 'riferimenti'
+                    };
+                    
+                    const mappedKey = keyMap[cleanKey];
+                    if (mappedKey) {
+                        data[mappedKey] = value;
+                    }
+                }
+            });
+            
+            return data;
+        };
+
+        // --- FUNZIONE OTTIMIZZAZIONE PROMPT ---
+        const generateOptimizedPrompt = (formData, lang) => {
+            const { ruolo, pubblico, tipoContenuto, obiettivo, tono, vincoli, riferimenti } = formData;
+            
+            const prompt = lang === 'it' 
+                ? `Sei un ${ruolo}. Crea ${tipoContenuto} per ${pubblico} con l'obiettivo di ${obiettivo}. 
+                   Usa un tono ${tono}. 
+                   Rispetta questi vincoli: ${vincoli}. 
+                   Considera questi riferimenti: ${riferimenti}.
+                   
+                   Fornisci il contenuto richiesto seguendo esattamente i parametri specificati.`
+                : `You are a ${ruolo}. Create ${tipoContenuto} for ${pubblico} with the goal of ${obiettivo}. 
+                   Use a ${tono} tone. 
+                   Respect these constraints: ${vincoli}. 
+                   Consider these references: ${riferimenti}.
+                   
+                   Provide the requested content following exactly the specified parameters.`;
+            
+            return prompt;
+        };
+
         const createChatSession = (lang) => {
             const systemInstruction = getSystemInstruction(lang);
             return ai.chats.create({ model: modelName, config: { systemInstruction } });
@@ -2690,7 +3061,245 @@ return (
             );
         };
         
-        const WelcomeScreen = ({ onSendMessage, lang }) => {
+        // --- COMPONENTE OTTIMIZZAZIONE PROMPT ---
+        const PromptOptimizerScreen = ({ onBack, onSendMessage, lang, initialData }) => {
+            const [formData, setFormData] = useState({
+                ruolo: initialData?.ruolo || '',
+                pubblico: initialData?.pubblico || '',
+                tipoContenuto: initialData?.tipoContenuto || '',
+                obiettivo: initialData?.obiettivo || '',
+                tono: initialData?.tono || '',
+                vincoli: initialData?.vincoli || '',
+                riferimenti: initialData?.riferimenti || ''
+            });
+            
+            const handleInputChange = (field, value) => {
+                setFormData(prev => ({ ...prev, [field]: value }));
+            };
+            
+            // Aggiorna il form quando cambiano i dati iniziali
+            useEffect(() => {
+                if (initialData) {
+                    setFormData({
+                        ruolo: initialData.ruolo || '',
+                        pubblico: initialData.pubblico || '',
+                        tipoContenuto: initialData.tipoContenuto || '',
+                        obiettivo: initialData.obiettivo || '',
+                        tono: initialData.tono || '',
+                        vincoli: initialData.vincoli || '',
+                        riferimenti: initialData.riferimenti || ''
+                    });
+                }
+            }, [initialData]);
+            
+            const handleOptimize = () => {
+                const optimizedPrompt = generateOptimizedPrompt(formData, lang);
+                onSendMessage(optimizedPrompt);
+            };
+            
+            const isFormValid = Object.values(formData).every(value => value.trim() !== '');
+            
+            return (
+                <div className="prompt-optimizer-screen">
+                    <div className="optimizer-header">
+                        <button className="back-btn" onClick={onBack}>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M19 12H5M12 19L5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        </button>
+                        <h2>{lang === 'it' ? 'Ottimizza Prompt' : 'Optimize Prompt'}</h2>
+                    </div>
+                    
+                    <div className="optimizer-form">
+                        <div className="form-group">
+                            <label>{lang === 'it' ? 'RUOLO' : 'ROLE'}</label>
+                            <input 
+                                type="text" 
+                                placeholder={lang === 'it' ? 'Definisci la persona AI (es. esperto di marketing, copywriter, programmatore)' : 'Define the AI person (e.g. marketing expert, copywriter, programmer)'}
+                                value={formData.ruolo}
+                                onChange={(e) => handleInputChange('ruolo', e.target.value)}
+                            />
+                        </div>
+                        
+                        <div className="form-group">
+                            <label>{lang === 'it' ? 'PUBBLICO' : 'AUDIENCE'}</label>
+                            <input 
+                                type="text" 
+                                placeholder={lang === 'it' ? 'Target specifico (es. startup, professionisti, studenti)' : 'Specific target (e.g. startups, professionals, students)'}
+                                value={formData.pubblico}
+                                onChange={(e) => handleInputChange('pubblico', e.target.value)}
+                            />
+                        </div>
+                        
+                        <div className="form-group">
+                            <label>{lang === 'it' ? 'TIPO DI CONTENUTO' : 'CONTENT TYPE'}</label>
+                            <input 
+                                type="text" 
+                                placeholder={lang === 'it' ? 'Formato (es. articolo, post social, email, script)' : 'Format (e.g. article, social post, email, script)'}
+                                value={formData.tipoContenuto}
+                                onChange={(e) => handleInputChange('tipoContenuto', e.target.value)}
+                            />
+                        </div>
+                        
+                        <div className="form-group">
+                            <label>{lang === 'it' ? 'OBIETTIVO' : 'OBJECTIVE'}</label>
+                            <input 
+                                type="text" 
+                                placeholder={lang === 'it' ? 'Risultato desiderato (es. aumentare conversioni, educare, intrattenere)' : 'Desired result (e.g. increase conversions, educate, entertain)'}
+                                value={formData.obiettivo}
+                                onChange={(e) => handleInputChange('obiettivo', e.target.value)}
+                            />
+                        </div>
+                        
+                        <div className="form-group">
+                            <label>{lang === 'it' ? 'TONO' : 'TONE'}</label>
+                            <input 
+                                type="text" 
+                                placeholder={lang === 'it' ? 'Stile comunicativo (es. professionale, amichevole, formale, creativo)' : 'Communication style (e.g. professional, friendly, formal, creative)'}
+                                value={formData.tono}
+                                onChange={(e) => handleInputChange('tono', e.target.value)}
+                            />
+                        </div>
+                        
+                        <div className="form-group">
+                            <label>{lang === 'it' ? 'VINCOLI' : 'CONSTRAINTS'}</label>
+                            <input 
+                                type="text" 
+                                placeholder={lang === 'it' ? 'Limitazioni (es. lunghezza, stile, requisiti specifici)' : 'Limitations (e.g. length, style, specific requirements)'}
+                                value={formData.vincoli}
+                                onChange={(e) => handleInputChange('vincoli', e.target.value)}
+                            />
+                        </div>
+                        
+                        <div className="form-group">
+                            <label>{lang === 'it' ? 'RIFERIMENTI' : 'REFERENCES'}</label>
+                            <input 
+                                type="text" 
+                                placeholder={lang === 'it' ? 'Contesto ed esempi (es. brand, stile, ispirazioni)' : 'Context and examples (e.g. brand, style, inspirations)'}
+                                value={formData.riferimenti}
+                                onChange={(e) => handleInputChange('riferimenti', e.target.value)}
+                            />
+                        </div>
+                        
+                        <button 
+                            className="optimize-submit-btn" 
+                            onClick={handleOptimize}
+                            disabled={!isFormValid}
+                        >
+                            {lang === 'it' ? 'Genera Prompt Ottimizzato' : 'Generate Optimized Prompt'}
+                        </button>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- COMPONENTE GALLERIA ---
+        const GalleryScreen = ({ onBack, lang, onUseTemplate }) => {
+            const [selectedCategory, setSelectedCategory] = useState('all');
+            
+            const categories = [
+                { id: 'all', name: lang === 'it' ? 'Tutti' : 'All' },
+                { id: 'marketing', name: lang === 'it' ? 'Marketing' : 'Marketing' },
+                { id: 'writing', name: lang === 'it' ? 'Scrittura' : 'Writing' },
+                { id: 'coding', name: lang === 'it' ? 'Programmazione' : 'Coding' },
+                { id: 'design', name: lang === 'it' ? 'Design' : 'Design' },
+                { id: 'business', name: lang === 'it' ? 'Business' : 'Business' }
+            ];
+            
+            const promptTemplates = [
+                {
+                    id: 1,
+                    title: lang === 'it' ? 'Post Social Media Virale' : 'Viral Social Media Post',
+                    description: lang === 'it' ? 'Crea contenuti che generano engagement e condivisioni' : 'Create content that generates engagement and shares',
+                    category: 'marketing',
+                    template: `RUOLO: ${lang === 'it' ? 'Esperto di social media marketing' : 'Social media marketing expert'}
+PUBBLICO: ${lang === 'it' ? 'Utenti social media attivi' : 'Active social media users'}
+TIPO DI CONTENUTO: ${lang === 'it' ? 'Post social media' : 'Social media post'}
+OBIETTIVO: ${lang === 'it' ? 'Generare engagement e condivisioni' : 'Generate engagement and shares'}
+TONO: ${lang === 'it' ? 'Coinvolgente e motivante' : 'Engaging and motivating'}
+VINCOLI: ${lang === 'it' ? 'Massimo 280 caratteri, con emoji' : 'Maximum 280 characters, with emojis'}
+RIFERIMENTI: ${lang === 'it' ? 'Trend attuali, hashtag popolari' : 'Current trends, popular hashtags'}`
+                },
+                {
+                    id: 2,
+                    title: lang === 'it' ? 'Email di Vendita' : 'Sales Email',
+                    description: lang === 'it' ? 'Email persuasive per aumentare le conversioni' : 'Persuasive emails to increase conversions',
+                    category: 'business',
+                    template: `RUOLO: ${lang === 'it' ? 'Copywriter esperto in email marketing' : 'Expert email marketing copywriter'}
+PUBBLICO: ${lang === 'it' ? 'Lead qualificati' : 'Qualified leads'}
+TIPO DI CONTENUTO: ${lang === 'it' ? 'Email di vendita' : 'Sales email'}
+OBIETTIVO: ${lang === 'it' ? 'Aumentare le conversioni' : 'Increase conversions'}
+TONO: ${lang === 'it' ? 'Professionale e convincente' : 'Professional and convincing'}
+VINCOLI: ${lang === 'it' ? 'Massimo 150 parole, con CTA chiaro' : 'Maximum 150 words, with clear CTA'}
+RIFERIMENTI: ${lang === 'it' ? 'Benefici del prodotto, social proof' : 'Product benefits, social proof'}`
+                },
+                {
+                    id: 3,
+                    title: lang === 'it' ? 'Script Video YouTube' : 'YouTube Video Script',
+                    description: lang === 'it' ? 'Script per video educativi e coinvolgenti' : 'Scripts for educational and engaging videos',
+                    category: 'content',
+                    template: `RUOLO: ${lang === 'it' ? 'Script writer per video digitali' : 'Digital video script writer'}
+PUBBLICO: ${lang === 'it' ? 'Visualizzatori YouTube interessati' : 'Interested YouTube viewers'}
+TIPO DI CONTENUTO: ${lang === 'it' ? 'Script video' : 'Video script'}
+OBIETTIVO: ${lang === 'it' ? 'Educare e intrattenere' : 'Educate and entertain'}
+TONO: ${lang === 'it' ? 'Conversazionale e amichevole' : 'Conversational and friendly'}
+VINCOLI: ${lang === 'it' ? '5-10 minuti di durata, con hook iniziale' : '5-10 minutes duration, with initial hook'}
+RIFERIMENTI: ${lang === 'it' ? 'Stile YouTuber popolari, formati virali' : 'Popular YouTuber style, viral formats'}`
+                }
+            ];
+            
+            const filteredTemplates = selectedCategory === 'all' 
+                ? promptTemplates 
+                : promptTemplates.filter(t => t.category === selectedCategory);
+            
+            return (
+                <div className="gallery-screen">
+                    <div className="gallery-header">
+                        <button className="back-btn" onClick={onBack}>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M19 12H5M12 19L5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        </button>
+                        <h2>{lang === 'it' ? 'Galleria Template' : 'Template Gallery'}</h2>
+                    </div>
+                    
+                    <div className="category-filters">
+                        {categories.map(category => (
+                            <button 
+                                key={category.id}
+                                className={`category-filter ${selectedCategory === category.id ? 'active' : ''}`}
+                                onClick={() => setSelectedCategory(category.id)}
+                            >
+                                {category.name}
+                            </button>
+                        ))}
+                    </div>
+                    
+                    <div className="templates-grid">
+                        {filteredTemplates.map(template => (
+                            <div key={template.id} className="template-card">
+                                <div className="template-header">
+                                    <h3>{template.title}</h3>
+                                    <span className="template-category">{template.category}</span>
+                                </div>
+                                <p className="template-description">{template.description}</p>
+                                <div className="template-preview">
+                                    <pre>{template.template}</pre>
+                                </div>
+                                <button 
+                                    className="use-template-btn" 
+                                    onClick={() => onUseTemplate(template.template)}
+                                >
+                                    {lang === 'it' ? 'Usa Template' : 'Use Template'}
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+
+        const WelcomeScreen = ({ onSendMessage, lang, onOpenPromptOptimizer, onOpenGallery }) => {
             const suggestions = {
                 it: [ "Consigliami un'AI per creare immagini", "Quali sono le migliori AI per programmare?", "Quali sono le alternative a ChatGPT?"],
                 en: [ "Suggest an AI for creating images", "Which are the best AI for coding?", "What are ChatGPT's alternatives?" ]
@@ -2707,6 +3316,22 @@ return (
                                 {text}
                             </button>
                         ))}
+                        
+                        {/* NUOVI PULSANTI VERDI */}
+                        <div className="action-buttons-container">
+                            <button className="action-btn optimize-btn" onClick={onOpenPromptOptimizer}>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z" fill="currentColor"/>
+                                </svg>
+                                {lang === 'it' ? 'Ottimizza Prompt' : 'Optimize Prompt'}
+                            </button>
+                            <button className="action-btn gallery-btn" onClick={onOpenGallery}>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M4 6H2V20C2 21.1 2.9 22 4 22H18V20H4V6ZM20 2H8C6.9 2 6 2.9 6 4V16C6 17.1 6.9 18 8 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2ZM20 16H8V4H20V16Z" fill="currentColor"/>
+                                </svg>
+                                {lang === 'it' ? 'Galleria' : 'Gallery'}
+                            </button>
+                        </div>
                     </div>
                 </div>
             );
@@ -2719,6 +3344,8 @@ return (
             const [isLoading, setIsLoading] = useState(false);
             const [chatSession, setChatSession] = useState(null);
             const messagesEndRef = useRef(null);
+            const [currentScreen, setCurrentScreen] = useState('welcome'); // 'welcome', 'optimizer', 'gallery'
+            const [templateData, setTemplateData] = useState(null);
 
             const activeConversation = conversations[activeConversationId] || { messages: [] };
             const messages = activeConversation.messages;
@@ -2737,8 +3364,26 @@ return (
             
             useEffect(() => { initializeChat(); }, [initializeChat]);
 
+            const handleOpenPromptOptimizer = () => {
+                setCurrentScreen('optimizer');
+            };
+            
+            const handleOpenGallery = () => {
+                setCurrentScreen('gallery');
+            };
+            
+            const handleBackToWelcome = () => {
+                setCurrentScreen('welcome');
+                setTemplateData(null);
+            };
+
             const handleSendMessage = async (inputText) => {
                 if (!inputText.trim() || !chatSession) return;
+
+                // Se siamo nell'ottimizzatore, torniamo alla schermata welcome
+                if (currentScreen === 'optimizer') {
+                    setCurrentScreen('welcome');
+                }
 
                 const userMessage = { id: `user-${Date.now()}`, text: inputText, sender: MessageSender.USER };
                 const loadingMessage = { id: `loading-${Date.now()}`, sender: MessageSender.LOADING };
@@ -2811,16 +3456,42 @@ return (
             return (
                 <div id="chatbot-app-container">
                     <main>
-                        {!hasStartedChat ? (
-                            <WelcomeScreen onSendMessage={handleSendMessage} lang={lang} />
+                        {currentScreen === 'welcome' && !hasStartedChat ? (
+                            <WelcomeScreen 
+                                onSendMessage={handleSendMessage} 
+                                lang={lang} 
+                                onOpenPromptOptimizer={handleOpenPromptOptimizer}
+                                onOpenGallery={handleOpenGallery}
+                            />
+                        ) : currentScreen === 'optimizer' ? (
+                            <PromptOptimizerScreen 
+                                onBack={handleBackToWelcome}
+                                onSendMessage={handleSendMessage}
+                                lang={lang}
+                                initialData={templateData}
+                            />
+                        ) : currentScreen === 'gallery' ? (
+                            <GalleryScreen 
+                                onBack={handleBackToWelcome}
+                                lang={lang}
+                                onUseTemplate={(template) => {
+                                    const parsedData = parseTemplateToData(template);
+                                    setTemplateData(parsedData);
+                                    setCurrentScreen('optimizer');
+                                }}
+                            />
                         ) : (
-                            <div id="chat-messages">
-                                {messages.map((msg) => <ChatMessageDisplay key={msg.id} message={msg} tools={tools} onOpenDetail={onOpenDetail} lang={lang} />)}
-                            </div>
+                            <>
+                                <div id="chat-messages">
+                                    {messages.map((msg) => <ChatMessageDisplay key={msg.id} message={msg} tools={tools} onOpenDetail={onOpenDetail} lang={lang} />)}
+                                </div>
+                                <div ref={messagesEndRef} />
+                            </>
                         )}
-                        <div ref={messagesEndRef} />
                     </main>
-                    <ChatInput onSendMessage={handleSendMessage} isLoading={isLoading} lang={lang} />
+                    {currentScreen === 'welcome' || hasStartedChat ? (
+                        <ChatInput onSendMessage={handleSendMessage} isLoading={isLoading} lang={lang} />
+                    ) : null}
                 </div>
             );
         };
