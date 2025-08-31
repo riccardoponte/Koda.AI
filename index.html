@@ -2740,6 +2740,220 @@ body.light-mode .welcome-logo span:first-child {
             background-color: rgba(255, 107, 107, 0.1);
         }
 
+        /* NUOVO: Stili per l'iniziale nelle card dei suggerimenti */
+        .suggestion-initial-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .suggestion-initial {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--spotify-text);
+            line-height: 1;
+        }
+        .profile-page-container {
+            padding: 16px;
+            color: var(--spotify-text);
+        }
+
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .profile-username {
+            font-size: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer; /* Aggiunto per indicare che è cliccabile */
+        }
+
+        .profile-info {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 12px;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: var(--spotify-accent);
+            color: var(--spotify-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 20px;
+            flex-grow: 1;
+            justify-content: space-around;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            display: block;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .stat-label {
+            display: block;
+            font-size: 14px;
+            color: var(--spotify-text-secondary);
+        }
+
+        .profile-details {
+            margin-bottom: 16px;
+        }
+
+        .profile-fullname {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .profile-actions-buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .profile-btn {
+            flex: 1;
+            padding: 8px 12px;
+            background-color: var(--spotify-card);
+            border: none;
+            border-radius: 8px;
+            color: var(--spotify-text);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .profile-btn:hover {
+            background-color: var(--spotify-bg-light);
+        }
+
+        .library-shelves-container {
+            padding-top: 24px;
+        }
+
+        .library-shelf {
+            margin-bottom: 40px;
+        }
+
+        .library-shelf-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--spotify-text);
+            margin: 0 0 20px 16px;
+        }
+
+        /* Stile per gli item sullo scaffale (verticale, tipo carta) */
+        .tool-shelf-item {
+            flex: 0 0 130px;
+            cursor: pointer;
+            scroll-snap-align: start;
+            transition: background-color 0.2s ease-in-out;
+            border-radius: 8px;
+            padding: 8px;
+        }
+        .tool-shelf-item:hover {
+            background-color: var(--spotify-bg-light);
+        }
+
+        .tool-shelf-logo-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 2 / 3;
+            border-radius: 6px;
+            background-color: var(--spotify-card);
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+        .tool-shelf-logo-container .tool-logo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .tool-shelf-logo-container .edit-icon {
+            width: 28px;
+            height: 28px;
+            font-size: 16px;
+        }
+
+        .tool-shelf-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--spotify-text);
+            line-height: 1.3;
+        }
+
+        /* Stile specifico per le card dei suggerimenti */
+        .suggestion-shelf-item {
+            flex: 0 0 220px; /* Suggerimenti più larghi */
+            height: 195px; /* Altezza fissa per allineare le card */
+            cursor: pointer;
+            scroll-snap-align: start;
+            border-radius: 8px;
+            padding: 16px;
+            background-color: var(--spotify-card);
+            border: 1px solid var(--spotify-bg-light);
+            display: flex;
+            flex-direction: column;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+        .suggestion-shelf-item:hover {
+            border-color: var(--spotify-accent);
+            transform: translateY(-2px);
+        }
+
+        .suggestion-shelf-app-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--spotify-text);
+            margin-bottom: 8px;
+        }
+
+        .suggestion-shelf-desc {
+            font-size: 13px;
+            color: var(--spotify-text-secondary);
+            line-height: 1.4;
+            flex-grow: 1; /* Occupa lo spazio disponibile */
+            overflow: hidden;
+            /* Tronca la descrizione per non farla debordare */
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 4; /* Limita a 4 righe */
+            -webkit-box-orient: vertical;
+        }
+
+        .suggestion-shelf-category {
+            margin-top: auto;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--spotify-text);
+            background-color: var(--spotify-bg-light);
+            padding: 4px 8px;
+            border-radius: 20px;
+            align-self: flex-start;
+        }
+
     </style>
     <!-- SCRIPT AGGIUNTI PER REACT E BABEL -->
     <script type="importmap">
@@ -3006,8 +3220,8 @@ return (
         
         const WelcomeScreen = ({ onSendMessage, lang }) => {
             const suggestions = {
-                it: [ "Consigliami un'AI per creare immagini", "Quali sono le alternative a ChatGPT?"],
-                en: [ "Suggest an AI for creating images", "What are ChatGPT's alternatives?" ]
+                it: [ "Consigliami un'AI per programmare","Consigliami un'AI per creare immagini", "Quali sono le alternative a ChatGPT?"],
+                en: [ "Suggest an AI for programming", "Suggest an AI for creating images", "What are ChatGPT's alternatives?" ]
             };
 
             return (
@@ -4643,6 +4857,12 @@ return (
                 librarySuggested: "Suggeriti",
                 editProfile: "Modifica profilo",
                 viewChats: "Visualizza chat",
+                // NUOVE TRADUZIONI LIBRERIA
+                libraryFavorites: "Preferiti",
+                libraryCustom: "Custom",
+                librarySuggested: "Suggeriti",
+                editProfile: "Modifica profilo",
+                viewChats: "Visualizza chat",
                 // NUOVE TRADUZIONI PER PROMPT CHAT
                 chatPromptTitle: "Chatta con altri utenti",
                 chatPromptText: "Accedi o registrati per iniziare a chattare e scoprire i suggerimenti degli altri.",
@@ -4762,6 +4982,12 @@ return (
                 filterAllChats: "All",
                 writeMessage: "Write a message...",
                 sendError: "Error sending message",
+                // NEW LIBRARY TRANSLATIONS
+                libraryFavorites: "Favorites",
+                libraryCustom: "Custom",
+                librarySuggested: "Suggested",
+                editProfile: "Edit profile",
+                viewChats: "View chats",
                 // NEW LIBRARY TRANSLATIONS
                 libraryFavorites: "Favorites",
                 libraryCustom: "Custom",
