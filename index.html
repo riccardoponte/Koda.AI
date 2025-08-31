@@ -9,24 +9,26 @@
 
         /* --- STILE CSS ISPIRATO A SPOTIFY (Completo e Funzionante) --- */
         :root {
-            --spotify-bg: #121212;
-            --spotify-bg-light: #181818;
-            --spotify-card: #282828;
-            --spotify-text: #ffffff;
-            --spotify-text-secondary: #b3b3b3;
-            --spotify-accent: #1db954;
-            --font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-            --bottom-nav-height: 70px;
-        }
+    --spotify-bg: #121212;
+    --spotify-bg-light: #181818;
+    --spotify-card: #282828;
+    --spotify-ai-bubble-bg: #3e3e3e; /* NUOVO: Colore distinto per le bolle di testo dell'AI in dark mode */
+    --spotify-text: #ffffff;
+    --spotify-text-secondary: #b3b3b3;
+    --spotify-accent: #1db954;
+    --font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    --bottom-nav-height: 70px;
+}
         
         /* NUOVO: Stili per la modalità Giorno (Light Mode) */
         body.light-mode {
-            --spotify-bg: #ffffff;
-            --spotify-bg-light: #f5f5f5;
-            --spotify-card: #e9e9e9;
-            --spotify-text: #121212;
-            --spotify-text-secondary: #535353;
-        }
+    --spotify-bg: #ffffff;
+    --spotify-bg-light: #f5f5f5;
+    --spotify-card: #e9e9e9;
+    --spotify-ai-bubble-bg: #e9e9e9; /* NUOVO: In light mode, le bolle AI usano un grigio chiaro */
+    --spotify-text: #121212;
+    --spotify-text-secondary: #535353;
+}
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html, body {
@@ -60,6 +62,11 @@
         
         #app-container { height: 100vh; display: flex; flex-direction: column; }
         #main-content { flex: 1; overflow-y: auto; padding-bottom: var(--bottom-nav-height); }
+
+/* NUOVO: Blocca lo scroll della pagina quando la welcome screen del chatbot è visibile */
+#main-content:has(#welcome-screen) {
+    overflow-y: hidden;
+}
         .top-bar { 
             padding: 16px; 
             display: flex; 
@@ -426,7 +433,7 @@
         .category-card h3 { position: relative; z-index: 2; color: #fff; }
         .category-card .logo-container { position: absolute; bottom: -10px; right: -20px; width: 80px; height: 80px; transform: rotate(25deg); z-index: 1; border-radius: 8px; background-color: rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .category-card .tool-logo { width: 100%; height: 100%; object-fit: cover; }
-        .search-bar-container { padding: 0 16px 16px; }
+        .search-bar-container { padding: 16px 16px 16px; }
         #search-input { width: 100%; padding: 14px 16px; font-size: 16px; background-color: var(--spotify-card); border: none; border-radius: 8px; color: var(--spotify-text); }
         #search-input::placeholder { color: var(--spotify-text-secondary); }
         body.light-mode #search-input { background-color: var(--spotify-card); color: var(--spotify-text); }
@@ -546,9 +553,9 @@ body.light-mode .welcome-logo span:first-child {
         .prompt-starter-container { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; max-width: 400px; }
         .prompt-starter-btn { background-color: var(--spotify-card); color: var(--spotify-text); border: 1px solid rgba(128,128,128,0.2); border-radius: 8px; padding: 12px 16px; font-size: 14px; font-weight: 500; cursor: pointer; width: 100%; text-align: left; transition: background-color 0.2s; }
         .prompt-starter-btn:hover { background-color: var(--spotify-bg-light); }
-        #chat-messages { width: 100%; display: flex; flex-direction: column; gap: 12px; }
+        #chat-messages { width: 100%; display: flex; flex-direction: column; gap: 12px; padding-top: 16px; /* NUOVO: Aggiunge spazio per evitare che il primo messaggio sia coperto dall'header */ }
         .chat-bubble { padding: 12px 16px; border-radius: 20px; max-width: 85%; line-height: 1.5; word-wrap: break-word; }
-        .chat-bubble.ai { background-color: var(--spotify-card); align-self: flex-start; border-bottom-left-radius: 4px; }
+        .chat-bubble.ai { background-color: var(--spotify-ai-bubble-bg); align-self: flex-start; border-bottom-left-radius: 4px; }
         .chat-bubble.user { background-color: var(--spotify-accent); color: #000; align-self: flex-end; border-bottom-right-radius: 4px; }
         .chat-bubble.system { background-color: transparent; color: var(--spotify-text-secondary); align-self: center; text-align: center; font-style: normal; font-size: 14px; width: 100%; max-width: 100%; padding: 0 16px 8px; }
         .chat-bubble.error { background-color: #8c1a1a; color: var(--spotify-text); align-self: flex-start; border-bottom-left-radius: 4px; }
@@ -2036,9 +2043,9 @@ body.light-mode .welcome-logo span:first-child {
         }
 
         .chat-search-container {
-            padding: 0 16px 16px 16px;
-            background-color: var(--spotify-bg);
-        }
+    padding: 16px; /* MODIFICATO: Aggiunto padding verticale per dare più spazio */
+    background-color: var(--spotify-bg);
+}
 
         .chat-search-input {
             width: 100%;
@@ -2585,44 +2592,47 @@ body.light-mode .welcome-logo span:first-child {
 
         const ChatMessageDisplay = ({ message, tools, onOpenDetail, lang }) => {
             const getMessageClass = () => `chat-bubble ${message.sender}`;
-            
-            if (message.sender === MessageSender.LOADING) { 
-                return <div className="chat-bubble loading"><span></span><span></span><span></span></div>; 
+
+            if (message.sender === MessageSender.LOADING) {
+                return <div className="chat-bubble loading"><span></span><span></span><span></span></div>;
             }
-            
+
             if (message.sender === MessageSender.MODEL) {
-                // Use localized tool names for regex matching
-                // Get all tools (static + user's) via the global function
                 const allTools = window.getAllToolsForCurrentUser ? window.getAllToolsForCurrentUser() : window.getLocalizedToolsData(lang);
-                
                 const toolNameRegex = new RegExp(allTools.map(t => t.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'g');
                 const mentionedToolNames = [...new Set(message.text.match(toolNameRegex))];
-                
-                if (mentionedToolNames.length > 0 && message.text.includes('•')) {
-                    // Find the original tool objects based on localized names (or user tool names)
+                const isToolListResponse = mentionedToolNames.length > 0 && message.text.includes('•');
+
+                if (isToolListResponse) {
+                    // Logica esistente per renderizzare le card degli strumenti
                     const mentionedTools = allTools.filter(tool => mentionedToolNames.includes(tool.name));
-                    
                     const lines = message.text.trim().split('\n');
                     const introLine = lines.find(line => !line.trim().startsWith('•'));
-                    const hasToolList = lines.some(line => line.trim().startsWith('•'));
+                    const introContent = introLine ? formatMessageContent(introLine) : '';
 
-                    if (hasToolList) {
-                        const introContent = introLine ? formatMessageContent(introLine) : '';
-                        return (
-                            <>
-                                {introLine && <div className="chat-bubble ai" dangerouslySetInnerHTML={{ __html: introContent }}></div>}
-                                <div className="chat-bubble ai" style={{background: 'transparent', padding: 0, marginTop: introLine ? '8px' : '0' }}>
-                                    <div className="chat-tool-card-container">
-                                        {mentionedTools.map(tool => <ToolCardMessage key={tool.id} tool={tool} onOpenDetail={onOpenDetail} lang={lang} />)}
-                                    </div>
+                    return (
+                        <>
+                            {introLine && <div className="chat-bubble ai" dangerouslySetInnerHTML={{ __html: introContent }}></div>}
+                            <div className="chat-bubble ai" style={{ background: 'transparent', padding: 0, marginTop: introLine ? '8px' : '0' }}>
+                                <div className="chat-tool-card-container">
+                                    {mentionedTools.map(tool => <ToolCardMessage key={tool.id} tool={tool} onOpenDetail={onOpenDetail} lang={lang} />)}
                                 </div>
-                            </>
-                        );
-                    }
+                            </div>
+                        </>
+                    );
+                } else {
+                    // NUOVA LOGICA: Per i messaggi AI di solo testo (come le domande di chiarimento)
+                    // Renderizza il testo con un contenitore trasparente, facendolo apparire fluttuante.
+                    // NUOVA LOGICA: Per i messaggi AI di solo testo (come le domande di chiarimento)
+// Aggiunge una classe specifica per gestirne lo stile in CSS.
+const content = formatMessageContent(message.text);
+return (
+    <div className="chat-bubble ai is-floating-text" dangerouslySetInnerHTML={{ __html: content }}></div>
+);
                 }
             }
-            
-            // Fallback for normal messages (including clarifications or non-list responses)
+
+            // Fallback per tutti gli altri tipi di messaggi (USER, ERROR, SYSTEM)
             const content = formatMessageContent(message.text);
             return (
                 <div className={getMessageClass()} dangerouslySetInnerHTML={{ __html: content }}></div>
