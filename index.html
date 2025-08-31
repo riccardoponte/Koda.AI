@@ -2210,205 +2210,69 @@ body.light-mode .welcome-logo span:first-child {
             color: var(--spotify-text);
             line-height: 1;
         }
-        .profile-page-container {
-            padding: 16px;
-            color: var(--spotify-text);
+        /* --- NUOVI STILI PER LA LIBRERIA (STILE SPOTIFY) --- */
+        #library-filters-container {
+            padding: 8px 16px 16px 16px;
+            position: sticky;
+            top: 64px; /* Altezza della top-bar */
+            background-color: var(--spotify-bg);
+            z-index: 9;
+        }
+        
+        #library-content-list .tool-card-list {
+            padding: 8px;
+            border-radius: 8px;
+            transition: background-color 0.2s ease;
+        }
+        #library-content-list .tool-card-list:hover {
+            background-color: var(--spotify-bg-light);
         }
 
-        .profile-header {
+        /* Stile per la card dei suggerimenti nella nuova lista verticale */
+        .suggestion-list-item {
+            background-color: var(--spotify-card);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 24px;
         }
-        
-        .profile-username {
-            font-size: 20px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            cursor: pointer; /* Aggiunto per indicare che è cliccabile */
-        }
-
-        .profile-info {
-            display: flex;
-            align-items: center;
-            gap: 24px;
-            margin-bottom: 12px;
-        }
-
-        .profile-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background-color: var(--spotify-accent);
-            color: var(--spotify-bg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            font-weight: bold;
-            flex-shrink: 0;
-        }
-
-        .profile-stats {
-            display: flex;
-            gap: 20px;
+        .suggestion-list-info {
             flex-grow: 1;
-            justify-content: space-around;
         }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-number {
-            display: block;
-            font-size: 18px;
-            font-weight: 600;
-        }
-
-        .stat-label {
-            display: block;
-            font-size: 14px;
-            color: var(--spotify-text-secondary);
-        }
-
-        .profile-details {
-            margin-bottom: 16px;
-        }
-
-        .profile-fullname {
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .profile-actions-buttons {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
-        }
-
-        .profile-btn {
-            flex: 1;
-            padding: 8px 12px;
-            background-color: var(--spotify-card);
-            border: none;
-            border-radius: 8px;
-            color: var(--spotify-text);
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .profile-btn:hover {
-            background-color: var(--spotify-bg-light);
-        }
-
-        .library-shelves-container {
-            padding-top: 24px;
-        }
-
-        .library-shelf {
-            margin-bottom: 40px;
-        }
-
-        .library-shelf-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--spotify-text);
-            margin: 0 0 20px 16px;
-        }
-
-        /* Stile per gli item sullo scaffale (verticale, tipo carta) */
-        .tool-shelf-item {
-            flex: 0 0 130px;
-            cursor: pointer;
-            scroll-snap-align: start;
-            transition: background-color 0.2s ease-in-out;
-            border-radius: 8px;
-            padding: 8px;
-        }
-        .tool-shelf-item:hover {
-            background-color: var(--spotify-bg-light);
-        }
-
-        .tool-shelf-logo-container {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 2 / 3;
-            border-radius: 6px;
-            background-color: var(--spotify-card);
-            margin-bottom: 12px;
-            overflow: hidden;
-        }
-        .tool-shelf-logo-container .tool-logo {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .tool-shelf-logo-container .edit-icon {
-            width: 28px;
-            height: 28px;
+        .suggestion-list-app-name {
             font-size: 16px;
-        }
-
-        .tool-shelf-name {
-            font-size: 13px;
             font-weight: 600;
-            color: var(--spotify-text);
-            line-height: 1.3;
+            margin-bottom: 4px;
         }
-
-        /* Stile specifico per le card dei suggerimenti */
-        .suggestion-shelf-item {
-            flex: 0 0 220px; /* Suggerimenti più larghi */
-            height: 195px; /* Altezza fissa per allineare le card */
-            cursor: pointer;
-            scroll-snap-align: start;
-            border-radius: 8px;
-            padding: 16px;
-            background-color: var(--spotify-card);
-            border: 1px solid var(--spotify-bg-light);
-            display: flex;
-            flex-direction: column;
-            transition: border-color 0.2s, transform 0.2s;
-        }
-        .suggestion-shelf-item:hover {
-            border-color: var(--spotify-accent);
-            transform: translateY(-2px);
-        }
-
-        .suggestion-shelf-app-name {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--spotify-text);
-            margin-bottom: 8px;
-        }
-
-        .suggestion-shelf-desc {
+        .suggestion-list-desc {
             font-size: 13px;
             color: var(--spotify-text-secondary);
             line-height: 1.4;
-            flex-grow: 1; /* Occupa lo spazio disponibile */
-            overflow: hidden;
-            /* Tronca la descrizione per non farla debordare */
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 4; /* Limita a 4 righe */
-            -webkit-box-orient: vertical;
         }
-
-        .suggestion-shelf-category {
-            margin-top: auto;
-            font-size: 12px;
+        .suggestion-list-actions .remove-suggestion-btn {
+             background: none;
+             border: none;
+             color: var(--spotify-text-secondary);
+             font-size: 20px;
+             cursor: pointer;
+             padding: 8px;
+             border-radius: 50%;
+             transition: color 0.2s, background-color 0.2s;
+        }
+        .suggestion-list-actions .remove-suggestion-btn:hover {
+            color: #ff6b6b;
+            background-color: rgba(255, 107, 107, 0.1);
+        }
+        /* NUOVO: Stile per il messaggio di stato vuoto nella Libreria */
+        .library-empty-state-prompt {
+            padding: 40px 20px;
+            text-align: center;
+            font-size: 15px;
             font-weight: 500;
-            color: var(--spotify-text);
-            background-color: var(--spotify-bg-light);
-            padding: 4px 8px;
-            border-radius: 20px;
-            align-self: flex-start;
+            color: var(--spotify-accent);
+            line-height: 1.6;
         }
 
         /* --- STILI PER IL "CURATED FEED" (NUOVO LAYOUT DI RICERCA) --- */
@@ -2753,205 +2617,69 @@ body.light-mode .welcome-logo span:first-child {
             color: var(--spotify-text);
             line-height: 1;
         }
-        .profile-page-container {
-            padding: 16px;
-            color: var(--spotify-text);
+        /* --- NUOVI STILI PER LA LIBRERIA (STILE SPOTIFY) --- */
+        #library-filters-container {
+            padding: 8px 16px 16px 16px;
+            position: sticky;
+            top: 64px; /* Altezza della top-bar */
+            background-color: var(--spotify-bg);
+            z-index: 9;
+        }
+        
+        #library-content-list .tool-card-list {
+            padding: 8px;
+            border-radius: 8px;
+            transition: background-color 0.2s ease;
+        }
+        #library-content-list .tool-card-list:hover {
+            background-color: var(--spotify-bg-light);
         }
 
-        .profile-header {
+        /* Stile per la card dei suggerimenti nella nuova lista verticale */
+        .suggestion-list-item {
+            background-color: var(--spotify-card);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 24px;
         }
-        
-        .profile-username {
-            font-size: 20px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            cursor: pointer; /* Aggiunto per indicare che è cliccabile */
-        }
-
-        .profile-info {
-            display: flex;
-            align-items: center;
-            gap: 24px;
-            margin-bottom: 12px;
-        }
-
-        .profile-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background-color: var(--spotify-accent);
-            color: var(--spotify-bg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            font-weight: bold;
-            flex-shrink: 0;
-        }
-
-        .profile-stats {
-            display: flex;
-            gap: 20px;
+        .suggestion-list-info {
             flex-grow: 1;
-            justify-content: space-around;
         }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-number {
-            display: block;
-            font-size: 18px;
-            font-weight: 600;
-        }
-
-        .stat-label {
-            display: block;
-            font-size: 14px;
-            color: var(--spotify-text-secondary);
-        }
-
-        .profile-details {
-            margin-bottom: 16px;
-        }
-
-        .profile-fullname {
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .profile-actions-buttons {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
-        }
-
-        .profile-btn {
-            flex: 1;
-            padding: 8px 12px;
-            background-color: var(--spotify-card);
-            border: none;
-            border-radius: 8px;
-            color: var(--spotify-text);
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .profile-btn:hover {
-            background-color: var(--spotify-bg-light);
-        }
-
-        .library-shelves-container {
-            padding-top: 24px;
-        }
-
-        .library-shelf {
-            margin-bottom: 40px;
-        }
-
-        .library-shelf-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--spotify-text);
-            margin: 0 0 20px 16px;
-        }
-
-        /* Stile per gli item sullo scaffale (verticale, tipo carta) */
-        .tool-shelf-item {
-            flex: 0 0 130px;
-            cursor: pointer;
-            scroll-snap-align: start;
-            transition: background-color 0.2s ease-in-out;
-            border-radius: 8px;
-            padding: 8px;
-        }
-        .tool-shelf-item:hover {
-            background-color: var(--spotify-bg-light);
-        }
-
-        .tool-shelf-logo-container {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 2 / 3;
-            border-radius: 6px;
-            background-color: var(--spotify-card);
-            margin-bottom: 12px;
-            overflow: hidden;
-        }
-        .tool-shelf-logo-container .tool-logo {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .tool-shelf-logo-container .edit-icon {
-            width: 28px;
-            height: 28px;
+        .suggestion-list-app-name {
             font-size: 16px;
-        }
-
-        .tool-shelf-name {
-            font-size: 13px;
             font-weight: 600;
-            color: var(--spotify-text);
-            line-height: 1.3;
+            margin-bottom: 4px;
         }
-
-        /* Stile specifico per le card dei suggerimenti */
-        .suggestion-shelf-item {
-            flex: 0 0 220px; /* Suggerimenti più larghi */
-            height: 195px; /* Altezza fissa per allineare le card */
-            cursor: pointer;
-            scroll-snap-align: start;
-            border-radius: 8px;
-            padding: 16px;
-            background-color: var(--spotify-card);
-            border: 1px solid var(--spotify-bg-light);
-            display: flex;
-            flex-direction: column;
-            transition: border-color 0.2s, transform 0.2s;
-        }
-        .suggestion-shelf-item:hover {
-            border-color: var(--spotify-accent);
-            transform: translateY(-2px);
-        }
-
-        .suggestion-shelf-app-name {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--spotify-text);
-            margin-bottom: 8px;
-        }
-
-        .suggestion-shelf-desc {
+        .suggestion-list-desc {
             font-size: 13px;
             color: var(--spotify-text-secondary);
             line-height: 1.4;
-            flex-grow: 1; /* Occupa lo spazio disponibile */
-            overflow: hidden;
-            /* Tronca la descrizione per non farla debordare */
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 4; /* Limita a 4 righe */
-            -webkit-box-orient: vertical;
         }
-
-        .suggestion-shelf-category {
-            margin-top: auto;
-            font-size: 12px;
+        .suggestion-list-actions .remove-suggestion-btn {
+             background: none;
+             border: none;
+             color: var(--spotify-text-secondary);
+             font-size: 20px;
+             cursor: pointer;
+             padding: 8px;
+             border-radius: 50%;
+             transition: color 0.2s, background-color 0.2s;
+        }
+        .suggestion-list-actions .remove-suggestion-btn:hover {
+            color: #ff6b6b;
+            background-color: rgba(255, 107, 107, 0.1);
+        }
+        /* NUOVO: Stile per il messaggio di stato vuoto nella Libreria */
+        .library-empty-state-prompt {
+            padding: 40px 20px;
+            text-align: center;
+            font-size: 15px;
             font-weight: 500;
-            color: var(--spotify-text);
-            background-color: var(--spotify-bg-light);
-            padding: 4px 8px;
-            border-radius: 20px;
-            align-self: flex-start;
+            color: var(--spotify-accent);
+            line-height: 1.6;
         }
 
     </style>
@@ -6616,7 +6344,7 @@ return (
                         console.error("User chat mount function not found.");
                     }
                 }
-            } else if (currentView === 'favorites') { // Questa vista è la nostra nuova Libreria
+            } else if (currentView === 'favorites') { // NUOVO: Vista Libreria stile Spotify
                 if (isGuest) {
                     contentArea.innerHTML = `
                         <div class="auth-prompt-card">
@@ -6629,170 +6357,98 @@ return (
                         </div>
                     `;
                 } else {
-                    // --- Informazioni Profilo ---
-                    const userInitial = currentUser.nickname ? currentUser.nickname.charAt(0).toUpperCase() : 'P';
-                    const userNickname = currentUser.nickname || 'rickiponte';
-                    const userFullName = currentUser.fullName || currentUser.nickname;
-                    
-                    const profileContentHTML = `
-                        <div class="profile-page-container">
-                             <div class="profile-header">
-                                <div class="profile-username" data-action="open-settings">${userNickname} <svg height="16" width="16" viewBox="0 0 24 24"><path fill="currentColor" d="M7 10l5 5 5-5z"></path></svg></div>
-                            </div>
-                            <div class="profile-info">
-                                <div class="profile-avatar">${userInitial}</div>
-                                <div class="profile-stats">
-                                    <div class="stat-item">
-                                        <span class="stat-number">${currentUser.favorites.length}</span>
-                                        <span class="stat-label" data-translate="libraryFavorites">${t.libraryFavorites}</span>
-                                    </div>
-                                    <div class="stat-item">
-                                        <span class="stat-number">${(currentUser.userTools || []).length}</span>
-                                        <span class="stat-label" data-translate="libraryCustom">${t.libraryCustom}</span>
-                                    </div>
-                                    <div class="stat-item">
-                                        <span class="stat-number">${(currentUser.aiSuggestions || []).length}</span>
-                                        <span class="stat-label" data-translate="librarySuggested">${t.librarySuggested}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="profile-details">
-                                <div class="profile-fullname">${userFullName}</div>
-                            </div>
-                            <div class="profile-actions-buttons">
-                                <button class="profile-btn" data-action="open-settings" data-translate="editProfile">${t.editProfile}</button>
-                                <button class="profile-btn" data-action="navigate" data-page="user-chats" data-translate="viewChats">${t.viewChats}</button>
+                    // --- STRUTTURA LIBRERIA CON FILTRI ---
+                    const filtersHTML = `
+                        <div id="library-filters-container">
+                            <div class="filter-pills" id="library-filters">
+                                <button class="pill-btn ${libraryTab === 'favorites' ? 'active' : ''}" data-action="set-library-tab" data-tab="favorites">${t.libraryFavorites}</button>
+                                <button class="pill-btn ${libraryTab === 'custom' ? 'active' : ''}" data-action="set-library-tab" data-tab="custom">${t.libraryCustom}</button>
+                                <button class="pill-btn ${libraryTab === 'suggested' ? 'active' : ''}" data-action="set-library-tab" data-tab="suggested">${t.librarySuggested}</button>
                             </div>
                         </div>
                     `;
-                    contentArea.innerHTML = profileContentHTML;
-
-                    // Aggiungi un contenitore per gli scaffali che verrà riempito dopo il fetch
-                    const shelvesContainer = document.createElement('div');
-                    shelvesContainer.className = 'library-shelves-container';
-                    contentArea.appendChild(shelvesContainer);
-
-                    // --- NUOVA LOGICA ASINCRONA PER GLI SCAFFALI ---
-                    (async () => {
-                        shelvesContainer.innerHTML = `<div class="chat-bubble loading" style="margin: 40px auto; background: transparent;"><span></span><span></span><span></span></div>`;
-
-                        let shelvesHTML = '';
-                        const localTools = getAllToolsForCurrentUser();
-                        const favoriteIds = currentUser.favorites || [];
-
-                        // Mappa per memorizzare i dati degli utenti recuperati ed evitare chiamate duplicate
-                        const fetchedUsersCache = new Map();
-
-                        // Recupera tutti i dati degli strumenti preferiti in un'unica operazione
-                        const favoriteToolsPromises = favoriteIds.map(async (toolId) => {
-                            // Cerca prima localmente
-                            let tool = localTools.find(t => t.id === toolId);
-                            if (tool) return tool;
-
-                            // Se non trovato e è un'app utente, recuperala
-                            if (toolId.startsWith('user-')) {
-                                const creatorId = toolId.split('-')[1];
-                                if (!creatorId) return null;
-
-                                let creatorData;
-                                if (fetchedUsersCache.has(creatorId)) {
-                                    creatorData = fetchedUsersCache.get(creatorId);
-                                } else {
-                                    const userDocRef = doc(db, "users", creatorId);
-                                    const userDocSnap = await getDoc(userDocRef);
-                                    creatorData = userDocSnap.exists() ? userDocSnap.data() : null;
-                                    fetchedUsersCache.set(creatorId, creatorData);
-                                }
-                                
-                                if (creatorData) {
-                                    const remoteTool = (creatorData.userTools || []).find(t => t.id === toolId);
-                                    if(remoteTool) return remoteTool;
-                                }
-                            }
-                            return null; // Strumento non trovato
-                        });
-
-                        const resolvedFavoriteTools = (await Promise.all(favoriteToolsPromises)).filter(Boolean);
-
-                        // Scaffale 1: Preferiti (ora con tutti i dati)
-                        if (resolvedFavoriteTools.length > 0) {
-                            shelvesHTML += `
-                                <div class="library-shelf">
-                                    <h3 class="library-shelf-title">${t.libraryFavorites}</h3>
-                                    <div class="horizontal-scroll-container">
-                                        ${resolvedFavoriteTools.map(tool => `
-                                            <div class="tool-shelf-item" data-id="${tool.id}">
-                                                <div class="tool-shelf-logo-container"><img src="${tool.logoUrl}" class="tool-logo" alt="${tool.name}" loading="lazy"></div>
-                                                <div class="tool-shelf-name">${tool.name}</div>
-                                            </div>
-                                        `).join('')}
-                                    </div>
-                                </div>
-                            `;
-                        }
-
-                        // Scaffale 2: App Custom (logica invariata)
-                        const userTools = currentUser.userTools || [];
-                        if (userTools.length > 0) {
-                            shelvesHTML += `
-                                <div class="library-shelf">
-                                    <h3 class="library-shelf-title">${t.libraryCustom}</h3>
-                                    <div class="horizontal-scroll-container">
-                                        ${userTools.map(tool => `
-                                            <div class="tool-shelf-item" data-id="${tool.id}">
-                                                <div class="tool-shelf-logo-container">
-                                                    <img src="${tool.logoUrl}" class="tool-logo" alt="${tool.name}" loading="lazy">
-                                                    <div class="edit-icon" data-action="open-edit-app-modal" data-id="${tool.id}" title="${t.editUserTool}"> ${pencilIcon} </div>
-                                                </div>
-                                                <div class="tool-shelf-name">${tool.name}</div>
-                                            </div>
-                                        `).join('')}
-                                    </div>
-                                </div>
-                            `;
-                        }
-                        
-                        // Scaffale 3: Suggerimenti (logica invariata)
-                        const suggestions = currentUser.aiSuggestions || [];
-                        if (suggestions.length > 0) {
-                             shelvesHTML += `
-                                <div class="library-shelf">
-                                    <h3 class="library-shelf-title">${t.librarySuggested}</h3>
-                                    <div class="horizontal-scroll-container">
-                                        ${suggestions.map(suggestion => {
-                                            const initial = suggestion.appName ? suggestion.appName.charAt(0).toUpperCase() : '?';
-                                            return `
-                                                <div class="tool-shelf-item" title="${suggestion.appName}">
-                                                    <div class="tool-shelf-logo-container suggestion-initial-container">
-                                                        <span class="suggestion-initial">${initial}</span>
-                                                        <div class="edit-icon" data-action="remove-ai-suggestion" data-id="${suggestion.id}" title="Rimuovi suggerimento: ${suggestion.appName}">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" height="14" viewBox="0 0 24 24" width="14" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
-                                                        </div>
-                                                    </div>
-                                                    <div class="tool-shelf-name">${suggestion.appName}</div>
-                                                </div>
-                                            `;
-                                        }).join('')}
-                                    </div>
-                                </div>
-                            `;
-                        }
-
-                        // Sostituisci il loader con il contenuto finale
-                        shelvesContainer.innerHTML = shelvesHTML;
-
-                    })(); // Chiusura e esecuzione della funzione asincrona
-
-                    // Pulsanti Fluttuanti (FABs)
+                    
+                    const contentListHTML = `<div id="library-content-list" class="list-container" style="padding: 0 16px;"></div>`;
+                    
+                    // FABs per aggiungere contenuti
                     const actionButtonsHTML = `
                         <button class="floating-action-btn" data-action="open-add-app-modal" title="${t.addCustomApp}" style="bottom: calc(var(--bottom-nav-height) + 16px);">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"></path></svg>
+                           <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"></path></svg>
                         </button>
                         <button class="floating-action-btn" data-action="add-ai-suggestion" title="${t.addAiSuggestionTitle}" style="bottom: calc(var(--bottom-nav-height) + 88px);">
                              <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"></path></svg>
                         </button>
                     `;
-                    contentArea.insertAdjacentHTML('beforeend', actionButtonsHTML);
+
+                    contentArea.innerHTML = filtersHTML + contentListHTML + actionButtonsHTML;
+
+                    // --- FUNZIONE PER RENDERIZZARE IL CONTENUTO DELLA SCHEDA ATTIVA ---
+                    const renderLibraryContent = async (tab) => {
+                        const listContainer = document.getElementById('library-content-list');
+                        if (!listContainer) return;
+                        listContainer.innerHTML = `<div class="chat-bubble loading" style="margin: 40px auto; background: transparent;"><span></span><span></span><span></span></div>`;
+
+                        let contentHTML = '';
+
+                        if (tab === 'favorites') {
+                            const favoriteIds = currentUser.favorites || [];
+                            if (favoriteIds.length > 0) {
+                                // Logica asincrona per recuperare i dati completi dei preferiti
+                                const localTools = getAllToolsForCurrentUser();
+                                const fetchedUsersCache = new Map();
+                                const favoriteToolsPromises = favoriteIds.map(async (toolId) => {
+                                    let tool = localTools.find(t => t.id === toolId);
+                                    if (tool) return tool;
+                                    if (toolId.startsWith('user-')) {
+                                        const creatorId = toolId.split('-')[1];
+                                        if (!creatorId) return null;
+                                        let creatorData = fetchedUsersCache.get(creatorId);
+                                        if (!creatorData) {
+                                            const userDocRef = doc(db, "users", creatorId);
+                                            const userDocSnap = await getDoc(userDocRef);
+                                            creatorData = userDocSnap.exists() ? userDocSnap.data() : null;
+                                            fetchedUsersCache.set(creatorId, creatorData);
+                                        }
+                                        if (creatorData) return (creatorData.userTools || []).find(t => t.id === toolId) || null;
+                                    }
+                                    return null;
+                                });
+                                const resolvedFavoriteTools = (await Promise.all(favoriteToolsPromises)).filter(Boolean);
+                                contentHTML = resolvedFavoriteTools.map(tool => createListCard(tool, 'favorites')).join('');
+                            } else {
+                                contentHTML = `<div id="empty-state">${t.emptyFavorites}</div>`;
+                            }
+                        } else if (tab === 'custom') {
+                            const userTools = currentUser.userTools || [];
+                            if (userTools.length > 0) {
+                                contentHTML = userTools.map(tool => createListCard(tool, 'custom')).join('');
+                            } else {
+                                contentHTML = `<div id="empty-state">${t.emptyUserTools}</div>`;
+                            }
+                        } else if (tab === 'suggested') {
+                            const suggestions = currentUser.aiSuggestions || [];
+                            if (suggestions.length > 0) {
+                                contentHTML = suggestions.map(s => `
+                                    <div class="suggestion-list-item" data-id="${s.id}">
+                                        <div class="suggestion-list-info">
+                                            <div class="suggestion-list-app-name">${s.appName}</div>
+                                            <div class="suggestion-list-desc">${s.description}</div>
+                                        </div>
+                                        <div class="suggestion-list-actions">
+                                            <button class="remove-suggestion-btn" data-action="remove-ai-suggestion" data-id="${s.id}" title="${t.removeAiSuggestion}">
+                                                <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                                            </button>
+                                        </div>
+                                    </div>`).join('');
+                            } else {
+                                contentHTML = `<div id="empty-state">${t.noSuggestions}</div>`;
+                            }
+                        }
+                        listContainer.innerHTML = contentHTML;
+                    };
+
+                    // Renderizza il contenuto della scheda iniziale, con un timeout per garantire che il DOM sia pronto
+                    setTimeout(() => renderLibraryContent(libraryTab), 0);
                 }
                 el.mainContent.appendChild(contentArea);
             }
@@ -8319,11 +7975,12 @@ const viewUserSuggestions = async (userId, userNickname) => {
                     case 'toggle-password-visibility':
                         handlePasswordVisibilityToggle(actionTarget);
                         break;
+                    // NUOVO: Gestisce i filtri della Libreria
                     case 'set-library-tab':
                         const tab = actionTarget.dataset.tab;
                         if (tab && tab !== libraryTab) {
                             libraryTab = tab;
-                            renderView();
+                            renderView(); // Un re-render completo è il modo più semplice per aggiornare tutto
                         }
                         break;
                     // Global Controls
