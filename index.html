@@ -553,6 +553,52 @@ body.light-mode .welcome-logo span:first-child {
         .prompt-starter-container { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; max-width: 400px; }
         .prompt-starter-btn { background-color: var(--spotify-card); color: var(--spotify-text); border: 1px solid rgba(128,128,128,0.2); border-radius: 8px; padding: 12px 16px; font-size: 14px; font-weight: 500; cursor: pointer; width: 100%; text-align: left; transition: background-color 0.2s; }
         .prompt-starter-btn:hover { background-color: var(--spotify-bg-light); }
+
+        /* NUOVI STILI PER I PULSANTI DI AZIONE */
+        .prompt-actions-container {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+            max-width: 400px;
+            margin-top: 24px; /* Spazio sopra i nuovi pulsanti */
+        }
+        .action-btn {
+            flex: 1;
+            padding: 14px;
+            border-radius: 8px;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+        .action-btn.primary {
+            background-color: var(--spotify-accent);
+            color: #000;
+        }
+        .action-btn.primary:hover {
+            background-color: #1ed760; /* Leggermente più chiaro al passaggio del mouse */
+            transform: scale(1.02);
+        }
+        .action-btn.secondary {
+            background-color: var(--spotify-card);
+            color: var(--spotify-text);
+            border: 1px solid rgba(128,128,128,0.2);
+        }
+        .action-btn.secondary:hover {
+            background-color: var(--spotify-bg-light);
+        }
+        /* NUOVO STILE PER IL PULSANTE VIOLA */
+        .action-btn.tertiary {
+            background-color: #8D49F2; /* Viola vibrante, in linea con lo stile */
+            color: var(--spotify-text);
+            border: none;
+        }
+        .action-btn.tertiary:hover {
+            background-color: #9d5bf5; /* Leggermente più chiaro al passaggio del mouse */
+            transform: scale(1.02);
+        }
         #chat-messages { width: 100%; display: flex; flex-direction: column; gap: 12px; padding-top: 16px; /* NUOVO: Aggiunge spazio per evitare che il primo messaggio sia coperto dall'header */ }
         .chat-bubble { padding: 12px 16px; border-radius: 20px; max-width: 85%; line-height: 1.5; word-wrap: break-word; }
         .chat-bubble.ai { background-color: var(--spotify-ai-bubble-bg); align-self: flex-start; border-bottom-left-radius: 4px; }
@@ -2458,6 +2504,242 @@ body.light-mode .welcome-logo span:first-child {
             -webkit-box-orient: vertical;
         }
 
+        /* --- STILI PER LA SCHERMATA PROMPT OPTIMIZER --- */
+        #optimizer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--spotify-bg);
+            z-index: 2500;
+            display: none; /* Nascosto di default */
+            flex-direction: column;
+            padding: 24px;
+            font-family: var(--font-family);
+            color: var(--spotify-text);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        #optimizer-overlay.visible {
+            display: flex;
+            opacity: 1;
+            visibility: visible;
+        }
+        .optimizer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-shrink: 0;
+        }
+        .optimizer-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .optimizer-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .optimizer-controls .button {
+            padding: 8px 16px;
+            font-size: 14px;
+            background-color: var(--spotify-card);
+            color: var(--spotify-text);
+            text-transform: none;
+            letter-spacing: normal;
+        }
+        .optimizer-controls .button.primary {
+            background-color: var(--spotify-accent);
+            color: #000;
+        }
+        .optimizer-controls .close-btn {
+            background: none;
+            border: none;
+            color: var(--spotify-text-secondary);
+            font-size: 28px;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+        }
+        .optimizer-content {
+            flex-grow: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            min-height: 0; /* Fix per overflow in flexbox */
+        }
+        .optimizer-panel {
+            display: flex;
+            flex-direction: column;
+        }
+        .optimizer-panel label {
+            font-size: 14px;
+            color: var(--spotify-text-secondary);
+            margin-bottom: 12px;
+        }
+        .optimizer-panel textarea {
+            width: 100%;
+            height: 100%;
+            resize: none;
+            background-color: var(--spotify-card);
+            border: 1px solid var(--spotify-bg-light);
+            border-radius: 12px;
+            padding: 16px;
+            color: var(--spotify-text);
+            font-size: 16px;
+            line-height: 1.5;
+            font-family: var(--font-family);
+        }
+        .optimizer-panel textarea:focus {
+            outline: none;
+            border-color: var(--spotify-accent);
+        }
+        .optimizer-footer {
+            margin-top: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+        .optimizer-actions {
+            display: flex;
+            justify-content: center; /* Centra il pulsante */
+            width: 100%;
+            max-width: 600px;
+        }
+        .optimizer-actions input {
+            flex-grow: 1;
+            background: transparent;
+            border: none;
+            color: var(--spotify-text);
+            padding: 8px;
+            font-size: 14px;
+        }
+        .optimizer-actions input:focus {
+            outline: none;
+        }
+        .optimizer-actions .button {
+            padding: 8px 20px;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+        .optimizer-helper-text {
+            font-size: 12px;
+            color: var(--spotify-text-secondary);
+        }
+        .optimizer-helper-text strong {
+            color: var(--spotify-text);
+        }
+        @media (max-width: 768px) {
+            .optimizer-content {
+                grid-template-columns: 1fr;
+                gap: 16px;
+                overflow-y: auto; /* Permette lo scroll su schermi piccoli */
+            }
+            #optimizer-overlay {
+                padding: 16px;
+            }
+            .optimizer-title {
+                font-size: 16px;
+            }
+            .optimizer-header {
+                margin-bottom: 16px;
+            }
+        }
+
+        /* --- STILI PER LA GALLERIA PROMPT (NUOVI) --- */
+        #prompt-gallery-modal .modal-content {
+            max-width: 700px; /* Più largo per i prompt */
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+        }
+        #prompt-gallery-modal .gallery-list {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding-right: 8px; /* Spazio per la scrollbar */
+            margin-top: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .prompt-gallery-item {
+            background-color: var(--spotify-bg-light);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid var(--spotify-card);
+        }
+        .prompt-gallery-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .prompt-gallery-header label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--spotify-text-secondary);
+        }
+        .prompt-gallery-copy-btn {
+            background: var(--spotify-card);
+            border: none;
+            color: var(--spotify-text);
+            padding: 6px 10px;
+            font-size: 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .prompt-gallery-copy-btn:hover {
+            background-color: var(--spotify-bg);
+        }
+        .prompt-gallery-content {
+            background-color: var(--spotify-card);
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre-wrap; /* Mantiene la formattazione */
+            word-wrap: break-word;
+            max-height: 150px;
+            overflow-y: auto;
+            color: var(--spotify-text-secondary);
+        }
+        .prompt-gallery-content.optimized {
+            color: var(--spotify-text);
+        }
+        .prompt-gallery-divider {
+            height: 1px;
+            background-color: var(--spotify-card);
+            margin: 12px 0;
+            border: none;
+        }
+        .prompt-gallery-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .prompt-gallery-delete-btn {
+            background: none;
+            border: none;
+            color: var(--spotify-text-secondary);
+            cursor: pointer;
+            padding: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: color 0.2s, background-color 0.2s;
+        }
+        .prompt-gallery-delete-btn:hover {
+            color: #ff6b6b; /* Rosso per indicare un'azione distruttiva */
+            background-color: rgba(255, 107, 107, 0.1);
+        }
+
     </style>
     <!-- SCRIPT AGGIUNTI PER REACT E BABEL -->
     <script type="importmap">
@@ -2472,6 +2754,35 @@ body.light-mode .welcome-logo span:first-child {
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 <body>
+
+    <div id="optimizer-overlay">
+        <div class="optimizer-header">
+            <div class="optimizer-title" data-translate="optimizerTitle">Optimize for GPT-5</div>
+            <div class="optimizer-controls">
+                <button class="button" data-action="copy-optimized-prompt" data-translate="copyButton">Copy</button>
+                <button class="button primary" data-action="save-optimized-prompt" data-translate="saveButton">Save</button>
+                <button class="close-btn" data-action="close-optimizer">&times;</button>
+            </div>
+        </div>
+        <div class="optimizer-content">
+            <div class="optimizer-panel">
+                <label data-translate="originalPromptLabel">Original prompt</label>
+                <textarea id="optimizer-original-prompt" data-translate-placeholder="originalPromptPlaceholder"></textarea>
+            </div>
+            <div class="optimizer-panel">
+                <label data-translate="optimizedPromptLabel">Optimized prompt</label>
+                <textarea id="optimizer-optimized-prompt" readonly data-translate-placeholder="optimizedPromptPlaceholder"></textarea>
+            </div>
+        </div>
+        <div class="optimizer-footer">
+            <div class="optimizer-actions">
+                <button id="optimizer-submit-btn" class="button primary" data-action="optimize-prompt" data-translate="optimizeButton">Optimize</button>
+            </div>
+            <div class="optimizer-helper-text" data-translate="optimizerHelperText">
+                Prompt Optimizer will apply <strong>best practices</strong> to your prompt.
+            </div>
+        </div>
+    </div>
 
     <div id="auth-overlay">
         <!-- Authentication content will be dynamically generated here by JS -->
@@ -2522,6 +2833,9 @@ body.light-mode .welcome-logo span:first-child {
         import React, { useState, useEffect, useRef, useCallback } from 'react';
         import ReactDOMClient from 'react-dom/client';
         import { GoogleGenAI } from '@google/genai';
+
+        // Make GoogleGenAI available to the main script for the optimizer
+        window.GoogleGenAI = GoogleGenAI;
 
         // --- Type Definitions ---
         const MessageSender = { USER: 'user', MODEL: 'model', ERROR: 'error', SYSTEM: 'system', LOADING: 'loading' };
@@ -2707,6 +3021,15 @@ return (
                                 {text}
                             </button>
                         ))}
+                    </div>
+                    {/* NUOVO: Contenitore per i pulsanti di azione */}
+                    <div className="prompt-actions-container">
+                        <button className="action-btn primary" data-action="navigate-to-optimizer">
+                           Ottimizza Prompt
+                        </button>
+                        <button className="action-btn tertiary" data-action="show-prompt-gallery">
+                           Galleria
+                        </button>
                     </div>
                 </div>
             );
@@ -3860,7 +4183,7 @@ return (
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut, updatePassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion, arrayRemove, collection, query, where, getDocs, addDoc, serverTimestamp, onSnapshot, orderBy, limit, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion, arrayRemove, collection, query, where, getDocs, addDoc, serverTimestamp, onSnapshot, orderBy, limit, writeBatch, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
     
     // --- FIREBASE CONFIG ---
     const firebaseConfig = {
@@ -4323,6 +4646,17 @@ return (
                 // NUOVE TRADUZIONI PER PROMPT CHAT
                 chatPromptTitle: "Chatta con altri utenti",
                 chatPromptText: "Accedi o registrati per iniziare a chattare e scoprire i suggerimenti degli altri.",
+                // NUOVE TRADUZIONI PER PROMPT OPTIMIZER
+                optimizerTitle: "Ottimizza per GPT-5",
+                originalPromptLabel: "Prompt originale",
+                optimizedPromptLabel: "Prompt ottimizzato",
+                originalPromptPlaceholder: "Inserisci qui il tuo prompt originale...",
+                optimizedPromptPlaceholder: "L'output ottimizzato apparirà qui...",
+                requestChangesPlaceholder: "Richiedi modifiche (opzionale)",
+                optimizeButton: "Ottimizza",
+                copyButton: "Copia",
+                saveButton: "Salva",
+                optimizerHelperText: "Il Prompt Optimizer applicherà le <strong>migliori pratiche</strong> al tuo prompt.",
             },
             en: {
                 // Auth
@@ -4437,6 +4771,17 @@ return (
                 // NEW TRANSLATIONS FOR CHAT PROMPT
                 chatPromptTitle: "Chat with other users",
                 chatPromptText: "Log in or sign up to start chatting and discover others' suggestions.",
+                // NEW TRANSLATIONS FOR PROMPT OPTIMIZER
+                optimizerTitle: "Optimize for GPT-5",
+                originalPromptLabel: "Original prompt",
+                optimizedPromptLabel: "Optimized prompt",
+                originalPromptPlaceholder: "Enter your original prompt here...",
+                optimizedPromptPlaceholder: "The optimized output will appear here...",
+                requestChangesPlaceholder: "Request changes (optional)",
+                optimizeButton: "Optimize",
+                copyButton: "Copy",
+                saveButton: "Save",
+                optimizerHelperText: "Prompt Optimizer will apply <strong>best practices</strong> to your prompt.",
             }
         };
         
@@ -7384,6 +7729,220 @@ const viewUserSuggestions = async (userId, userNickname) => {
         };
 
 
+        // --- NUOVE FUNZIONI PER PROMPT OPTIMIZER E GALLERIA ---
+
+        // Salva un prompt ottimizzato su Firebase
+        const saveOptimizedPromptToFirebase = async (originalPrompt, optimizedPrompt) => {
+            if (!currentUser.uid) {
+                showToast("Devi essere loggato per salvare i prompt.");
+                triggerAuthFlow();
+                return;
+            }
+            const savedPromptsRef = collection(db, "users", currentUser.uid, "savedPrompts");
+            try {
+                await addDoc(savedPromptsRef, {
+                    originalPrompt,
+                    optimizedPrompt,
+                    timestamp: serverTimestamp()
+                });
+                showToast("Prompt salvato nella galleria!");
+            } catch (error) {
+                console.error("Errore nel salvataggio del prompt:", error);
+                showToast("Errore durante il salvataggio del prompt.");
+            }
+        };
+
+        // Recupera i prompt salvati per l'utente corrente da Firebase
+        const getSavedPromptsForUser = async (userId) => {
+            const savedPromptsRef = collection(db, "users", userId, "savedPrompts");
+            const q = query(savedPromptsRef, orderBy("timestamp", "desc"));
+            const querySnapshot = await getDocs(q);
+            const prompts = [];
+            querySnapshot.forEach((doc) => {
+                prompts.push({ id: doc.id, ...doc.data() });
+            });
+            return prompts;
+        };
+        
+        // Gestisce il click sul pulsante "Salva" dell'optimizer
+        const handleSaveOptimizedPrompt = async () => {
+            const originalPrompt = document.getElementById('optimizer-original-prompt').value.trim();
+            const optimizedPrompt = document.getElementById('optimizer-optimized-prompt').value.trim();
+
+            if (!optimizedPrompt) {
+                showToast("Ottimizza prima un prompt per poterlo salvare.");
+                return;
+            }
+            await saveOptimizedPromptToFirebase(originalPrompt, optimizedPrompt);
+        };
+
+        // Gestisce il click sul pulsante "Copia" dell'optimizer
+        const handleCopyOptimizedPrompt = () => {
+            const optimizedPrompt = document.getElementById('optimizer-optimized-prompt').value;
+            if (optimizedPrompt) {
+                navigator.clipboard.writeText(optimizedPrompt)
+                    .then(() => showToast("Prompt ottimizzato copiato!"))
+                    .catch(err => showToast("Errore nella copia."));
+            } else {
+                showToast("Nessun prompt da copiare.");
+            }
+        };
+
+                        // Apre il modale della galleria con i prompt salvati
+        const openPromptGalleryModal = async () => {
+            if (!currentUser.uid) {
+                triggerAuthFlow();
+                return;
+            }
+            
+            // Mostra un caricamento
+            el.modalContainer.innerHTML = `<div class="modal-overlay visible"><div class="modal-content" style="display:flex; justify-content:center; align-items:center;"><div class="chat-bubble loading"><span></span><span></span><span></span></div></div></div>`;
+            
+            const savedPrompts = await getSavedPromptsForUser(currentUser.uid);
+            const t = translations[currentLanguage];
+
+            const promptsHTML = savedPrompts.length > 0 ? savedPrompts.map(p => `
+                <div class="prompt-gallery-item">
+                    <div class="prompt-gallery-header">
+                        <label>${t.originalPromptLabel}</label>
+                        <div class="prompt-gallery-actions">
+                            <button class="prompt-gallery-copy-btn" data-action="copy-gallery-prompt" data-target-id="original-${p.id}">${t.copyButton}</button>
+                        </div>
+                    </div>
+                    <div class="prompt-gallery-content" id="original-${p.id}">${p.originalPrompt}</div>
+                    <hr class="prompt-gallery-divider">
+                    <div class="prompt-gallery-header">
+                        <label>${t.optimizedPromptLabel}</label>
+                        <div class="prompt-gallery-actions">
+                            <button class="prompt-gallery-copy-btn" data-action="copy-gallery-prompt" data-target-id="optimized-${p.id}">${t.copyButton}</button>
+                            <button class="prompt-gallery-delete-btn" title="Elimina prompt" data-action="delete-saved-prompt" data-id="${p.id}">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 0 24 24" width="16" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="prompt-gallery-content optimized" id="optimized-${p.id}">${p.optimizedPrompt}</div>
+                </div>
+            `).join('') : `<div id="empty-state">Nessun prompt salvato.</div>`;
+
+            const modalHTML = `
+                <div id="prompt-gallery-modal" class="modal-overlay visible">
+                    <div class="modal-content">
+                        <button class="modal-close-btn" data-action="close-modal">×</button>
+                        <h2>Galleria Prompt</h2>
+                        <div class="gallery-list">${promptsHTML}</div>
+                    </div>
+                </div>
+            `;
+            el.modalContainer.innerHTML = modalHTML;
+        };
+
+        // --- FUNZIONI CORRETTE PER COPIA ED ELIMINAZIONE ---
+
+        // Gestisce la copia del testo dalla galleria in modo più robusto
+        const handleCopyFromGallery = (targetId) => {
+            const element = document.getElementById(targetId);
+            if (!element) {
+                showToast("Errore: Impossibile trovare il testo.");
+                return;
+            }
+            const textToCopy = element.innerText || element.textContent; // .innerText è più affidabile
+
+            // Fallback per browser che non supportano navigator.clipboard o contesti non sicuri
+            const textarea = document.createElement('textarea');
+            textarea.value = textToCopy;
+            textarea.style.position = 'absolute';
+            textarea.style.left = '-9999px'; // Nascondi l'elemento
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showToast("Copiato!");
+            } catch (err) {
+                console.error('Fallback di copia fallito:', err);
+                showToast("Errore durante la copia.");
+            } finally {
+                document.body.removeChild(textarea);
+            }
+        };
+
+        // Gestisce l'eliminazione di un prompt salvato da Firebase
+        const handleDeleteSavedPrompt = async (promptId) => {
+            if (!currentUser.uid || !promptId) return;
+
+            if (confirm("Sei sicuro di voler eliminare questo prompt?")) {
+                const promptRef = doc(db, "users", currentUser.uid, "savedPrompts", promptId);
+                try {
+                    await deleteDoc(promptRef);
+                    showToast("Prompt eliminato con successo!");
+                    await openPromptGalleryModal(); // Ricarica la galleria per mostrare le modifiche
+                } catch (error) {
+                    console.error("Errore nell'eliminazione del prompt:", error);
+                    showToast("Impossibile eliminare il prompt.");
+                }
+            }
+        };
+
+
+        // --- FUNZIONE PER OTTIMIZZARE I PROMPT ---
+        const handlePromptOptimization = async () => {
+            const originalPromptTextarea = document.getElementById('optimizer-original-prompt');
+            const optimizedPromptTextarea = document.getElementById('optimizer-optimized-prompt');
+            const optimizeBtn = document.getElementById('optimizer-submit-btn');
+
+            const originalPrompt = originalPromptTextarea.value.trim();
+            if (!originalPrompt) {
+                showToast("Per favore, inserisci un prompt da ottimizzare.");
+                return;
+            }
+
+            optimizeBtn.disabled = true;
+            optimizeBtn.textContent = 'Optimizing...';
+            optimizedPromptTextarea.value = ''; // Pulisce l'output precedente
+
+            const lang = currentLanguage;
+            const instructions = {
+                it: `Sei un esperto di ingegneria dei prompt. Il tuo compito è riscrivere il prompt dell'utente per renderlo più efficace per un modello linguistico avanzato come GPT-5.
+                Obiettivi:
+                1.  **Chiarezza e Specificità:** Rendi il prompt inequivocabile. Aggiungi dettagli mancanti se necessario per evitare ambiguità.
+                2.  **Contesto:** Fornisci un contesto adeguato. Specifica il ruolo che l'AI deve assumere (es. "Agisci come un esperto di marketing...").
+                3.  **Formato di Output:** Definisci chiaramente il formato di output desiderato (es. "rispondi in formato JSON", "crea una tabella markdown", "usa un elenco puntato").
+                4.  **Vincoli:** Aggiungi vincoli per guidare la risposta (es. "la risposta non deve superare le 200 parole", "usa un tono formale").
+                5.  **Migliori Pratiche:** Applica tecniche come il "Chain of Thought" o fornisci esempi "few-shot" se appropriato.
+                IMPORTANTE: Mantieni l'intento originale del prompt dell'utente, ma migliorane la struttura e la formulazione per massimizzare la qualità della risposta dell'AI. Rispondi SOLO con il prompt ottimizzato, senza alcun testo introduttivo o di chiusura.`,
+                en: `You are an expert prompt engineer. Your task is to rewrite the user's prompt to make it more effective for an advanced language model like GPT-5.
+                Objectives:
+                1.  **Clarity and Specificity:** Make the prompt unambiguous. Add missing details if necessary to avoid ambiguity.
+                2.  **Context:** Provide adequate context. Specify the role the AI should assume (e.g., "Act as a marketing expert...").
+                3.  **Output Format:** Clearly define the desired output format (e.g., "respond in JSON format," "create a markdown table," "use a bulleted list").
+                4.  **Constraints:** Add constraints to guide the response (e.g., "the response must not exceed 200 words," "use a formal tone").
+                5.  **Best Practices:** Apply techniques like "Chain of Thought" or provide "few-shot" examples if appropriate.
+                IMPORTANT: Maintain the original intent of the user's prompt, but improve its structure and wording to maximize the quality of the AI's response. Respond ONLY with the optimized prompt, without any introductory or closing text.`
+            };
+
+            try {
+                // Utilizziamo le stesse utility del chatbot principale
+                const optimizerAi = new window.GoogleGenAI({ apiKey: "AIzaSyAipeUNqXwvgZDOM9L2I602ARsw5jaGxKg" });
+                const optimizerChat = optimizerAi.chats.create({ 
+                    model: 'gemini-1.5-flash', 
+                    config: { systemInstruction: instructions[lang] } 
+                });
+                
+                const result = await optimizerChat.sendMessageStream({ message: originalPrompt });
+                
+                for await (const chunk of result) {
+                    optimizedPromptTextarea.value += chunk.text;
+                }
+
+            } catch (error) {
+                console.error("Optimization Error:", error);
+                optimizedPromptTextarea.value = "An error occurred during optimization. Please try again.";
+                showToast("Optimization failed.");
+            } finally {
+                optimizeBtn.disabled = false;
+                optimizeBtn.textContent = translations[lang].optimizeButton;
+            }
+        };
+
         // --- INITIALIZATION LOGIC ---
 
         const initializeAppForGuest = () => {
@@ -7488,11 +8047,48 @@ const viewUserSuggestions = async (userId, userNickname) => {
 
 
             // 3. Handle elements with data-action (excluding the K button which is handled above)
-            const actionTarget = target.closest('[data-action]');
-            if (actionTarget && actionTarget.id !== 'privileged-unlock-btn') { // Explicitly exclude K button
-                const action = actionTarget.dataset.action;
-                
-                                switch(action) {
+                            const actionTarget = target.closest('[data-action]');
+                if (actionTarget && actionTarget.id !== 'privileged-unlock-btn') { // Explicitly exclude K button
+                    const action = actionTarget.dataset.action;
+                    
+                                    switch(action) {
+                        case 'navigate-to-optimizer':
+                            const optimizer = document.getElementById('optimizer-overlay');
+                            if(optimizer) {
+                                optimizer.classList.add('visible');
+                                // Blocchiamo lo scroll del body quando l'overlay è attivo
+                                document.body.style.overflow = 'hidden';
+                            }
+                            break;
+                        case 'close-optimizer':
+                            const optimizerToClose = document.getElementById('optimizer-overlay');
+                            if(optimizerToClose) {
+                                optimizerToClose.classList.remove('visible');
+                                // Ripristiniamo lo scroll del body
+                                document.body.style.overflow = '';
+                            }
+                            break;
+                        case 'optimize-prompt':
+                            handlePromptOptimization();
+                            break;
+                        // --- AZIONI PER OPTIMIZER E GALLERIA (NUOVE) ---
+                        case 'copy-optimized-prompt':
+                            handleCopyOptimizedPrompt();
+                            break;
+                        case 'save-optimized-prompt':
+                            handleSaveOptimizedPrompt();
+                            break;
+                         case 'show-prompt-gallery':
+                            openPromptGalleryModal();
+                            break;
+                        case 'copy-gallery-prompt':
+                            // Chiama la nuova funzione helper per la copia
+                            handleCopyFromGallery(actionTarget.dataset.targetId);
+                            break;
+                        case 'delete-saved-prompt':
+                            // Aggiunta la nuova azione per chiamare la funzione di eliminazione
+                            handleDeleteSavedPrompt(actionTarget.dataset.id);
+                            break;
                     // NUOVO: Gestisce il click sull'icona della password
                     case 'toggle-password-visibility':
                         handlePasswordVisibilityToggle(actionTarget);
