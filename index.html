@@ -2970,7 +2970,7 @@ return (
                            Ottimizza Prompt
                         </button>
                         <button className="action-btn tertiary" data-action="show-prompt-gallery">
-                           Galleria
+                           Prompt Salvati
                         </button>
                     </div>
                 </div>
@@ -3232,7 +3232,7 @@ return (
             const [showCommandPalette, setShowCommandPalette] = useState(false); // Mostra il menu dei comandi
             const [filteredCommands, setFilteredCommands] = useState([]); // Comandi filtrati da mostrare
             const [chatSearchTerm, setChatSearchTerm] = useState(''); // NUOVO STATO PER LA RICERCA
-            const [chatFilter, setChatFilter] = useState('all'); // NUOVO STATO PER I FILTRI: 'all' o 'unread'
+            const [chatFilter, setChatFilter] = useState('all'); // NUOVO STATO PER I FILTRI: 'all', 'unread' o 'hidden'
             const [searchResults, setSearchResults] = useState([]); // NUOVO STATO PER I RISULTATI DI RICERCA
             const messagesEndRef = useRef(null);
             const textareaRef = useRef(null); // Aggiunto per l'auto-grow
@@ -3383,8 +3383,20 @@ return (
                 if (!hiddenIds.includes(chatId)) {
                     const newHiddenIds = [...hiddenIds, chatId];
                     localStorage.setItem(`hidden_chats_${currentUser.uid}`, JSON.stringify(newHiddenIds));
-                    setChats(prevChats => prevChats.filter(chat => chat.id !== chatId));
+                    // FORZA UN RI-RENDER SENZA RIMUOVERE LA CHAT DALLO STATO
+                    setChats(prevChats => [...prevChats]);
                 }
+            };
+
+            // NUOVA FUNZIONE PER RIPRISTINARE UNA CHAT
+            const handleRestoreChat = (e, chatId) => {
+                e.stopPropagation();
+                const hiddenIds = getHiddenChatIds();
+                const newHiddenIds = hiddenIds.filter(id => id !== chatId);
+                localStorage.setItem(`hidden_chats_${currentUser.uid}`, JSON.stringify(newHiddenIds));
+                // FORZA UN RI-RENDER SENZA RIMUOVERE LA CHAT DALLO STATO
+                setChats(prevChats => [...prevChats]);
+                showToast(language === 'it' ? 'Chat ripristinata!' : 'Chat restored!');
             };
 
             const loadUserChats = async () => {
@@ -3409,10 +3421,10 @@ return (
                     chatsUnsubscribe();
                 }
                 
+                // MODIFICATO: Ora il listener imposta TUTTE le chat, incluse quelle nascoste.
+                // Il filtraggio avverrà al momento del rendering.
                 const unsubscribe = window.setupChatsListener(currentUser.uid, (chatsData) => {
-                    const hiddenChatIds = getHiddenChatIds();
-                    const visibleChats = chatsData.filter(chat => !hiddenChatIds.includes(chat.id));
-                    setChats(visibleChats.sort((a, b) => (b.lastMessageTime?.seconds || 0) - (a.lastMessageTime?.seconds || 0)));
+                    setChats(chatsData.sort((a, b) => (b.lastMessageTime?.seconds || 0) - (a.lastMessageTime?.seconds || 0)));
                 });
                 
                 setChatsUnsubscribe(() => unsubscribe);
@@ -3753,17 +3765,24 @@ return (
             
             // **MODIFICA:** Usa lo stato locale `language` invece della prop `lang` per i testi
             if (view === 'list') {
-                // NUOVA LOGICA DI FILTRAGGIO (con aggiunta del filtro per 'da leggere')
-                const filteredChats = chats
-                    .filter(chat => 
-                        chat.otherUserNickname?.toLowerCase().includes(chatSearchTerm.toLowerCase())
-                    )
-                    .filter(chat => {
-                        if (chatFilter === 'unread') {
-                            return chat.unreadCount > 0;
-                        }
-                        return true; // Se il filtro è 'all', mostra tutto
-                    });
+                // LOGICA DI FILTRAGGIO COMPLETAMENTE RIVISTA PER GESTIRE LE CHAT NASCOSTE
+                const hiddenChatIds = getHiddenChatIds();
+                const filteredChats = chats.filter(chat => {
+                    const matchesSearch = chat.otherUserNickname?.toLowerCase().includes(chatSearchTerm.toLowerCase());
+                    if (!matchesSearch) return false;
+
+                    const isHidden = hiddenChatIds.includes(chat.id);
+
+                    switch (chatFilter) {
+                        case 'hidden':
+                            return isHidden; // Mostra solo le chat nascoste
+                        case 'unread':
+                            return !isHidden && chat.unreadCount > 0; // Mostra solo le visibili e non lette
+                        case 'all':
+                        default:
+                            return !isHidden; // Mostra solo le chat visibili
+                    }
+                });
 
                 return (
                     <div className="user-chat-container">
@@ -3807,10 +3826,7 @@ return (
                             <button 
                                 className={`pill-btn ${chatFilter === 'all' ? 'active' : ''}`}
                                 onClick={() => {
-                                    // NUOVO: Aggiorna lo stato online quando l'utente cambia filtro
-                                    if (currentUser && currentUser.uid) {
-                                        updateUserOnlineStatus(currentUser.uid, true);
-                                    }
+                                    if (currentUser && currentUser.uid) { updateUserOnlineStatus(currentUser.uid, true); }
                                     setChatFilter('all');
                                 }}
                             >
@@ -3819,14 +3835,21 @@ return (
                             <button 
                                 className={`pill-btn ${chatFilter === 'unread' ? 'active' : ''}`}
                                 onClick={() => {
-                                    // NUOVO: Aggiorna lo stato online quando l'utente cambia filtro
-                                    if (currentUser && currentUser.uid) {
-                                        updateUserOnlineStatus(currentUser.uid, true);
-                                    }
+                                    if (currentUser && currentUser.uid) { updateUserOnlineStatus(currentUser.uid, true); }
                                     setChatFilter('unread');
                                 }}
                             >
-                                {language === 'it' ? 'Nuovi' : 'New'}
+                                {language === 'it' ? 'Nuove' : 'New'}
+                            </button>
+                            {/* NUOVO PULSANTE PER LE CHAT NASCOSTE */}
+                            <button 
+                                className={`pill-btn ${chatFilter === 'hidden' ? 'active' : ''}`}
+                                onClick={() => {
+                                    if (currentUser && currentUser.uid) { updateUserOnlineStatus(currentUser.uid, true); }
+                                    setChatFilter('hidden');
+                                }}
+                            >
+                                {language === 'it' ? 'Eliminate' : 'Hidden'}
                             </button>
                         </div>
 
@@ -3858,23 +3881,37 @@ return (
                                             <div className="user-chat-item-time">
                                                 {formatMessageTime(chat.lastMessageTime)}
                                             </div>
-                                            <button 
-                                                className="user-chat-item-delete-btn" 
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    // NUOVO: Aggiorna lo stato online quando l'utente nasconde una chat
-                                                    if (currentUser && currentUser.uid) {
-                                                        updateUserOnlineStatus(currentUser.uid, true);
-                                                    }
-                                                    handleHideChat(e, chat.id);
-                                                }}
-                                                title={language === 'it' ? 'Nascondi chat' : 'Hide chat'}
-                                            >
-                                                <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18" fill="currentColor">
-                                                    <path d="M0 0h24v24H0z" fill="none"/>
-                                                    <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
-                                                </svg>
-                                            </button>
+                                            {/* NUOVO: Pulsante condizionale per nascondere o ripristinare */}
+                                            {chatFilter === 'hidden' ? (
+                                                <button 
+                                                    className="user-chat-item-restore-btn" // Potrebbe avere uno stile diverso se vuoi
+                                                    onClick={(e) => handleRestoreChat(e, chat.id)}
+                                                    title={language === 'it' ? 'Ripristina chat' : 'Restore chat'}
+                                                    style={{ background: 'none', border: 'none', color: 'var(--spotify-accent)', cursor: 'pointer', padding: '8px' }}
+                                                >
+                                                    <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18" fill="currentColor">
+                                                        <path d="M0 0h24v24H0z" fill="none"/>
+                                                        <path d="M13 3a9 9 0 0 0-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42A8.954 8.954 0 0 0 13 21a9 9 0 0 0 0-18zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/>
+                                                    </svg>
+                                                </button>
+                                            ) : (
+                                                <button 
+                                                    className="user-chat-item-delete-btn" 
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        if (currentUser && currentUser.uid) {
+                                                            updateUserOnlineStatus(currentUser.uid, true);
+                                                        }
+                                                        handleHideChat(e, chat.id);
+                                                    }}
+                                                    title={language === 'it' ? 'Nascondi chat' : 'Hide chat'}
+                                                >
+                                                    <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18" fill="currentColor">
+                                                        <path d="M0 0h24v24H0z" fill="none"/>
+                                                        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                                                    </svg>
+                                                </button>
+                                            )}
                                         </div>
                                     </div>
                                 ))
@@ -4579,6 +4616,8 @@ return (
                 filterAllChats: "Tutte",
                 writeMessage: "Scrivi un messaggio...",
                 sendError: "Errore nell'invio del messaggio",
+                filterHidden: "Nascoste", // NUOVO
+                restoreChat: "Ripristina chat", // NUOVO
                 // NUOVE TRADUZIONI LIBRERIA
                 libraryFavorites: "Preferiti",
                 libraryCustom: "Custom",
@@ -4710,6 +4749,8 @@ return (
                 filterAllChats: "All",
                 writeMessage: "Write a message...",
                 sendError: "Error sending message",
+                filterHidden: "Hidden", // NEW
+                restoreChat: "Restore chat", // NEW
                 // NEW LIBRARY TRANSLATIONS
                 libraryFavorites: "Favorites",
                 libraryCustom: "Custom",
