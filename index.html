@@ -942,6 +942,176 @@
             cursor: not-allowed;
         }
 
+        /* Sent Reviews Modal Styles */
+        .sent-reviews-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .sent-reviews-modal.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .sent-reviews-modal-content {
+            background: var(--spotify-card);
+            padding: 24px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .sent-reviews-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(128, 128, 128, 0.2);
+        }
+
+        .sent-reviews-modal-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .sent-reviews-modal-close {
+            background: none;
+            border: none;
+            color: var(--spotify-text-secondary);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .sent-review-item {
+            background-color: var(--spotify-bg-light);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(128, 128, 128, 0.1);
+        }
+
+        .sent-review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .sent-review-tool-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sent-review-tool-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            object-fit: cover;
+            background-color: var(--spotify-card);
+        }
+
+        .sent-review-tool-name {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .sent-review-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .sent-review-edit-btn,
+        .sent-review-delete-btn {
+            background: none;
+            border: 1px solid var(--spotify-text-secondary);
+            color: var(--spotify-text);
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .sent-review-edit-btn:hover {
+            background-color: var(--spotify-accent);
+            border-color: var(--spotify-accent);
+            color: #000;
+        }
+
+        .sent-review-delete-btn:hover {
+            background-color: #ff6b6b;
+            border-color: #ff6b6b;
+            color: #fff;
+        }
+
+        .sent-review-rating {
+            display: flex;
+            gap: 2px;
+            margin-bottom: 8px;
+        }
+
+        .sent-review-text {
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--spotify-text);
+        }
+
+        .sent-review-date {
+            font-size: 12px;
+            color: var(--spotify-text-secondary);
+            margin-top: 8px;
+        }
+
+        .no-sent-reviews {
+            text-align: center;
+            color: var(--spotify-text-secondary);
+            padding: 40px 20px;
+            font-style: italic;
+        }
+
+        /* View All Reviews Link */
+        .view-all-reviews-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--spotify-accent);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            margin-top: 12px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .view-all-reviews-link:hover {
+            color: #1ed760;
+            text-decoration: underline;
+        }
+
+        .view-all-reviews-link svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
         .tool-card-list .edit-icon {
             /* Style for edit icon in list view */
             position: absolute;
@@ -5825,7 +5995,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut, updatePassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion, arrayRemove, collection, query, where, getDocs, addDoc, serverTimestamp, onSnapshot, orderBy, limit, writeBatch, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion, arrayRemove, collection, query, where, getDocs, addDoc, serverTimestamp, onSnapshot, orderBy, limit, writeBatch, deleteDoc, collectionGroup } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         // --- FIREBASE CONFIG ---
         const firebaseConfig = {
@@ -6478,6 +6648,7 @@
                     visitWebsite: "Visita Sito Web", alternativeSuggestion: "In alternativa prova:",
                     // Settings Modal
                     settingsTitle: "Impostazioni account", changePasswordTitle: "Cambia password", newPasswordLabel: "Nuova password",
+                    sentReviews: "Recensioni inviate", noSentReviews: "Non hai ancora inviato recensioni.", viewAllUserReviews: "Visualizza tutte le recensioni utente", allUserReviews: "Tutte le recensioni utente",
                     newPasswordPlaceholder: "Minimo 6 caratteri", confirmPasswordLabel: "Conferma password", confirmPasswordPlaceholder: "Reinserisci la Nuova password",
                     savePasswordButton: "Salva Password", passwordUpdateSuccess: "Password aggiornata con successo!",
                     passwordTooShort: "La password deve contenere almeno 6 caratteri.", passwordsDoNotMatch: "Le password non coincidono.",
@@ -6625,6 +6796,7 @@
                     visitWebsite: "Visit Website", alternativeSuggestion: "Alternatively, try:",
                     // Settings Modal
                     settingsTitle: "Account Settings", changePasswordTitle: "Change Password", newPasswordLabel: "New Password",
+                    sentReviews: "Sent Reviews", noSentReviews: "You haven't sent any reviews yet.", viewAllUserReviews: "View all user reviews", allUserReviews: "All User Reviews",
                     newPasswordPlaceholder: "Minimum 6 characters", confirmPasswordLabel: "Confirm Password", confirmPasswordPlaceholder: "Re-enter new password",
                     savePasswordButton: "Save Password", passwordUpdateSuccess: "Password updated successfully!",
                     passwordTooShort: "Password must be at least 6 characters long.", passwordsDoNotMatch: "Passwords do not match.",
@@ -7747,6 +7919,12 @@
                                 <div id="reviews-container-${tool.id}">
                                     <div class="loading-reviews">${t.loadingReviews || 'Caricamento recensioni...'}</div>
                                 </div>
+                                <a class="view-all-reviews-link" data-action="view-all-user-reviews" data-tool-id="${tool.id}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                    </svg>
+                                    <span data-translate="viewAllUserReviews">Visualizza tutte le recensioni utente</span>
+                                </a>
                             </div>
                             ${recommendationHTML}
                         </div>
@@ -8326,6 +8504,12 @@
                                 <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
                             </svg>
                             <span data-translate="changePasswordTitle">Cambia password</span>
+                        </div>
+                        <div class="user-profile-item" data-action="view-sent-reviews">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                            </svg>
+                            <span data-translate="sentReviews">Recensioni inviate</span>
                         </div>
                         <div class="user-profile-divider"></div>
                         <div class="user-profile-item user-profile-logout" data-action="logout">
@@ -9200,6 +9384,316 @@
                         console.error("Logout Error:", error);
                         showToast("Errore durante il logout.");
                     }
+                }
+            };
+
+            // NEW FUNCTION: Open Sent Reviews Modal
+            const openSentReviewsModal = async () => {
+                if (!currentUser.uid) return;
+                const t = translations[currentLanguage];
+
+                const modalHTML = `
+                <div id="sent-reviews-modal" class="sent-reviews-modal visible">
+                    <div class="sent-reviews-modal-content">
+                        <div class="sent-reviews-modal-header">
+                            <h2 class="sent-reviews-modal-title" data-translate="sentReviews">Recensioni inviate</h2>
+                            <button class="sent-reviews-modal-close" data-action="close-modal">×</button>
+                        </div>
+                        <div id="sent-reviews-container">
+                            <div class="loading-reviews">${t.loadingReviews || 'Caricamento recensioni...'}</div>
+                        </div>
+                    </div>
+                </div>`;
+
+                el.modalContainer.innerHTML = modalHTML;
+                await loadSentReviews();
+            };
+
+            // NEW FUNCTION: Load Sent Reviews (CORRECTED AND OPTIMIZED)
+            const loadSentReviews = async () => {
+                const container = document.getElementById('sent-reviews-container');
+                if (!container || !currentUser.uid) return;
+
+                const t = translations[currentLanguage];
+                container.innerHTML = `<div class="loading-reviews">${t.loadingReviews || 'Caricamento recensioni...'}</div>`;
+
+                try {
+                    // Step 1: Use a Collection Group Query to find all reviews by the current user
+                    const reviewsQuery = query(collectionGroup(db, 'reviews'), where('userId', '==', currentUser.uid));
+                    const reviewsSnapshot = await getDocs(reviewsQuery);
+
+                    if (reviewsSnapshot.empty) {
+                        container.innerHTML = `<div class="no-sent-reviews">${t.noSentReviews || 'Non hai ancora inviato recensioni.'}</div>`;
+                        return;
+                    }
+
+                    // Step 2: Prepare to fetch the tool data for each review
+                    const reviewsWithToolData = [];
+                    for (const reviewDoc of reviewsSnapshot.docs) {
+                        const reviewData = reviewDoc.data();
+                        const toolId = reviewDoc.ref.parent.parent.id; // Get the parent tool ID
+                        
+                        // Find the tool in the local list (static + custom)
+                        const tool = getAllToolsForCurrentUser().find(t => t.id === toolId);
+                        
+                        if (tool) {
+                             reviewsWithToolData.push({
+                                id: reviewDoc.id,
+                                toolId: toolId,
+                                toolName: tool.name, // Use name from local data
+                                toolLogoUrl: tool.logoUrl, // Use logo from local data
+                                ...reviewData
+                            });
+                        }
+                    }
+
+                    // Step 3: Sort and render the reviews
+                    reviewsWithToolData.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+
+                    const reviewsHTML = reviewsWithToolData.map(review => {
+                        const starsHTML = Array.from({ length: 5 }, (_, i) =>
+                            `<span class="star ${i < review.rating ? '' : 'empty'}">★</span>`
+                        ).join('');
+                        const reviewDate = review.createdAt ? new Date(review.createdAt.seconds * 1000).toLocaleDateString() : 'N/A';
+
+                        return `
+                        <div class="sent-review-item">
+                            <div class="sent-review-header">
+                                <div class="sent-review-tool-info">
+                                    <img src="${review.toolLogoUrl}" alt="${review.toolName}" class="sent-review-tool-logo">
+                                    <div class="sent-review-tool-name">${review.toolName}</div>
+                                </div>
+                                <div class="sent-review-actions">
+                                    <button class="sent-review-edit-btn" data-action="edit-review" data-tool-id="${review.toolId}" data-review-id="${review.id}">Modifica</button>
+                                    <button class="sent-review-delete-btn" data-action="delete-review" data-tool-id="${review.toolId}" data-review-id="${review.id}">Elimina</button>
+                                </div>
+                            </div>
+                            <div class="sent-review-rating">${starsHTML}</div>
+                            <div class="sent-review-text">${review.text}</div>
+                            <div class="sent-review-date">${reviewDate}</div>
+                        </div>`;
+                    }).join('');
+
+                    container.innerHTML = reviewsHTML;
+
+                } catch (error) {
+                    console.error('Error loading sent reviews:', error);
+                    container.innerHTML = `<div class="no-sent-reviews">Errore nel caricamento delle recensioni.</div>`;
+                    // Firestore often gives a helpful error message in the console with a link to create the required index for collection group queries.
+                    if (error.message.includes('index')) {
+                         container.innerHTML += `<p style="font-size:12px; color: #ff6b6b; margin-top: 10px;">Questo errore potrebbe richiedere la creazione di un indice in Firestore. Controlla la console del browser per un link di creazione automatica.</p>`;
+                    }
+                }
+            };
+
+            // NEW FUNCTION: Open All User Reviews Modal
+            const openAllUserReviewsModal = async (toolId) => {
+                const t = translations[currentLanguage];
+
+                const modalHTML = `
+                <div id="all-user-reviews-modal" class="sent-reviews-modal visible">
+                    <div class="sent-reviews-modal-content">
+                        <div class="sent-reviews-modal-header">
+                            <h2 class="sent-reviews-modal-title" data-translate="allUserReviews">Tutte le recensioni utente</h2>
+                            <button class="sent-reviews-modal-close" data-action="close-modal">×</button>
+                        </div>
+                        <div id="all-user-reviews-container">
+                            <div class="loading-reviews">${t.loadingReviews || 'Caricamento recensioni...'}</div>
+                        </div>
+                    </div>
+                </div>`;
+
+                el.modalContainer.innerHTML = modalHTML;
+                await loadAllUserReviews(toolId);
+            };
+
+            // NEW FUNCTION: Load All User Reviews for a specific tool
+            const loadAllUserReviews = async (toolId) => {
+                const container = document.getElementById('all-user-reviews-container');
+                if (!container) return;
+
+                try {
+                    const t = translations[currentLanguage];
+                    const reviewsRef = collection(db, 'tools', toolId, 'reviews');
+                    const reviewsQuery = query(reviewsRef, orderBy('createdAt', 'desc'));
+                    const reviewsSnapshot = await getDocs(reviewsQuery);
+
+                    if (reviewsSnapshot.empty) {
+                        container.innerHTML = `<div class="no-reviews">${t.noReviews}</div>`;
+                        return;
+                    }
+
+                    let reviewsHTML = '';
+                    for (const reviewDoc of reviewsSnapshot.docs) {
+                        const review = reviewDoc.data();
+                        let username = 'Utente Anonimo';
+                        let userInitial = 'U';
+
+                        if (review.userId) {
+                            try {
+                                const userDoc = await getDoc(doc(db, 'users', review.userId));
+                                if (userDoc.exists()) {
+                                    const userData = userDoc.data();
+                                    username = userData.nickname || userData.name || 'Utente';
+                                    userInitial = username.charAt(0).toUpperCase();
+                                }
+                            } catch (error) {
+                                console.error('Error fetching user data:', error);
+                            }
+                        }
+
+                        const starsHTML = Array.from({ length: 5 }, (_, i) =>
+                            `<span class="star ${i < review.rating ? '' : 'empty'}">★</span>`
+                        ).join('');
+
+                        reviewsHTML += `
+                        <div class="review-item">
+                            <div class="review-header">
+                                <div class="review-user">
+                                    <div class="review-avatar">${userInitial}</div>
+                                    <div class="review-user-info">
+                                        <div class="review-username">${username}</div>
+                                        <div class="review-date">${review.createdAt?.toDate().toLocaleDateString()}</div>
+                                    </div>
+                                </div>
+                                <div class="review-rating">${starsHTML}</div>
+                            </div>
+                            <div class="review-text">${review.text}</div>
+                        </div>`;
+                    }
+
+                    container.innerHTML = reviewsHTML;
+                } catch (error) {
+                    console.error('Error loading all user reviews:', error);
+                    container.innerHTML = '<div class="no-reviews">Errore nel caricamento delle recensioni.</div>';
+                }
+            };
+
+            // NEW FUNCTION: Open Edit Review Modal
+            const openEditReviewModal = async (toolId, reviewId) => {
+                if (!currentUser.uid) return;
+
+                try {
+                    const reviewDoc = await getDoc(doc(db, 'tools', toolId, 'reviews', reviewId));
+                    if (!reviewDoc.exists()) {
+                        showToast('Recensione non trovata');
+                        return;
+                    }
+
+                    const reviewData = reviewDoc.data();
+                    const t = translations[currentLanguage];
+
+                    const modalHTML = `
+                    <div id="edit-review-modal" class="review-modal visible">
+                        <div class="review-modal-content">
+                            <div class="review-modal-header">
+                                <h2 class="review-modal-title">Modifica Recensione</h2>
+                                <button class="review-modal-close" data-action="close-modal">×</button>
+                            </div>
+                            <div class="rating-input-container">
+                                <label class="rating-input-label">Valutazione</label>
+                                <div class="stars-input">
+                                    ${Array.from({ length: 5 }, (_, i) =>
+                        `<span class="star-input ${i < reviewData.rating ? 'active' : ''}" data-rating="${i + 1}">★</span>`
+                    ).join('')}
+                                </div>
+                            </div>
+                            <div class="review-text-container">
+                                <label class="review-text-label">Recensione</label>
+                                <textarea class="review-text-input" id="edit-review-text" placeholder="Scrivi la tua recensione...">${reviewData.text}</textarea>
+                            </div>
+                            <div class="review-modal-actions">
+                                <button class="review-cancel-btn" data-action="close-modal">Annulla</button>
+                                <button class="review-submit-btn" id="update-review-btn" data-tool-id="${toolId}" data-review-id="${reviewId}">Aggiorna Recensione</button>
+                            </div>
+                        </div>
+                    </div>`;
+
+                    el.modalContainer.innerHTML = modalHTML;
+
+                    // Set current rating
+                    window.currentEditRating = reviewData.rating;
+
+                    // Attach event listener for update
+                    document.getElementById('update-review-btn')?.addEventListener('click', handleUpdateReview);
+                } catch (error) {
+                    console.error('Error opening edit review modal:', error);
+                    showToast('Errore nel caricamento della recensione');
+                }
+            };
+
+            // NEW FUNCTION: Handle Update Review
+            const handleUpdateReview = async (event) => {
+                const toolId = event.target.dataset.toolId;
+                const reviewId = event.target.dataset.reviewId;
+                const reviewText = document.getElementById('edit-review-text').value.trim();
+                const rating = window.currentEditRating || 1;
+
+                if (!reviewText) {
+                    showToast('Inserisci il testo della recensione');
+                    return;
+                }
+
+                try {
+                    const reviewRef = doc(db, 'tools', toolId, 'reviews', reviewId);
+                    await updateDoc(reviewRef, {
+                        text: reviewText,
+                        rating: rating,
+                        updatedAt: new Date()
+                    });
+
+                    showToast('Recensione aggiornata con successo');
+                    closeModal();
+
+                    // Refresh the sent reviews modal if it's open
+                    if (document.getElementById('sent-reviews-modal')) {
+                        await loadSentReviews();
+                    }
+                } catch (error) {
+                    console.error('Error updating review:', error);
+                    showToast('Errore nell\'aggiornamento della recensione');
+                }
+            };
+
+            // NEW FUNCTION: Confirm Delete Review
+            const confirmDeleteReview = (toolId, reviewId) => {
+                const t = translations[currentLanguage];
+
+                const modalHTML = `
+                <div id="confirm-delete-review-modal" class="modal-overlay visible">
+                    <div class="modal-content">
+                        <h2>Conferma Eliminazione</h2>
+                        <p>Sei sicuro di voler eliminare questa recensione? Questa azione non può essere annullata.</p>
+                        <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px;">
+                            <button class="review-cancel-btn" data-action="close-modal">Annulla</button>
+                            <button class="review-submit-btn" id="confirm-delete-review-btn" data-tool-id="${toolId}" data-review-id="${reviewId}" style="background-color: #ff6b6b;">Elimina</button>
+                        </div>
+                    </div>
+                </div>`;
+
+                el.modalContainer.innerHTML = modalHTML;
+
+                // Attach event listener for delete confirmation
+                document.getElementById('confirm-delete-review-btn')?.addEventListener('click', handleDeleteReview);
+            };
+
+            // NEW FUNCTION: Handle Delete Review
+            const handleDeleteReview = async (event) => {
+                const toolId = event.target.dataset.toolId;
+                const reviewId = event.target.dataset.reviewId;
+
+                try {
+                    await deleteDoc(doc(db, 'tools', toolId, 'reviews', reviewId));
+                    showToast('Recensione eliminata con successo');
+                    closeModal();
+
+                    // Refresh the sent reviews modal if it's open
+                    if (document.getElementById('sent-reviews-modal')) {
+                        await loadSentReviews();
+                    }
+                } catch (error) {
+                    console.error('Error deleting review:', error);
+                    showToast('Errore nell\'eliminazione della recensione');
                 }
             };
 
@@ -10513,6 +11007,30 @@
                             closeUserProfileDropdown();
                             openChangePasswordModal();
                             break;
+                        case 'view-sent-reviews':
+                            closeUserProfileDropdown();
+                            openSentReviewsModal();
+                            break;
+                        case 'view-all-user-reviews':
+                            const toolId = actionTarget.dataset.toolId;
+                            if (toolId) {
+                                openAllUserReviewsModal(toolId);
+                            }
+                            break;
+                        case 'edit-review':
+                            const editToolId = actionTarget.dataset.toolId;
+                            const editReviewId = actionTarget.dataset.reviewId;
+                            if (editToolId && editReviewId) {
+                                openEditReviewModal(editToolId, editReviewId);
+                            }
+                            break;
+                        case 'delete-review':
+                            const deleteToolId = actionTarget.dataset.toolId;
+                            const deleteReviewId = actionTarget.dataset.reviewId;
+                            if (deleteToolId && deleteReviewId) {
+                                confirmDeleteReview(deleteToolId, deleteReviewId);
+                            }
+                            break;
                         case 'logout':
                             closeUserProfileDropdown();
                             handleLogout(); // Usa la nuova funzione centralizzata
@@ -10544,7 +11062,16 @@
             document.addEventListener('click', (e) => {
                 if (e.target.classList.contains('star-input')) {
                     const rating = parseInt(e.target.dataset.rating);
-                    setRating(rating);
+                    // Check if we're in edit mode
+                    if (document.getElementById('edit-review-modal')) {
+                        window.currentEditRating = rating;
+                        const starsInput = document.querySelectorAll('.star-input');
+                        starsInput.forEach((star, index) => {
+                            star.classList.toggle('active', index < rating);
+                        });
+                    } else {
+                        setRating(rating);
+                    }
                 }
             });
 
