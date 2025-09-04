@@ -1306,6 +1306,21 @@
             visibility: visible;
         }
 
+        /* Responsive modal overlay */
+        @media (max-width: 768px) {
+            .modal-overlay {
+                align-items: flex-start;
+                padding-top: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .modal-overlay {
+                align-items: flex-start;
+                padding-top: 10px;
+            }
+        }
+
         .modal-content {
             background: var(--spotify-card);
             padding: 24px;
@@ -1338,6 +1353,50 @@
             cursor: pointer;
             text-transform: uppercase;
             letter-spacing: 1px;
+        }
+
+        /* Stili per il pulsante admin migliorato */
+        .admin-add-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 16px 24px;
+            text-transform: none;
+            letter-spacing: normal;
+            transition: all 0.2s ease;
+        }
+
+        .admin-add-button:hover {
+            background-color: #1ed760;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(29, 185, 84, 0.3);
+        }
+
+        .admin-add-button .button-icon {
+            font-size: 24px;
+            font-weight: 300;
+            line-height: 1;
+        }
+
+        .admin-add-button .button-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 2px;
+        }
+
+        .admin-add-button .button-primary {
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .admin-add-button .button-secondary {
+            font-size: 14px;
+            font-weight: 500;
+            opacity: 0.8;
+            line-height: 1.2;
         }
 
         #detail-content h2 {
@@ -2348,9 +2407,11 @@
         #replace-featured-modal .input-group,
         #change-password-modal .input-group,
         /* AGGIUNTO */
-        #change-nickname-modal .input-group {
+        #change-nickname-modal .input-group,
+        #add-global-tool-modal .input-group,
+        #edit-global-tool-modal .input-group {
             /* AGGIUNTO */
-            margin-bottom: 16px;
+            margin-bottom: 20px;
             text-align: left;
         }
 
@@ -2359,12 +2420,15 @@
         #replace-featured-modal label,
         #change-password-modal label,
         /* AGGIUNTO */
-        #change-nickname-modal label {
+        #change-nickname-modal label,
+        #add-global-tool-modal label,
+        #edit-global-tool-modal label {
             /* AGGIUNTO */
             display: block;
-            font-weight: 500;
-            margin-bottom: 8px;
-            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 15px;
+            color: var(--spotify-text);
         }
 
         #settings-modal input,
@@ -2375,21 +2439,193 @@
         /* AGGIUNTO */
         #change-nickname-modal input,
         /* AGGIUNTO */
-        #edit-app-modal input {
+        #edit-app-modal input,
+        #add-global-tool-modal input,
+        #add-global-tool-modal textarea,
+        #add-global-tool-modal select,
+        #edit-global-tool-modal input,
+        #edit-global-tool-modal textarea,
+        #edit-global-tool-modal select {
             width: 100%;
-            padding: 14px 16px;
+            padding: 16px 18px;
             font-size: 16px;
             background-color: var(--spotify-bg-light);
             border: 1px solid rgba(128, 128, 128, 0.2);
-            border-radius: 8px;
+            border-radius: 12px;
             color: var(--spotify-text);
             box-sizing: border-box;
-            /* Ensure padding doesn't affect width */
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            font-family: var(--font-family);
         }
 
         #add-app-modal textarea {
             min-height: 80px;
             resize: vertical;
+        }
+
+        /* Stili specifici per il modal Aggiungi AI */
+        .add-ai-modal {
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            margin: 20px;
+            width: calc(100% - 40px);
+        }
+
+        .add-ai-form {
+            padding-top: 24px;
+        }
+
+        /* Responsive design per il modal */
+        @media (max-width: 768px) {
+            .add-ai-modal {
+                max-width: none;
+                width: calc(100% - 20px);
+                margin: 10px;
+                max-height: 95vh;
+            }
+
+            .add-ai-form {
+                padding-top: 16px;
+            }
+
+            #add-global-tool-modal .input-group,
+            #edit-global-tool-modal .input-group {
+                margin-bottom: 16px;
+            }
+
+            #add-global-tool-modal input,
+            #add-global-tool-modal textarea,
+            #add-global-tool-modal select,
+            #edit-global-tool-modal input,
+            #edit-global-tool-modal textarea,
+            #edit-global-tool-modal select {
+                padding: 14px 16px;
+                font-size: 16px;
+            }
+
+            #add-global-tool-modal h2,
+            #edit-global-tool-modal h2 {
+                font-size: 20px;
+                margin-bottom: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .add-ai-modal {
+                width: calc(100% - 10px);
+                margin: 5px;
+                border-radius: 12px;
+                max-height: 98vh;
+            }
+
+            .add-ai-form {
+                padding-top: 12px;
+            }
+
+            #add-global-tool-modal .input-group,
+            #edit-global-tool-modal .input-group {
+                margin-bottom: 14px;
+            }
+
+            #add-global-tool-modal input,
+            #add-global-tool-modal textarea,
+            #add-global-tool-modal select,
+            #edit-global-tool-modal input,
+            #edit-global-tool-modal textarea,
+            #edit-global-tool-modal select {
+                padding: 12px 14px;
+                font-size: 16px;
+                border-radius: 10px;
+            }
+
+            #add-global-tool-modal label,
+            #edit-global-tool-modal label {
+                font-size: 14px;
+                margin-bottom: 8px;
+            }
+
+            #add-global-tool-modal h2,
+            #edit-global-tool-modal h2 {
+                font-size: 18px;
+                margin-bottom: 12px;
+            }
+
+            #add-global-tool-modal .button,
+            #edit-global-tool-modal .button {
+                padding: 14px 20px;
+                font-size: 16px;
+                margin-top: 8px;
+            }
+
+            .modal-close-btn {
+                font-size: 20px;
+                top: 10px;
+                right: 10px;
+            }
+        }
+
+        #add-global-tool-modal input:focus,
+        #add-global-tool-modal textarea:focus,
+        #add-global-tool-modal select:focus,
+        #edit-global-tool-modal input:focus,
+        #edit-global-tool-modal textarea:focus,
+        #edit-global-tool-modal select:focus {
+            outline: none;
+            border-color: var(--spotify-accent);
+            box-shadow: 0 0 0 3px rgba(29, 185, 84, 0.1);
+        }
+
+        #add-global-tool-modal textarea,
+        #edit-global-tool-modal textarea {
+            min-height: 100px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+
+        #add-global-tool-modal select,
+        #edit-global-tool-modal select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 12px center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            padding-right: 40px;
+        }
+
+        .checkbox-group {
+            margin: 24px 0 32px 0;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background-color: var(--spotify-bg-light);
+            border-radius: 12px;
+            border: 1px solid rgba(128, 128, 128, 0.2);
+            transition: background-color 0.2s ease;
+        }
+
+        .checkbox-wrapper:hover {
+            background-color: var(--spotify-card);
+        }
+
+        .checkbox-wrapper input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin: 0;
+            cursor: pointer;
+            accent-color: var(--spotify-accent);
+        }
+
+        .checkbox-wrapper label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 16px;
         }
 
         /* Style for file input */
@@ -4485,6 +4721,40 @@
             font-weight: 500;
             color: var(--spotify-accent);
             line-height: 1.6;
+        }
+
+        /* Toast Message Styles */
+        .toast-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--spotify-card);
+            color: var(--spotify-text);
+            padding: 16px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 10000;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            max-width: 300px;
+            word-wrap: break-word;
+            border-left: 4px solid var(--spotify-accent);
+        }
+
+        .toast-message.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Toast responsive adjustments */
+        @media (max-width: 480px) {
+            .toast-message {
+                top: 10px;
+                right: 10px;
+                left: 10px;
+                max-width: none;
+            }
         }
     </style>
     <!-- SCRIPT AGGIUNTI PER REACT E BABEL -->
@@ -6764,6 +7034,26 @@
                     alreadyReviewed: "Hai già recensito questo strumento",
                     anonymous: "Utente Anonimo",
                     unknownDate: "Data sconosciuta",
+                    // Admin translations
+                    addAI: "Aggiungi AI",
+                    addAIToDatabase: "Aggiungi AI al Database",
+                    aiNameLabel: "Nome AI",
+                    aiNamePlaceholder: "Es. ChatGPT",
+                    descriptionITLabel: "Descrizione (IT)",
+                    descriptionITPlaceholder: "Descrizione in italiano...",
+                    descriptionENLabel: "Descrizione (EN)",
+                    descriptionENPlaceholder: "Descrizione in inglese...",
+                    websiteLinkLabel: "Link Sito Web",
+                    websiteLinkPlaceholder: "https://sito.com",
+                    logoURLLabel: "Link Logo URL",
+                    logoURLPlaceholder: "https://sito.com/logo.png",
+                    categoryLabel: "Categoria",
+                    countryLabel: "Paese",
+                    countryPlaceholder: "USA, Cina...",
+                    saveToDatabase: "Salva nel Database",
+                    editAIInDatabase: "Modifica AI nel Database",
+                    documentIdLabel: "ID Documento (non modificabile)",
+                    saveChanges: "Salva Modifiche",
                 },
                 en: {
                     // Auth
@@ -6912,6 +7202,26 @@
                     alreadyReviewed: "You have already reviewed this tool",
                     anonymous: "Anonymous User",
                     unknownDate: "Unknown date",
+                    // Admin translations
+                    addAI: "Add AI",
+                    addAIToDatabase: "Add AI to Database",
+                    aiNameLabel: "AI Name",
+                    aiNamePlaceholder: "Ex. ChatGPT",
+                    descriptionITLabel: "Description (IT)",
+                    descriptionITPlaceholder: "Description in Italian...",
+                    descriptionENLabel: "Description (EN)",
+                    descriptionENPlaceholder: "Description in English...",
+                    websiteLinkLabel: "Website Link",
+                    websiteLinkPlaceholder: "https://website.com",
+                    logoURLLabel: "Logo URL Link",
+                    logoURLPlaceholder: "https://website.com/logo.png",
+                    categoryLabel: "Category",
+                    countryLabel: "Country",
+                    countryPlaceholder: "USA, China...",
+                    saveToDatabase: "Save to Database",
+                    editAIInDatabase: "Edit AI in Database",
+                    documentIdLabel: "Document ID (not editable)",
+                    saveChanges: "Save Changes",
                 }
             };
 
@@ -6956,9 +7266,9 @@
                 }
             };
 
-                        // --- DATABASE PERSONALIZZATO (CARICATO DA FIREBASE) ---
+            // --- DATABASE PERSONALIZZATO (CARICATO DA FIREBASE) ---
             let aiToolsData = []; // Questa variabile verrà popolata dinamicamente da Firestore
-	            // NUOVA FUNZIONE per caricare gli strumenti da Firestore
+            // NUOVA FUNZIONE per caricare gli strumenti da Firestore
             const fetchToolsFromFirestore = async () => {
                 try {
                     const toolsCollectionRef = collection(db, "tools");
@@ -7963,7 +8273,7 @@
                         console.error("Chatbot mount function not found.");
                     }
                 } else if (currentView === 'top-ai') {
-                
+
                     // Limita a 4 le AI In evidenza
                     const featuredTools = staticTools.filter(t => t.isFeatured).slice(0, 4); // Solo 4 AI In evidenza
                     let contentHTML = `<div class="section-title" data-translate="featured">${t.featured}</div><div class="grid-container">`;
@@ -8038,11 +8348,17 @@
 
                 } else if (currentView === 'explore') {
                     el.mainContent.insertAdjacentHTML('beforeend', `<div class="search-bar-container"><input type="text" id="search-input" placeholder="${t.searchPlaceholder}"></div>`);
-                                        // NUOVO: Mostra il pulsante "Aggiungi AI" solo agli amministratori
+                    // NUOVO: Mostra il pulsante "Aggiungi AI" solo agli amministratori
                     if (currentUser.role === 'admin') {
                         const adminAddToolButtonHTML = `
                         <div style="padding: 0 16px 16px;">
-                             <button class="button" data-action="open-add-global-tool-modal" style="width: 100%;">+ Aggiungi AI al Database</button>
+                             <button class="button admin-add-button" data-action="open-add-global-tool-modal" style="width: 100%;">
+                                <div class="button-icon">+</div>
+                                <div class="button-text">
+                                    <div class="button-primary">Aggiungi AI</div>
+                                    <div class="button-secondary"></div>
+                                </div>
+                             </button>
                         </div>
                         `;
                         el.mainContent.insertAdjacentHTML('beforeend', adminAddToolButtonHTML);
@@ -8792,12 +9108,12 @@
                     for (const reviewDoc of reviewsSnapshot.docs) {
                         const reviewData = reviewDoc.data();
                         const toolId = reviewDoc.ref.parent.parent.id; // Get the parent tool ID
-                        
+
                         // Find the tool in the local list (static + custom)
                         const tool = getAllToolsForCurrentUser().find(t => t.id === toolId);
-                        
+
                         if (tool) {
-                             reviewsWithToolData.push({
+                            reviewsWithToolData.push({
                                 id: reviewDoc.id,
                                 toolId: toolId,
                                 toolName: tool.name, // Use name from local data
@@ -8841,7 +9157,7 @@
                     container.innerHTML = `<div class="no-sent-reviews">Errore nel caricamento delle recensioni.</div>`;
                     // Firestore often gives a helpful error message in the console with a link to create the required index for collection group queries.
                     if (error.message.includes('index')) {
-                         container.innerHTML += `<p style="font-size:12px; color: #ff6b6b; margin-top: 10px;">Questo errore potrebbe richiedere la creazione di un indice in Firestore. Controlla la console del browser per un link di creazione automatica.</p>`;
+                        container.innerHTML += `<p style="font-size:12px; color: #ff6b6b; margin-top: 10px;">Questo errore potrebbe richiedere la creazione di un indice in Firestore. Controlla la console del browser per un link di creazione automatica.</p>`;
                     }
                 }
             };
@@ -9191,7 +9507,9 @@
                 el.modalContainer.innerHTML = modalHTML;
 
                 document.getElementById('update-app-btn').addEventListener('click', (e) => {
+                    console.log('update-app-btn clicked');
                     const id = e.currentTarget.dataset.id;
+                    console.log('App ID:', id);
                     handleUpdateApp(id);
                 });
 
@@ -9205,7 +9523,11 @@
 
             // NEW FUNCTION: Handle app update
             const handleUpdateApp = async (toolId) => {
-                if (!currentUser.uid) return;
+                console.log('handleUpdateApp called with toolId:', toolId);
+                if (!currentUser.uid) {
+                    console.log('No user logged in');
+                    return;
+                }
 
                 const t = translations[currentLanguage];
                 const nameInput = document.getElementById('edit-app-name');
@@ -10056,7 +10378,7 @@
                 el.modalContainer.innerHTML = modalHTML;
             };
 
-                        // NUOVA FUNZIONE: Apre il modale per aggiungere uno strumento globale (solo admin) - STILE MIGLIORATO
+            // NUOVA FUNZIONE: Apre il modale per aggiungere uno strumento globale (solo admin) - STILE MIGLIORATO
             const openAddGlobalToolModal = () => {
                 if (currentUser.role !== 'admin') return;
                 const t = translations[currentLanguage];
@@ -10065,119 +10387,114 @@
 
                 const modalHTML = `
                 <div id="add-global-tool-modal" class="modal-overlay visible">
-                    <div class="modal-content" style="text-align: left;">
+                    <div class="modal-content add-ai-modal" style="text-align: left;">
                         <button class="modal-close-btn" data-action="close-modal">×</button>
-                        <h2>Aggiungi AI al Database</h2>
+                        <h2>${t.addAIToDatabase}</h2>
                         
-                        <div class="input-group" style="margin-top: 24px;">
-                            <label for="global-tool-name">Nome AI</label>
-                            <input type="text" id="global-tool-name" placeholder="Es. ChatGPT">
-                        </div>
-
-                        <div class="input-group">
-                            <label for="global-tool-desc-it">Descrizione (IT)</label>
-                            <textarea id="global-tool-desc-it" placeholder="Descrizione in italiano..."></textarea>
-                        </div>
-                        <div class="input-group">
-                            <label for="global-tool-desc-en">Descrizione (EN)</label>
-                            <textarea id="global-tool-desc-en" placeholder="Descrizione in inglese..."></textarea>
-                        </div>
-
-                        <div class="input-group">
-                            <label for="global-tool-website">Link Sito Web</label>
-                            <input type="url" id="global-tool-website" placeholder="https://sito.com">
-                        </div>
-                        <div class="input-group">
-                            <label for="global-tool-logo">Link Logo URL</label>
-                            <input type="url" id="global-tool-logo" placeholder="https://sito.com/logo.png">
-                        </div>
-
-                        <div class="form-row" style="grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div class="add-ai-form">
                             <div class="input-group">
-                                <label for="global-tool-category">Categoria</label>
+                                <label for="global-tool-name">${t.aiNameLabel}</label>
+                                <input type="text" id="global-tool-name" placeholder="${t.aiNamePlaceholder}">
+                            </div>
+
+                            <div class="input-group">
+                                <label for="global-tool-desc-it">${t.descriptionITLabel}</label>
+                                <textarea id="global-tool-desc-it" placeholder="${t.descriptionITPlaceholder}"></textarea>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="global-tool-desc-en">${t.descriptionENLabel}</label>
+                                <textarea id="global-tool-desc-en" placeholder="${t.descriptionENPlaceholder}"></textarea>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="global-tool-website">${t.websiteLinkLabel}</label>
+                                <input type="url" id="global-tool-website" placeholder="${t.websiteLinkPlaceholder}">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="global-tool-logo">${t.logoURLLabel}</label>
+                                <input type="url" id="global-tool-logo" placeholder="${t.logoURLPlaceholder}">
+                            </div>
+
+                            <div class="input-group">
+                                <label for="global-tool-category">${t.categoryLabel}</label>
                                 <select id="global-tool-category">${categoryOptions}</select>
                             </div>
+                            
                             <div class="input-group">
-                                <label for="global-tool-country">Paese</label>
-                                <input type="text" id="global-tool-country" placeholder="USA, Cina...">
+                                <label for="global-tool-country">${t.countryLabel}</label>
+                                <input type="text" id="global-tool-country" placeholder="${t.countryPlaceholder}">
                             </div>
-                        </div>
 
-                        <div class="input-group" style="display:flex; align-items:center; gap:10px; margin-top: 16px; margin-bottom: 24px;">
-                            <input type="checkbox" id="global-tool-featured" style="width: auto; height: 18px;">
-                            <label for="global-tool-featured" style="margin-bottom: 0;">In Evidenza?</label>
+                            <button class="button" data-action="submit-global-tool">${t.saveToDatabase}</button>
                         </div>
-
-                        <button class="button" data-action="submit-global-tool" style="width: 100%;">Salva nel Database</button>
                     </div>
                 </div>`;
                 el.modalContainer.innerHTML = modalHTML;
             };
 
-                        // NUOVA FUNZIONE: Apre il modale per MODIFICARE uno strumento globale (solo admin)
+            // NUOVA FUNZIONE: Apre il modale per MODIFICARE uno strumento globale (solo admin)
             const openEditGlobalToolModal = (toolId) => {
                 if (currentUser.role !== 'admin') return;
-                
+
                 const toolToEdit = aiToolsData.find(t => t.id === toolId);
                 if (!toolToEdit) {
                     showToast("Strumento non trovato.");
                     return;
                 }
-                
+
                 const t = translations[currentLanguage];
                 const categoryOptions = categories.map(cat => `<option value="${cat.id}" ${cat.id === toolToEdit.category ? 'selected' : ''}>${cat.name[currentLanguage]}</option>`).join('');
-
                 const modalHTML = `
                 <div id="edit-global-tool-modal" class="modal-overlay visible">
-                    <div class="modal-content" style="text-align: left;">
+                    <div class="modal-content add-ai-modal" style="text-align: left;">
                         <button class="modal-close-btn" data-action="close-modal">×</button>
-                        <h2>Modifica AI nel Database</h2>
+                        <h2>${t.editAIInDatabase}</h2>
                         
-                        <div class="input-group" style="margin-top: 24px;">
-                            <label>ID Documento (non modificabile)</label>
-                            <input type="text" value="${toolToEdit.id}" disabled style="background-color: var(--spotify-bg);">
-                        </div>
-
-                        <div class="input-group">
-                            <label for="edit-global-tool-name">Nome AI</label>
-                            <input type="text" id="edit-global-tool-name" value="${toolToEdit.name || ''}">
-                        </div>
-
-                        <div class="input-group">
-                            <label for="edit-global-tool-desc-it">Descrizione (IT)</label>
-                            <textarea id="edit-global-tool-desc-it">${toolToEdit.description.it || ''}</textarea>
-                        </div>
-                        <div class="input-group">
-                            <label for="edit-global-tool-desc-en">Descrizione (EN)</label>
-                            <textarea id="edit-global-tool-desc-en">${toolToEdit.description.en || ''}</textarea>
-                        </div>
-
-                        <div class="input-group">
-                            <label for="edit-global-tool-website">Link Sito Web</label>
-                            <input type="url" id="edit-global-tool-website" value="${toolToEdit.website || ''}">
-                        </div>
-                        <div class="input-group">
-                            <label for="edit-global-tool-logo">Link Logo URL</label>
-                            <input type="url" id="edit-global-tool-logo" value="${toolToEdit.logoUrl || ''}">
-                        </div>
-
-                        <div class="form-row" style="grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div class="add-ai-form">
                             <div class="input-group">
-                                <label for="edit-global-tool-category">Categoria</label>
+                                <label>${t.documentIdLabel}</label>
+                                <input type="text" value="${toolToEdit.id}" disabled style="background-color: var(--spotify-bg);">
+                            </div>
+
+                            <div class="input-group">
+                                <label for="edit-global-tool-name">${t.aiNameLabel}</label>
+                                <input type="text" id="edit-global-tool-name" value="${toolToEdit.name || ''}">
+                            </div>
+
+                            <div class="input-group">
+                                <label for="edit-global-tool-desc-it">${t.descriptionITLabel}</label>
+                                <textarea id="edit-global-tool-desc-it">${toolToEdit.description.it || ''}</textarea>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="edit-global-tool-desc-en">${t.descriptionENLabel}</label>
+                                <textarea id="edit-global-tool-desc-en">${toolToEdit.description.en || ''}</textarea>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="edit-global-tool-website">${t.websiteLinkLabel}</label>
+                                <input type="url" id="edit-global-tool-website" value="${toolToEdit.website || ''}">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="edit-global-tool-logo">${t.logoURLLabel}</label>
+                                <input type="url" id="edit-global-tool-logo" value="${toolToEdit.logoUrl || ''}">
+                            </div>
+
+                            <div class="input-group">
+                                <label for="edit-global-tool-category">${t.categoryLabel}</label>
                                 <select id="edit-global-tool-category">${categoryOptions}</select>
                             </div>
+                            
                             <div class="input-group">
-                                <label for="edit-global-tool-country">Paese</label>
+                                <label for="edit-global-tool-country">${t.countryLabel}</label>
                                 <input type="text" id="edit-global-tool-country" value="${toolToEdit.country || ''}">
                             </div>
-                        </div>
 
-                        <div class="input-group" style="display:flex; align-items:center; gap:10px; margin-top: 16px; margin-bottom: 24px;">
-                            <input type="checkbox" id="edit-global-tool-featured" style="width: auto; height: 18px;" ${toolToEdit.isFeatured ? 'checked' : ''}>
-                            <label for="edit-global-tool-featured" style="margin-bottom: 0;">In Evidenza?</label>
+                            <button class="button" data-action="submit-edit-global-tool" data-id="${toolToEdit.id}">${t.saveChanges}</button>
                         </div>
-
-                        <button class="button" data-action="submit-edit-global-tool" data-id="${toolToEdit.id}" style="width: 100%;">Salva Modifiche</button>
                     </div>
                 </div>`;
                 el.modalContainer.innerHTML = modalHTML;
@@ -10185,7 +10502,19 @@
 
             // NUOVA FUNZIONE: Salva le modifiche dello strumento globale su Firestore
             const handleEditGlobalTool = async (toolId) => {
-                if (currentUser.role !== 'admin' || !toolId) return;
+                console.log('handleEditGlobalTool called with toolId:', toolId);
+                if (currentUser.role !== 'admin' || !toolId) {
+                    console.log('User is not admin or no toolId, role:', currentUser.role, 'toolId:', toolId);
+                    return;
+                }
+
+                // Recuperiamo il tool esistente per mantenere i campi non modificabili
+                const existingTool = aiToolsData.find(t => t.id === toolId);
+                if (!existingTool) {
+                    console.log('Tool not found in aiToolsData');
+                    showToast("Strumento non trovato.");
+                    return;
+                }
 
                 const updatedToolData = {
                     id: toolId, // Manteniamo l'ID
@@ -10198,7 +10527,7 @@
                     logoUrl: document.getElementById('edit-global-tool-logo').value.trim(),
                     category: document.getElementById('edit-global-tool-category').value,
                     country: document.getElementById('edit-global-tool-country').value.trim(),
-                    isFeatured: document.getElementById('edit-global-tool-featured').checked
+                    isFeatured: existingTool.isFeatured || false
                 };
 
                 // Validazione base
@@ -10211,10 +10540,10 @@
                     const toolDocRef = doc(db, "tools", toolId);
                     // Usiamo updateDoc per aggiornare il documento esistente
                     await updateDoc(toolDocRef, updatedToolData);
-                    
+
                     showToast("Strumento AI aggiornato con successo!");
                     closeModal();
-                    
+
                     // Ricarica i dati e la vista per mostrare le modifiche
                     aiToolsData = await fetchToolsFromFirestore();
                     renderView();
@@ -10226,8 +10555,12 @@
             };
             // NUOVA FUNZIONE: Salva il nuovo strumento globale su Firestore
             const handleAddGlobalTool = async () => {
-                if (currentUser.role !== 'admin') return;
-                
+                console.log('handleAddGlobalTool called');
+                if (currentUser.role !== 'admin') {
+                    console.log('User is not admin, role:', currentUser.role);
+                    return;
+                }
+
                 const toolId = document.getElementById('global-tool-id').value.trim();
                 if (!toolId) { showToast("L'ID unico è obbligatorio."); return; }
 
@@ -10242,7 +10575,7 @@
                     logoUrl: document.getElementById('global-tool-logo').value.trim(),
                     category: document.getElementById('global-tool-category').value,
                     country: document.getElementById('global-tool-country').value.trim(),
-                    isFeatured: document.getElementById('global-tool-featured').checked
+                    isFeatured: false
                 };
 
                 // Validazione base
@@ -10255,10 +10588,10 @@
                     // Usa setDoc con l'ID fornito per creare il nuovo documento nella collezione 'tools'
                     const toolDocRef = doc(db, "tools", toolId);
                     await setDoc(toolDocRef, newToolData);
-                    
+
                     showToast("Strumento AI aggiunto con successo al database!");
                     closeModal();
-                    
+
                     // Ricarica i dati e la vista per mostrare il nuovo strumento
                     aiToolsData = await fetchToolsFromFirestore();
                     renderView();
@@ -10293,17 +10626,19 @@
                     const action = actionTarget.dataset.action;
 
                     switch (action) {
-                                                // NUOVE AZIONI ADMIN
+                        // NUOVE AZIONI ADMIN
                         case 'open-add-global-tool-modal':
                             openAddGlobalToolModal();
                             break;
                         case 'submit-global-tool':
+                            console.log('submit-global-tool action triggered');
                             handleAddGlobalTool();
                             break;
-                                                    case 'open-edit-global-tool-modal':
+                        case 'open-edit-global-tool-modal':
                             openEditGlobalToolModal(actionTarget.dataset.id);
                             break;
                         case 'submit-edit-global-tool':
+                            console.log('submit-edit-global-tool action triggered');
                             handleEditGlobalTool(actionTarget.dataset.id);
                             break;
                         case 'navigate-to-optimizer':
@@ -10763,11 +11098,11 @@
                 }
             });
 
-                        // --- FIREBASE AUTH STATE CHANGE LISTENER ---
+            // --- FIREBASE AUTH STATE CHANGE LISTENER ---
             onAuthStateChanged(auth, async (user) => { // Aggiungi "async" qui
                 // Carica gli strumenti da Firestore PRIMA di inizializzare l'app
                 aiToolsData = await fetchToolsFromFirestore();
-                
+
                 if (user) {
                     // L'utente è loggato, avvia l'app con i suoi dati.
                     console.log("User is logged in:", user.uid);
