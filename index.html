@@ -6091,7 +6091,8 @@
             // Crea un testo di anteprima per la lista chat
             let previewText = '';
             if (contentObject.type === 'ai_link') {
-                const linkedTool = window.aiToolsData.find(t => t.id === contentObject.toolId);
+                const currentTools = window.getLocalizedToolsData ? window.getLocalizedToolsData(currentLanguage) : [];
+                const linkedTool = currentTools.find(t => t.id === contentObject.toolId);
                 previewText = `🔗 Ha suggerito: ${linkedTool ? linkedTool.name : 'un\'AI'}`;
             } else {
                 previewText = contentObject.text;
@@ -6956,8 +6957,18 @@
                 }
             };
 
-            // --- DATABASE PERSONALIZZATO ---
-            const aiToolsData = [
+            // --- STATIC TOOLS CATALOG VIA FIRESTORE ---
+            // Holds the raw tool documents fetched from Firestore
+            window.allStaticToolsRaw = [];
+
+            // One-time seeding: populate ai_tools if empty
+            const ensureAiToolsSeeded = async () => {
+                const toolsColRef = collection(db, 'ai_tools');
+                const existing = await getDocs(toolsColRef);
+                if (!existing.empty) return;
+
+                // Seed data used ONLY for initial population
+                const seedData = [
                 {
                     id: 'tool-meta',
                     name: 'Meta AI',
@@ -7627,13 +7638,33 @@
                     isFeatured: false,
                     logoUrl: 'https://i.postimg.cc/C1p0hHKt/db-NOM1-In-400x400.png'
                 },
-            ];
+                ];
+
+                // Write each seed tool as its own document (id as document ID)
+                for (const tool of seedData) {
+                    try {
+                        await setDoc(doc(db, 'ai_tools', tool.id), tool);
+                    } catch (e) {
+                        console.error('Failed seeding tool', tool.id, e);
+                    }
+                }
+            };
+
+            // Load tools from Firestore into memory
+            const loadAllStaticTools = async () => {
+                const toolsSnap = await getDocs(collection(db, 'ai_tools'));
+                window.allStaticToolsRaw = toolsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+            };
 
             // Funzione globale accessibile anche dallo script React
             window.getLocalizedToolsData = (lang) => {
-                return aiToolsData.map(tool => ({ ...tool, description: tool.description[lang] || tool.description['en'] }));
+                return (window.allStaticToolsRaw || []).map(tool => ({
+                    ...tool,
+                    description: typeof tool.description === 'object'
+                        ? (tool.description[lang] || tool.description['en'])
+                        : tool.description
+                }));
             }
-            window.aiToolsData = aiToolsData; // Keep static data accessible
 
             // MODIFICA: Le categorie ora hanno un ID e nomi traducibili
             const categories = [
@@ -7648,7 +7679,7 @@
                 // Add a generic category for user tools if needed, or let user specify
                 // For simplicity, let's allow user to pick from existing categories
             ];
-            const countries = [...new Set(aiToolsData.map(t => t.country))]
+            const countries = [...new Set((window.allStaticToolsRaw || []).map(t => t.country))]
                 .filter(c => c !== 'Global' && c !== 'Italia') // <-- Rimuove anche "Italia"
                 .map(c => {
                     // Se il paese è 'undefined', lo rinominiamo in "Nazione" e gli diamo una bandiera generica
@@ -10613,9 +10644,12 @@
 
             // --- INITIALIZATION LOGIC ---
 
-            const initializeAppForGuest = () => {
+            const initializeAppForGuest = async () => {
                 // Initialize currentUser with default empty state
                 currentUser = { uid: null, name: 'Guest', nickname: 'Guest', favorites: [], isPrivileged: false, userTools: [], userFeaturedTools: [], userFeaturedReplacements: {}, aiSuggestions: [] };
+                // Ensure static tools are available
+                await ensureAiToolsSeeded();
+                await loadAllStaticTools();
                 loadConversations();
                 unmountReactApp();
                 el.appContainer.style.display = 'flex';
@@ -10625,6 +10659,9 @@
             };
 
             const initializeAppWithUser = async (user) => {
+                // Ensure static tools are available
+                await ensureAiToolsSeeded();
+                await loadAllStaticTools();
                 const userDocRef = doc(db, "users", user.uid);
                 try {
                     const userDocSnap = await getDoc(userDocRef);
