@@ -10601,6 +10601,18 @@
                     showToast(`Errore: ${error.message}`);
                 }
             };
+            window.addEventListener('popstate', (event) => {
+                if (event.state && event.state.page) {
+                    // If a state exists from a previous pushState, update the view
+                    currentView = event.state.page;
+                    renderView();
+                } else {
+                    // If no state is found (e.g., initial page load), default to home
+                    currentView = 'home';
+                    renderView();
+                }
+            });
+
             // --- MAIN EVENT LISTENER ---
             document.body.addEventListener('click', (e) => {
                 const target = e.target;
@@ -10608,7 +10620,16 @@
                 // 1. Handle navigation buttons FIRST
                 const navBtn = target.closest('.nav-btn');
                 if (navBtn && navBtn.dataset.page !== currentView) {
-                    currentView = navBtn.dataset.page;
+                    const newView = navBtn.dataset.page;
+                    currentView = newView;
+
+                    // --- INSERT THIS CODE ---
+                    const state = { page: newView };
+                    const title = ''; // Title is ignored by most browsers
+                    const url = `#${newView}`; // Update the URL with a hash
+                    history.pushState(state, title, url);
+                    // --- END OF INSERTION ---
+
                     // Reset filters when changing main pages
                     activeFilter = 'All'; exploreFilter = { type: null, value: null }; rankingFilter = 'All'; // Reset all filters
                     renderView();
@@ -11100,6 +11121,20 @@
 
             // --- FIREBASE AUTH STATE CHANGE LISTENER ---
             onAuthStateChanged(auth, async (user) => { // Aggiungi "async" qui
+                // --- INSERT THIS CODE ---
+                // Check the URL hash to set the initial view
+                const initialHash = window.location.hash.substring(1); // e.g., 'explore' from '#explore'
+                const validPages = ['home', 'top-ai', 'explore', 'user-chats', 'favorites']; // Add any other valid page keys here
+
+                if (initialHash && validPages.includes(initialHash)) {
+                    currentView = initialHash;
+                } else {
+                    // Default to home view if hash is missing or invalid
+                    currentView = 'home';
+                    // Use replaceState to set the initial history entry without creating a new one
+                    history.replaceState({ page: 'home' }, '', '#home');
+                }
+                // --- END OF INSERTION ---
                 // Carica gli strumenti da Firestore PRIMA di inizializzare l'app
                 aiToolsData = await fetchToolsFromFirestore();
 
