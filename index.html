@@ -8182,15 +8182,29 @@
             </div>
         `;
 
-                let otherControlsHTML = `
-                <button id="theme-toggle-btn" class="global-btn" data-action="toggle-theme">${themeIcon}</button>
-            `;
+                let otherControlsHTML = '';
 
-                if (includeLangToggle) {
-                    otherControlsHTML += `
-                    <button id="lang-toggle-btn" class="global-btn" data-action="toggle-lang">${currentLanguage.toUpperCase()}</button>
-                `;
-                }
+// Aggiunge il pulsante "Aggiungi AI" per gli amministratori
+if (currentUser.role === 'admin') {
+    otherControlsHTML += `
+        <button id="admin-add-tool-btn" class="global-btn" data-action="open-add-global-tool-modal" title="${translations[currentLanguage].addAIToDatabase}">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor">
+                <path d="M0 0h24v24H0V0z" fill="none"/>
+                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+            </svg>
+        </button>
+    `;
+}
+
+otherControlsHTML += `
+<button id="theme-toggle-btn" class="global-btn" data-action="toggle-theme">${themeIcon}</button>
+`;
+
+if (includeLangToggle) {
+    otherControlsHTML += `
+    <button id="lang-toggle-btn" class="global-btn" data-action="toggle-lang">${currentLanguage.toUpperCase()}</button>
+`;
+}
 
                 // Return as an object to pass to React
                 return { avatar: avatarHTML, otherControls: otherControlsHTML };
@@ -8348,21 +8362,7 @@
 
                 } else if (currentView === 'explore') {
                     el.mainContent.insertAdjacentHTML('beforeend', `<div class="search-bar-container"><input type="text" id="search-input" placeholder="${t.searchPlaceholder}"></div>`);
-                    // NUOVO: Mostra il pulsante "Aggiungi AI" solo agli amministratori
-                    if (currentUser.role === 'admin') {
-                        const adminAddToolButtonHTML = `
-                        <div style="padding: 0 16px 16px;">
-                             <button class="button admin-add-button" data-action="open-add-global-tool-modal" style="width: 100%;">
-                                <div class="button-icon">+</div>
-                                <div class="button-text">
-                                    <div class="button-primary">Aggiungi AI</div>
-                                    <div class="button-secondary"></div>
-                                </div>
-                             </button>
-                        </div>
-                        `;
-                        el.mainContent.insertAdjacentHTML('beforeend', adminAddToolButtonHTML);
-                    }
+                    
 
                     if (exploreFilter.type) {
                         const allTools = getAllToolsForCurrentUser();
@@ -10555,52 +10555,51 @@
             };
             // NUOVA FUNZIONE: Salva il nuovo strumento globale su Firestore
             const handleAddGlobalTool = async () => {
-                console.log('handleAddGlobalTool called');
-                if (currentUser.role !== 'admin') {
-                    console.log('User is not admin, role:', currentUser.role);
-                    return;
-                }
+    console.log('handleAddGlobalTool called');
+    if (currentUser.role !== 'admin') {
+        console.log('User is not admin, role:', currentUser.role);
+        return;
+    }
 
-                const toolId = document.getElementById('global-tool-id').value.trim();
-                if (!toolId) { showToast("L'ID unico è obbligatorio."); return; }
+    // Rimosso il tentativo di leggere un ID inesistente.
 
-                const newToolData = {
-                    id: toolId,
-                    name: document.getElementById('global-tool-name').value.trim(),
-                    description: {
-                        it: document.getElementById('global-tool-desc-it').value.trim(),
-                        en: document.getElementById('global-tool-desc-en').value.trim()
-                    },
-                    website: document.getElementById('global-tool-website').value.trim(),
-                    logoUrl: document.getElementById('global-tool-logo').value.trim(),
-                    category: document.getElementById('global-tool-category').value,
-                    country: document.getElementById('global-tool-country').value.trim(),
-                    isFeatured: false
-                };
+    const newToolData = {
+        // L'ID non viene più specificato qui. Verrà generato da Firestore.
+        name: document.getElementById('global-tool-name').value.trim(),
+        description: {
+            it: document.getElementById('global-tool-desc-it').value.trim(),
+            en: document.getElementById('global-tool-desc-en').value.trim()
+        },
+        website: document.getElementById('global-tool-website').value.trim(),
+        logoUrl: document.getElementById('global-tool-logo').value.trim(),
+        category: document.getElementById('global-tool-category').value,
+        country: document.getElementById('global-tool-country').value.trim(),
+        isFeatured: false // Valore di default per i nuovi strumenti
+    };
 
-                // Validazione base
-                if (!newToolData.name || !newToolData.website || !newToolData.logoUrl) {
-                    showToast("Nome, Sito Web e URL Logo sono obbligatori.");
-                    return;
-                }
+    // Validazione base
+    if (!newToolData.name || !newToolData.website || !newToolData.logoUrl) {
+        showToast("Nome, Sito Web e URL Logo sono obbligatori.");
+        return;
+    }
 
-                try {
-                    // Usa setDoc con l'ID fornito per creare il nuovo documento nella collezione 'tools'
-                    const toolDocRef = doc(db, "tools", toolId);
-                    await setDoc(toolDocRef, newToolData);
+    try {
+        // Usa addDoc per creare un nuovo documento con un ID generato automaticamente
+        const toolsCollectionRef = collection(db, "tools");
+        await addDoc(toolsCollectionRef, newToolData);
 
-                    showToast("Strumento AI aggiunto con successo al database!");
-                    closeModal();
+        showToast("Strumento AI aggiunto con successo al database!");
+        closeModal();
 
-                    // Ricarica i dati e la vista per mostrare il nuovo strumento
-                    aiToolsData = await fetchToolsFromFirestore();
-                    renderView();
+        // Ricarica i dati e la vista per mostrare il nuovo strumento
+        aiToolsData = await fetchToolsFromFirestore();
+        renderView();
 
-                } catch (error) {
-                    console.error("Errore nell'aggiunta dello strumento globale:", error);
-                    showToast(`Errore: ${error.message}`);
-                }
-            };
+    } catch (error) {
+        console.error("Errore nell'aggiunta dello strumento globale:", error);
+        showToast(`Errore: ${error.message}`);
+    }
+};
             window.addEventListener('popstate', (event) => {
                 if (event.state && event.state.page) {
                     // If a state exists from a previous pushState, update the view
