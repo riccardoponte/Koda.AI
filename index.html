@@ -7035,6 +7035,7 @@
                     anonymous: "Utente Anonimo",
                     unknownDate: "Data sconosciuta",
                     // Admin translations
+                    alternativeAIsLabel: "AI Alternative (max 3)",
                     addAI: "Aggiungi AI",
                     addAIToDatabase: "Aggiungi AI al Database",
                     aiNameLabel: "Nome AI",
@@ -7203,6 +7204,7 @@
                     anonymous: "Anonymous User",
                     unknownDate: "Unknown date",
                     // Admin translations
+                    alternativeAIsLabel: "Alternative AIs (max 3)",
                     addAI: "Add AI",
                     addAIToDatabase: "Add AI to Database",
                     aiNameLabel: "AI Name",
@@ -7534,18 +7536,33 @@
                 const isUserFeatured = isMyUserTool && currentUser.userFeaturedTools?.includes(toolId);
 
                 let recommendationHTML = '';
-                let recommendedTool = null;
-                const allToolsForRec = getAllToolsForCurrentUser(); // Usa la lista locale per le raccomandazioni
-                if (tool.recommendationId) {
-                    recommendedTool = allToolsForRec.find(t => t.id === tool.recommendationId);
+                const allToolsForRec = getAllToolsForCurrentUser();
+                const recommendedToolIds = tool.recommendationIds || [];
+
+                if (recommendedToolIds.length > 0) {
+                    // L'admin ha impostato raccomandazioni specifiche
+                    const recommendedTools = recommendedToolIds.map(id => allToolsForRec.find(t => t.id === id)).filter(Boolean);
+                    if (recommendedTools.length > 0) {
+                        recommendationHTML = recommendedTools.map(recTool => `
+                            <div class="recommendation-box" data-action="open-detail-modal" data-id="${recTool.id}">
+                                <img src="${recTool.logoUrl}" alt="${recTool.name}" class="recommendation-logo" loading="lazy">
+                                <div class="recommendation-text">${t.alternativeSuggestion}<strong>${recTool.name}</strong></div>
+                            </div>
+                        `).join('');
+                    }
                 } else {
+                    // Fallback alla logica precedente: trova uno strumento casuale della stessa categoria
                     const sameCategory = allToolsForRec.filter(t => t.category === tool.category && t.id !== tool.id);
                     if (sameCategory.length > 0) {
-                        recommendedTool = sameCategory[Math.floor(Math.random() * sameCategory.length)];
+                        const recommendedTool = sameCategory[Math.floor(Math.random() * sameCategory.length)];
+                        if (recommendedTool) {
+                             recommendationHTML = `
+                                <div class="recommendation-box" data-action="open-detail-modal" data-id="${recommendedTool.id}">
+                                    <img src="${recommendedTool.logoUrl}" alt="${recommendedTool.name}" class="recommendation-logo" loading="lazy">
+                                    <div class="recommendation-text">${t.alternativeSuggestion}<strong>${recommendedTool.name}</strong></div>
+                                </div>`;
+                        }
                     }
-                }
-                if (recommendedTool) {
-                    recommendationHTML = `<div class="recommendation-box" data-action="open-detail-modal" data-id="${recommendedTool.id}"><img src="${recommendedTool.logoUrl}" alt="${recommendedTool.name}" class="recommendation-logo" loading="lazy"><div class="recommendation-text">${t.alternativeSuggestion}<strong>${recommendedTool.name}</strong></div></div>`;
                 }
 
                 let userToolActionsHTML = '';
@@ -10427,6 +10444,13 @@ if (includeLangToggle) {
                                 <input type="text" id="global-tool-country" placeholder="${t.countryPlaceholder}">
                             </div>
 
+                            <div class="input-group">
+                                <label for="global-tool-recommendations">${t.alternativeAIsLabel}</label>
+                                <select id="global-tool-recommendations" multiple style="height: 150px; padding: 10px;">
+                                    ${aiToolsData.map(tool => `<option value="${tool.id}">${tool.name}</option>`).join('')}
+                                </select>
+                            </div>
+
                             <button class="button" data-action="submit-global-tool">${t.saveToDatabase}</button>
                         </div>
                     </div>
@@ -10446,6 +10470,12 @@ if (includeLangToggle) {
 
                 const t = translations[currentLanguage];
                 const categoryOptions = categories.map(cat => `<option value="${cat.id}" ${cat.id === toolToEdit.category ? 'selected' : ''}>${cat.name[currentLanguage]}</option>`).join('');
+                const currentRecommendationIds = toolToEdit.recommendationIds || [];
+                const allToolsOptions = aiToolsData
+                    .filter(tool => tool.id !== toolId) // Esclude lo strumento corrente dalla lista delle opzioni
+                    .map(tool => `<option value="${tool.id}" ${currentRecommendationIds.includes(tool.id) ? 'selected' : ''}>${tool.name}</option>`)
+                    .join('');
+
                 const modalHTML = `
                 <div id="edit-global-tool-modal" class="modal-overlay visible">
                     <div class="modal-content add-ai-modal" style="text-align: left;">
@@ -10493,6 +10523,13 @@ if (includeLangToggle) {
                                 <input type="text" id="edit-global-tool-country" value="${toolToEdit.country || ''}">
                             </div>
 
+                            <div class="input-group">
+                                <label for="edit-global-tool-recommendations">${t.alternativeAIsLabel}</label>
+                                <select id="edit-global-tool-recommendations" multiple style="height: 150px; padding: 10px;">
+                                    ${allToolsOptions}
+                                </select>
+                            </div>
+
                             <button class="button" data-action="submit-edit-global-tool" data-id="${toolToEdit.id}">${t.saveChanges}</button>
                         </div>
                     </div>
@@ -10527,7 +10564,8 @@ if (includeLangToggle) {
                     logoUrl: document.getElementById('edit-global-tool-logo').value.trim(),
                     category: document.getElementById('edit-global-tool-category').value,
                     country: document.getElementById('edit-global-tool-country').value.trim(),
-                    isFeatured: existingTool.isFeatured || false
+                    isFeatured: existingTool.isFeatured || false,
+                    recommendationIds: Array.from(document.getElementById('edit-global-tool-recommendations').selectedOptions).map(option => option.value)
                 };
 
                 // Validazione base
@@ -10574,7 +10612,8 @@ if (includeLangToggle) {
         logoUrl: document.getElementById('global-tool-logo').value.trim(),
         category: document.getElementById('global-tool-category').value,
         country: document.getElementById('global-tool-country').value.trim(),
-        isFeatured: false // Valore di default per i nuovi strumenti
+        isFeatured: false, // Valore di default per i nuovi strumenti
+        recommendationIds: Array.from(document.getElementById('global-tool-recommendations').selectedOptions).map(option => option.value)
     };
 
     // Validazione base
