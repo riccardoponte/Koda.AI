@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Koda.AI - Enhanced Chatbot</title>
+    <title>Koda</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
@@ -269,7 +269,7 @@
         .user-profile-dropdown {
             position: absolute;
             top: 100%;
-            right: 0;
+            left: 0; /* MODIFICA: Allineato a sinistra invece che a destra per la responsività */
             margin-top: 8px;
             background-color: var(--spotify-card);
             border-radius: 12px;
@@ -1309,15 +1309,31 @@
         /* Responsive modal overlay */
         @media (max-width: 768px) {
             .modal-overlay {
+                /* Default to top alignment for potentially long content */
                 align-items: flex-start;
-                padding-top: 20px;
+                padding: 20px 0; /* Use symmetrical padding */
+            }
+
+            /* Specifically center overlays containing shorter, form-like modals */
+            .modal-overlay:has(.add-ai-modal),
+            .modal-overlay:has(#settings-modal .modal-content),
+            .modal-overlay:has(#confirm-delete-review-modal .modal-content) {
+                align-items: center;
             }
         }
 
         @media (max-width: 480px) {
             .modal-overlay {
+                /* Default to top alignment */
                 align-items: flex-start;
-                padding-top: 10px;
+                padding: 10px 0;
+            }
+
+            /* Specifically center overlays containing shorter, form-like modals */
+            .modal-overlay:has(.add-ai-modal),
+            .modal-overlay:has(#settings-modal .modal-content),
+            .modal-overlay:has(#confirm-delete-review-modal .modal-content) {
+                align-items: center;
             }
         }
 
@@ -1397,6 +1413,16 @@
             font-weight: 500;
             opacity: 0.8;
             line-height: 1.2;
+        }
+
+        /* NUOVO: Fix per il layout del modale Impostazioni */
+        #settings-modal .modal-content {
+            text-align: left; /* Allinea a sinistra il contenuto del form */
+            margin: auto; /* Forzatura del centraggio verticale e orizzontale */
+        }
+
+        #settings-modal .modal-content h2 {
+            text-align: center; /* Ri-centra il titolo principale */
         }
 
         #detail-content h2 {
@@ -2409,7 +2435,8 @@
         /* AGGIUNTO */
         #change-nickname-modal .input-group,
         #add-global-tool-modal .input-group,
-        #edit-global-tool-modal .input-group {
+        #edit-global-tool-modal .input-group,
+        #edit-ranking-modal .input-group {
             /* AGGIUNTO */
             margin-bottom: 20px;
             text-align: left;
@@ -2422,7 +2449,8 @@
         /* AGGIUNTO */
         #change-nickname-modal label,
         #add-global-tool-modal label,
-        #edit-global-tool-modal label {
+        #edit-global-tool-modal label,
+        #edit-ranking-modal label {
             /* AGGIUNTO */
             display: block;
             font-weight: 600;
@@ -2445,7 +2473,8 @@
         #add-global-tool-modal select,
         #edit-global-tool-modal input,
         #edit-global-tool-modal textarea,
-        #edit-global-tool-modal select {
+        #edit-global-tool-modal select,
+        #edit-ranking-modal input {
             width: 100%;
             padding: 16px 18px;
             font-size: 16px;
@@ -2552,11 +2581,78 @@
             }
 
             #add-global-tool-modal .button,
-            #edit-global-tool-modal .button {
-                padding: 14px 20px;
-                font-size: 16px;
-                margin-top: 8px;
-            }
+        #edit-global-tool-modal .button {
+            padding: 14px 20px;
+            font-size: 16px;
+            margin-top: 8px;
+        }
+
+        /* --- NUOVI STILI PER LA GESTIONE CLASSIFICHE ADMIN --- */
+        #manage-rankings-modal .sent-review-item {
+            transition: background-color 0.2s;
+        }
+        #manage-rankings-modal .sent-review-item:hover {
+            background-color: var(--spotify-card);
+        }
+
+        #ranking-selected-tools .tool-list-item {
+            padding: 8px;
+            background-color: var(--spotify-bg-light);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: grab; /* Make it look draggable */
+            transition: background-color 0.2s, opacity 0.2s;
+            user-select: none; /* Prevent text selection while dragging */
+        }
+
+        #ranking-selected-tools .tool-list-item img {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            object-fit: cover;
+            flex-shrink: 0;
+            pointer-events: none; /* Prevent image from being dragged alone */
+        }
+        
+        #ranking-selected-tools .tool-list-item.dragging {
+            opacity: 0.4;
+            background: var(--spotify-accent);
+        }
+
+        #ranking-selected-tools .sent-review-delete-btn {
+            background-color: var(--spotify-card);
+            color: var(--spotify-text-secondary);
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            font-size: 16px;
+            line-height: 24px;
+            text-align: center;
+            padding: 0;
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        #ranking-selected-tools .sent-review-delete-btn:hover {
+            background-color: #ff6b6b;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        #ranking-tool-search-results {
+            border: 1px solid var(--spotify-bg-light);
+            border-radius: 8px;
+            margin-top: 8px;
+            padding: 4px;
+        }
+
+        #ranking-tool-search-results .tool-list-item:hover {
+            background-color: var(--spotify-bg-light);
+        }
 
             .modal-close-btn {
                 font-size: 20px;
@@ -4850,7 +4946,7 @@
                         <path
                             d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
                     </svg></span><span data-translate="navSearch">Cerca</span></button>
-            <button class="nav-btn" data-page="user-chats">
+            <button class="nav-btn" data-page="user-chats" id="nav-btn-user-chats">
                 <span class="icon">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"
                         fill="currentColor">
@@ -6904,7 +7000,7 @@
                     fullNameRequired: "Il nome completo è obbligatorio.",
                     // App
                     navHome: "Home", navTopAI: "TOP AI", navSearch: "Cerca", navSearchUsers: "Utenti", navUserChats: "Chat", navLibrary: "Libreria",
-                    pageTitleHome: "Koda.AI Chatbot", pageTitleTopAI: "TOP AI", pageTitleSearch: "Cerca", pageTitleSearchUsers: "Utenti", pageTitleUserChats: "Chat Utenti", pageTitleLibrary: "Libreria",
+                    pageTitleHome: "Koda", pageTitleTopAI: "TOP AI", pageTitleSearch: "Cerca", pageTitleSearchUsers: "Utenti", pageTitleUserChats: "Chat Utenti", pageTitleLibrary: "Libreria",
                     logout: "Logout", featured: "In evidenza", rankingsTitle: "Classifiche TOP AI", filterAll: "Tutti",
                     searchPlaceholder: "Cerca strumenti, categorie...", browseAll: "Sfoglia tutto", browseByOrigin: "Sfoglia per nazionalità",
                     backToSearch: "‹ Torna a cercare", toolsFrom: "Strumenti da", libraryPromptTitle: "Salva i tuoi preferiti",
@@ -7054,6 +7150,22 @@
                     editAIInDatabase: "Modifica AI nel Database",
                     documentIdLabel: "ID Documento (non modificabile)",
                     saveChanges: "Salva Modifiche",
+                    // NUOVE TRADUZIONI PER GESTIONE CLASSIFICHE
+                    manageRankings: "Gestisci Classifiche",
+                    createRanking: "Crea Nuova Classifica",
+                    editRanking: "Modifica Classifica",
+                    rankingTitleITLabel: "Titolo (IT)",
+                    rankingTitleENLabel: "Titolo (EN)",
+                    rankingCategoryLabel: "Categoria (per filtro)",
+                    rankingOrderLabel: "Ordine di Visualizzazione",
+                    rankingToolsLabel: "Seleziona 3 AI",
+                    searchAIs: "Cerca AI...",
+                    confirmDeleteRanking: "Sei sicuro di voler eliminare questa classifica? L'azione è irreversibile.",
+                    // NUOVE TRADUZIONI PER FEATURE TOGGLES
+                    featureToggles: "Gestione Funzionalità",
+                    enableUserChat: "Abilita Chat Utente",
+                    enableReviews: "Abilita Sistema di Recensioni",
+                    enableRatings: "Abilita Visualizzazione Voti",
                 },
                 en: {
                     // Auth
@@ -7072,7 +7184,7 @@
                     fullNameRequired: "Full name is required.",
                     // App
                     navHome: "Home", navTopAI: "TOP AI", navSearch: "Search", navSearchUsers: "Users", navUserChats: "Chats", navLibrary: "Library",
-                    pageTitleHome: "Koda.AI Chatbot", pageTitleTopAI: "TOP AI", pageTitleSearch: "Search", pageTitleSearchUsers: "Search Users", pageTitleUserChats: "User Chats", pageTitleLibrary: "Your Library",
+                    pageTitleHome: "Koda", pageTitleTopAI: "TOP AI", pageTitleSearch: "Search", pageTitleSearchUsers: "Search Users", pageTitleUserChats: "User Chats", pageTitleLibrary: "Your Library",
                     logout: "Logout", featured: "Featured", rankingsTitle: "TOP AI Rankings", filterAll: "All",
                     searchPlaceholder: "Search tools, categories...", browseAll: "Browse All", browseByOrigin: "Browse by County",
                     backToSearch: "‹ Back to search", toolsFrom: "Tools from", libraryPromptTitle: "Save your favorites",
@@ -7222,6 +7334,22 @@
                     editAIInDatabase: "Edit AI in Database",
                     documentIdLabel: "Document ID (not editable)",
                     saveChanges: "Save Changes",
+                    // NEW TRANSLATIONS FOR RANKING MANAGEMENT
+                    manageRankings: "Manage Rankings",
+                    createRanking: "Create New Ranking",
+                    editRanking: "Edit Ranking",
+                    rankingTitleITLabel: "Title (IT)",
+                    rankingTitleENLabel: "Title (EN)",
+                    rankingCategoryLabel: "Category (for filter)",
+                    rankingOrderLabel: "Display Order",
+                    rankingToolsLabel: "Select 3 AIs",
+                    searchAIs: "Search AIs...",
+                    confirmDeleteRanking: "Are you sure you want to delete this ranking? This action is irreversible.",
+                    // NEW TRANSLATIONS FOR FEATURE TOGGLES
+                    featureToggles: "Feature Management",
+                    enableUserChat: "Enable User Chat",
+                    enableReviews: "Enable Review System",
+                    enableRatings: "Enable Rating Display",
                 }
             };
 
@@ -7268,6 +7396,8 @@
 
             // --- DATABASE PERSONALIZZATO (CARICATO DA FIREBASE) ---
             let aiToolsData = []; // Questa variabile verrà popolata dinamicamente da Firestore
+            let aiRankingsData = []; // NUOVO: Questa variabile conterrà i dati delle classifiche da Firestore
+            let featureSettings = { isChatEnabled: true, isReviewsEnabled: true, isRatingsEnabled: true }; // NUOVO: Impostazioni per le funzionalità, con fallback
             // NUOVA FUNZIONE per caricare gli strumenti da Firestore
             const fetchToolsFromFirestore = async () => {
                 try {
@@ -7286,6 +7416,43 @@
                     return []; // Restituisce un array vuoto in caso di errore
                 }
             };
+            // NUOVA FUNZIONE per caricare le classifiche da Firestore
+            const fetchRankingsFromFirestore = async () => {
+                try {
+                    const rankingsCollectionRef = collection(db, "rankings");
+                    const q = query(rankingsCollectionRef); // Removed orderBy("order")
+                    const querySnapshot = await getDocs(q);
+                    const firestoreRankings = [];
+                    querySnapshot.forEach((doc) => {
+                        firestoreRankings.push({ ...doc.data(), id: doc.id });
+                    });
+                    console.log(`Successfully fetched ${firestoreRankings.length} rankings from Firestore.`);
+                    return firestoreRankings;
+                } catch (error) {
+                    console.error("Error fetching rankings from Firestore:", error);
+                    showToast("Could not load AI rankings from the database.");
+                    return [];
+                }
+            };
+            // NUOVA FUNZIONE per caricare le impostazioni delle funzionalità
+            const fetchFeatureSettings = async () => {
+                try {
+                    const settingsDocRef = doc(db, "settings", "featureToggles");
+                    const docSnap = await getDoc(settingsDocRef);
+                    if (docSnap.exists()) {
+                        console.log("Successfully fetched feature settings.");
+                        return docSnap.data();
+                    } else {
+                        console.warn("Feature settings document not found in Firestore. Using defaults.");
+                        return { isChatEnabled: true, isReviewsEnabled: true, isRatingsEnabled: true };
+                    }
+                } catch (error) {
+                    console.error("Error fetching feature settings:", error);
+                    showToast("Could not load app settings.");
+                    return { isChatEnabled: true, isReviewsEnabled: true, isRatingsEnabled: true };
+                }
+            };
+
             // Funzione globale accessibile anche dallo script React
             window.getLocalizedToolsData = (lang) => {
                 return aiToolsData.map(tool => ({ ...tool, description: tool.description[lang] || tool.description['en'] }));
@@ -7449,7 +7616,8 @@
                     }
                 }
 
-                return `<div class="tool-card-grid" data-id="${tool.id}"><div class="logo-container"><img src="${tool.logoUrl}" class="tool-logo" alt="${tool.name}" loading="lazy">${editIconHTML}</div><div class="tool-name">${tool.name}</div><div class="rating-container" id="rating-${tool.id}"></div></div>`;
+                const ratingHTML = featureSettings.isRatingsEnabled ? `<div class="rating-container" id="rating-${tool.id}"></div>` : '';
+                return `<div class="tool-card-grid" data-id="${tool.id}"><div class="logo-container"><img src="${tool.logoUrl}" class="tool-logo" alt="${tool.name}" loading="lazy">${editIconHTML}</div><div class="tool-name">${tool.name}</div>${ratingHTML}</div>`;
             };
 
             const createListCard = (tool, context) => {
@@ -7467,7 +7635,8 @@
                     editIconHTML = `<div class="edit-icon" data-action="open-edit-app-modal" data-id="${tool.id}" title="${translations[currentLanguage].editUserTool}"> ${pencilIcon} </div>`;
                 }
 
-                return `<div class="tool-card-list" data-id="${tool.id}"><div class="logo-container"><img src="${tool.logoUrl}" class="tool-logo" alt="${tool.name}" loading="lazy">${editIconHTML}</div><div class="info"><div class="tool-name">${tool.name}</div><div class="tool-subtext">${getTranslatedCategoryName(tool.category)}</div><div class="rating-container" id="rating-${tool.id}"></div></div>${favoriteIconHTML}</div>`;
+                const ratingHTML = featureSettings.isRatingsEnabled ? `<div class="rating-container" id="rating-${tool.id}"></div>` : '';
+                return `<div class="tool-card-list" data-id="${tool.id}"><div class="logo-container"><img src="${tool.logoUrl}" class="tool-logo" alt="${tool.name}" loading="lazy">${editIconHTML}</div><div class="info"><div class="tool-name">${tool.name}</div><div class="tool-subtext">${getTranslatedCategoryName(tool.category)}</div>${ratingHTML}</div>${favoriteIconHTML}</div>`;
             };
 
             const createCategoryCard = (category) => {
@@ -7570,7 +7739,23 @@
                                 ${currentUser.uid ? `<button class="button" data-action="toggle-favorite" data-id="${tool.id}">${isFavorited ? t.detailModalRemoveFavorite : t.detailModalAddFavorite}</button>` : ''}
                                 <a href="${tool.website}" target="_blank" class="button" style="text-decoration: none; display: flex; justify-content: center; align-items: center;">${t.visitWebsite}</a>
                             </div>
+                            ${featureSettings.isReviewsEnabled ? `
                             <div class="reviews-section">
+                                <div class="reviews-header">
+                                    <h3 class="reviews-title">${t.reviews || 'Recensioni'}</h3>
+                                    ${currentUser.uid ? `<button class="add-review-btn" data-action="add-review" data-tool-id="${tool.id}">${t.addReview || 'Aggiungi Recensione'}</button>` : ''}
+                                </div>
+                                <div id="reviews-container-${tool.id}">
+                                    <div class="loading-reviews">${t.loadingReviews || 'Caricamento recensioni...'}</div>
+                                </div>
+                                <a class="view-all-reviews-link" data-action="view-all-user-reviews" data-tool-id="${tool.id}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                    </svg>
+                                    <span data-translate="viewAllUserReviews">Visualizza tutte le recensioni utente</span>
+                                </a>
+                            </div>
+                            ` : ''}
                                 <div class="reviews-header">
                                     <h3 class="reviews-title">${t.reviews || 'Recensioni'}</h3>
                                     ${currentUser.uid ? `<button class="add-review-btn" data-action="add-review" data-tool-id="${tool.id}">${t.addReview || 'Aggiungi Recensione'}</button>` : ''}
@@ -8164,12 +8349,20 @@
                             </svg>
                             <span data-translate="changePasswordTitle">Cambia password</span>
                         </div>
+                        ${featureSettings.isReviewsEnabled ? `
                         <div class="user-profile-item" data-action="view-sent-reviews">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                 <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
                             </svg>
                             <span data-translate="sentReviews">Recensioni inviate</span>
                         </div>
+                        ` : ''}
+                        ${currentUser.role === 'admin' ? `
+                        <div class="user-profile-item" data-action="open-feature-toggles-modal">
+                             <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.08-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>
+                            <span data-translate="featureToggles">Gestione Funzionalità</span>
+                        </div>
+                        ` : ''}
                         <div class="user-profile-divider"></div>
                         <div class="user-profile-item user-profile-logout" data-action="logout">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -8195,6 +8388,14 @@ if (currentUser.role === 'admin') {
         </button>
     `;
 }
+otherControlsHTML += `
+        <button id="admin-manage-rankings-btn" class="global-btn" data-action="open-manage-rankings-modal" title="Manage TOP AI Rankings">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor">
+                <path d="M0 0h24v24H0z" fill="none"/>
+                <path d="M16 11V3H8v6H2v12h20V11h-6zm-6-6h4v14h-4V5zm-6 6h4v8H4v-8zm16 8h-4v-8h4v8z"/>
+            </svg>
+        </button>
+    `;
 
 otherControlsHTML += `
 <button id="theme-toggle-btn" class="global-btn" data-action="toggle-theme">${themeIcon}</button>
@@ -8303,13 +8504,8 @@ if (includeLangToggle) {
 
                     contentHTML += `</div>`; // Close grid-container
 
-                    const rankings = [
-                        { titleKey: "rankingTextTitle", category: "Testo", toolIds: ['tool-044', 'tool-013', 'tool-001'] }, // Added Perplexity to Text ranking
-                        { titleKey: "rankingCodeTitle", category: "Codice", toolIds: ["tool-024", "tool-021", "tool-052"] },
-                        { titleKey: "rankingImagesTitle", category: "Immagini", toolIds: ["tool-014", "tool-001", "tool-033", "tool-005"] }
-                    ];
-
-                    const rankingCategoryIdentifiers = ["All", "Testo", "Codice", "Immagini"];
+                    // Le classifiche ora vengono da aiRankingsData
+                    const rankingCategoryIdentifiers = ["All", ...new Set(aiRankingsData.map(r => r.category))];
                     const filtersHTML = `<div class="filters-container" style="top: 64px; margin-bottom: 20px;">
                     <div class="filter-pills" id="ranking-filters">
                         ${rankingCategoryIdentifiers.map(id => `<button class="pill-btn ${rankingFilter === id ? 'active' : ''}" data-action="set-ranking-filter" data-filter="${id}">${id === 'All' ? t.filterAll : getTranslatedCategoryName(id)}</button>`).join('')}
@@ -8336,9 +8532,9 @@ if (includeLangToggle) {
                     <div class="section-title" style="margin-top: 40px;" data-translate="rankingsTitle">${t.rankingsTitle}</div>
                     ${filtersHTML}
                     <div class="ranking-section-container">
-                        ${rankings.map(ranking => `
+                        ${aiRankingsData.map(ranking => `
                             <div class="ranking-card" data-ranking-category="${ranking.category}">
-                                <h3>${t[ranking.titleKey]}</h3>
+                                <h3>${currentLanguage === 'it' ? ranking.title_it : ranking.title_en}</h3>
                                 <ol class="ranking-list">
                                     ${ranking.toolIds.map((id, index) => createRankingItem(id, index + 1)).join('')}
                                 </ol>
@@ -8601,8 +8797,16 @@ if (includeLangToggle) {
                     el.mainContent.appendChild(contentArea);
                 }
 
-                // NUOVO: Carica le valutazioni degli strumenti dopo aver renderizzato la vista
-                setTimeout(() => loadToolRatings(), 500);
+                // NUOVO: Carica le valutazioni degli strumenti dopo aver renderizzato la vista (se abilitate)
+                if (featureSettings.isRatingsEnabled) {
+                    setTimeout(() => loadToolRatings(), 500);
+                }
+
+                // NUOVO: Nascondi/mostra il pulsante della chat in base alle impostazioni
+                const chatNavBtn = document.getElementById('nav-btn-user-chats');
+                if (chatNavBtn) {
+                    chatNavBtn.style.display = featureSettings.isChatEnabled ? 'flex' : 'none';
+                }
 
                 updateNavActiveState();
                 applyTranslations(currentLanguage); // Apply translations after rendering content
@@ -9916,7 +10120,15 @@ if (includeLangToggle) {
                             <button class="view-suggestions-btn" data-action="view-user-suggestions" data-uid="${user.uid}" data-nickname="${user.nickname}">
                                 ${t.viewSuggestions}
                             </button>
+                            ${featureSettings.isChatEnabled ? `
                             <button class="chat-button" data-action="start-user-chat" data-uid="${user.uid}" data-nickname="${user.nickname}">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 0 24 24" width="16" fill="currentColor">
+                                    <path d="M0 0h24v24H0z" fill="none"/>
+                                    <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
+                                </svg>
+                                ${t.startChat}
+                            </button>
+                            ` : ''}
                                 <svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 0 24 24" width="16" fill="currentColor">
                                     <path d="M0 0h24v24H0z" fill="none"/>
                                     <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
@@ -10500,6 +10712,284 @@ if (includeLangToggle) {
                 el.modalContainer.innerHTML = modalHTML;
             };
 
+            // --- NUOVA LOGICA DI GESTIONE CLASSIFICHE (CRUD COMPLETO) ---
+
+            // Apre il modale principale che elenca tutte le classifiche
+            const openManageRankingsModal = () => {
+                if (currentUser.role !== 'admin') return;
+                const t = translations[currentLanguage];
+
+                const rankingsListHTML = aiRankingsData.map(ranking => `
+                    <div class="sent-review-item">
+                        <div class="sent-review-header">
+                            <div class="sent-review-tool-info">
+                                <div class="sent-review-tool-name">${ranking.title_it}</div>
+                            </div>
+                            <div class="sent-review-actions">
+                                <button class="sent-review-edit-btn" data-action="open-edit-ranking-modal" data-id="${ranking.id}">${t.editRanking}</button>
+                                <button class="sent-review-delete-btn" data-action="delete-ranking" data-id="${ranking.id}">${t.deleteButton}</button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                const modalHTML = `
+                <div id="manage-rankings-modal" class="modal-overlay visible">
+                    <div class="modal-content add-ai-modal" style="text-align: left;">
+                        <button class="modal-close-btn" data-action="close-modal">×</button>
+                        <h2>${t.manageRankings}</h2>
+                        <div style="margin-top: 24px;">${rankingsListHTML}</div>
+                        <button class="button" data-action="open-edit-ranking-modal" style="width: 100%; margin-top: 24px;">${t.createRanking}</button>
+                    </div>
+                </div>`;
+                el.modalContainer.innerHTML = modalHTML;
+            };
+
+            // Apre il modale per creare o modificare una singola classifica
+            const openEditRankingModal = (rankingId = null) => {
+                const t = translations[currentLanguage];
+                const isEditing = rankingId !== null;
+                const ranking = isEditing ? aiRankingsData.find(r => r.id === rankingId) : {};
+                
+                let selectedTools = ranking.toolIds ? ranking.toolIds.map(id => aiToolsData.find(t => t.id === id)).filter(Boolean) : [];
+
+                const renderSelectedTools = () => selectedTools.map(tool => `
+                    <div class="tool-list-item" data-id="${tool.id}" draggable="true">
+                        <img src="${tool.logoUrl}" alt="${tool.name}">
+                        <div class="info"><div class="tool-name">${tool.name}</div></div>
+                        <button class="sent-review-delete-btn" data-action="ranking-remove-tool" data-id="${tool.id}">×</button>
+                    </div>
+                `).join('');
+
+                const modalHTML = `
+                <div id="edit-ranking-modal" class="modal-overlay visible">
+                    <div class="modal-content add-ai-modal" style="text-align: left; max-width: 600px;">
+                        <button class="modal-close-btn" data-action="close-modal">×</button>
+                        <h2>${isEditing ? t.editRanking : t.createRanking}</h2>
+                        <div class="add-ai-form">
+                            <div class="input-group"><label for="ranking-title-it">${t.rankingTitleITLabel}</label><input type="text" id="ranking-title-it" value="${ranking.title_it || ''}"></div>
+                            <div class="input-group"><label for="ranking-title-en">${t.rankingTitleENLabel}</label><input type="text" id="ranking-title-en" value="${ranking.title_en || ''}"></div>
+                            <div class="input-group"><label for="ranking-category">${t.rankingCategoryLabel}</label><input type="text" id="ranking-category" value="${ranking.category || ''}"></div>
+                            
+                            
+                            <div class="input-group">
+                                <label>${t.rankingToolsLabel}</label>
+                                <div id="ranking-selected-tools" class="list-container" style="margin-bottom: 16px;">${renderSelectedTools()}</div>
+                                <input type="text" id="ranking-tool-search" placeholder="${t.searchAIs}">
+                                <div id="ranking-tool-search-results" class="list-container" style="max-height: 200px; overflow-y: auto; margin-top: 8px;"></div>
+                            </div>
+                            <button class="button" data-action="save-ranking" data-id="${rankingId || ''}">${t.saveChanges}</button>
+                        </div>
+                    </div>
+                </div>`;
+                el.modalContainer.innerHTML = modalHTML;
+
+                const searchInput = document.getElementById('ranking-tool-search');
+                const resultsContainer = document.getElementById('ranking-tool-search-results');
+                const selectedContainer = document.getElementById('ranking-selected-tools');
+
+                const updateUI = () => {
+                    selectedContainer.innerHTML = renderSelectedTools();
+                };
+
+                searchInput.addEventListener('input', () => {
+                    const searchTerm = searchInput.value.toLowerCase();
+                    if (searchTerm.length < 2) {
+                        resultsContainer.innerHTML = '';
+                        return;
+                    }
+                    const filteredTools = aiToolsData.filter(tool => tool.name.toLowerCase().includes(searchTerm) && !selectedTools.find(st => st.id === tool.id));
+                    resultsContainer.innerHTML = filteredTools.slice(0, 10).map(tool => `
+                        <div class="tool-list-item" data-action="ranking-add-tool" data-id="${tool.id}" style="cursor: pointer;">
+                            <img src="${tool.logoUrl}" alt="${tool.name}"><div class="info"><div class="tool-name">${tool.name}</div></div>
+                        </div>
+                    `).join('');
+                });
+
+                // --- START: Drag and Drop Logic for Ranking Editor ---
+                const draggableItemsContainer = selectedContainer;
+                let draggedItem = null;
+
+                draggableItemsContainer.addEventListener('dragstart', e => {
+                    draggedItem = e.target;
+                    // Use a timeout to allow the browser to create a drag image before adding the class
+                    setTimeout(() => {
+                        if (draggedItem) draggedItem.classList.add('dragging');
+                    }, 0);
+                });
+
+                draggableItemsContainer.addEventListener('dragend', e => {
+                    if (draggedItem) {
+                        draggedItem.classList.remove('dragging');
+                        draggedItem = null;
+                    }
+                });
+
+                draggableItemsContainer.addEventListener('dragover', e => {
+                    e.preventDefault(); // Necessary to allow drop
+                    const afterElement = getDragAfterElement(draggableItemsContainer, e.clientY);
+                    const currentlyDragged = document.querySelector('.dragging');
+                    if (currentlyDragged) {
+                         if (afterElement == null) {
+                            draggableItemsContainer.appendChild(currentlyDragged);
+                        } else {
+                            draggableItemsContainer.insertBefore(currentlyDragged, afterElement);
+                        }
+                    }
+                });
+
+                function getDragAfterElement(container, y) {
+                    const draggableElements = [...container.querySelectorAll('.tool-list-item:not(.dragging)')];
+
+                    return draggableElements.reduce((closest, child) => {
+                        const box = child.getBoundingClientRect();
+                        const offset = y - box.top - box.height / 2;
+                        if (offset < 0 && offset > closest.offset) {
+                            return { offset: offset, element: child };
+                        } else {
+                            return closest;
+                        }
+                    }, { offset: Number.NEGATIVE_INFINITY }).element;
+                }
+                // --- END: Drag and Drop Logic ---
+
+                el.modalContainer.addEventListener('click', e => {
+                    const actionTarget = e.target.closest('[data-action]');
+                    if (!actionTarget) return;
+                    const action = actionTarget.dataset.action;
+                    const toolId = actionTarget.dataset.id;
+
+                    if (action === 'ranking-add-tool') {
+                        if (selectedTools.length < 3) {
+                            const toolToAdd = aiToolsData.find(t => t.id === toolId);
+                            if (toolToAdd) {
+                                selectedTools.push(toolToAdd);
+                                updateUI();
+                                searchInput.value = '';
+                                resultsContainer.innerHTML = '';
+                            }
+                        } else {
+                            showToast("Puoi selezionare al massimo 3 AI.");
+                        }
+                    } else if (action === 'ranking-remove-tool') {
+                        // Prevent click event during a drag operation
+                        if (draggedItem) return;
+                        selectedTools = selectedTools.filter(t => t.id !== toolId);
+                        updateUI();
+                    }
+                });
+            };
+
+            // Salva le modifiche per una singola classifica
+            const handleSaveRanking = async (rankingId) => {
+                const isEditing = !!rankingId;
+                const t = translations[currentLanguage];
+
+                const data = {
+                    title_it: document.getElementById('ranking-title-it').value.trim(),
+                    title_en: document.getElementById('ranking-title-en').value.trim(),
+                    category: document.getElementById('ranking-category').value.trim(),
+                    // 'order' field removed
+                    toolIds: Array.from(document.querySelectorAll('#ranking-selected-tools .tool-list-item')).map(el => el.dataset.id)
+                };
+
+                if (!data.title_it || !data.title_en || !data.category || data.toolIds.length === 0) {
+                    showToast("Tutti i campi sono obbligatori.");
+                    return;
+                }
+
+                try {
+                    if (isEditing) {
+                        const rankingDocRef = doc(db, "rankings", rankingId);
+                        await updateDoc(rankingDocRef, data);
+                    } else {
+                        const rankingsCollectionRef = collection(db, "rankings");
+                        await addDoc(rankingsCollectionRef, data);
+                    }
+                    showToast(`Classifica ${isEditing ? 'aggiornata' : 'creata'} con successo!`);
+                    closeModal();
+                    [aiRankingsData] = await Promise.all([fetchRankingsFromFirestore()]);
+                    renderView();
+                } catch (error) {
+                    console.error("Errore nel salvataggio della classifica:", error);
+                    showToast(`Errore: ${error.message}`);
+                }
+            };
+
+            // NUOVA FUNZIONE: Apre il modale per la gestione delle funzionalità
+            const openFeatureTogglesModal = () => {
+                if (currentUser.role !== 'admin') return;
+                const t = translations[currentLanguage];
+
+                const modalHTML = `
+                <div id="feature-toggles-modal" class="modal-overlay visible">
+                    <div class="modal-content add-ai-modal" style="text-align: left;">
+                        <button class="modal-close-btn" data-action="close-modal">×</button>
+                        <h2>${t.featureToggles}</h2>
+                        <div class="add-ai-form">
+                            <div class="checkbox-group">
+                                <div class="checkbox-wrapper">
+                                    <input type="checkbox" id="toggle-chat" ${featureSettings.isChatEnabled ? 'checked' : ''}>
+                                    <label for="toggle-chat">${t.enableUserChat}</label>
+                                </div>
+                            </div>
+                             <div class="checkbox-group">
+                                <div class="checkbox-wrapper">
+                                    <input type="checkbox" id="toggle-reviews" ${featureSettings.isReviewsEnabled ? 'checked' : ''}>
+                                    <label for="toggle-reviews">${t.enableReviews}</label>
+                                </div>
+                            </div>
+                             <div class="checkbox-group">
+                                <div class="checkbox-wrapper">
+                                    <input type="checkbox" id="toggle-ratings" ${featureSettings.isRatingsEnabled ? 'checked' : ''}>
+                                    <label for="toggle-ratings">${t.enableRatings}</label>
+                                </div>
+                            </div>
+                            <button class="button" data-action="save-feature-toggles">${t.saveChanges}</button>
+                        </div>
+                    </div>
+                </div>`;
+                el.modalContainer.innerHTML = modalHTML;
+            };
+
+            // NUOVA FUNZIONE: Salva le impostazioni delle funzionalità
+            const handleSaveFeatureToggles = async () => {
+                if (currentUser.role !== 'admin') return;
+
+                const newSettings = {
+                    isChatEnabled: document.getElementById('toggle-chat').checked,
+                    isReviewsEnabled: document.getElementById('toggle-reviews').checked,
+                    isRatingsEnabled: document.getElementById('toggle-ratings').checked
+                };
+
+                try {
+                    const settingsDocRef = doc(db, "settings", "featureToggles");
+                    await setDoc(settingsDocRef, newSettings); // setDoc sovrascrive il documento
+                    featureSettings = newSettings; // Aggiorna lo stato locale
+                    showToast("Impostazioni salvate con successo!");
+                    closeModal();
+                    renderView(); // Ricarica la UI per applicare le modifiche
+                } catch (error) {
+                    console.error("Errore nel salvataggio delle impostazioni:", error);
+                    showToast(`Errore: ${error.message}`);
+                }
+            };
+            // Elimina una classifica
+            const handleDeleteRanking = async (rankingId) => {
+                const t = translations[currentLanguage];
+                if (confirm(t.confirmDeleteRanking)) {
+                    try {
+                        const rankingDocRef = doc(db, "rankings", rankingId);
+                        await deleteDoc(rankingDocRef);
+                        showToast("Classifica eliminata con successo!");
+                        [aiRankingsData] = await Promise.all([fetchRankingsFromFirestore()]);
+                        openManageRankingsModal(); // Riapre il modale di gestione aggiornato
+                    } catch (error) {
+                        console.error("Errore nell'eliminazione della classifica:", error);
+                        showToast(`Errore: ${error.message}`);
+                    }
+                }
+            };
             // NUOVA FUNZIONE: Salva le modifiche dello strumento globale su Firestore
             const handleEditGlobalTool = async (toolId) => {
                 console.log('handleEditGlobalTool called with toolId:', toolId);
@@ -10649,6 +11139,24 @@ if (includeLangToggle) {
                         // NUOVE AZIONI ADMIN
                         case 'open-add-global-tool-modal':
                             openAddGlobalToolModal();
+                            break;
+                            case 'open-manage-rankings-modal':
+                            openManageRankingsModal();
+                            break;
+                        case 'open-edit-ranking-modal':
+                            openEditRankingModal(actionTarget.dataset.id || null);
+                            break;
+                        case 'save-ranking':
+                            handleSaveRanking(actionTarget.dataset.id || null);
+                            break;
+                        case 'delete-ranking':
+                            handleDeleteRanking(actionTarget.dataset.id);
+                            break;
+                            case 'open-feature-toggles-modal':
+                            openFeatureTogglesModal();
+                            break;
+                        case 'save-feature-toggles':
+                            handleSaveFeatureToggles();
                             break;
                         case 'submit-global-tool':
                             console.log('submit-global-tool action triggered');
@@ -11134,8 +11642,12 @@ if (includeLangToggle) {
                     history.replaceState({ page: 'home' }, '', '#home');
                 }
                 // --- END OF INSERTION ---
-                // Carica gli strumenti da Firestore PRIMA di inizializzare l'app
-                aiToolsData = await fetchToolsFromFirestore();
+                // Carica tutti i dati di configurazione da Firestore PRIMA di inizializzare l'app
+                [aiToolsData, aiRankingsData, featureSettings] = await Promise.all([
+                    fetchToolsFromFirestore(),
+                    fetchRankingsFromFirestore(),
+                    fetchFeatureSettings()
+                ]);
 
                 if (user) {
                     // L'utente è loggato, avvia l'app con i suoi dati.
