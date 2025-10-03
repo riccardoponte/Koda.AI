@@ -1317,7 +1317,11 @@
             /* Specifically center overlays containing shorter, form-like modals */
             .modal-overlay:has(.add-ai-modal),
             .modal-overlay:has(#settings-modal .modal-content),
-            .modal-overlay:has(#confirm-delete-review-modal .modal-content) {
+            .modal-overlay:has(#confirm-delete-review-modal .modal-content),
+            .modal-overlay:has(#confirm-delete-modal .modal-content),
+            #detail-modal,
+            #change-nickname-modal,
+            #change-password-modal {
                 align-items: center;
             }
         }
@@ -1332,7 +1336,11 @@
             /* Specifically center overlays containing shorter, form-like modals */
             .modal-overlay:has(.add-ai-modal),
             .modal-overlay:has(#settings-modal .modal-content),
-            .modal-overlay:has(#confirm-delete-review-modal .modal-content) {
+            .modal-overlay:has(#confirm-delete-review-modal .modal-content),
+            .modal-overlay:has(#confirm-delete-modal .modal-content),
+            #detail-modal,
+            #change-nickname-modal,
+            #change-password-modal {
                 align-items: center;
             }
         }
@@ -7166,6 +7174,18 @@
                     enableUserChat: "Abilita Chat Utente",
                     enableReviews: "Abilita Sistema di Recensioni",
                     enableRatings: "Abilita Visualizzazione Voti",
+                    // NUOVE TRADUZIONI PER GESTIONE ALTERNATIVE
+                    manageAlternatives: "Gestisci Alternative",
+                    searchMainAI: "Cerca AI principale...",
+                    currentAlternative: "Alternativa Attuale",
+                    noAlternative: "Nessuna",
+                    editAlternative: "Modifica",
+                    editAlternativeFor: "Modifica alternativa per %s",
+                    removeAlternative: "Rimuovi Alternativa",
+                    searchNewAlternative: "Cerca una nuova alternativa...",
+                    alternativeUpdated: "Alternativa aggiornata con successo!",
+                    alternativeRemoved: "Alternativa rimossa con successo!",
+                    errorUpdatingAlternative: "Errore durante l'aggiornamento dell'alternativa.",
                 },
                 en: {
                     // Auth
@@ -7350,6 +7370,18 @@
                     enableUserChat: "Enable User Chat",
                     enableReviews: "Enable Review System",
                     enableRatings: "Enable Rating Display",
+                    // NEW TRANSLATIONS FOR ALTERNATIVES MANAGEMENT
+                    manageAlternatives: "Manage Alternatives",
+                    searchMainAI: "Search main AI...",
+                    currentAlternative: "Current Alternative",
+                    noAlternative: "None",
+                    editAlternative: "Edit",
+                    editAlternativeFor: "Edit alternative for %s",
+                    removeAlternative: "Remove Alternative",
+                    searchNewAlternative: "Search for a new alternative...",
+                    alternativeUpdated: "Alternative updated successfully!",
+                    alternativeRemoved: "Alternative removed successfully!",
+                    errorUpdatingAlternative: "Error updating alternative.",
                 }
             };
 
@@ -7756,20 +7788,6 @@
                                 </a>
                             </div>
                             ` : ''}
-                                <div class="reviews-header">
-                                    <h3 class="reviews-title">${t.reviews || 'Recensioni'}</h3>
-                                    ${currentUser.uid ? `<button class="add-review-btn" data-action="add-review" data-tool-id="${tool.id}">${t.addReview || 'Aggiungi Recensione'}</button>` : ''}
-                                </div>
-                                <div id="reviews-container-${tool.id}">
-                                    <div class="loading-reviews">${t.loadingReviews || 'Caricamento recensioni...'}</div>
-                                </div>
-                                <a class="view-all-reviews-link" data-action="view-all-user-reviews" data-tool-id="${tool.id}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                                    </svg>
-                                    <span data-translate="viewAllUserReviews">Visualizza tutte le recensioni utente</span>
-                                </a>
-                            </div>
                             ${recommendationHTML}
                         </div>
                     </div>
@@ -8358,8 +8376,12 @@
                         </div>
                         ` : ''}
                         ${currentUser.role === 'admin' ? `
+                        <div class="user-profile-item" data-action="open-manage-alternatives-modal">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M16.01 11H4v2h12.01v3L20 12l-3.99-4v3z"/></svg>
+                            <span data-translate="manageAlternatives">Gestisci Alternative</span>
+                        </div>
                         <div class="user-profile-item" data-action="open-feature-toggles-modal">
-                             <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.08-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>
+                             <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.08-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19-.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>
                             <span data-translate="featureToggles">Gestione Funzionalità</span>
                         </div>
                         ` : ''}
@@ -10853,31 +10875,34 @@ if (includeLangToggle) {
                 }
                 // --- END: Drag and Drop Logic ---
 
-                el.modalContainer.addEventListener('click', e => {
-                    const actionTarget = e.target.closest('[data-action]');
-                    if (!actionTarget) return;
-                    const action = actionTarget.dataset.action;
-                    const toolId = actionTarget.dataset.id;
+                const editRankingModalElement = document.getElementById('edit-ranking-modal');
+                if (editRankingModalElement) {
+                    editRankingModalElement.addEventListener('click', e => {
+                        const actionTarget = e.target.closest('[data-action]');
+                        if (!actionTarget) return;
+                        const action = actionTarget.dataset.action;
+                        const toolId = actionTarget.dataset.id;
 
-                    if (action === 'ranking-add-tool') {
-                        if (selectedTools.length < 3) {
-                            const toolToAdd = aiToolsData.find(t => t.id === toolId);
-                            if (toolToAdd) {
-                                selectedTools.push(toolToAdd);
-                                updateUI();
-                                searchInput.value = '';
-                                resultsContainer.innerHTML = '';
+                        if (action === 'ranking-add-tool') {
+                            if (selectedTools.length < 3) {
+                                const toolToAdd = aiToolsData.find(t => t.id === toolId);
+                                if (toolToAdd) {
+                                    selectedTools.push(toolToAdd);
+                                    updateUI();
+                                    searchInput.value = '';
+                                    resultsContainer.innerHTML = '';
+                                }
+                            } else {
+                                showToast("Puoi selezionare al massimo 3 AI.");
                             }
-                        } else {
-                            showToast("Puoi selezionare al massimo 3 AI.");
+                        } else if (action === 'ranking-remove-tool') {
+                            // Prevent click event during a drag operation
+                            if (draggedItem) return;
+                            selectedTools = selectedTools.filter(t => t.id !== toolId);
+                            updateUI();
                         }
-                    } else if (action === 'ranking-remove-tool') {
-                        // Prevent click event during a drag operation
-                        if (draggedItem) return;
-                        selectedTools = selectedTools.filter(t => t.id !== toolId);
-                        updateUI();
-                    }
-                });
+                    });
+                }
             };
 
             // Salva le modifiche per una singola classifica
@@ -10951,6 +10976,175 @@ if (includeLangToggle) {
                 </div>`;
                 el.modalContainer.innerHTML = modalHTML;
             };
+
+            // --- NUOVE FUNZIONI PER GESTIONE ALTERNATIVE (ADMIN) ---
+
+            const openManageAlternativesModal = () => {
+                if (currentUser.role !== 'admin') return;
+                const t = translations[currentLanguage];
+
+                const generateToolListItem = (tool) => {
+                    const alternative = tool.recommendationId ? aiToolsData.find(t => t.id === tool.recommendationId) : null;
+                    return `
+                        <div class="sent-review-item" data-tool-name="${tool.name.toLowerCase()}" data-tool-category="${tool.category}">
+                            <div class="sent-review-header">
+                                <div class="sent-review-tool-info">
+                                    <img src="${tool.logoUrl}" class="sent-review-tool-logo">
+                                    <div class="sent-review-tool-name">${tool.name}</div>
+                                </div>
+                                <div class="sent-review-actions">
+                                    <button class="sent-review-edit-btn" data-action="open-edit-alternative-modal" data-id="${tool.id}">${t.editAlternative}</button>
+                                </div>
+                            </div>
+                            <div style="font-size: 13px; color: var(--spotify-text-secondary); margin-top: 8px;">
+                                ${t.currentAlternative}: <strong>${alternative ? alternative.name : t.noAlternative}</strong>
+                            </div>
+                        </div>
+                    `;
+                };
+
+                const categoryFiltersHTML = `
+                <div class="filter-pills" id="alternative-category-filters" style="margin-top: 16px; padding-bottom: 8px;">
+                    <button class="pill-btn active" data-action="set-alternative-filter" data-category="All">${t.filterAll}</button>
+                    ${categories.map(cat => `
+                        <button class="pill-btn" data-action="set-alternative-filter" data-category="${cat.id}">${getTranslatedCategoryName(cat.id)}</button>
+                    `).join('')}
+                </div>
+                `;
+
+                const modalHTML = `
+                <div id="manage-alternatives-modal" class="modal-overlay visible">
+                    <div class="modal-content add-ai-modal" style="text-align: left; max-width: 700px;">
+                        <button class="modal-close-btn" data-action="close-modal">×</button>
+                        <h2>${t.manageAlternatives}</h2>
+                        <div class="input-group" style="margin-top: 24px;">
+                            <input type="text" id="alternative-main-search" class="chat-search-input" placeholder="${t.searchMainAI}">
+                        </div>
+                        ${categoryFiltersHTML}
+                        <div id="alternatives-tool-list" class="list-container" style="max-height: 55vh; overflow-y: auto; margin-top: 8px;">
+                            ${aiToolsData.map(generateToolListItem).join('')}
+                        </div>
+                    </div>
+                </div>`;
+                el.modalContainer.innerHTML = modalHTML;
+
+                // --- Filtering Logic ---
+                const searchInput = document.getElementById('alternative-main-search');
+                const categoryFiltersContainer = document.getElementById('alternative-category-filters');
+                const toolListContainer = document.getElementById('alternatives-tool-list');
+                let currentCategoryFilter = 'All';
+
+                const applyFilters = () => {
+                    const searchTerm = searchInput.value.toLowerCase();
+                    toolListContainer.querySelectorAll('.sent-review-item').forEach(item => {
+                        const matchesCategory = currentCategoryFilter === 'All' || item.dataset.toolCategory === currentCategoryFilter;
+                        const matchesSearch = item.dataset.toolName.includes(searchTerm);
+                        item.style.display = (matchesCategory && matchesSearch) ? '' : 'none';
+                    });
+                };
+
+                searchInput.addEventListener('input', applyFilters);
+
+                categoryFiltersContainer.addEventListener('click', (e) => {
+                    const filterBtn = e.target.closest('[data-action="set-alternative-filter"]');
+                    if (filterBtn) {
+                        currentCategoryFilter = filterBtn.dataset.category;
+                        
+                        categoryFiltersContainer.querySelectorAll('.pill-btn').forEach(btn => btn.classList.remove('active'));
+                        filterBtn.classList.add('active');
+                        
+                        applyFilters();
+                    }
+                });
+            };
+
+            const openEditAlternativeModal = (mainToolId) => {
+                if (currentUser.role !== 'admin') return;
+                const t = translations[currentLanguage];
+                const mainTool = aiToolsData.find(t => t.id === mainToolId);
+                if (!mainTool) return;
+
+                const currentAlternative = mainTool.recommendationId ? aiToolsData.find(t => t.id === mainTool.recommendationId) : null;
+
+                const modalHTML = `
+                <div id="edit-alternative-modal" class="modal-overlay visible">
+                    <div class="modal-content add-ai-modal" style="text-align: left; max-width: 600px;">
+                        <button class="modal-close-btn" data-action="close-modal">×</button>
+                        <h2>${t.editAlternativeFor.replace('%s', `<strong>${mainTool.name}</strong>`)}</h2>
+                        
+                        <div class="input-group" style="margin-top: 24px;">
+                            <label>${t.currentAlternative}</label>
+                            <div id="current-alternative-display" style="background: var(--spotify-bg-light); padding: 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                                ${currentAlternative ? `<span>${currentAlternative.name}</span><button class="sent-review-delete-btn" data-action="remove-alternative" data-id="${mainTool.id}">×</button>` : `<span>${t.noAlternative}</span>`}
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label>${t.searchNewAlternative}</label>
+                            <input type="text" id="alternative-search-input" placeholder="...">
+                            <div id="alternative-search-results" class="list-container" style="max-height: 200px; overflow-y: auto; margin-top: 8px;"></div>
+                        </div>
+                    </div>
+                </div>`;
+                el.modalContainer.innerHTML = modalHTML;
+
+                document.getElementById('alternative-search-input').addEventListener('input', (e) => {
+                    const searchTerm = e.target.value.toLowerCase();
+                    const resultsContainer = document.getElementById('alternative-search-results');
+                    if (searchTerm.length < 2) {
+                        resultsContainer.innerHTML = '';
+                        return;
+                    }
+                    const filteredTools = aiToolsData.filter(tool => tool.id !== mainToolId && tool.name.toLowerCase().includes(searchTerm));
+                    resultsContainer.innerHTML = filteredTools.slice(0, 10).map(tool => `
+                        <div class="tool-list-item" data-action="update-alternative" data-main-id="${mainToolId}" data-alt-id="${tool.id}" style="cursor: pointer;">
+                            <img src="${tool.logoUrl}" alt="${tool.name}"><div class="info"><div class="tool-name">${tool.name}</div></div>
+                        </div>
+                    `).join('');
+                });
+            };
+
+            const handleUpdateAlternative = async (mainToolId, alternativeToolId) => {
+                const t = translations[currentLanguage];
+                try {
+                    const toolDocRef = doc(db, "tools", mainToolId);
+                    await updateDoc(toolDocRef, { recommendationId: alternativeToolId });
+                    
+                    // Update local data and UI
+                    const toolIndex = aiToolsData.findIndex(t => t.id === mainToolId);
+                    if (toolIndex !== -1) {
+                        aiToolsData[toolIndex].recommendationId = alternativeToolId;
+                    }
+                    showToast(t.alternativeUpdated);
+                    closeModal();
+                    openManageAlternativesModal(); // Reopen the main modal to show the change
+                } catch (error) {
+                    console.error("Error updating alternative:", error);
+                    showToast(t.errorUpdatingAlternative);
+                }
+            };
+
+            const handleRemoveAlternative = async (mainToolId) => {
+                const t = translations[currentLanguage];
+                try {
+                    const toolDocRef = doc(db, "tools", mainToolId);
+                    await updateDoc(toolDocRef, { recommendationId: null });
+
+                    // Update local data and UI
+                    const toolIndex = aiToolsData.findIndex(t => t.id === mainToolId);
+                    if (toolIndex !== -1) {
+                        delete aiToolsData[toolIndex].recommendationId;
+                    }
+                    showToast(t.alternativeRemoved);
+                    closeModal();
+                    openManageAlternativesModal(); // Reopen the main modal to show the change
+                } catch (error)
+                 {
+                    console.error("Error removing alternative:", error);
+                    showToast(t.errorUpdatingAlternative);
+                }
+            };
+
 
             // NUOVA FUNZIONE: Salva le impostazioni delle funzionalità
             const handleSaveFeatureToggles = async () => {
@@ -11157,6 +11351,20 @@ if (includeLangToggle) {
                             break;
                         case 'save-feature-toggles':
                             handleSaveFeatureToggles();
+                            break;
+                        // ADMIN: MANAGE ALTERNATIVES
+                        case 'open-manage-alternatives-modal':
+                            closeUserProfileDropdown();
+                            openManageAlternativesModal();
+                            break;
+                        case 'open-edit-alternative-modal':
+                            openEditAlternativeModal(actionTarget.dataset.id);
+                            break;
+                        case 'update-alternative':
+                            handleUpdateAlternative(actionTarget.dataset.mainId, actionTarget.dataset.altId);
+                            break;
+                        case 'remove-alternative':
+                            handleRemoveAlternative(actionTarget.dataset.id);
                             break;
                         case 'submit-global-tool':
                             console.log('submit-global-tool action triggered');
