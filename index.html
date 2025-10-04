@@ -1315,13 +1315,17 @@
             }
 
             /* Specifically center overlays containing shorter, form-like modals */
-            .modal-overlay:has(.add-ai-modal),
-            .modal-overlay:has(#settings-modal .modal-content),
-            .modal-overlay:has(#confirm-delete-review-modal .modal-content),
-            .modal-overlay:has(#confirm-delete-modal .modal-content),
+            #add-ai-suggestion-modal,
+            #settings-modal,
+            #confirm-delete-review-modal,
+            #confirm-delete-modal,
             #detail-modal,
             #change-nickname-modal,
-            #change-password-modal {
+            #change-password-modal,
+            #prompt-gallery-modal,
+            #manage-rankings-modal,
+            #feature-toggles-modal,
+            #edit-alternative-modal {
                 align-items: center;
             }
         }
@@ -1334,13 +1338,17 @@
             }
 
             /* Specifically center overlays containing shorter, form-like modals */
-            .modal-overlay:has(.add-ai-modal),
-            .modal-overlay:has(#settings-modal .modal-content),
-            .modal-overlay:has(#confirm-delete-review-modal .modal-content),
-            .modal-overlay:has(#confirm-delete-modal .modal-content),
+            #add-ai-suggestion-modal,
+            #settings-modal,
+            #confirm-delete-review-modal,
+            #confirm-delete-modal,
             #detail-modal,
             #change-nickname-modal,
-            #change-password-modal {
+            #change-password-modal,
+            #prompt-gallery-modal,
+            #manage-rankings-modal,
+            #feature-toggles-modal,
+            #edit-alternative-modal {
                 align-items: center;
             }
         }
@@ -2444,7 +2452,8 @@
         #change-nickname-modal .input-group,
         #add-global-tool-modal .input-group,
         #edit-global-tool-modal .input-group,
-        #edit-ranking-modal .input-group {
+        #edit-ranking-modal .input-group,
+        #edit-alternative-modal .input-group {
             /* AGGIUNTO */
             margin-bottom: 20px;
             text-align: left;
@@ -2458,7 +2467,8 @@
         #change-nickname-modal label,
         #add-global-tool-modal label,
         #edit-global-tool-modal label,
-        #edit-ranking-modal label {
+        #edit-ranking-modal label,
+        #edit-alternative-modal label {
             /* AGGIUNTO */
             display: block;
             font-weight: 600;
@@ -2601,6 +2611,109 @@
         }
         #manage-rankings-modal .sent-review-item:hover {
             background-color: var(--spotify-card);
+        }
+
+        .ranking-action-btn {
+            background: var(--spotify-bg-light);
+            border: 1px solid var(--spotify-card);
+            color: var(--spotify-text);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .ranking-action-btn.edit:hover {
+            background-color: var(--spotify-accent);
+            color: #000;
+            border-color: var(--spotify-accent);
+        }
+
+        .ranking-action-btn.delete:hover {
+            background-color: #ff6b6b;
+            color: white;
+            border-color: #ff6b6b;
+        }
+
+        /* --- STILI PER GESTIONE ALTERNATIVE (NUOVO LAYOUT) --- */
+        .alternative-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background-color: var(--spotify-bg-light);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border: 1px solid var(--spotify-card);
+        }
+
+        .main-ai-col {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .main-ai-col img {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .main-ai-col .tool-name {
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .alt-ai-col {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 0;
+            justify-content: flex-end;
+        }
+
+        .alt-ai-col .tool-list-item {
+            padding: 6px 8px;
+            background-color: var(--spotify-card);
+            border-radius: 8px;
+            flex-grow: 1;
+            min-width: 0;
+        }
+        
+        .alt-ai-col .tool-list-item .info .tool-name {
+            font-size: 14px;
+        }
+        
+        .alt-empty-state {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+            padding: 6px 8px;
+            background-color: var(--spotify-card);
+            border-radius: 8px;
+            color: var(--spotify-text-secondary);
+            font-style: italic;
+            font-size: 14px;
+        }
+
+        .edit-mode-container {
+            width: 100%;
+        }
+
+        .edit-mode-container .chat-search-input {
+            margin-bottom: 8px;
         }
 
         #ranking-selected-tools .tool-list-item {
@@ -2783,6 +2896,20 @@
             /* Added replace modal */
             width: 100%;
             margin-top: 8px;
+        }
+
+        .settings-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 8px;
+        }
+
+        .settings-modal-header h2 {
+            flex-grow: 1; /* Allow title to take up remaining space */
+            text-align: center; /* Center the title text */
+            margin: 0;
         }
 
         hr.modal-divider {
@@ -4635,11 +4762,12 @@
             }
         }
 
-        /* --- STILI PER LA GALLERIA PROMPT (NUOVI) --- */
+        /* --- STILI PER LA GALLERIA PROMPT (NUOVI E MODIFICATI) --- */
         #prompt-gallery-modal .modal-content {
-            max-width: 700px;
-            /* Più largo per i prompt */
-            max-height: 85vh;
+            /* Rimosse le regole full-screen. Ora si comporterà come un modale standard centrato. */
+            width: 90%;
+            max-width: 600px; /* Larghezza massima per il modale */
+            max-height: 80vh; /* Altezza massima per evitare che sia troppo lungo */
             display: flex;
             flex-direction: column;
         }
@@ -4647,8 +4775,7 @@
         #prompt-gallery-modal .gallery-list {
             flex-grow: 1;
             overflow-y: auto;
-            padding-right: 8px;
-            /* Spazio per la scrollbar */
+            padding: 16px; /* Aggiunge padding interno per non far attaccare gli elementi ai bordi */
             margin-top: 16px;
             display: flex;
             flex-direction: column;
@@ -4660,6 +4787,11 @@
             border-radius: 12px;
             padding: 16px;
             border: 1px solid var(--spotify-card);
+            /* MODIFICA: Usa flexbox per far crescere il contenuto */
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1; /* Permette all'item di crescere se è l'unico */
+            min-height: 0; /* Fix per flexbox in contenitori scrollabili */
         }
 
         .prompt-gallery-header {
@@ -4697,15 +4829,16 @@
             font-size: 14px;
             line-height: 1.5;
             white-space: pre-wrap;
-            /* Mantiene la formattazione */
             word-wrap: break-word;
-            max-height: 150px;
-            overflow-y: auto;
             color: var(--spotify-text-secondary);
+            /* MODIFICA: Rimosso max-height e overflow-y di default */
         }
 
         .prompt-gallery-content.optimized {
             color: var(--spotify-text);
+            /* MODIFICA: Fa crescere questo elemento per riempire lo spazio */
+            flex-grow: 1;
+            overflow-y: auto; /* Aggiunge lo scroll solo a questo elemento se necessario */
         }
 
         .prompt-gallery-divider {
@@ -4715,30 +4848,7 @@
             border: none;
         }
 
-        .prompt-gallery-actions {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-
-        .prompt-gallery-delete-btn {
-            background: none;
-            border: none;
-            color: var(--spotify-text-secondary);
-            cursor: pointer;
-            padding: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: color 0.2s, background-color 0.2s;
-        }
-
-        .prompt-gallery-delete-btn:hover {
-            color: #ff6b6b;
-            /* Rosso per indicare un'azione distruttiva */
-            background-color: rgba(255, 107, 107, 0.1);
-        }
+        .prompt-gallery-act
 
         /* NUOVO: Stili per l'iniziale nelle card dei suggerimenti */
         .suggestion-initial-container {
@@ -4902,9 +5012,6 @@
             <div class="optimizer-actions">
                 <button id="optimizer-submit-btn" class="button primary" data-action="optimize-prompt"
                     data-translate="optimizeButton">Optimize</button>
-            </div>
-            <div class="optimizer-helper-text" data-translate="optimizerHelperText">
-                Prompt Optimizer will apply <strong>best practices</strong> to your prompt.
             </div>
         </div>
     </div>
@@ -5159,6 +5266,17 @@
                 en: ["Suggest an AI for programming", "Suggest an AI for creating images", "What are ChatGPT's alternatives?"]
             };
 
+            const buttonTexts = {
+                it: {
+                    optimize: "Ottimizza Prompt",
+                    saved: "Prompt Salvati"
+                },
+                en: {
+                    optimize: "Optimize Prompt",
+                    saved: "Saved Prompts"
+                }
+            };
+
             return (
                 <div id="welcome-screen">
                     <div className="welcome-logo">
@@ -5174,10 +5292,10 @@
                     {/* NUOVO: Contenitore per i pulsanti di azione */}
                     <div className="prompt-actions-container">
                         <button className="action-btn primary" data-action="navigate-to-optimizer">
-                            Ottimizza Prompt
+                            {buttonTexts[lang].optimize}
                         </button>
                         <button className="action-btn tertiary" data-action="show-prompt-gallery">
-                            Prompt Salvati
+                            {buttonTexts[lang].saved}
                         </button>
                     </div>
                 </div>
@@ -7021,7 +7139,7 @@
                     detailModalRemoveFavorite: "Rimuovi dai Preferiti", detailModalAddFavorite: "Aggiungi ai Preferiti",
                     visitWebsite: "Visita Sito Web", alternativeSuggestion: "In alternativa prova:",
                     // Settings Modal
-                    settingsTitle: "Impostazioni account", changePasswordTitle: "Cambia password", newPasswordLabel: "Nuova password",
+                    settingsTitle: "Impostazioni", changePasswordTitle: "Cambia password", newPasswordLabel: "Nuova password",
                     sentReviews: "Recensioni inviate", noSentReviews: "Non hai ancora inviato recensioni.", viewAllUserReviews: "Visualizza tutte le recensioni utente", allUserReviews: "Tutte le recensioni utente",
                     newPasswordPlaceholder: "Minimo 6 caratteri", confirmPasswordLabel: "Conferma password", confirmPasswordPlaceholder: "Reinserisci la Nuova password",
                     savePasswordButton: "Salva Password", passwordUpdateSuccess: "Password aggiornata con successo!",
@@ -7114,7 +7232,7 @@
                     chatPromptTitle: "Chatta con altri utenti",
                     chatPromptText: "Accedi o registrati per iniziare a chattare e scoprire i suggerimenti degli altri.",
                     // NUOVE TRADUZIONI PER PROMPT OPTIMIZER
-                    optimizerTitle: "Ottimizza per GPT-5",
+                    optimizerTitle: "Prompt Optimizer",
                     originalPromptLabel: "Prompt originale",
                     optimizedPromptLabel: "Prompt ottimizzato",
                     originalPromptPlaceholder: "Inserisci qui il tuo prompt originale...",
@@ -7541,6 +7659,8 @@
             const moonIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M9.37 5.51A7.35 7.35 0 009.1 7.5c0 4.08 3.32 7.4 7.4 7.4.68 0 1.35-.09 1.99-.27C17.45 17.19 14.93 19 12 19c-3.86 0-7-3.14-7-7 0-2.93 1.81-5.45 4.37-6.49z"/></svg>`;
             // Pencil icon SVG for editing
             const pencilIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M14.06 9.02l.92.92L5.92 18H5v-.92l9.06-9.06zm4.6-4.6l-1.39-1.39c-.2-.2-.51-.2-.71 0l-1.83 1.83 3.29 3.29 1.83-1.83c.2-.2.2-.51 0-.71zM3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"/></svg>`;
+            const smallPencilIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>`;
+            const trashIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>`;
 
 
             const el = {
@@ -7590,17 +7710,9 @@
             };
 
             const showToast = (message) => {
-                const toast = document.createElement('div');
-                toast.className = 'toast-message';
-                toast.textContent = message;
-                document.body.appendChild(toast);
-                setTimeout(() => {
-                    toast.classList.add('show');
-                }, 10);
-                setTimeout(() => {
-                    toast.classList.remove('show');
-                    toast.addEventListener('transitionend', () => toast.remove());
-                }, 3000);
+                // This function is intentionally left empty to disable toast notifications as requested.
+                // For debugging, you can log the message to the console instead:
+                // console.log('Toast Message:', message);
             };
 
             // Espone la funzione showToast globalmente
@@ -8353,7 +8465,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                             </svg>
-                            <span data-translate="settingsTitle">Impostazioni account</span>
+                            <span data-translate="settingsTitle">Impostazioni</span>
                         </div>
                         <div class="user-profile-item" data-action="change-nickname">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -8987,14 +9099,20 @@ if (includeLangToggle) {
             window.openSettingsModal = () => {
                 if (!currentUser.uid) return;
                 const t = translations[currentLanguage];
+                const logoutIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2z"/></svg>`;
 
                 const modalHTML = `
                 <div id="settings-modal" class="modal-overlay visible">
                     <div class="modal-content">
                         <button class="modal-close-btn" data-action="close-modal">×</button>
-                        <h2 data-translate="settingsTitle">${t.settingsTitle}</h2>
                         
-                        <p style="font-size: 16px; color: var(--spotify-text-secondary); margin-top: 16px; margin-bottom: 24px;">${currentUser.name}</p>
+                        <div class="settings-modal-header">
+                            <button class="global-btn" data-action="logout" title="${t.logout}">${logoutIconSVG}</button>
+                            <h2 data-translate="settingsTitle">${t.settingsTitle}</h2>
+                            <div style="width: 32px; height: 32px;"></div> <!-- Placeholder to balance logout button -->
+                        </div>
+                        
+                        <p style="font-size: 16px; color: var(--spotify-text-secondary); margin-bottom: 24px; text-align: center;">${currentUser.name}</p>
                         
                         <hr class="modal-divider">
 
@@ -9024,9 +9142,6 @@ if (includeLangToggle) {
                         </div>
                         <button class="button" id="update-password-btn" data-translate="savePasswordButton">${t.savePasswordButton}</button>
 
-                         <hr class="modal-divider">
-                         <button id="logout-btn-modal" class="pill-btn" data-action="logout" data-translate="logout">${t.logout}</button>
-
                     </div>
                 </div>`;
                 el.modalContainer.innerHTML = modalHTML;
@@ -9035,11 +9150,7 @@ if (includeLangToggle) {
                 document.getElementById('update-nickname-btn')?.addEventListener('click', handleNicknameUpdate);
                 // Attach listener to the update password button
                 document.getElementById('update-password-btn')?.addEventListener('click', handlePasswordUpdate);
-                // Attach listener to the logout button inside the modal
-                document.getElementById('logout-btn-modal')?.addEventListener('click', () => {
-                    handleLogout(); // Usa la nuova funzione centralizzata
-                    closeModal();
-                });
+                // The logout action is now handled by the main body event listener via data-action="logout"
             };
 
             const handleNicknameUpdate = async () => {
@@ -10748,8 +10859,8 @@ if (includeLangToggle) {
                                 <div class="sent-review-tool-name">${ranking.title_it}</div>
                             </div>
                             <div class="sent-review-actions">
-                                <button class="sent-review-edit-btn" data-action="open-edit-ranking-modal" data-id="${ranking.id}">${t.editRanking}</button>
-                                <button class="sent-review-delete-btn" data-action="delete-ranking" data-id="${ranking.id}">${t.deleteButton}</button>
+                                <button class="ranking-action-btn edit" data-action="open-edit-ranking-modal" data-id="${ranking.id}" title="${t.editRanking}">${smallPencilIcon}</button>
+                                <button class="ranking-action-btn delete" data-action="delete-ranking" data-id="${ranking.id}" title="${t.deleteButton}">${trashIcon}</button>
                             </div>
                         </div>
                     </div>
@@ -10983,21 +11094,32 @@ if (includeLangToggle) {
                 if (currentUser.role !== 'admin') return;
                 const t = translations[currentLanguage];
 
-                const generateToolListItem = (tool) => {
+                // Helper to generate the HTML for a single row
+                const generateAlternativeRowHTML = (tool) => {
                     const alternative = tool.recommendationId ? aiToolsData.find(t => t.id === tool.recommendationId) : null;
-                    return `
-                        <div class="sent-review-item" data-tool-name="${tool.name.toLowerCase()}" data-tool-category="${tool.category}">
-                            <div class="sent-review-header">
-                                <div class="sent-review-tool-info">
-                                    <img src="${tool.logoUrl}" class="sent-review-tool-logo">
-                                    <div class="sent-review-tool-name">${tool.name}</div>
-                                </div>
-                                <div class="sent-review-actions">
-                                    <button class="sent-review-edit-btn" data-action="open-edit-alternative-modal" data-id="${tool.id}">${t.editAlternative}</button>
-                                </div>
+                    
+                    let alternativeHTML;
+                    if (alternative) {
+                        alternativeHTML = `
+                            <div class="tool-list-item">
+                                <img class="sent-review-tool-logo" src="${alternative.logoUrl}" alt="${alternative.name}">
+                                <div class="info"><div class="tool-name">${alternative.name}</div></div>
                             </div>
-                            <div style="font-size: 13px; color: var(--spotify-text-secondary); margin-top: 8px;">
-                                ${t.currentAlternative}: <strong>${alternative ? alternative.name : t.noAlternative}</strong>
+                            <button class="ranking-action-btn delete" data-action="remove-alternative" data-id="${tool.id}" title="${t.removeAlternative}">${trashIcon}</button>
+                        `;
+                    } else {
+                        alternativeHTML = `<div class="alt-empty-state">${t.noAlternative}</div>`;
+                    }
+
+                    return `
+                        <div class="alternative-row" data-id="${tool.id}" data-tool-name="${tool.name.toLowerCase()}" data-tool-category="${tool.category}">
+                            <div class="main-ai-col">
+                                <img class="sent-review-tool-logo" src="${tool.logoUrl}" alt="${tool.name}">
+                                <div class="tool-name">${tool.name}</div>
+                            </div>
+                            <div class="alt-ai-col">
+                                ${alternativeHTML}
+                                <button class="ranking-action-btn edit" data-action="edit-alternative-inline" data-id="${tool.id}" title="${t.editAlternative}">${smallPencilIcon}</button>
                             </div>
                         </div>
                     `;
@@ -11006,15 +11128,12 @@ if (includeLangToggle) {
                 const categoryFiltersHTML = `
                 <div class="filter-pills" id="alternative-category-filters" style="margin-top: 16px; padding-bottom: 8px;">
                     <button class="pill-btn active" data-action="set-alternative-filter" data-category="All">${t.filterAll}</button>
-                    ${categories.map(cat => `
-                        <button class="pill-btn" data-action="set-alternative-filter" data-category="${cat.id}">${getTranslatedCategoryName(cat.id)}</button>
-                    `).join('')}
-                </div>
-                `;
+                    ${categories.map(cat => `<button class="pill-btn" data-action="set-alternative-filter" data-category="${cat.id}">${getTranslatedCategoryName(cat.id)}</button>`).join('')}
+                </div>`;
 
                 const modalHTML = `
                 <div id="manage-alternatives-modal" class="modal-overlay visible">
-                    <div class="modal-content add-ai-modal" style="text-align: left; max-width: 700px;">
+                    <div class="modal-content add-ai-modal" style="text-align: left; max-width: 800px;">
                         <button class="modal-close-btn" data-action="close-modal">×</button>
                         <h2>${t.manageAlternatives}</h2>
                         <div class="input-group" style="margin-top: 24px;">
@@ -11022,7 +11141,7 @@ if (includeLangToggle) {
                         </div>
                         ${categoryFiltersHTML}
                         <div id="alternatives-tool-list" class="list-container" style="max-height: 55vh; overflow-y: auto; margin-top: 8px;">
-                            ${aiToolsData.map(generateToolListItem).join('')}
+                            ${aiToolsData.sort((a,b) => a.name.localeCompare(b.name)).map(generateAlternativeRowHTML).join('')}
                         </div>
                     </div>
                 </div>`;
@@ -11036,10 +11155,10 @@ if (includeLangToggle) {
 
                 const applyFilters = () => {
                     const searchTerm = searchInput.value.toLowerCase();
-                    toolListContainer.querySelectorAll('.sent-review-item').forEach(item => {
+                    toolListContainer.querySelectorAll('.alternative-row').forEach(item => {
                         const matchesCategory = currentCategoryFilter === 'All' || item.dataset.toolCategory === currentCategoryFilter;
                         const matchesSearch = item.dataset.toolName.includes(searchTerm);
-                        item.style.display = (matchesCategory && matchesSearch) ? '' : 'none';
+                        item.style.display = (matchesCategory && matchesSearch) ? 'flex' : 'none';
                     });
                 };
 
@@ -11049,56 +11168,42 @@ if (includeLangToggle) {
                     const filterBtn = e.target.closest('[data-action="set-alternative-filter"]');
                     if (filterBtn) {
                         currentCategoryFilter = filterBtn.dataset.category;
-                        
                         categoryFiltersContainer.querySelectorAll('.pill-btn').forEach(btn => btn.classList.remove('active'));
                         filterBtn.classList.add('active');
-                        
                         applyFilters();
                     }
                 });
             };
 
-            const openEditAlternativeModal = (mainToolId) => {
-                if (currentUser.role !== 'admin') return;
+            const enterAlternativeEditMode = (mainToolId, rowElement) => {
+                const altCol = rowElement.querySelector('.alt-ai-col');
+                if (!altCol || altCol.dataset.editing === 'true') return;
+
+                altCol.dataset.editing = 'true';
+                altCol.dataset.originalHtml = altCol.innerHTML;
                 const t = translations[currentLanguage];
-                const mainTool = aiToolsData.find(t => t.id === mainToolId);
-                if (!mainTool) return;
 
-                const currentAlternative = mainTool.recommendationId ? aiToolsData.find(t => t.id === mainTool.recommendationId) : null;
-
-                const modalHTML = `
-                <div id="edit-alternative-modal" class="modal-overlay visible">
-                    <div class="modal-content add-ai-modal" style="text-align: left; max-width: 600px;">
-                        <button class="modal-close-btn" data-action="close-modal">×</button>
-                        <h2>${t.editAlternativeFor.replace('%s', `<strong>${mainTool.name}</strong>`)}</h2>
-                        
-                        <div class="input-group" style="margin-top: 24px;">
-                            <label>${t.currentAlternative}</label>
-                            <div id="current-alternative-display" style="background: var(--spotify-bg-light); padding: 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
-                                ${currentAlternative ? `<span>${currentAlternative.name}</span><button class="sent-review-delete-btn" data-action="remove-alternative" data-id="${mainTool.id}">×</button>` : `<span>${t.noAlternative}</span>`}
-                            </div>
-                        </div>
-
-                        <div class="input-group">
-                            <label>${t.searchNewAlternative}</label>
-                            <input type="text" id="alternative-search-input" placeholder="...">
-                            <div id="alternative-search-results" class="list-container" style="max-height: 200px; overflow-y: auto; margin-top: 8px;"></div>
-                        </div>
+                altCol.innerHTML = `
+                    <div class="edit-mode-container">
+                        <input type="text" class="chat-search-input" placeholder="${t.searchNewAlternative}" id="inline-alt-search-${mainToolId}">
+                        <div class="list-container" id="inline-alt-results-${mainToolId}" style="max-height: 150px; overflow-y: auto;"></div>
                     </div>
-                </div>`;
-                el.modalContainer.innerHTML = modalHTML;
+                    <button class="ranking-action-btn" data-action="cancel-alternative-edit" title="${t.cancel}">×</button>
+                `;
 
-                document.getElementById('alternative-search-input').addEventListener('input', (e) => {
-                    const searchTerm = e.target.value.toLowerCase();
-                    const resultsContainer = document.getElementById('alternative-search-results');
+                const searchInput = document.getElementById(`inline-alt-search-${mainToolId}`);
+                const resultsContainer = document.getElementById(`inline-alt-results-${mainToolId}`);
+                
+                searchInput.focus();
+                searchInput.addEventListener('input', () => {
+                    const searchTerm = searchInput.value.toLowerCase();
                     if (searchTerm.length < 2) {
-                        resultsContainer.innerHTML = '';
-                        return;
+                        resultsContainer.innerHTML = ''; return;
                     }
                     const filteredTools = aiToolsData.filter(tool => tool.id !== mainToolId && tool.name.toLowerCase().includes(searchTerm));
-                    resultsContainer.innerHTML = filteredTools.slice(0, 10).map(tool => `
+                    resultsContainer.innerHTML = filteredTools.slice(0, 5).map(tool => `
                         <div class="tool-list-item" data-action="update-alternative" data-main-id="${mainToolId}" data-alt-id="${tool.id}" style="cursor: pointer;">
-                            <img src="${tool.logoUrl}" alt="${tool.name}"><div class="info"><div class="tool-name">${tool.name}</div></div>
+                            <img class="sent-review-tool-logo" src="${tool.logoUrl}" alt="${tool.name}"><div class="info"><div class="tool-name">${tool.name}</div></div>
                         </div>
                     `).join('');
                 });
@@ -11110,14 +11215,23 @@ if (includeLangToggle) {
                     const toolDocRef = doc(db, "tools", mainToolId);
                     await updateDoc(toolDocRef, { recommendationId: alternativeToolId });
                     
-                    // Update local data and UI
                     const toolIndex = aiToolsData.findIndex(t => t.id === mainToolId);
-                    if (toolIndex !== -1) {
-                        aiToolsData[toolIndex].recommendationId = alternativeToolId;
-                    }
+                    if (toolIndex !== -1) aiToolsData[toolIndex].recommendationId = alternativeToolId;
+                    
                     showToast(t.alternativeUpdated);
-                    closeModal();
-                    openManageAlternativesModal(); // Reopen the main modal to show the change
+
+                    // Update UI inline instead of reloading
+                    const rowToUpdate = document.querySelector(`.alternative-row[data-id="${mainToolId}"]`);
+                    const altColToUpdate = rowToUpdate.querySelector('.alt-ai-col');
+                    const newAlternative = aiToolsData.find(t => t.id === alternativeToolId);
+                    altColToUpdate.innerHTML = `
+                        <div class="tool-list-item">
+                            <img class="sent-review-tool-logo" src="${newAlternative.logoUrl}" alt="${newAlternative.name}">
+                            <div class="info"><div class="tool-name">${newAlternative.name}</div></div>
+                        </div>
+                        <button class="ranking-action-btn delete" data-action="remove-alternative" data-id="${mainToolId}" title="${t.removeAlternative}">${trashIcon}</button>
+                        <button class="ranking-action-btn edit" data-action="edit-alternative-inline" data-id="${mainToolId}" title="${t.editAlternative}">${smallPencilIcon}</button>
+                    `;
                 } catch (error) {
                     console.error("Error updating alternative:", error);
                     showToast(t.errorUpdatingAlternative);
@@ -11130,16 +11244,19 @@ if (includeLangToggle) {
                     const toolDocRef = doc(db, "tools", mainToolId);
                     await updateDoc(toolDocRef, { recommendationId: null });
 
-                    // Update local data and UI
                     const toolIndex = aiToolsData.findIndex(t => t.id === mainToolId);
-                    if (toolIndex !== -1) {
-                        delete aiToolsData[toolIndex].recommendationId;
-                    }
+                    if (toolIndex !== -1) delete aiToolsData[toolIndex].recommendationId;
+
                     showToast(t.alternativeRemoved);
-                    closeModal();
-                    openManageAlternativesModal(); // Reopen the main modal to show the change
-                } catch (error)
-                 {
+
+                    // Update UI inline
+                    const rowToUpdate = document.querySelector(`.alternative-row[data-id="${mainToolId}"]`);
+                    const altColToUpdate = rowToUpdate.querySelector('.alt-ai-col');
+                    altColToUpdate.innerHTML = `
+                        <div class="alt-empty-state">${t.noAlternative}</div>
+                        <button class="ranking-action-btn edit" data-action="edit-alternative-inline" data-id="${mainToolId}" title="${t.editAlternative}">${smallPencilIcon}</button>
+                    `;
+                } catch (error) {
                     console.error("Error removing alternative:", error);
                     showToast(t.errorUpdatingAlternative);
                 }
@@ -11357,8 +11474,18 @@ if (includeLangToggle) {
                             closeUserProfileDropdown();
                             openManageAlternativesModal();
                             break;
-                        case 'open-edit-alternative-modal':
-                            openEditAlternativeModal(actionTarget.dataset.id);
+                        case 'edit-alternative-inline':
+                            const rowElement = actionTarget.closest('.alternative-row');
+                            enterAlternativeEditMode(actionTarget.dataset.id, rowElement);
+                            break;
+                        case 'cancel-alternative-edit':
+                            const rowToCancel = actionTarget.closest('.alternative-row');
+                            const altCol = rowToCancel.querySelector('.alt-ai-col');
+                            if (altCol.dataset.originalHtml) {
+                                altCol.innerHTML = altCol.dataset.originalHtml;
+                                delete altCol.dataset.editing;
+                                delete altCol.dataset.originalHtml;
+                            }
                             break;
                         case 'update-alternative':
                             handleUpdateAlternative(actionTarget.dataset.mainId, actionTarget.dataset.altId);
