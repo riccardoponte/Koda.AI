@@ -1315,19 +1315,21 @@
             }
 
             /* Specifically center overlays containing shorter, form-like modals */
-            #add-ai-suggestion-modal,
-            #settings-modal,
-            #confirm-delete-review-modal,
-            #confirm-delete-modal,
-            #detail-modal,
-            #change-nickname-modal,
-            #change-password-modal,
-            #prompt-gallery-modal,
-            #manage-rankings-modal,
-            #feature-toggles-modal,
-            #edit-alternative-modal {
-                align-items: center;
-            }
+        #add-ai-suggestion-modal,
+        #settings-modal,
+        #confirm-delete-review-modal,
+        #confirm-delete-modal,
+        #detail-modal,
+        #change-nickname-modal,
+        #change-password-modal,
+        #prompt-gallery-modal,
+        #manage-rankings-modal,
+        #feature-toggles-modal,
+        #edit-alternative-modal,
+        #add-video-modal, /* NUOVO */
+        #edit-video-modal /* NUOVO */ {
+            align-items: center;
+        }
         }
 
         @media (max-width: 480px) {
@@ -2492,7 +2494,12 @@
         #edit-global-tool-modal input,
         #edit-global-tool-modal textarea,
         #edit-global-tool-modal select,
-        #edit-ranking-modal input {
+        #edit-ranking-modal input,
+        /* NUOVI SELETTORI PER I MODAL VIDEO */
+        #add-video-modal input,
+        #add-video-modal textarea,
+        #edit-video-modal input,
+        #edit-video-modal textarea {
             width: 100%;
             padding: 16px 18px;
             font-size: 16px;
@@ -2892,10 +2899,12 @@
 
         #settings-modal .button,
         #add-app-modal .button,
-        #replace-featured-modal .button {
-            /* Added replace modal */
+        #replace-featured-modal .button,
+        /* NUOVI SELETTORI PER I MODAL VIDEO CON MARGINE AUMENTATO */
+        #add-video-modal .button,
+        #edit-video-modal .button {
             width: 100%;
-            margin-top: 8px;
+            margin-top: 24px; /* Aumentato margine per più spazio */
         }
 
         .settings-modal-header {
@@ -4961,6 +4970,8 @@
             transform: translateX(0);
         }
 
+        **SOSTITUISCI CON:**
+```css
         /* Toast responsive adjustments */
         @media (max-width: 480px) {
             .toast-message {
@@ -4968,6 +4979,171 @@
                 right: 10px;
                 left: 10px;
                 max-width: none;
+            }
+        }
+        
+        /* --- NUOVI STILI PER CATALOGO VIDEO (FULLSCREEN) --- */
+        #video-catalog-modal.modal-overlay {
+            padding: 0 !important; /* Rimuove il padding per un vero fullscreen */
+        }
+
+        #video-catalog-modal .modal-content {
+            width: 100%;
+            height: 100%;
+            max-width: none;
+            max-height: none;
+            border-radius: 0; /* Rimuove gli angoli arrotondati */
+            display: flex;
+            flex-direction: column;
+        }
+
+        #video-catalog-modal .modal-header {
+             display: flex;
+             justify-content: space-between;
+             align-items: center;
+             margin-bottom: 16px;
+        }
+
+        #video-catalog-modal .modal-header-buttons {
+            display: flex;
+            align-items: center;
+            gap: 12px; /* Aggiunge spazio tra i pulsanti '+' e 'x' */
+        }
+        
+        #video-catalog-modal .admin-add-video-btn {
+            background-color: var(--spotify-accent);
+            color: black;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-list-container {
+            flex-grow: 1;
+            overflow-y: auto;
+            margin: -8px;
+            padding: 8px;
+        }
+
+        .video-card {
+            background-color: var(--spotify-bg-light);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+        
+        .video-thumbnail {
+            width: 50%; /* Occupa metà dello spazio del genitore */
+            height: auto; /* L'altezza si adatta per mantenere le proporzioni */
+            aspect-ratio: 16 / 9; /* Mantiene il formato 16:9 del video */
+            flex-shrink: 0;
+            border-radius: 8px;
+            object-fit: cover;
+            background-color: var(--spotify-card);
+        }
+
+        .video-info {
+            flex-grow: 1;
+        }
+
+        .video-info h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .video-info p {
+            font-size: 13px;
+            color: var(--spotify-text-secondary);
+            line-height: 1.4;
+            margin-bottom: 12px;
+        }
+
+        .video-info .button {
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        .video-date {
+            font-size: 12px;
+            color: var(--spotify-text-secondary);
+            margin-top: 8px;
+        }
+
+        .video-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            align-items: center; /* Allinea il pulsante Guarda con le icone */
+        }
+
+        .video-actions .button {
+            flex-grow: 1; /* Fa espandere il pulsante "Guarda" */
+        }
+
+        .video-admin-btn {
+            background: var(--spotify-card);
+            border: 1px solid var(--spotify-bg-light);
+            color: var(--spotify-text);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        
+        .video-admin-btn:hover {
+            background-color: var(--spotify-bg);
+        }
+        
+        .video-admin-btn.delete:hover {
+             background-color: #ff6b6b;
+             color: white;
+        }
+        
+        .video-card[draggable="true"] {
+            cursor: grab;
+        }
+
+        .video-card.dragging {
+            opacity: 0.5;
+            background: var(--spotify-accent);
+        }
+
+        #save-video-order-btn {
+            width: calc(100% - 32px);
+            margin: 16px 16px 0 16px;
+            display: none; /* Nascosto di default */
+        }
+
+        /* --- NUOVI STILI RESPONSIVE PER VIDEO CARD --- */
+        @media (max-width: 600px) {
+            .video-card {
+                flex-direction: column; /* Cambia il layout in verticale su schermi piccoli */
+            }
+
+            .video-thumbnail {
+                width: 100%; /* L'immagine ora occupa tutta la larghezza */
+            }
+            
+            .video-info {
+                width: 100%; /* Anche la sezione info occupa tutta la larghezza */
             }
         }
     </style>
@@ -7304,6 +7480,28 @@
                     alternativeUpdated: "Alternativa aggiornata con successo!",
                     alternativeRemoved: "Alternativa rimossa con successo!",
                     errorUpdatingAlternative: "Errore durante l'aggiornamento dell'alternativa.",
+                    // NUOVE TRADUZIONI PER CATALOGO VIDEO
+                    videoCatalogTitle: "Tutorials & Guide",
+                    watchVideo: "Guarda",
+                    addVideoTitle: "Aggiungi Nuovo Video",
+                    videoTitleLabel: "Titolo Video",
+                    videoTitlePlaceholder: "Es. Guida a Koda.AI",
+                    videoDescItLabel: "Descrizione (IT)",
+                    videoDescEnLabel: "Descrizione (EN)",
+                    videoDescPlaceholder: "Breve descrizione del video...",
+                    videoLinkLabel: "Link Video YouTube",
+                    videoLinkPlaceholder: "https://www.youtube.com/watch?v=...",
+                    addVideoButton: "Aggiungi Video",
+                    videoAddedSuccess: "Video aggiunto con successo!",
+                    invalidYoutubeUrl: "Per favore, inserisci un link YouTube valido.",
+                    // Admin Video Actions
+                    editVideo: "Modifica",
+                    deleteVideo: "Elimina",
+                    confirmDeleteVideo: "Sei sicuro di voler eliminare questo video? L'azione è irreversibile.",
+                    videoUpdatedSuccess: "Video aggiornato con successo!",
+                    videoDeletedSuccess: "Video eliminato con successo!",
+                    saveOrder: "Salva Ordine",
+                    orderSavedSuccess: "Ordine salvato con successo!",
                 },
                 en: {
                     // Auth
@@ -7500,6 +7698,28 @@
                     alternativeUpdated: "Alternative updated successfully!",
                     alternativeRemoved: "Alternative removed successfully!",
                     errorUpdatingAlternative: "Error updating alternative.",
+                    // NEW TRANSLATIONS FOR VIDEO CATALOG
+                    videoCatalogTitle: "Tutorials & Guides",
+                    watchVideo: "Watch",
+                    addVideoTitle: "Add New Video",
+                    videoTitleLabel: "Video Title",
+                    videoTitlePlaceholder: "Ex. Koda.AI Guide",
+                    videoDescItLabel: "Description (IT)",
+                    videoDescEnLabel: "Description (EN)",
+                    videoDescPlaceholder: "Brief description of the video...",
+                    videoLinkLabel: "YouTube Video Link",
+                    videoLinkPlaceholder: "https://www.youtube.com/watch?v=...",
+                    addVideoButton: "Add Video",
+                    videoAddedSuccess: "Video added successfully!",
+                    invalidYoutubeUrl: "Please enter a valid YouTube link.",
+                    // Admin Video Actions
+                    editVideo: "Edit",
+                    deleteVideo: "Delete",
+                    confirmDeleteVideo: "Are you sure you want to delete this video? This action is irreversible.",
+                    videoUpdatedSuccess: "Video updated successfully!",
+                    videoDeletedSuccess: "Video deleted successfully!",
+                    saveOrder: "Save Order",
+                    orderSavedSuccess: "Order saved successfully!",
                 }
             };
 
@@ -7547,6 +7767,7 @@
             // --- DATABASE PERSONALIZZATO (CARICATO DA FIREBASE) ---
             let aiToolsData = []; // Questa variabile verrà popolata dinamicamente da Firestore
             let aiRankingsData = []; // NUOVO: Questa variabile conterrà i dati delle classifiche da Firestore
+            let youtubeVideosData = []; // NUOVO: Conterrà i video da Firebase
             let featureSettings = { isChatEnabled: true, isReviewsEnabled: true, isRatingsEnabled: true }; // NUOVO: Impostazioni per le funzionalità, con fallback
             // NUOVA FUNZIONE per caricare gli strumenti da Firestore
             const fetchToolsFromFirestore = async () => {
@@ -7600,6 +7821,24 @@
                     console.error("Error fetching feature settings:", error);
                     showToast("Could not load app settings.");
                     return { isChatEnabled: true, isReviewsEnabled: true, isRatingsEnabled: true };
+                }
+            };
+
+            // NUOVA FUNZIONE per caricare i video da Firestore (ordinati per campo 'order')
+            const fetchVideosFromFirestore = async () => {
+                try {
+                    const videosCollectionRef = collection(db, "videos");
+                    const q = query(videosCollectionRef, orderBy("order", "asc"));
+                    const querySnapshot = await getDocs(q);
+                    const firestoreVideos = [];
+                    querySnapshot.forEach((doc) => {
+                        firestoreVideos.push({ ...doc.data(), id: doc.id });
+                    });
+                    console.log(`Successfully fetched ${firestoreVideos.length} videos from Firestore.`);
+                    return firestoreVideos;
+                } catch (error) {
+                    console.error("Error fetching videos from Firestore:", error);
+                    return [];
                 }
             };
 
@@ -8530,6 +8769,13 @@ otherControlsHTML += `
             </svg>
         </button>
     `;
+
+// NUOVO: Pulsante Catalogo Video
+otherControlsHTML += `
+    <button id="video-catalog-btn" class="global-btn" data-action="open-video-catalog" title="${translations[currentLanguage].videoCatalogTitle}" style="color: var(--spotify-accent);">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+    </button>
+`;
 
 otherControlsHTML += `
 <button id="theme-toggle-btn" class="global-btn" data-action="toggle-theme">${themeIcon}</button>
@@ -10638,6 +10884,302 @@ if (includeLangToggle) {
                 }
             };
 
+            const openVideoCatalogModal = () => {
+                const t = translations[currentLanguage];
+                const isAdmin = currentUser.role === 'admin';
+                
+                const adminAddButton = isAdmin
+                    ? `<button class="admin-add-video-btn" data-action="open-add-video-modal" title="${t.addVideoTitle}">+</button>` 
+                    : '';
+                
+                const videosHTML = youtubeVideosData.map((video, index) => {
+                    let videoId = '';
+                    try {
+                        const url = new URL(video.youtubeUrl);
+                        videoId = url.hostname === 'youtu.be' ? url.pathname.slice(1) : url.searchParams.get('v');
+                    } catch (e) {}
+                    
+                    const thumbnailUrl = videoId ? `https://img.youtube.com/vi/${videoId}/mqdefault.jpg` : 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+                    const videoDate = video.createdAt ? new Date(video.createdAt.seconds * 1000).toLocaleDateString(currentLanguage === 'it' ? 'it-IT' : 'en-US') : '';
+
+                    const adminActionsHTML = isAdmin ? `
+                        <button class="video-admin-btn" data-action="open-edit-video-modal" data-id="${video.id}" title="${t.editVideo}">${smallPencilIcon}</button>
+                        <button class="video-admin-btn delete" data-action="delete-video" data-id="${video.id}" title="${t.deleteVideo}">${trashIcon}</button>
+                    ` : '';
+
+                    return `
+                        <div class="video-card" data-id="${video.id}" ${isAdmin ? 'draggable="true"' : ''}>
+                            <img src="${thumbnailUrl}" class="video-thumbnail" alt="Thumbnail">
+                            <div class="video-info">
+                                <h4>${index + 1}. ${video.title}</h4>
+                                <p>${video.description[currentLanguage] || video.description['en']}</p>
+                                <div class="video-actions">
+                                    <button class="button" data-action="watch-youtube-video" data-url="${video.youtubeUrl}">${t.watchVideo}</button>
+                                    ${adminActionsHTML}
+                                </div>
+                                ${videoDate ? `<div class="video-date">${videoDate}</div>` : ''}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                const saveOrderButton = isAdmin ? `<button class="button" id="save-video-order-btn" data-action="save-video-order">${t.saveOrder}</button>` : '';
+
+                const modalHTML = `
+                <div id="video-catalog-modal" class="modal-overlay visible">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>${t.videoCatalogTitle}</h2>
+                            <div class="modal-header-buttons">
+                                ${adminAddButton}
+                                <button class="modal-close-btn" data-action="close-modal" style="position: static;">×</button>
+                            </div>
+                        </div>
+                        <div class="video-list-container">
+                            ${videosHTML.length > 0 ? videosHTML : `<div id="empty-state">Nessun video disponibile.</div>`}
+                        </div>
+                        ${saveOrderButton}
+                    </div>
+                </div>`;
+                el.modalContainer.innerHTML = modalHTML;
+                
+                if (isAdmin) {
+                    initializeVideoDragAndDrop();
+                }
+            };
+
+            const initializeVideoDragAndDrop = () => {
+                const container = document.querySelector('#video-catalog-modal .video-list-container');
+                if (!container) return;
+
+                let draggedItem = null;
+
+                container.addEventListener('dragstart', e => {
+                    if (e.target.classList.contains('video-card')) {
+                        draggedItem = e.target;
+                        setTimeout(() => draggedItem.classList.add('dragging'), 0);
+                        document.getElementById('save-video-order-btn').style.display = 'block';
+                    }
+                });
+
+                container.addEventListener('dragend', () => {
+                    if (draggedItem) {
+                        draggedItem.classList.remove('dragging');
+                        draggedItem = null;
+                    }
+                });
+
+                container.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    const afterElement = getDragAfterElement(container, e.clientY);
+                    const dragging = container.querySelector('.dragging');
+                    if (dragging) {
+                        if (afterElement == null) {
+                            container.appendChild(dragging);
+                        } else {
+                            container.insertBefore(dragging, afterElement);
+                        }
+                    }
+                });
+
+                function getDragAfterElement(container, y) {
+                    const draggableElements = [...container.querySelectorAll('.video-card:not(.dragging)')];
+                    return draggableElements.reduce((closest, child) => {
+                        const box = child.getBoundingClientRect();
+                        const offset = y - box.top - box.height / 2;
+                        if (offset < 0 && offset > closest.offset) {
+                            return { offset: offset, element: child };
+                        } else {
+                            return closest;
+                        }
+                    }, { offset: Number.NEGATIVE_INFINITY }).element;
+                }
+            };
+
+        const openAddVideoModal = () => {
+            if (currentUser.role !== 'admin') return;
+            const t = translations[currentLanguage];
+
+            const modalHTML = `
+            <div id="add-video-modal" class="modal-overlay visible">
+                <div class="modal-content add-ai-modal" style="text-align: left;">
+                    <button class="modal-close-btn" data-action="close-modal">×</button>
+                    <h2>${t.addVideoTitle}</h2>
+                    <div class="add-ai-form">
+                        <div class="input-group">
+                            <label for="video-title">${t.videoTitleLabel}</label>
+                            <input type="text" id="video-title" placeholder="${t.videoTitlePlaceholder}">
+                        </div>
+                        <div class="input-group">
+                            <label for="video-desc-it">${t.videoDescItLabel}</label>
+                            <textarea id="video-desc-it" placeholder="${t.videoDescPlaceholder}"></textarea>
+                        </div>
+                        <div class="input-group">
+                            <label for="video-desc-en">${t.videoDescEnLabel}</label>
+                            <textarea id="video-desc-en" placeholder="${t.videoDescPlaceholder}"></textarea>
+                        </div>
+                        <div class="input-group">
+                            <label for="video-link">${t.videoLinkLabel}</label>
+                            <input type="url" id="video-link" placeholder="${t.videoLinkPlaceholder}">
+                        </div>
+                        <button class="button" data-action="submit-video">${t.addVideoButton}</button>
+                    </div>
+                </div>
+            </div>`;
+            el.modalContainer.innerHTML = modalHTML;
+        };
+
+        const handleAddVideo = async () => {
+                if (currentUser.role !== 'admin') return;
+                const t = translations[currentLanguage];
+
+                const newVideoData = {
+                    title: document.getElementById('video-title').value.trim(),
+                    description: {
+                        it: document.getElementById('video-desc-it').value.trim(),
+                        en: document.getElementById('video-desc-en').value.trim(),
+                    },
+                    youtubeUrl: document.getElementById('video-link').value.trim(),
+                    createdAt: serverTimestamp(),
+                    order: Date.now() // Aggiunge un valore di ordine per posizionarlo alla fine
+                };
+
+            if (!newVideoData.title || !newVideoData.youtubeUrl || !newVideoData.description.it || !newVideoData.description.en) {
+                showToast("Tutti i campi sono obbligatori.");
+                return;
+            }
+            
+            // Validazione semplice dell'URL di YouTube
+            if (!newVideoData.youtubeUrl.includes('youtube.com') && !newVideoData.youtubeUrl.includes('youtu.be')) {
+                showToast(t.invalidYoutubeUrl);
+                return;
+            }
+
+            try {
+                const videosCollectionRef = collection(db, "videos");
+                await addDoc(videosCollectionRef, newVideoData);
+                showToast(t.videoAddedSuccess);
+                
+                // Ricarica i video e riapri il catalogo per mostrare l'aggiornamento
+                youtubeVideosData = await fetchVideosFromFirestore();
+                openVideoCatalogModal();
+
+            } catch (error) {
+                console.error("Errore nell'aggiunta del video:", error);
+                showToast(`Errore: ${error.message}`);
+            }
+        };
+
+
+        const openEditVideoModal = (videoId) => {
+                if (currentUser.role !== 'admin') return;
+                const t = translations[currentLanguage];
+                const videoToEdit = youtubeVideosData.find(v => v.id === videoId);
+                if (!videoToEdit) return;
+
+                const modalHTML = `
+                <div id="edit-video-modal" class="modal-overlay visible">
+                    <div class="modal-content add-ai-modal" style="text-align: left;">
+                        <button class="modal-close-btn" data-action="close-modal">×</button>
+                        <h2>${t.editVideo}</h2>
+                        <div class="add-ai-form">
+                            <div class="input-group">
+                                <label for="edit-video-title">${t.videoTitleLabel}</label>
+                                <input type="text" id="edit-video-title" value="${videoToEdit.title}">
+                            </div>
+                            <div class="input-group">
+                                <label for="edit-video-desc-it">${t.videoDescItLabel}</label>
+                                <textarea id="edit-video-desc-it">${videoToEdit.description.it}</textarea>
+                            </div>
+                            <div class="input-group">
+                                <label for="edit-video-desc-en">${t.videoDescEnLabel}</label>
+                                <textarea id="edit-video-desc-en">${videoToEdit.description.en}</textarea>
+                            </div>
+                            <div class="input-group">
+                                <label for="edit-video-link">${t.videoLinkLabel}</label>
+                                <input type="url" id="edit-video-link" value="${videoToEdit.youtubeUrl}">
+                            </div>
+                            <button class="button" data-action="submit-video-edit" data-id="${videoId}">${t.saveChanges}</button>
+                        </div>
+                    </div>
+                </div>`;
+                el.modalContainer.innerHTML = modalHTML;
+            };
+
+            const handleUpdateVideo = async (videoId) => {
+                if (currentUser.role !== 'admin') return;
+                const t = translations[currentLanguage];
+
+                const updatedData = {
+                    title: document.getElementById('edit-video-title').value.trim(),
+                    description: {
+                        it: document.getElementById('edit-video-desc-it').value.trim(),
+                        en: document.getElementById('edit-video-desc-en').value.trim(),
+                    },
+                    youtubeUrl: document.getElementById('edit-video-link').value.trim(),
+                };
+
+                if (!updatedData.title || !updatedData.youtubeUrl) {
+                    showToast("Titolo e Link sono obbligatori."); return;
+                }
+
+                try {
+                    const videoDocRef = doc(db, "videos", videoId);
+                    await updateDoc(videoDocRef, updatedData);
+                    showToast(t.videoUpdatedSuccess);
+
+                    youtubeVideosData = await fetchVideosFromFirestore();
+                    openVideoCatalogModal();
+                } catch (error) {
+                    console.error("Errore nell'aggiornamento del video:", error);
+                    showToast(`Errore: ${error.message}`);
+                }
+            };
+            
+            const handleDeleteVideo = async (videoId) => {
+                if (currentUser.role !== 'admin') return;
+                const t = translations[currentLanguage];
+                
+                if (confirm(t.confirmDeleteVideo)) {
+                    try {
+                        await deleteDoc(doc(db, "videos", videoId));
+                        showToast(t.videoDeletedSuccess);
+                        
+                        youtubeVideosData = await fetchVideosFromFirestore();
+                        openVideoCatalogModal();
+                    } catch (error) {
+                        console.error("Errore nell'eliminazione del video:", error);
+                        showToast(`Errore: ${error.message}`);
+                    }
+                }
+            };
+
+            const handleSaveVideoOrder = async () => {
+                const t = translations[currentLanguage];
+                const videoList = document.querySelector('#video-catalog-modal .video-list-container');
+                if (!videoList) return;
+
+                const videoCards = videoList.querySelectorAll('.video-card');
+                const batch = writeBatch(db);
+
+                videoCards.forEach((card, index) => {
+                    const videoId = card.dataset.id;
+                    const videoRef = doc(db, "videos", videoId);
+                    batch.update(videoRef, { order: index });
+                });
+
+                try {
+                    await batch.commit();
+                    showToast(t.orderSavedSuccess);
+                    document.getElementById('save-video-order-btn').style.display = 'none';
+                    youtubeVideosData = await fetchVideosFromFirestore(); // Ricarica per consistenza
+                } catch (error) {
+                     console.error("Errore nel salvataggio dell'ordine:", error);
+                     showToast(`Errore: ${error.message}`);
+                }
+            };
+
+
             // --- INITIALIZATION LOGIC ---
 
             const initializeAppForGuest = () => {
@@ -11463,6 +12005,33 @@ if (includeLangToggle) {
                         case 'delete-ranking':
                             handleDeleteRanking(actionTarget.dataset.id);
                             break;
+                        // AZIONI CATALOGO VIDEO
+                        case 'open-video-catalog':
+                            openVideoCatalogModal();
+                            break;
+                        case 'open-add-video-modal':
+                            openAddVideoModal();
+                            break;
+                        case 'submit-video':
+                            handleAddVideo();
+                            break;
+                        case 'watch-youtube-video':
+                            const url = actionTarget.dataset.url;
+                            if (url) window.open(url, '_blank');
+                            break;
+                        case 'open-edit-video-modal':
+                            openEditVideoModal(actionTarget.dataset.id);
+                            break;
+                        case 'submit-video-edit':
+                            handleUpdateVideo(actionTarget.dataset.id);
+                            break;
+                        case 'delete-video':
+                            handleDeleteVideo(actionTarget.dataset.id);
+                            break;
+                        case 'save-video-order':
+                            handleSaveVideoOrder();
+                            break;
+
                             case 'open-feature-toggles-modal':
                             openFeatureTogglesModal();
                             break;
@@ -11962,7 +12531,7 @@ if (includeLangToggle) {
             });
 
             // --- FIREBASE AUTH STATE CHANGE LISTENER ---
-            onAuthStateChanged(auth, async (user) => { // Aggiungi "async" qui
+             onAuthStateChanged(auth, async (user) => { // Aggiungi "async" qui
                 // --- INSERT THIS CODE ---
                 // Check the URL hash to set the initial view
                 const initialHash = window.location.hash.substring(1); // e.g., 'explore' from '#explore'
@@ -11978,10 +12547,11 @@ if (includeLangToggle) {
                 }
                 // --- END OF INSERTION ---
                 // Carica tutti i dati di configurazione da Firestore PRIMA di inizializzare l'app
-                [aiToolsData, aiRankingsData, featureSettings] = await Promise.all([
+                [aiToolsData, aiRankingsData, featureSettings, youtubeVideosData] = await Promise.all([
                     fetchToolsFromFirestore(),
                     fetchRankingsFromFirestore(),
-                    fetchFeatureSettings()
+                    fetchFeatureSettings(),
+                    fetchVideosFromFirestore() // NUOVA CHIAMATA
                 ]);
 
                 if (user) {
