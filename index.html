@@ -269,7 +269,8 @@
         .user-profile-dropdown {
             position: absolute;
             top: 100%;
-            left: 0; /* MODIFICA: Allineato a sinistra invece che a destra per la responsività */
+            left: 0;
+            /* MODIFICA: Allineato a sinistra invece che a destra per la responsività */
             margin-top: 8px;
             background-color: var(--spotify-card);
             border-radius: 12px;
@@ -1311,25 +1312,32 @@
             .modal-overlay {
                 /* Default to top alignment for potentially long content */
                 align-items: flex-start;
-                padding: 20px 0; /* Use symmetrical padding */
+                padding: 20px 0;
+                /* Use symmetrical padding */
             }
 
             /* Specifically center overlays containing shorter, form-like modals */
-        #add-ai-suggestion-modal,
-        #settings-modal,
-        #confirm-delete-review-modal,
-        #confirm-delete-modal,
-        #detail-modal,
-        #change-nickname-modal,
-        #change-password-modal,
-        #prompt-gallery-modal,
-        #manage-rankings-modal,
-        #feature-toggles-modal,
-        #edit-alternative-modal,
-        #add-video-modal, /* NUOVO */
-        #edit-video-modal /* NUOVO */ {
-            align-items: center;
-        }
+            #add-ai-suggestion-modal,
+            #settings-modal,
+            #confirm-delete-review-modal,
+            #confirm-delete-modal,
+            #confirm-delete-prompt-modal,
+            /* AGGIUNTO */
+            #detail-modal,
+            #change-nickname-modal,
+            #change-password-modal,
+            #prompt-gallery-modal,
+            #manage-rankings-modal,
+            #feature-toggles-modal,
+            #edit-alternative-modal,
+            #add-video-modal,
+            /* NUOVO */
+            #edit-video-modal
+
+            /* NUOVO */
+                {
+                align-items: center;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1344,6 +1352,8 @@
             #settings-modal,
             #confirm-delete-review-modal,
             #confirm-delete-modal,
+            #confirm-delete-prompt-modal,
+            /* AGGIUNTO */
             #detail-modal,
             #change-nickname-modal,
             #change-password-modal,
@@ -1435,12 +1445,15 @@
 
         /* NUOVO: Fix per il layout del modale Impostazioni */
         #settings-modal .modal-content {
-            text-align: left; /* Allinea a sinistra il contenuto del form */
-            margin: auto; /* Forzatura del centraggio verticale e orizzontale */
+            text-align: left;
+            /* Allinea a sinistra il contenuto del form */
+            margin: auto;
+            /* Forzatura del centraggio verticale e orizzontale */
         }
 
         #settings-modal .modal-content h2 {
-            text-align: center; /* Ri-centra il titolo principale */
+            text-align: center;
+            /* Ri-centra il titolo principale */
         }
 
         #detail-content h2 {
@@ -2606,181 +2619,185 @@
             }
 
             #add-global-tool-modal .button,
-        #edit-global-tool-modal .button {
-            padding: 14px 20px;
-            font-size: 16px;
-            margin-top: 8px;
-        }
+            #edit-global-tool-modal .button {
+                padding: 14px 20px;
+                font-size: 16px;
+                margin-top: 8px;
+            }
 
-        /* --- NUOVI STILI PER LA GESTIONE CLASSIFICHE ADMIN --- */
-        #manage-rankings-modal .sent-review-item {
-            transition: background-color 0.2s;
-        }
-        #manage-rankings-modal .sent-review-item:hover {
-            background-color: var(--spotify-card);
-        }
+            /* --- NUOVI STILI PER LA GESTIONE CLASSIFICHE ADMIN --- */
+            #manage-rankings-modal .sent-review-item {
+                transition: background-color 0.2s;
+            }
 
-        .ranking-action-btn {
-            background: var(--spotify-bg-light);
-            border: 1px solid var(--spotify-card);
-            color: var(--spotify-text);
-            border-radius: 50%;
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
+            #manage-rankings-modal .sent-review-item:hover {
+                background-color: var(--spotify-card);
+            }
 
-        .ranking-action-btn.edit:hover {
-            background-color: var(--spotify-accent);
-            color: #000;
-            border-color: var(--spotify-accent);
-        }
+            .ranking-action-btn {
+                background: var(--spotify-bg-light);
+                border: 1px solid var(--spotify-card);
+                color: var(--spotify-text);
+                border-radius: 50%;
+                width: 36px;
+                height: 36px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
 
-        .ranking-action-btn.delete:hover {
-            background-color: #ff6b6b;
-            color: white;
-            border-color: #ff6b6b;
-        }
+            .ranking-action-btn.edit:hover {
+                background-color: var(--spotify-accent);
+                color: #000;
+                border-color: var(--spotify-accent);
+            }
 
-        /* --- STILI PER GESTIONE ALTERNATIVE (NUOVO LAYOUT) --- */
-        .alternative-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px;
-            background-color: var(--spotify-bg-light);
-            border-radius: 12px;
-            margin-bottom: 12px;
-            border: 1px solid var(--spotify-card);
-        }
+            .ranking-action-btn.delete:hover {
+                background-color: #ff6b6b;
+                color: white;
+                border-color: #ff6b6b;
+            }
 
-        .main-ai-col {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex: 1;
-            min-width: 0;
-        }
-        
-        .main-ai-col img {
-            width: 40px;
-            height: 40px;
-            border-radius: 6px;
-            object-fit: cover;
-            flex-shrink: 0;
-        }
+            /* --- STILI PER GESTIONE ALTERNATIVE (NUOVO LAYOUT) --- */
+            .alternative-row {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 12px;
+                background-color: var(--spotify-bg-light);
+                border-radius: 12px;
+                margin-bottom: 12px;
+                border: 1px solid var(--spotify-card);
+            }
 
-        .main-ai-col .tool-name {
-            font-weight: 600;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        
-        .alt-ai-col {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex: 1;
-            min-width: 0;
-            justify-content: flex-end;
-        }
+            .main-ai-col {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                flex: 1;
+                min-width: 0;
+            }
 
-        .alt-ai-col .tool-list-item {
-            padding: 6px 8px;
-            background-color: var(--spotify-card);
-            border-radius: 8px;
-            flex-grow: 1;
-            min-width: 0;
-        }
-        
-        .alt-ai-col .tool-list-item .info .tool-name {
-            font-size: 14px;
-        }
-        
-        .alt-empty-state {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-grow: 1;
-            padding: 6px 8px;
-            background-color: var(--spotify-card);
-            border-radius: 8px;
-            color: var(--spotify-text-secondary);
-            font-style: italic;
-            font-size: 14px;
-        }
+            .main-ai-col img {
+                width: 40px;
+                height: 40px;
+                border-radius: 6px;
+                object-fit: cover;
+                flex-shrink: 0;
+            }
 
-        .edit-mode-container {
-            width: 100%;
-        }
+            .main-ai-col .tool-name {
+                font-weight: 600;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
 
-        .edit-mode-container .chat-search-input {
-            margin-bottom: 8px;
-        }
+            .alt-ai-col {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                flex: 1;
+                min-width: 0;
+                justify-content: flex-end;
+            }
 
-        #ranking-selected-tools .tool-list-item {
-            padding: 8px;
-            background-color: var(--spotify-bg-light);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: grab; /* Make it look draggable */
-            transition: background-color 0.2s, opacity 0.2s;
-            user-select: none; /* Prevent text selection while dragging */
-        }
+            .alt-ai-col .tool-list-item {
+                padding: 6px 8px;
+                background-color: var(--spotify-card);
+                border-radius: 8px;
+                flex-grow: 1;
+                min-width: 0;
+            }
 
-        #ranking-selected-tools .tool-list-item img {
-            width: 32px;
-            height: 32px;
-            border-radius: 4px;
-            object-fit: cover;
-            flex-shrink: 0;
-            pointer-events: none; /* Prevent image from being dragged alone */
-        }
-        
-        #ranking-selected-tools .tool-list-item.dragging {
-            opacity: 0.4;
-            background: var(--spotify-accent);
-        }
+            .alt-ai-col .tool-list-item .info .tool-name {
+                font-size: 14px;
+            }
 
-        #ranking-selected-tools .sent-review-delete-btn {
-            background-color: var(--spotify-card);
-            color: var(--spotify-text-secondary);
-            border: none;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            font-size: 16px;
-            line-height: 24px;
-            text-align: center;
-            padding: 0;
-            flex-shrink: 0;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
+            .alt-empty-state {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-grow: 1;
+                padding: 6px 8px;
+                background-color: var(--spotify-card);
+                border-radius: 8px;
+                color: var(--spotify-text-secondary);
+                font-style: italic;
+                font-size: 14px;
+            }
 
-        #ranking-selected-tools .sent-review-delete-btn:hover {
-            background-color: #ff6b6b;
-            color: white;
-            transform: scale(1.1);
-        }
+            .edit-mode-container {
+                width: 100%;
+            }
 
-        #ranking-tool-search-results {
-            border: 1px solid var(--spotify-bg-light);
-            border-radius: 8px;
-            margin-top: 8px;
-            padding: 4px;
-        }
+            .edit-mode-container .chat-search-input {
+                margin-bottom: 8px;
+            }
 
-        #ranking-tool-search-results .tool-list-item:hover {
-            background-color: var(--spotify-bg-light);
-        }
+            #ranking-selected-tools .tool-list-item {
+                padding: 8px;
+                background-color: var(--spotify-bg-light);
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                cursor: grab;
+                /* Make it look draggable */
+                transition: background-color 0.2s, opacity 0.2s;
+                user-select: none;
+                /* Prevent text selection while dragging */
+            }
+
+            #ranking-selected-tools .tool-list-item img {
+                width: 32px;
+                height: 32px;
+                border-radius: 4px;
+                object-fit: cover;
+                flex-shrink: 0;
+                pointer-events: none;
+                /* Prevent image from being dragged alone */
+            }
+
+            #ranking-selected-tools .tool-list-item.dragging {
+                opacity: 0.4;
+                background: var(--spotify-accent);
+            }
+
+            #ranking-selected-tools .sent-review-delete-btn {
+                background-color: var(--spotify-card);
+                color: var(--spotify-text-secondary);
+                border: none;
+                border-radius: 50%;
+                width: 24px;
+                height: 24px;
+                font-size: 16px;
+                line-height: 24px;
+                text-align: center;
+                padding: 0;
+                flex-shrink: 0;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+
+            #ranking-selected-tools .sent-review-delete-btn:hover {
+                background-color: #ff6b6b;
+                color: white;
+                transform: scale(1.1);
+            }
+
+            #ranking-tool-search-results {
+                border: 1px solid var(--spotify-bg-light);
+                border-radius: 8px;
+                margin-top: 8px;
+                padding: 4px;
+            }
+
+            #ranking-tool-search-results .tool-list-item:hover {
+                background-color: var(--spotify-bg-light);
+            }
 
             .modal-close-btn {
                 font-size: 20px;
@@ -2904,7 +2921,8 @@
         #add-video-modal .button,
         #edit-video-modal .button {
             width: 100%;
-            margin-top: 24px; /* Aumentato margine per più spazio */
+            margin-top: 24px;
+            /* Aumentato margine per più spazio */
         }
 
         .settings-modal-header {
@@ -2916,8 +2934,10 @@
         }
 
         .settings-modal-header h2 {
-            flex-grow: 1; /* Allow title to take up remaining space */
-            text-align: center; /* Center the title text */
+            flex-grow: 1;
+            /* Allow title to take up remaining space */
+            text-align: center;
+            /* Center the title text */
             margin: 0;
         }
 
@@ -4773,19 +4793,66 @@
 
         /* --- STILI PER LA GALLERIA PROMPT (NUOVI E MODIFICATI) --- */
         #prompt-gallery-modal .modal-content {
-            /* Rimosse le regole full-screen. Ora si comporterà come un modale standard centrato. */
-            width: 90%;
-            max-width: 600px; /* Larghezza massima per il modale */
-            max-height: 80vh; /* Altezza massima per evitare che sia troppo lungo */
+            width: 100%;
+            height: 100%;
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 0;
             display: flex;
             flex-direction: column;
+            padding: 0;
+        }
+
+        #prompt-gallery-modal .gallery-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid rgba(128, 128, 128, 0.2);
+        }
+
+        #prompt-gallery-modal h2 {
+            margin: 0 0 16px 0;
+            font-size: 24px;
+        }
+
+        #prompt-gallery-modal .modal-close-btn {
+            position: absolute;
+            top: 20px;
+            right: 24px;
+        }
+
+        .gallery-search-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .gallery-search-input {
+            flex: 1;
+            padding: 12px 16px;
+            background-color: var(--spotify-bg-light);
+            border: 1px solid rgba(128, 128, 128, 0.2);
+            border-radius: 8px;
+            color: var(--spotify-text);
+            font-size: 14px;
+        }
+
+        .gallery-search-input::placeholder {
+            color: var(--spotify-text-secondary);
+        }
+
+        .gallery-sort-select {
+            padding: 12px 16px;
+            background-color: var(--spotify-bg-light);
+            border: 1px solid rgba(128, 128, 128, 0.2);
+            border-radius: 8px;
+            color: var(--spotify-text);
+            font-size: 14px;
+            cursor: pointer;
         }
 
         #prompt-gallery-modal .gallery-list {
             flex-grow: 1;
             overflow-y: auto;
-            padding: 16px; /* Aggiunge padding interno per non far attaccare gli elementi ai bordi */
-            margin-top: 16px;
+            padding: 24px;
             display: flex;
             flex-direction: column;
             gap: 16px;
@@ -4794,13 +4861,82 @@
         .prompt-gallery-item {
             background-color: var(--spotify-bg-light);
             border-radius: 12px;
-            padding: 16px;
             border: 1px solid var(--spotify-card);
-            /* MODIFICA: Usa flexbox per far crescere il contenuto */
+            overflow: hidden;
+        }
+
+        .prompt-gallery-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .prompt-gallery-item-header:hover {
+            background-color: var(--spotify-card);
+        }
+
+        .prompt-gallery-item-title {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .prompt-gallery-item-number {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--spotify-accent);
+            min-width: 40px;
+        }
+
+        .prompt-gallery-item-info {
+            flex: 1;
             display: flex;
             flex-direction: column;
-            flex-grow: 1; /* Permette all'item di crescere se è l'unico */
-            min-height: 0; /* Fix per flexbox in contenitori scrollabili */
+            gap: 4px;
+        }
+
+        .prompt-gallery-item-title h3 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .prompt-gallery-item-date {
+            font-size: 13px;
+            color: var(--spotify-text-secondary);
+            font-weight: 500;
+        }
+
+        .prompt-gallery-item-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--spotify-text-secondary);
+        }
+
+        .prompt-gallery-item-toggle svg {
+            transition: transform 0.3s;
+        }
+
+        .prompt-gallery-item.collapsed .prompt-gallery-item-toggle svg {
+            transform: rotate(-90deg);
+        }
+
+        .prompt-gallery-item-content {
+            max-height: 1000px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            padding: 0 16px 16px 16px;
+        }
+
+        .prompt-gallery-item.collapsed .prompt-gallery-item-content {
+            max-height: 0;
+            padding: 0 16px;
         }
 
         .prompt-gallery-header {
@@ -4845,9 +4981,12 @@
 
         .prompt-gallery-content.optimized {
             color: var(--spotify-text);
+            background-color: rgba(29, 185, 84, 0.15);
+            border: 1px solid rgba(29, 185, 84, 0.3);
             /* MODIFICA: Fa crescere questo elemento per riempire lo spazio */
             flex-grow: 1;
-            overflow-y: auto; /* Aggiunge lo scroll solo a questo elemento se necessario */
+            overflow-y: auto;
+            /* Aggiunge lo scroll solo a questo elemento se necessario */
         }
 
         .prompt-gallery-divider {
@@ -4970,8 +5109,7 @@
             transform: translateX(0);
         }
 
-        **SOSTITUISCI CON:**
-```css
+        **SOSTITUISCI CON:** ```css
         /* Toast responsive adjustments */
         @media (max-width: 480px) {
             .toast-message {
@@ -4981,10 +5119,11 @@
                 max-width: none;
             }
         }
-        
+
         /* --- NUOVI STILI PER CATALOGO VIDEO (FULLSCREEN) --- */
         #video-catalog-modal.modal-overlay {
-            padding: 0 !important; /* Rimuove il padding per un vero fullscreen */
+            padding: 0 !important;
+            /* Rimuove il padding per un vero fullscreen */
         }
 
         #video-catalog-modal .modal-content {
@@ -4992,24 +5131,26 @@
             height: 100%;
             max-width: none;
             max-height: none;
-            border-radius: 0; /* Rimuove gli angoli arrotondati */
+            border-radius: 0;
+            /* Rimuove gli angoli arrotondati */
             display: flex;
             flex-direction: column;
         }
 
         #video-catalog-modal .modal-header {
-             display: flex;
-             justify-content: space-between;
-             align-items: center;
-             margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
         }
 
         #video-catalog-modal .modal-header-buttons {
             display: flex;
             align-items: center;
-            gap: 12px; /* Aggiunge spazio tra i pulsanti '+' e 'x' */
+            gap: 12px;
+            /* Aggiunge spazio tra i pulsanti '+' e 'x' */
         }
-        
+
         #video-catalog-modal .admin-add-video-btn {
             background-color: var(--spotify-accent);
             color: black;
@@ -5040,11 +5181,14 @@
             gap: 16px;
             align-items: flex-start;
         }
-        
+
         .video-thumbnail {
-            width: 50%; /* Occupa metà dello spazio del genitore */
-            height: auto; /* L'altezza si adatta per mantenere le proporzioni */
-            aspect-ratio: 16 / 9; /* Mantiene il formato 16:9 del video */
+            width: 50%;
+            /* Occupa metà dello spazio del genitore */
+            height: auto;
+            /* L'altezza si adatta per mantenere le proporzioni */
+            aspect-ratio: 16 / 9;
+            /* Mantiene il formato 16:9 del video */
             flex-shrink: 0;
             border-radius: 8px;
             object-fit: cover;
@@ -5060,7 +5204,7 @@
             font-weight: 600;
             margin-bottom: 4px;
         }
-        
+
         .video-info p {
             font-size: 13px;
             color: var(--spotify-text-secondary);
@@ -5086,11 +5230,13 @@
             display: flex;
             gap: 8px;
             margin-top: 12px;
-            align-items: center; /* Allinea il pulsante Guarda con le icone */
+            align-items: center;
+            /* Allinea il pulsante Guarda con le icone */
         }
 
         .video-actions .button {
-            flex-grow: 1; /* Fa espandere il pulsante "Guarda" */
+            flex-grow: 1;
+            /* Fa espandere il pulsante "Guarda" */
         }
 
         .video-admin-btn {
@@ -5107,16 +5253,16 @@
             transition: all 0.2s;
             flex-shrink: 0;
         }
-        
+
         .video-admin-btn:hover {
             background-color: var(--spotify-bg);
         }
-        
+
         .video-admin-btn.delete:hover {
-             background-color: #ff6b6b;
-             color: white;
+            background-color: #ff6b6b;
+            color: white;
         }
-        
+
         .video-card[draggable="true"] {
             cursor: grab;
         }
@@ -5129,21 +5275,25 @@
         #save-video-order-btn {
             width: calc(100% - 32px);
             margin: 16px 16px 0 16px;
-            display: none; /* Nascosto di default */
+            display: none;
+            /* Nascosto di default */
         }
 
         /* --- NUOVI STILI RESPONSIVE PER VIDEO CARD --- */
         @media (max-width: 600px) {
             .video-card {
-                flex-direction: column; /* Cambia il layout in verticale su schermi piccoli */
+                flex-direction: column;
+                /* Cambia il layout in verticale su schermi piccoli */
             }
 
             .video-thumbnail {
-                width: 100%; /* L'immagine ora occupa tutta la larghezza */
+                width: 100%;
+                /* L'immagine ora occupa tutta la larghezza */
             }
-            
+
             .video-info {
-                width: 100%; /* Anche la sezione info occupa tutta la larghezza */
+                width: 100%;
+                /* Anche la sezione info occupa tutta la larghezza */
             }
         }
     </style>
@@ -5213,49 +5363,50 @@
         </div>
     </div>
 
+    <div id="initial-loader"
+        style="display: flex; justify-content: center; align-items: center; height: 100vh; position: fixed; top: 0; left: 0; width: 100vw; z-index: 9999; background-color: var(--spotify-bg);">
+        <div class="chat-bubble loading" style="align-self: center;"><span></span><span></span><span></span></div>
+    </div>
     <div id="app-container">
         <div id="main-content">
-            <div id="initial-loader" style="display: flex; justify-content: center; align-items: center; height: 100%;">
-                <div class="chat-bubble loading"><span></span><span></span><span></span></div>
-            </div>
         </div>
-        <nav id="bottom-nav">
-            <!-- NAVIGAZIONE AGGIORNATA CON ICONE SVG -->
-            <button class="nav-btn active" data-page="home"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg"
-                        height="24" viewBox="0 0 24 24" width="24" fill="currentColor">
-                        <path d="M0 0h24v24H0z" fill="none" />
-                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
-                    </svg></span><span data-translate="navHome">Home</span></button>
-            <button class="nav-btn" data-page="top-ai"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg"
-                        height="24" viewBox="0 0 24 24" width="24" fill="currentColor">
-                        <path d="M0 0h24v24H0z" fill="none" />
-                        <path d="M5 9.2h3V19H5zM10.6 5h3v14h-3zm5.6 8H19v6h-2.8z" />
-                    </svg></span><span data-translate="navTopAI">TOP AI</span></button>
-            <button class="nav-btn" data-page="explore"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg"
-                        height="24" viewBox="0 0 24 24" width="24" fill="currentColor">
-                        <path d="M0 0h24v24H0z" fill="none" />
-                        <path
-                            d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
-                    </svg></span><span data-translate="navSearch">Cerca</span></button>
-            <button class="nav-btn" data-page="user-chats" id="nav-btn-user-chats">
-                <span class="icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"
-                        fill="currentColor">
-                        <path d="M0 0h24v24H0z" fill="none" />
-                        <path
-                            d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z" />
-                    </svg>
-                    <span id="chat-notification-badge" class="notification-badge" style="display: none;"></span>
-                </span>
-                <span data-translate="navUserChats">Chat</span>
-            </button>
-            <button class="nav-btn" data-page="favorites"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg"
-                        height="24" viewBox="0 0 24 24" width="24" fill="currentColor">
-                        <path d="M0 0h24v24H0z" fill="none" />
-                        <path
-                            d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" />
-                    </svg></span><span data-translate="navLibrary">Libreria</span></button>
-        </nav>
+    </div>
+    <nav id="bottom-nav">
+        <!-- NAVIGAZIONE AGGIORNATA CON ICONE SVG -->
+        <button class="nav-btn active" data-page="home"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg"
+                    height="24" viewBox="0 0 24 24" width="24" fill="currentColor">
+                    <path d="M0 0h24v24H0z" fill="none" />
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                </svg></span><span data-translate="navHome">Home</span></button>
+        <button class="nav-btn" data-page="top-ai"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg"
+                    height="24" viewBox="0 0 24 24" width="24" fill="currentColor">
+                    <path d="M0 0h24v24H0z" fill="none" />
+                    <path d="M5 9.2h3V19H5zM10.6 5h3v14h-3zm5.6 8H19v6h-2.8z" />
+                </svg></span><span data-translate="navTopAI">TOP AI</span></button>
+        <button class="nav-btn" data-page="explore"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg"
+                    height="24" viewBox="0 0 24 24" width="24" fill="currentColor">
+                    <path d="M0 0h24v24H0z" fill="none" />
+                    <path
+                        d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+                </svg></span><span data-translate="navSearch">Cerca</span></button>
+        <button class="nav-btn" data-page="user-chats" id="nav-btn-user-chats">
+            <span class="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor">
+                    <path d="M0 0h24v24H0z" fill="none" />
+                    <path
+                        d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z" />
+                </svg>
+                <span id="chat-notification-badge" class="notification-badge" style="display: none;"></span>
+            </span>
+            <span data-translate="navUserChats">Chat</span>
+        </button>
+        <button class="nav-btn" data-page="favorites"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg"
+                    height="24" viewBox="0 0 24 24" width="24" fill="currentColor">
+                    <path d="M0 0h24v24H0z" fill="none" />
+                    <path
+                        d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" />
+                </svg></span><span data-translate="navLibrary">Libreria</span></button>
+    </nav>
     </div>
 
     <div id="modal-container"></div>
@@ -7418,6 +7569,8 @@
                     copyButton: "Copia",
                     saveButton: "Salva",
                     optimizerHelperText: "Il Prompt Optimizer applicherà le <strong>migliori pratiche</strong> al tuo prompt.",
+                    confirmDeletePromptTitle: "Conferma Eliminazione", // NUOVO
+                    confirmDeletePromptText: "Sei sicuro di voler eliminare questo prompt? L'azione è irreversibile.", // NUOVO
                     // NUOVO: Traduzioni per il sistema di recensioni
                     reviews: "Recensioni",
                     addReview: "Aggiungi Recensione",
@@ -7636,6 +7789,8 @@
                     copyButton: "Copy",
                     saveButton: "Save",
                     optimizerHelperText: "Prompt Optimizer will apply <strong>best practices</strong> to your prompt.",
+                    confirmDeletePromptTitle: "Confirm Deletion", // NEW
+                    confirmDeletePromptText: "Are you sure you want to delete this prompt? This action is irreversible.", // NEW
                     // NUOVO: Traduzioni per il sistema di recensioni
                     reviews: "Reviews",
                     addReview: "Add Review",
@@ -8751,9 +8906,9 @@
 
                 let otherControlsHTML = '';
 
-// Aggiunge il pulsante "Aggiungi AI" per gli amministratori
-if (currentUser.role === 'admin') {
-    otherControlsHTML += `
+                // Aggiunge il pulsante "Aggiungi AI" per gli amministratori
+                if (currentUser.role === 'admin') {
+                    otherControlsHTML += `
         <button id="admin-add-tool-btn" class="global-btn" data-action="open-add-global-tool-modal" title="${translations[currentLanguage].addAIToDatabase}">
             <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor">
                 <path d="M0 0h24v24H0V0z" fill="none"/>
@@ -8761,8 +8916,8 @@ if (currentUser.role === 'admin') {
             </svg>
         </button>
     `;
-}
-otherControlsHTML += `
+                }
+                otherControlsHTML += `
         <button id="admin-manage-rankings-btn" class="global-btn" data-action="open-manage-rankings-modal" title="Manage TOP AI Rankings">
             <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor">
                 <path d="M0 0h24v24H0z" fill="none"/>
@@ -8771,22 +8926,22 @@ otherControlsHTML += `
         </button>
     `;
 
-// NUOVO: Pulsante Catalogo Video
-otherControlsHTML += `
+                // NUOVO: Pulsante Catalogo Video
+                otherControlsHTML += `
     <button id="video-catalog-btn" class="global-btn" data-action="open-video-catalog" title="${translations[currentLanguage].videoCatalogTitle}" style="color: var(--spotify-accent);">
         <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
     </button>
 `;
 
-otherControlsHTML += `
+                otherControlsHTML += `
 <button id="theme-toggle-btn" class="global-btn" data-action="toggle-theme">${themeIcon}</button>
 `;
 
-if (includeLangToggle) {
-    otherControlsHTML += `
+                if (includeLangToggle) {
+                    otherControlsHTML += `
     <button id="lang-toggle-btn" class="global-btn" data-action="toggle-lang">${currentLanguage.toUpperCase()}</button>
 `;
-}
+                }
 
                 // Return as an object to pass to React
                 return { avatar: avatarHTML, otherControls: otherControlsHTML };
@@ -8939,7 +9094,7 @@ if (includeLangToggle) {
 
                 } else if (currentView === 'explore') {
                     el.mainContent.insertAdjacentHTML('beforeend', `<div class="search-bar-container"><input type="text" id="search-input" placeholder="${t.searchPlaceholder}"></div>`);
-                    
+
 
                     if (exploreFilter.type) {
                         const allTools = getAllToolsForCurrentUser();
@@ -10716,7 +10871,31 @@ if (includeLangToggle) {
                     showToast("Ottimizza prima un prompt per poterlo salvare.");
                     return;
                 }
+
+                // Trova il pulsante di salvataggio per dare feedback visivo
+                const saveButton = document.querySelector('[data-action="save-optimized-prompt"]');
+                const originalButtonText = saveButton ? saveButton.textContent : '';
+                
+                if (saveButton) {
+                    saveButton.disabled = true;
+                    saveButton.style.opacity = '0.6';
+                    saveButton.innerHTML = '✓ Salvato!';
+                    saveButton.style.backgroundColor = 'var(--spotify-accent)';
+                    saveButton.style.color = '#000';
+                }
+
                 await saveOptimizedPromptToFirebase(originalPrompt, optimizedPrompt);
+
+                // Ripristina il pulsante dopo 2 secondi
+                if (saveButton) {
+                    setTimeout(() => {
+                        saveButton.innerHTML = originalButtonText;
+                        saveButton.disabled = false;
+                        saveButton.style.opacity = '1';
+                        saveButton.style.backgroundColor = '';
+                        saveButton.style.color = '';
+                    }, 2000);
+                }
             };
 
             // Gestisce il click sul pulsante "Copia" dell'optimizer
@@ -10741,42 +10920,110 @@ if (includeLangToggle) {
                 // Mostra un caricamento
                 el.modalContainer.innerHTML = `<div class="modal-overlay visible"><div class="modal-content" style="display:flex; justify-content:center; align-items:center;"><div class="chat-bubble loading"><span></span><span></span><span></span></div></div></div>`;
 
-                const savedPrompts = await getSavedPromptsForUser(currentUser.uid);
+                let savedPrompts = await getSavedPromptsForUser(currentUser.uid);
                 const t = translations[currentLanguage];
 
-                const promptsHTML = savedPrompts.length > 0 ? savedPrompts.map(p => `
-                <div class="prompt-gallery-item">
-                    <div class="prompt-gallery-header">
-                        <label>${t.originalPromptLabel}</label>
-                        <div class="prompt-gallery-actions">
-                            <button class="prompt-gallery-copy-btn" data-action="copy-gallery-prompt" data-target-id="original-${p.id}">${t.copyButton}</button>
+                // Funzione per formattare la data
+                const formatDate = (timestamp) => {
+                    if (!timestamp) return '';
+                    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+                    return date.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                };
+
+                // Funzione per generare l'HTML dei prompt
+                const generatePromptsHTML = (prompts) => {
+                    if (prompts.length === 0) {
+                        return `<div id="empty-state">Nessun prompt salvato.</div>`;
+                    }
+                    
+                    return prompts.map((p, index) => `
+                        <div class="prompt-gallery-item" data-prompt-id="${p.id}">
+                            <div class="prompt-gallery-item-header" data-action="toggle-prompt">
+                                <div class="prompt-gallery-item-title">
+                                    <span class="prompt-gallery-item-number">#${index + 1}</span>
+                                    <div class="prompt-gallery-item-info">
+                                        <h3>${p.originalPrompt.substring(0, 50)}${p.originalPrompt.length > 50 ? '...' : ''}</h3>
+                                        <span class="prompt-gallery-item-date">${formatDate(p.timestamp)}</span>
+                                    </div>
+                                </div>
+                                <div class="prompt-gallery-item-toggle">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20" fill="currentColor">
+                                        <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="prompt-gallery-item-content">
+                                <div class="prompt-gallery-header">
+                                    <label>${t.originalPromptLabel}</label>
+                                    <div class="prompt-gallery-actions">
+                                        <button class="prompt-gallery-copy-btn" data-action="copy-gallery-prompt" data-target-id="original-${p.id}">${t.copyButton}</button>
+                                    </div>
+                                </div>
+                                <div class="prompt-gallery-content" id="original-${p.id}">${p.originalPrompt}</div>
+                                <hr class="prompt-gallery-divider">
+                                <div class="prompt-gallery-header">
+                                    <label>${t.optimizedPromptLabel}</label>
+                                    <div class="prompt-gallery-actions">
+                                        <button class="prompt-gallery-delete-btn" title="Elimina prompt" data-action="delete-saved-prompt" data-id="${p.id}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 0 24 24" width="16" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="prompt-gallery-content optimized" id="optimized-${p.id}">${p.optimizedPrompt}</div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="prompt-gallery-content" id="original-${p.id}">${p.originalPrompt}</div>
-                    <hr class="prompt-gallery-divider">
-                    <div class="prompt-gallery-header">
-                        <label>${t.optimizedPromptLabel}</label>
-                        <div class="prompt-gallery-actions">
-                            <button class="prompt-gallery-copy-btn" data-action="copy-gallery-prompt" data-target-id="optimized-${p.id}">${t.copyButton}</button>
-                            <button class="prompt-gallery-delete-btn" title="Elimina prompt" data-action="delete-saved-prompt" data-id="${p.id}">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 0 24 24" width="16" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="prompt-gallery-content optimized" id="optimized-${p.id}">${p.optimizedPrompt}</div>
-                </div>
-            `).join('') : `<div id="empty-state">Nessun prompt salvato.</div>`;
+                    `).join('');
+                };
 
                 const modalHTML = `
-                <div id="prompt-gallery-modal" class="modal-overlay visible">
-                    <div class="modal-content">
-                        <button class="modal-close-btn" data-action="close-modal">×</button>
-                        <h2>Galleria Prompt</h2>
-                        <div class="gallery-list">${promptsHTML}</div>
+                    <div id="prompt-gallery-modal" class="modal-overlay visible">
+                        <div class="modal-content">
+                            <button class="modal-close-btn" data-action="close-modal">×</button>
+                            <div class="gallery-header">
+                                <h2>Galleria Prompt</h2>
+                                <div class="gallery-search-bar">
+                                    <input type="text" class="gallery-search-input" placeholder="Cerca nei prompt..." id="gallery-search-input">
+                                    <select class="gallery-sort-select" id="gallery-sort-select">
+                                        <option value="newest">Più recenti</option>
+                                        <option value="oldest">Più vecchi</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="gallery-list" id="gallery-list">${generatePromptsHTML(savedPrompts)}</div>
+                        </div>
                     </div>
-                </div>
-            `;
+                `;
+                
                 el.modalContainer.innerHTML = modalHTML;
+
+                // Aggiungi event listener per la ricerca
+                const searchInput = document.getElementById('gallery-search-input');
+                const sortSelect = document.getElementById('gallery-sort-select');
+                const galleryList = document.getElementById('gallery-list');
+
+                const filterAndSortPrompts = () => {
+                    const searchTerm = searchInput.value.toLowerCase();
+                    const sortOrder = sortSelect.value;
+
+                    let filtered = savedPrompts.filter(p => 
+                        p.originalPrompt.toLowerCase().includes(searchTerm) || 
+                        p.optimizedPrompt.toLowerCase().includes(searchTerm)
+                    );
+
+                    if (sortOrder === 'newest') {
+                        filtered.sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0));
+                    } else {
+                        filtered.sort((a, b) => (a.createdAt?.toMillis() || 0) - (b.createdAt?.toMillis() || 0));
+                    }
+
+                    galleryList.innerHTML = generatePromptsHTML(filtered);
+                };
+
+                searchInput.addEventListener('input', filterAndSortPrompts);
+                sortSelect.addEventListener('change', filterAndSortPrompts);
+
+                // Ordina inizialmente per più recenti
+                filterAndSortPrompts();
             };
 
             // --- FUNZIONI CORRETTE PER COPIA ED ELIMINAZIONE ---
@@ -10809,19 +11056,37 @@ if (includeLangToggle) {
             };
 
             // Gestisce l'eliminazione di un prompt salvato da Firebase
-            const handleDeleteSavedPrompt = async (promptId) => {
+            // Apre il modale di conferma per l'eliminazione di un prompt
+            const handleDeleteSavedPrompt = (promptId) => {
+                if (!promptId) return;
+                const t = translations[currentLanguage];
+
+                const modalHTML = `
+    <div id="confirm-delete-prompt-modal" class="modal-overlay visible">
+        <div class="modal-content" style="text-align: left; max-width: 400px;">
+            <h2 style="font-size: 20px; margin-bottom: 16px;">${t.confirmDeletePromptTitle}</h2>
+            <p style="color: var(--spotify-text-secondary); line-height: 1.5; margin-bottom: 24px;">${t.confirmDeletePromptText}</p>
+            <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <button class="pill-btn" data-action="close-modal">${t.cancel}</button>
+                <button class="button" data-action="execute-delete-saved-prompt" data-id="${promptId}" style="background-color: #ff6b6b; color: white;">${t.deleteButton}</button>
+            </div>
+        </div>
+    </div>`;
+                el.modalContainer.innerHTML = modalHTML;
+            };
+
+            // Esegue l'eliminazione effettiva di un prompt dopo la conferma
+            const executeDeleteSavedPrompt = async (promptId) => {
                 if (!currentUser.uid || !promptId) return;
 
-                if (confirm("Sei sicuro di voler eliminare questo prompt?")) {
-                    const promptRef = doc(db, "users", currentUser.uid, "savedPrompts", promptId);
-                    try {
-                        await deleteDoc(promptRef);
-                        showToast("Prompt eliminato con successo!");
-                        await openPromptGalleryModal(); // Ricarica la galleria per mostrare le modifiche
-                    } catch (error) {
-                        console.error("Errore nell'eliminazione del prompt:", error);
-                        showToast("Impossibile eliminare il prompt.");
-                    }
+                const promptRef = doc(db, "users", currentUser.uid, "savedPrompts", promptId);
+                try {
+                    await deleteDoc(promptRef);
+                    showToast("Prompt eliminato con successo!");
+                    await openPromptGalleryModal(); // Ricarica la galleria per mostrare le modifiche
+                } catch (error) {
+                    console.error("Errore nell'eliminazione del prompt:", error);
+                    showToast("Impossibile eliminare il prompt.");
                 }
             };
 
@@ -10889,18 +11154,18 @@ if (includeLangToggle) {
             const openVideoCatalogModal = () => {
                 const t = translations[currentLanguage];
                 const isAdmin = currentUser.role === 'admin';
-                
+
                 const adminAddButton = isAdmin
-                    ? `<button class="admin-add-video-btn" data-action="open-add-video-modal" title="${t.addVideoTitle}">+</button>` 
+                    ? `<button class="admin-add-video-btn" data-action="open-add-video-modal" title="${t.addVideoTitle}">+</button>`
                     : '';
-                
+
                 const videosHTML = youtubeVideosData.map((video, index) => {
                     let videoId = '';
                     try {
                         const url = new URL(video.youtubeUrl);
                         videoId = url.hostname === 'youtu.be' ? url.pathname.slice(1) : url.searchParams.get('v');
-                    } catch (e) {}
-                    
+                    } catch (e) { }
+
                     const thumbnailUrl = videoId ? `https://img.youtube.com/vi/${videoId}/mqdefault.jpg` : 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
                     const videoDate = video.createdAt ? new Date(video.createdAt.seconds * 1000).toLocaleDateString(currentLanguage === 'it' ? 'it-IT' : 'en-US') : '';
 
@@ -10944,7 +11209,7 @@ if (includeLangToggle) {
                     </div>
                 </div>`;
                 el.modalContainer.innerHTML = modalHTML;
-                
+
                 if (isAdmin) {
                     initializeVideoDragAndDrop();
                 }
@@ -10998,11 +11263,11 @@ if (includeLangToggle) {
                 }
             };
 
-        const openAddVideoModal = () => {
-            if (currentUser.role !== 'admin') return;
-            const t = translations[currentLanguage];
+            const openAddVideoModal = () => {
+                if (currentUser.role !== 'admin') return;
+                const t = translations[currentLanguage];
 
-            const modalHTML = `
+                const modalHTML = `
             <div id="add-video-modal" class="modal-overlay visible">
                 <div class="modal-content add-ai-modal" style="text-align: left;">
                     <button class="modal-close-btn" data-action="close-modal">×</button>
@@ -11028,10 +11293,10 @@ if (includeLangToggle) {
                     </div>
                 </div>
             </div>`;
-            el.modalContainer.innerHTML = modalHTML;
-        };
+                el.modalContainer.innerHTML = modalHTML;
+            };
 
-        const handleAddVideo = async () => {
+            const handleAddVideo = async () => {
                 if (currentUser.role !== 'admin') return;
                 const t = translations[currentLanguage];
 
@@ -11046,34 +11311,34 @@ if (includeLangToggle) {
                     order: Date.now() // Aggiunge un valore di ordine per posizionarlo alla fine
                 };
 
-            if (!newVideoData.title || !newVideoData.youtubeUrl || !newVideoData.description.it || !newVideoData.description.en) {
-                showToast("Tutti i campi sono obbligatori.");
-                return;
-            }
-            
-            // Validazione semplice dell'URL di YouTube
-            if (!newVideoData.youtubeUrl.includes('youtube.com') && !newVideoData.youtubeUrl.includes('youtu.be')) {
-                showToast(t.invalidYoutubeUrl);
-                return;
-            }
+                if (!newVideoData.title || !newVideoData.youtubeUrl || !newVideoData.description.it || !newVideoData.description.en) {
+                    showToast("Tutti i campi sono obbligatori.");
+                    return;
+                }
 
-            try {
-                const videosCollectionRef = collection(db, "videos");
-                await addDoc(videosCollectionRef, newVideoData);
-                showToast(t.videoAddedSuccess);
-                
-                // Ricarica i video e riapri il catalogo per mostrare l'aggiornamento
-                youtubeVideosData = await fetchVideosFromFirestore();
-                openVideoCatalogModal();
+                // Validazione semplice dell'URL di YouTube
+                if (!newVideoData.youtubeUrl.includes('youtube.com') && !newVideoData.youtubeUrl.includes('youtu.be')) {
+                    showToast(t.invalidYoutubeUrl);
+                    return;
+                }
 
-            } catch (error) {
-                console.error("Errore nell'aggiunta del video:", error);
-                showToast(`Errore: ${error.message}`);
-            }
-        };
+                try {
+                    const videosCollectionRef = collection(db, "videos");
+                    await addDoc(videosCollectionRef, newVideoData);
+                    showToast(t.videoAddedSuccess);
+
+                    // Ricarica i video e riapri il catalogo per mostrare l'aggiornamento
+                    youtubeVideosData = await fetchVideosFromFirestore();
+                    openVideoCatalogModal();
+
+                } catch (error) {
+                    console.error("Errore nell'aggiunta del video:", error);
+                    showToast(`Errore: ${error.message}`);
+                }
+            };
 
 
-        const openEditVideoModal = (videoId) => {
+            const openEditVideoModal = (videoId) => {
                 if (currentUser.role !== 'admin') return;
                 const t = translations[currentLanguage];
                 const videoToEdit = youtubeVideosData.find(v => v.id === videoId);
@@ -11137,16 +11402,16 @@ if (includeLangToggle) {
                     showToast(`Errore: ${error.message}`);
                 }
             };
-            
+
             const handleDeleteVideo = async (videoId) => {
                 if (currentUser.role !== 'admin') return;
                 const t = translations[currentLanguage];
-                
+
                 if (confirm(t.confirmDeleteVideo)) {
                     try {
                         await deleteDoc(doc(db, "videos", videoId));
                         showToast(t.videoDeletedSuccess);
-                        
+
                         youtubeVideosData = await fetchVideosFromFirestore();
                         openVideoCatalogModal();
                     } catch (error) {
@@ -11176,8 +11441,8 @@ if (includeLangToggle) {
                     document.getElementById('save-video-order-btn').style.display = 'none';
                     youtubeVideosData = await fetchVideosFromFirestore(); // Ricarica per consistenza
                 } catch (error) {
-                     console.error("Errore nel salvataggio dell'ordine:", error);
-                     showToast(`Errore: ${error.message}`);
+                    console.error("Errore nel salvataggio dell'ordine:", error);
+                    showToast(`Errore: ${error.message}`);
                 }
             };
 
@@ -11427,7 +11692,7 @@ if (includeLangToggle) {
                 const t = translations[currentLanguage];
                 const isEditing = rankingId !== null;
                 const ranking = isEditing ? aiRankingsData.find(r => r.id === rankingId) : {};
-                
+
                 let selectedTools = ranking.toolIds ? ranking.toolIds.map(id => aiToolsData.find(t => t.id === id)).filter(Boolean) : [];
 
                 const renderSelectedTools = () => selectedTools.map(tool => `
@@ -11507,7 +11772,7 @@ if (includeLangToggle) {
                     const afterElement = getDragAfterElement(draggableItemsContainer, e.clientY);
                     const currentlyDragged = document.querySelector('.dragging');
                     if (currentlyDragged) {
-                         if (afterElement == null) {
+                        if (afterElement == null) {
                             draggableItemsContainer.appendChild(currentlyDragged);
                         } else {
                             draggableItemsContainer.insertBefore(currentlyDragged, afterElement);
@@ -11641,7 +11906,7 @@ if (includeLangToggle) {
                 // Helper to generate the HTML for a single row
                 const generateAlternativeRowHTML = (tool) => {
                     const alternative = tool.recommendationId ? aiToolsData.find(t => t.id === tool.recommendationId) : null;
-                    
+
                     let alternativeHTML;
                     if (alternative) {
                         alternativeHTML = `
@@ -11685,7 +11950,7 @@ if (includeLangToggle) {
                         </div>
                         ${categoryFiltersHTML}
                         <div id="alternatives-tool-list" class="list-container" style="max-height: 55vh; overflow-y: auto; margin-top: 8px;">
-                            ${aiToolsData.sort((a,b) => a.name.localeCompare(b.name)).map(generateAlternativeRowHTML).join('')}
+                            ${aiToolsData.sort((a, b) => a.name.localeCompare(b.name)).map(generateAlternativeRowHTML).join('')}
                         </div>
                     </div>
                 </div>`;
@@ -11737,7 +12002,7 @@ if (includeLangToggle) {
 
                 const searchInput = document.getElementById(`inline-alt-search-${mainToolId}`);
                 const resultsContainer = document.getElementById(`inline-alt-results-${mainToolId}`);
-                
+
                 searchInput.focus();
                 searchInput.addEventListener('input', () => {
                     const searchTerm = searchInput.value.toLowerCase();
@@ -11758,10 +12023,10 @@ if (includeLangToggle) {
                 try {
                     const toolDocRef = doc(db, "tools", mainToolId);
                     await updateDoc(toolDocRef, { recommendationId: alternativeToolId });
-                    
+
                     const toolIndex = aiToolsData.findIndex(t => t.id === mainToolId);
                     if (toolIndex !== -1) aiToolsData[toolIndex].recommendationId = alternativeToolId;
-                    
+
                     showToast(t.alternativeUpdated);
 
                     // Update UI inline instead of reloading
@@ -11900,51 +12165,51 @@ if (includeLangToggle) {
             };
             // NUOVA FUNZIONE: Salva il nuovo strumento globale su Firestore
             const handleAddGlobalTool = async () => {
-    console.log('handleAddGlobalTool called');
-    if (currentUser.role !== 'admin') {
-        console.log('User is not admin, role:', currentUser.role);
-        return;
-    }
+                console.log('handleAddGlobalTool called');
+                if (currentUser.role !== 'admin') {
+                    console.log('User is not admin, role:', currentUser.role);
+                    return;
+                }
 
-    // Rimosso il tentativo di leggere un ID inesistente.
+                // Rimosso il tentativo di leggere un ID inesistente.
 
-    const newToolData = {
-        // L'ID non viene più specificato qui. Verrà generato da Firestore.
-        name: document.getElementById('global-tool-name').value.trim(),
-        description: {
-            it: document.getElementById('global-tool-desc-it').value.trim(),
-            en: document.getElementById('global-tool-desc-en').value.trim()
-        },
-        website: document.getElementById('global-tool-website').value.trim(),
-        logoUrl: document.getElementById('global-tool-logo').value.trim(),
-        category: document.getElementById('global-tool-category').value,
-        country: document.getElementById('global-tool-country').value.trim(),
-        isFeatured: false // Valore di default per i nuovi strumenti
-    };
+                const newToolData = {
+                    // L'ID non viene più specificato qui. Verrà generato da Firestore.
+                    name: document.getElementById('global-tool-name').value.trim(),
+                    description: {
+                        it: document.getElementById('global-tool-desc-it').value.trim(),
+                        en: document.getElementById('global-tool-desc-en').value.trim()
+                    },
+                    website: document.getElementById('global-tool-website').value.trim(),
+                    logoUrl: document.getElementById('global-tool-logo').value.trim(),
+                    category: document.getElementById('global-tool-category').value,
+                    country: document.getElementById('global-tool-country').value.trim(),
+                    isFeatured: false // Valore di default per i nuovi strumenti
+                };
 
-    // Validazione base
-    if (!newToolData.name || !newToolData.website || !newToolData.logoUrl) {
-        showToast("Nome, Sito Web e URL Logo sono obbligatori.");
-        return;
-    }
+                // Validazione base
+                if (!newToolData.name || !newToolData.website || !newToolData.logoUrl) {
+                    showToast("Nome, Sito Web e URL Logo sono obbligatori.");
+                    return;
+                }
 
-    try {
-        // Usa addDoc per creare un nuovo documento con un ID generato automaticamente
-        const toolsCollectionRef = collection(db, "tools");
-        await addDoc(toolsCollectionRef, newToolData);
+                try {
+                    // Usa addDoc per creare un nuovo documento con un ID generato automaticamente
+                    const toolsCollectionRef = collection(db, "tools");
+                    await addDoc(toolsCollectionRef, newToolData);
 
-        showToast("Strumento AI aggiunto con successo al database!");
-        closeModal();
+                    showToast("Strumento AI aggiunto con successo al database!");
+                    closeModal();
 
-        // Ricarica i dati e la vista per mostrare il nuovo strumento
-        aiToolsData = await fetchToolsFromFirestore();
-        renderView();
+                    // Ricarica i dati e la vista per mostrare il nuovo strumento
+                    aiToolsData = await fetchToolsFromFirestore();
+                    renderView();
 
-    } catch (error) {
-        console.error("Errore nell'aggiunta dello strumento globale:", error);
-        showToast(`Errore: ${error.message}`);
-    }
-};
+                } catch (error) {
+                    console.error("Errore nell'aggiunta dello strumento globale:", error);
+                    showToast(`Errore: ${error.message}`);
+                }
+            };
             window.addEventListener('popstate', (event) => {
                 if (event.state && event.state.page) {
                     // If a state exists from a previous pushState, update the view
@@ -11995,7 +12260,7 @@ if (includeLangToggle) {
                         case 'open-add-global-tool-modal':
                             openAddGlobalToolModal();
                             break;
-                            case 'open-manage-rankings-modal':
+                        case 'open-manage-rankings-modal':
                             openManageRankingsModal();
                             break;
                         case 'open-edit-ranking-modal':
@@ -12034,7 +12299,7 @@ if (includeLangToggle) {
                             handleSaveVideoOrder();
                             break;
 
-                            case 'open-feature-toggles-modal':
+                        case 'open-feature-toggles-modal':
                             openFeatureTogglesModal();
                             break;
                         case 'save-feature-toggles':
@@ -12109,8 +12374,17 @@ if (includeLangToggle) {
                             handleCopyFromGallery(actionTarget.dataset.targetId);
                             break;
                         case 'delete-saved-prompt':
-                            // Aggiunta la nuova azione per chiamare la funzione di eliminazione
                             handleDeleteSavedPrompt(actionTarget.dataset.id);
+                            break;
+                        case 'execute-delete-saved-prompt': // NUOVA AZIONE
+                            executeDeleteSavedPrompt(actionTarget.dataset.id);
+                            break;
+                        case 'toggle-prompt':
+                            // Toggle per aprire/chiudere i prompt
+                            const promptItem = actionTarget.closest('.prompt-gallery-item');
+                            if (promptItem) {
+                                promptItem.classList.toggle('collapsed');
+                            }
                             break;
                         // NUOVO: Gestisce il click sull'icona della password
                         case 'toggle-password-visibility':
@@ -12533,7 +12807,7 @@ if (includeLangToggle) {
             });
 
             // --- FIREBASE AUTH STATE CHANGE LISTENER ---
-             onAuthStateChanged(auth, async (user) => { // Aggiungi "async" qui
+            onAuthStateChanged(auth, async (user) => { // Aggiungi "async" qui
                 // --- INSERT THIS CODE ---
                 // Check the URL hash to set the initial view
                 const initialHash = window.location.hash.substring(1); // e.g., 'explore' from '#explore'
