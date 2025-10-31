@@ -11534,125 +11534,165 @@
 
             // NUOVA FUNZIONE: Apre il modale per aggiungere uno strumento globale (solo admin) - STILE MIGLIORATO
             const openAddGlobalToolModal = () => {
-                if (currentUser.role !== 'admin') return;
-                const t = translations[currentLanguage];
+    if (currentUser.role !== 'admin') return;
+    const t = translations[currentLanguage];
 
-                const categoryOptions = categories.map(cat => `<option value="${cat.id}">${cat.name[currentLanguage]}</option>`).join('');
+    const categoryOptions = categories.map(cat => `<option value="${cat.id}">${cat.name[currentLanguage]}</option>`).join('');
 
-                const modalHTML = `
-                <div id="add-global-tool-modal" class="modal-overlay visible">
-                    <div class="modal-content add-ai-modal" style="text-align: left;">
-                        <button class="modal-close-btn" data-action="close-modal">×</button>
-                        <h2>${t.addAIToDatabase}</h2>
-                        
-                        <div class="add-ai-form">
-                            <div class="input-group">
-                                <label for="global-tool-name">${t.aiNameLabel}</label>
-                                <input type="text" id="global-tool-name" placeholder="${t.aiNamePlaceholder}">
-                            </div>
+    const modalHTML = `
+    <div id="add-global-tool-modal" class="modal-overlay visible">
+        <div class="modal-content add-ai-modal" style="text-align: left;">
+            <button class="modal-close-btn" data-action="close-modal">×</button>
+            <h2>${t.addAIToDatabase}</h2>
+            
+            <div class="add-ai-form">
+                <div class="input-group">
+                    <label for="global-tool-name">${t.aiNameLabel}</label>
+                    <input type="text" id="global-tool-name" placeholder="${t.aiNamePlaceholder}">
+                </div>
 
-                            <div class="input-group">
-                                <label for="global-tool-desc-it">${t.descriptionITLabel}</label>
-                                <textarea id="global-tool-desc-it" placeholder="${t.descriptionITPlaceholder}"></textarea>
-                            </div>
-                            
-                            <div class="input-group">
-                                <label for="global-tool-desc-en">${t.descriptionENLabel}</label>
-                                <textarea id="global-tool-desc-en" placeholder="${t.descriptionENPlaceholder}"></textarea>
-                            </div>
+                <div class="input-group">
+                    <label for="global-tool-desc-it">${t.descriptionITLabel}</label>
+                    <textarea id="global-tool-desc-it" placeholder="${t.descriptionITPlaceholder}"></textarea>
+                </div>
+                
+                <div class="input-group">
+                    <label for="global-tool-desc-en">${t.descriptionENLabel}</label>
+                    <textarea id="global-tool-desc-en" placeholder="${t.descriptionENPlaceholder}"></textarea>
+                </div>
 
-                            <div class="input-group">
-                                <label for="global-tool-website">${t.websiteLinkLabel}</label>
-                                <input type="url" id="global-tool-website" placeholder="${t.websiteLinkPlaceholder}">
-                            </div>
-                            
-                            <div class="input-group">
-                                <label for="global-tool-logo">${t.logoURLLabel}</label>
-                                <input type="url" id="global-tool-logo" placeholder="${t.logoURLPlaceholder}">
-                            </div>
+                <div class="input-group">
+                    <label for="global-tool-website">${t.websiteLinkLabel}</label>
+                    <input type="url" id="global-tool-website" placeholder="${t.websiteLinkPlaceholder}">
+                </div>
+                
+                <div class="input-group">
+                    <label for="global-tool-logo">${t.logoURLLabel}</label>
+                    <input type="url" id="global-tool-logo" placeholder="${t.logoURLPlaceholder}">
+                </div>
 
-                            <div class="input-group">
-                                <label for="global-tool-category">${t.categoryLabel}</label>
-                                <select id="global-tool-category">${categoryOptions}</select>
-                            </div>
-                            
-                            <div class="input-group">
-                                <label for="global-tool-country">${t.countryLabel}</label>
-                                <input type="text" id="global-tool-country" placeholder="${t.countryPlaceholder}">
-                            </div>
+                <div class="input-group">
+                    <label for="global-tool-category">${t.categoryLabel}</label>
+                    <select id="global-tool-category">${categoryOptions}</select>
+                </div>
+                
+                <div class="input-group">
+                    <label for="global-tool-country">${t.countryLabel}</label>
+                    <input type="text" id="global-tool-country" placeholder="${t.countryPlaceholder}">
+                </div>
 
-                            <button class="button" data-action="submit-global-tool">${t.saveToDatabase}</button>
-                        </div>
-                    </div>
-                </div>`;
-                el.modalContainer.innerHTML = modalHTML;
-            };
+                <!-- NUOVI CAMPI PER IL COMPARATORE -->
+                <div class="input-group">
+                    <label for="global-tool-pricing">Modello di Prezzo</label>
+                    <select id="global-tool-pricing">
+                        <option value="Free">Gratis</option>
+                        <option value="Freemium" selected>Freemium</option>
+                        <option value="Paid">A Pagamento</option>
+                        <option value="Free Trial">Prova Gratuita</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="global-tool-bestfor">Ideale Per</label>
+                    <input type="text" id="global-tool-bestfor" placeholder="Es. Scrittura di articoli di blog">
+                </div>
+                <div class="input-group">
+                    <label for="global-tool-features">Caratteristiche Principali (separate da virgola)</label>
+                    <textarea id="global-tool-features" placeholder="Caratteristica 1, Caratteristica 2, ..."></textarea>
+                </div>
+                <!-- FINE NUOVI CAMPI -->
+
+                <button class="button" data-action="submit-global-tool">${t.saveToDatabase}</button>
+            </div>
+        </div>
+    </div>`;
+    el.modalContainer.innerHTML = modalHTML;
+};
 
             // NUOVA FUNZIONE: Apre il modale per MODIFICARE uno strumento globale (solo admin)
             const openEditGlobalToolModal = (toolId) => {
-                if (currentUser.role !== 'admin') return;
+    if (currentUser.role !== 'admin') return;
 
-                const toolToEdit = aiToolsData.find(t => t.id === toolId);
-                if (!toolToEdit) {
-                    showToast("Strumento non trovato.");
-                    return;
-                }
+    const toolToEdit = aiToolsData.find(t => t.id === toolId);
+    if (!toolToEdit) {
+        showToast("Strumento non trovato.");
+        return;
+    }
 
-                const t = translations[currentLanguage];
-                const categoryOptions = categories.map(cat => `<option value="${cat.id}" ${cat.id === toolToEdit.category ? 'selected' : ''}>${cat.name[currentLanguage]}</option>`).join('');
-                const modalHTML = `
-                <div id="edit-global-tool-modal" class="modal-overlay visible">
-                    <div class="modal-content add-ai-modal" style="text-align: left;">
-                        <button class="modal-close-btn" data-action="close-modal">×</button>
-                        <h2>${t.editAIInDatabase}</h2>
-                        
-                        <div class="add-ai-form">
-                            <div class="input-group">
-                                <label>${t.documentIdLabel}</label>
-                                <input type="text" value="${toolToEdit.id}" disabled style="background-color: var(--spotify-bg);">
-                            </div>
+    const t = translations[currentLanguage];
+    const categoryOptions = categories.map(cat => `<option value="${cat.id}" ${cat.id === toolToEdit.category ? 'selected' : ''}>${cat.name[currentLanguage]}</option>`).join('');
+    const modalHTML = `
+    <div id="edit-global-tool-modal" class="modal-overlay visible">
+        <div class="modal-content add-ai-modal" style="text-align: left;">
+            <button class="modal-close-btn" data-action="close-modal">×</button>
+            <h2>${t.editAIInDatabase}</h2>
+            
+            <div class="add-ai-form">
+                <div class="input-group">
+                    <label>${t.documentIdLabel}</label>
+                    <input type="text" value="${toolToEdit.id}" disabled style="background-color: var(--spotify-bg);">
+                </div>
 
-                            <div class="input-group">
-                                <label for="edit-global-tool-name">${t.aiNameLabel}</label>
-                                <input type="text" id="edit-global-tool-name" value="${toolToEdit.name || ''}">
-                            </div>
+                <div class="input-group">
+                    <label for="edit-global-tool-name">${t.aiNameLabel}</label>
+                    <input type="text" id="edit-global-tool-name" value="${toolToEdit.name || ''}">
+                </div>
 
-                            <div class="input-group">
-                                <label for="edit-global-tool-desc-it">${t.descriptionITLabel}</label>
-                                <textarea id="edit-global-tool-desc-it">${toolToEdit.description.it || ''}</textarea>
-                            </div>
-                            
-                            <div class="input-group">
-                                <label for="edit-global-tool-desc-en">${t.descriptionENLabel}</label>
-                                <textarea id="edit-global-tool-desc-en">${toolToEdit.description.en || ''}</textarea>
-                            </div>
+                <div class="input-group">
+                    <label for="edit-global-tool-desc-it">${t.descriptionITLabel}</label>
+                    <textarea id="edit-global-tool-desc-it">${toolToEdit.description.it || ''}</textarea>
+                </div>
+                
+                <div class="input-group">
+                    <label for="edit-global-tool-desc-en">${t.descriptionENLabel}</label>
+                    <textarea id="edit-global-tool-desc-en">${toolToEdit.description.en || ''}</textarea>
+                </div>
 
-                            <div class="input-group">
-                                <label for="edit-global-tool-website">${t.websiteLinkLabel}</label>
-                                <input type="url" id="edit-global-tool-website" value="${toolToEdit.website || ''}">
-                            </div>
-                            
-                            <div class="input-group">
-                                <label for="edit-global-tool-logo">${t.logoURLLabel}</label>
-                                <input type="url" id="edit-global-tool-logo" value="${toolToEdit.logoUrl || ''}">
-                            </div>
+                <div class="input-group">
+                    <label for="edit-global-tool-website">${t.websiteLinkLabel}</label>
+                    <input type="url" id="edit-global-tool-website" value="${toolToEdit.website || ''}">
+                </div>
+                
+                <div class="input-group">
+                    <label for="edit-global-tool-logo">${t.logoURLLabel}</label>
+                    <input type="url" id="edit-global-tool-logo" value="${toolToEdit.logoUrl || ''}">
+                </div>
 
-                            <div class="input-group">
-                                <label for="edit-global-tool-category">${t.categoryLabel}</label>
-                                <select id="edit-global-tool-category">${categoryOptions}</select>
-                            </div>
-                            
-                            <div class="input-group">
-                                <label for="edit-global-tool-country">${t.countryLabel}</label>
-                                <input type="text" id="edit-global-tool-country" value="${toolToEdit.country || ''}">
-                            </div>
+                <div class="input-group">
+                    <label for="edit-global-tool-category">${t.categoryLabel}</label>
+                    <select id="edit-global-tool-category">${categoryOptions}</select>
+                </div>
+                
+                <div class="input-group">
+                    <label for="edit-global-tool-country">${t.countryLabel}</label>
+                    <input type="text" id="edit-global-tool-country" value="${toolToEdit.country || ''}">
+                </div>
 
-                            <button class="button" data-action="submit-edit-global-tool" data-id="${toolToEdit.id}">${t.saveChanges}</button>
-                        </div>
-                    </div>
-                </div>`;
-                el.modalContainer.innerHTML = modalHTML;
-            };
+                <!-- NUOVI CAMPI PER IL COMPARATORE -->
+                <div class="input-group">
+                    <label for="edit-global-tool-pricing">Modello di Prezzo</label>
+                    <select id="edit-global-tool-pricing">
+                        <option value="Free" ${toolToEdit.pricingModel === 'Free' ? 'selected' : ''}>Gratis</option>
+                        <option value="Freemium" ${toolToEdit.pricingModel === 'Freemium' ? 'selected' : ''}>Freemium</option>
+                        <option value="Paid" ${toolToEdit.pricingModel === 'Paid' ? 'selected' : ''}>A Pagamento</option>
+                        <option value="Free Trial" ${toolToEdit.pricingModel === 'Free Trial' ? 'selected' : ''}>Prova Gratuita</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="edit-global-tool-bestfor">Ideale Per</label>
+                    <input type="text" id="edit-global-tool-bestfor" placeholder="Es. Scrittura di articoli di blog" value="${toolToEdit.bestFor || ''}">
+                </div>
+                <div class="input-group">
+                    <label for="edit-global-tool-features">Caratteristiche Principali (separate da virgola)</label>
+                    <textarea id="edit-global-tool-features" placeholder="Caratteristica 1, Caratteristica 2, ...">${(toolToEdit.keyFeatures || []).join(', ')}</textarea>
+                </div>
+                <!-- FINE NUOVI CAMPI -->
+
+                <button class="button" data-action="submit-edit-global-tool" data-id="${toolToEdit.id}">${t.saveChanges}</button>
+            </div>
+        </div>
+    </div>`;
+    el.modalContainer.innerHTML = modalHTML;
+};
 
             // --- NUOVA LOGICA DI GESTIONE CLASSIFICHE (CRUD COMPLETO) ---
 
@@ -12112,104 +12152,102 @@
             };
             // NUOVA FUNZIONE: Salva le modifiche dello strumento globale su Firestore
             const handleEditGlobalTool = async (toolId) => {
-                console.log('handleEditGlobalTool called with toolId:', toolId);
-                if (currentUser.role !== 'admin' || !toolId) {
-                    console.log('User is not admin or no toolId, role:', currentUser.role, 'toolId:', toolId);
-                    return;
-                }
+    if (currentUser.role !== 'admin' || !toolId) return;
 
-                // Recuperiamo il tool esistente per mantenere i campi non modificabili
-                const existingTool = aiToolsData.find(t => t.id === toolId);
-                if (!existingTool) {
-                    console.log('Tool not found in aiToolsData');
-                    showToast("Strumento non trovato.");
-                    return;
-                }
+    const existingTool = aiToolsData.find(t => t.id === toolId);
+    if (!existingTool) {
+        showToast("Strumento non trovato.");
+        return;
+    }
 
-                const updatedToolData = {
-                    id: toolId, // Manteniamo l'ID
-                    name: document.getElementById('edit-global-tool-name').value.trim(),
-                    description: {
-                        it: document.getElementById('edit-global-tool-desc-it').value.trim(),
-                        en: document.getElementById('edit-global-tool-desc-en').value.trim()
-                    },
-                    website: document.getElementById('edit-global-tool-website').value.trim(),
-                    logoUrl: document.getElementById('edit-global-tool-logo').value.trim(),
-                    category: document.getElementById('edit-global-tool-category').value,
-                    country: document.getElementById('edit-global-tool-country').value.trim(),
-                    isFeatured: existingTool.isFeatured || false
-                };
+    const updatedToolData = {
+        name: document.getElementById('edit-global-tool-name').value.trim(),
+        description: {
+            it: document.getElementById('edit-global-tool-desc-it').value.trim(),
+            en: document.getElementById('edit-global-tool-desc-en').value.trim()
+        },
+        website: document.getElementById('edit-global-tool-website').value.trim(),
+        logoUrl: document.getElementById('edit-global-tool-logo').value.trim(),
+        category: document.getElementById('edit-global-tool-category').value,
+        country: document.getElementById('edit-global-tool-country').value.trim(),
 
-                // Validazione base
-                if (!updatedToolData.name || !updatedToolData.website || !updatedToolData.logoUrl) {
-                    showToast("Nome, Sito Web e URL Logo sono obbligatori.");
-                    return;
-                }
+        // --- NUOVA LOGICA ---
+        pricingModel: document.getElementById('edit-global-tool-pricing').value,
+        bestFor: document.getElementById('edit-global-tool-bestfor').value.trim(),
+        keyFeatures: document.getElementById('edit-global-tool-features').value
+                            .split(',')
+                            .map(f => f.trim())
+                            .filter(f => f),
+                            
+        // Manteniamo i campi esistenti che non sono nel form per sicurezza
+        isFeatured: existingTool.isFeatured || false,
+        recommendationId: existingTool.recommendationId || null
+    };
 
-                try {
-                    const toolDocRef = doc(db, "tools", toolId);
-                    // Usiamo updateDoc per aggiornare il documento esistente
-                    await updateDoc(toolDocRef, updatedToolData);
+    if (!updatedToolData.name || !updatedToolData.website || !updatedToolData.logoUrl) {
+        showToast("Nome, Sito Web e URL Logo sono obbligatori.");
+        return;
+    }
 
-                    showToast("Strumento AI aggiornato con successo!");
-                    closeModal();
+    try {
+        const toolDocRef = doc(db, "tools", toolId);
+        await updateDoc(toolDocRef, updatedToolData);
 
-                    // Ricarica i dati e la vista per mostrare le modifiche
-                    aiToolsData = await fetchToolsFromFirestore();
-                    renderView();
+        showToast("Strumento AI aggiornato con successo!");
+        closeModal();
 
-                } catch (error) {
-                    console.error("Errore nell'aggiornamento dello strumento:", error);
-                    showToast(`Errore: ${error.message}`);
-                }
-            };
+        aiToolsData = await fetchToolsFromFirestore();
+        renderView();
+
+    } catch (error) {
+        console.error("Errore nell'aggiornamento dello strumento:", error);
+        showToast(`Errore: ${error.message}`);
+    }
+};
             // NUOVA FUNZIONE: Salva il nuovo strumento globale su Firestore
             const handleAddGlobalTool = async () => {
-                console.log('handleAddGlobalTool called');
-                if (currentUser.role !== 'admin') {
-                    console.log('User is not admin, role:', currentUser.role);
-                    return;
-                }
+    if (currentUser.role !== 'admin') return;
 
-                // Rimosso il tentativo di leggere un ID inesistente.
+    const newToolData = {
+        name: document.getElementById('global-tool-name').value.trim(),
+        description: {
+            it: document.getElementById('global-tool-desc-it').value.trim(),
+            en: document.getElementById('global-tool-desc-en').value.trim()
+        },
+        website: document.getElementById('global-tool-website').value.trim(),
+        logoUrl: document.getElementById('global-tool-logo').value.trim(),
+        category: document.getElementById('global-tool-category').value,
+        country: document.getElementById('global-tool-country').value.trim(),
+        isFeatured: false,
+        
+        // --- NUOVA LOGICA ---
+        pricingModel: document.getElementById('global-tool-pricing').value,
+        bestFor: document.getElementById('global-tool-bestfor').value.trim(),
+        keyFeatures: document.getElementById('global-tool-features').value
+                            .split(',')
+                            .map(f => f.trim())
+                            .filter(f => f)
+    };
 
-                const newToolData = {
-                    // L'ID non viene più specificato qui. Verrà generato da Firestore.
-                    name: document.getElementById('global-tool-name').value.trim(),
-                    description: {
-                        it: document.getElementById('global-tool-desc-it').value.trim(),
-                        en: document.getElementById('global-tool-desc-en').value.trim()
-                    },
-                    website: document.getElementById('global-tool-website').value.trim(),
-                    logoUrl: document.getElementById('global-tool-logo').value.trim(),
-                    category: document.getElementById('global-tool-category').value,
-                    country: document.getElementById('global-tool-country').value.trim(),
-                    isFeatured: false // Valore di default per i nuovi strumenti
-                };
+    if (!newToolData.name || !newToolData.website || !newToolData.logoUrl) {
+        showToast("Nome, Sito Web e URL Logo sono obbligatori.");
+        return;
+    }
 
-                // Validazione base
-                if (!newToolData.name || !newToolData.website || !newToolData.logoUrl) {
-                    showToast("Nome, Sito Web e URL Logo sono obbligatori.");
-                    return;
-                }
+    try {
+        const toolsCollectionRef = collection(db, "tools");
+        await addDoc(toolsCollectionRef, newToolData);
 
-                try {
-                    // Usa addDoc per creare un nuovo documento con un ID generato automaticamente
-                    const toolsCollectionRef = collection(db, "tools");
-                    await addDoc(toolsCollectionRef, newToolData);
-
-                    showToast("Strumento AI aggiunto con successo al database!");
-                    closeModal();
-
-                    // Ricarica i dati e la vista per mostrare il nuovo strumento
-                    aiToolsData = await fetchToolsFromFirestore();
-                    renderView();
-
-                } catch (error) {
-                    console.error("Errore nell'aggiunta dello strumento globale:", error);
-                    showToast(`Errore: ${error.message}`);
-                }
-            };
+        showToast("Strumento AI aggiunto con successo al database!");
+        closeModal();
+        
+        aiToolsData = await fetchToolsFromFirestore();
+        renderView();
+    } catch (error) {
+        console.error("Errore nell'aggiunta dello strumento globale:", error);
+        showToast(`Errore: ${error.message}`);
+    }
+};
             window.addEventListener('popstate', (event) => {
                 if (event.state && event.state.page) {
                     // If a state exists from a previous pushState, update the view
