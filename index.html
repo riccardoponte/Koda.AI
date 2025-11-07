@@ -7486,7 +7486,7 @@
                     fullNameRequired: "Il nome completo è obbligatorio.",
                     // App
                     navHome: "Home", navTopAI: "TOP AI", navSearch: "Cerca", navSearchUsers: "Utenti", navUserChats: "Chat", navLibrary: "Libreria",
-                    pageTitleHome: "Koda", pageTitleTopAI: "TOP AI", pageTitleSearch: "Cerca", pageTitleSearchUsers: "Utenti", pageTitleUserChats: "Chat Utenti", pageTitleLibrary: "Libreria",
+                    pageTitleHome: "", pageTitleTopAI: "TOP AI", pageTitleSearch: "Cerca", pageTitleSearchUsers: "Utenti", pageTitleUserChats: "Chat Utenti", pageTitleLibrary: "Libreria",
                     logout: "Logout", featured: "In evidenza", rankingsTitle: "Classifiche TOP AI", filterAll: "Tutti",
                     searchPlaceholder: "Cerca strumenti, categorie...", browseAll: "Sfoglia tutto", browseByOrigin: "Sfoglia per nazionalità",
                     backToSearch: "‹ Torna a cercare", toolsFrom: "Strumenti da", libraryPromptTitle: "Salva i tuoi preferiti",
@@ -7720,7 +7720,7 @@
                     fullNameRequired: "Full name is required.",
                     // App
                     navHome: "Home", navTopAI: "TOP AI", navSearch: "Search", navSearchUsers: "Users", navUserChats: "Chats", navLibrary: "Library",
-                    pageTitleHome: "Koda", pageTitleTopAI: "TOP AI", pageTitleSearch: "Search", pageTitleSearchUsers: "Search Users", pageTitleUserChats: "User Chats", pageTitleLibrary: "Your Library",
+                    pageTitleHome: "", pageTitleTopAI: "TOP AI", pageTitleSearch: "Search", pageTitleSearchUsers: "Search Users", pageTitleUserChats: "User Chats", pageTitleLibrary: "Your Library",
                     logout: "Logout", featured: "Featured", rankingsTitle: "TOP AI Rankings", filterAll: "All",
                     searchPlaceholder: "Search tools, categories...", browseAll: "Browse All", browseByOrigin: "Browse by County",
                     backToSearch: "‹ Back to search", toolsFrom: "Tools from", libraryPromptTitle: "Save your favorites",
@@ -8933,8 +8933,6 @@
                 <div class="user-profile-dropdown" id="user-profile-dropdown">
                     <div class="user-profile-header">
                         <div class="user-profile-avatar">${userInitial}</div>
-                        <div class="user-profile-name">${currentUser.nickname || currentUser.name}</div>
-                        <div class="user-profile-email">${currentUser.name}</div>
                     </div>
                     <div class="user-profile-menu">
                         <div class="user-profile-item" data-action="open-settings">
@@ -8942,18 +8940,6 @@
                                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                             </svg>
                             <span data-translate="settingsTitle">Impostazioni</span>
-                        </div>
-                        <div class="user-profile-item" data-action="change-nickname">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                            </svg>
-                            <span data-translate="changeNicknameTitle">Cambia nickname</span>
-                        </div>
-                        <div class="user-profile-item" data-action="change-password">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
-                            </svg>
-                            <span data-translate="changePasswordTitle">Cambia password</span>
                         </div>
                         ${featureSettings.isReviewsEnabled ? `
                         <div class="user-profile-item" data-action="view-sent-reviews">
@@ -10964,7 +10950,7 @@
                 // Trova il pulsante di salvataggio per dare feedback visivo
                 const saveButton = document.querySelector('[data-action="save-optimized-prompt"]');
                 const originalButtonText = saveButton ? saveButton.textContent : '';
-                
+
                 if (saveButton) {
                     saveButton.disabled = true;
                     saveButton.style.opacity = '0.6';
@@ -11024,7 +11010,7 @@
                     if (prompts.length === 0) {
                         return `<div id="empty-state">Nessun prompt salvato.</div>`;
                     }
-                    
+
                     return prompts.map((p, index) => `
                         <div class="prompt-gallery-item" data-prompt-id="${p.id}">
                             <div class="prompt-gallery-item-header" data-action="toggle-prompt">
@@ -11082,7 +11068,7 @@
                         </div>
                     </div>
                 `;
-                
+
                 el.modalContainer.innerHTML = modalHTML;
 
                 // Aggiungi event listener per la ricerca
@@ -11094,8 +11080,8 @@
                     const searchTerm = searchInput.value.toLowerCase();
                     const sortOrder = sortSelect.value;
 
-                    let filtered = savedPrompts.filter(p => 
-                        p.originalPrompt.toLowerCase().includes(searchTerm) || 
+                    let filtered = savedPrompts.filter(p =>
+                        p.originalPrompt.toLowerCase().includes(searchTerm) ||
                         p.optimizedPrompt.toLowerCase().includes(searchTerm)
                     );
 
@@ -11630,7 +11616,7 @@
 
                 const modalHTML = `
                 <div id="add-global-tool-modal" class="modal-overlay visible">
-                    <div class="modal-content add-ai-modal" style="text-align: left;">
+                    <div class="modal-content add-ai-modal" style="text-align: left; max-width: 100%; width: 100%; height: 100vh; margin: 0; border-radius: 0; max-height: 100vh; overflow-y: auto;">
                         <button class="modal-close-btn" data-action="close-modal">×</button>
                         <h2>${t.addAIToDatabase}</h2>
                         
@@ -11691,7 +11677,7 @@
                 const categoryOptions = categories.map(cat => `<option value="${cat.id}" ${cat.id === toolToEdit.category ? 'selected' : ''}>${cat.name[currentLanguage]}</option>`).join('');
                 const modalHTML = `
                 <div id="edit-global-tool-modal" class="modal-overlay visible">
-                    <div class="modal-content add-ai-modal" style="text-align: left;">
+                    <div class="modal-content add-ai-modal" style="text-align: left; max-width: 100%; width: 100%; height: 100vh; margin: 0; border-radius: 0; max-height: 100vh; overflow-y: auto;">
                         <button class="modal-close-btn" data-action="close-modal">×</button>
                         <h2>${t.editAIInDatabase}</h2>
                         
@@ -11777,7 +11763,7 @@
 
                 const modalHTML = `
                 <div id="manage-rankings-modal" class="modal-overlay visible">
-                    <div class="modal-content add-ai-modal" style="text-align: left;">
+                    <div class="modal-content add-ai-modal" style="text-align: left; max-width: 100%; width: 100%; height: 100vh; margin: 0; border-radius: 0; max-height: 100vh; overflow-y: auto;">
                         <button class="modal-close-btn" data-action="close-modal">×</button>
                         <h2>${t.manageRankings}</h2>
                         <div style="margin-top: 24px;">${rankingsListHTML}</div>
@@ -11805,7 +11791,7 @@
 
                 const modalHTML = `
                 <div id="edit-ranking-modal" class="modal-overlay visible">
-                    <div class="modal-content add-ai-modal" style="text-align: left; max-width: 600px;">
+                    <div class="modal-content add-ai-modal" style="text-align: left; max-width: 100%; width: 100%; height: 100vh; margin: 0; border-radius: 0; max-height: 100vh; overflow-y: auto;">
                         <button class="modal-close-btn" data-action="close-modal">×</button>
                         <h2>${isEditing ? t.editRanking : t.createRanking}</h2>
                         <div class="add-ai-form">
@@ -11968,7 +11954,7 @@
 
                 const modalHTML = `
                 <div id="feature-toggles-modal" class="modal-overlay visible">
-                    <div class="modal-content add-ai-modal" style="text-align: left;">
+                    <div class="modal-content add-ai-modal" style="text-align: left; max-width: 100%; width: 100%; height: 100vh; margin: 0; border-radius: 0; max-height: 100vh; overflow-y: auto;">
                         <button class="modal-close-btn" data-action="close-modal">×</button>
                         <h2>${t.featureToggles}</h2>
                         <div class="add-ai-form">
@@ -12426,18 +12412,19 @@
 
                 try {
                     // Update pricing for all selected tools
-                    const updatePromises = selectedIds.map(id => 
+                    const updatePromises = selectedIds.map(id =>
                         updateDoc(doc(db, "tools", id), { pricing: pricingType })
                     );
                     await Promise.all(updatePromises);
 
                     const successMsg = t.pricingUpdatedSuccess.replace('%d', selectedIds.length);
                     showToast(successMsg);
-                    closeModal();
 
-                    // Reload data and view
+                    // Reload data without closing modal or changing view
                     aiToolsData = await fetchToolsFromFirestore();
-                    renderView();
+
+                    // Reopen the modal to show updated pricing
+                    openManagePricingModal();
 
                 } catch (error) {
                     console.error("Errore nell'aggiornamento dei prezzi:", error);
@@ -12522,7 +12509,7 @@
 
                 const t = translations[currentLanguage];
                 const confirmDelete = confirm(t.confirmDeleteTool || 'Sei sicuro di voler eliminare questo strumento AI?');
-                
+
                 if (!confirmDelete) return;
 
                 try {
@@ -13023,14 +13010,6 @@
                         case 'open-settings':
                             closeUserProfileDropdown();
                             window.openSettingsModal();
-                            break;
-                        case 'change-nickname':
-                            closeUserProfileDropdown();
-                            openChangeNicknameModal();
-                            break;
-                        case 'change-password':
-                            closeUserProfileDropdown();
-                            openChangePasswordModal();
                             break;
                         case 'view-sent-reviews':
                             closeUserProfileDropdown();
