@@ -684,6 +684,34 @@
             color: var(--spotify-text-secondary);
         }
 
+        /* NUOVO: Stili per i badge di prezzo */
+        .pricing-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            vertical-align: middle;
+        }
+
+        .pricing-badge.free {
+            background-color: rgba(29, 185, 84, 0.15);
+            color: #1db954;
+        }
+
+        .pricing-badge.freemium {
+            background-color: rgba(255, 193, 7, 0.15);
+            color: #ffc107;
+        }
+
+        .pricing-badge.paid {
+            background-color: rgba(255, 107, 107, 0.15);
+            color: #ff6b6b;
+        }
+
         .reviews-section {
             margin-top: 24px;
             padding-top: 24px;
@@ -1471,6 +1499,7 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
+            align-items: center;
             gap: 8px;
             margin-bottom: 24px;
         }
@@ -1480,6 +1509,10 @@
             padding: 6px 12px;
             border-radius: 20px;
             font-size: 12px;
+        }
+
+        #detail-content .pricing-badge {
+            margin-top: 0;
         }
 
         #detail-content .detail-actions {
@@ -7633,6 +7666,20 @@
                     alternativeUpdated: "Alternativa aggiornata con successo!",
                     alternativeRemoved: "Alternativa rimossa con successo!",
                     errorUpdatingAlternative: "Errore durante l'aggiornamento dell'alternativa.",
+                    deleteMultipleTools: "Elimina AI Multiple",
+                    selectToolsToDelete: "Seleziona AI da eliminare",
+                    deleteSelected: "Elimina Selezionate",
+                    toolsSelected: "AI selezionate",
+                    confirmDeleteMultiple: "Sei sicuro di voler eliminare %d AI?",
+                    toolsDeletedSuccess: "%d AI eliminate con successo!",
+                    managePricing: "Gestisci Prezzi",
+                    selectToolsForPricing: "Seleziona AI per modificare il prezzo",
+                    setPricing: "Imposta Prezzo",
+                    pricingFree: "Gratuito",
+                    pricingFreemium: "Freemium",
+                    pricingPaid: "A Pagamento",
+                    selectPricingType: "Seleziona tipo di prezzo",
+                    pricingUpdatedSuccess: "Prezzi aggiornati per %d AI!",
                     // NUOVE TRADUZIONI PER CATALOGO VIDEO
                     videoCatalogTitle: "Tutorials & Guide",
                     watchVideo: "Guarda",
@@ -7853,6 +7900,20 @@
                     alternativeUpdated: "Alternative updated successfully!",
                     alternativeRemoved: "Alternative removed successfully!",
                     errorUpdatingAlternative: "Error updating alternative.",
+                    deleteMultipleTools: "Delete Multiple AIs",
+                    selectToolsToDelete: "Select AIs to delete",
+                    deleteSelected: "Delete Selected",
+                    toolsSelected: "AIs selected",
+                    confirmDeleteMultiple: "Are you sure you want to delete %d AIs?",
+                    toolsDeletedSuccess: "%d AIs deleted successfully!",
+                    managePricing: "Manage Pricing",
+                    selectToolsForPricing: "Select AIs to change pricing",
+                    setPricing: "Set Pricing",
+                    pricingFree: "Free",
+                    pricingFreemium: "Freemium",
+                    pricingPaid: "Paid",
+                    selectPricingType: "Select pricing type",
+                    pricingUpdatedSuccess: "Pricing updated for %d AIs!",
                     // NEW TRANSLATIONS FOR VIDEO CATALOG
                     videoCatalogTitle: "Tutorials & Guides",
                     watchVideo: "Watch",
@@ -8135,6 +8196,23 @@
 
 
             // Modified createGridCard to optionally show an edit icon and specify its action
+            // Helper function to generate pricing badge HTML
+            const getPricingBadgeHTML = (pricing) => {
+                if (!pricing) return '';
+                const t = translations[currentLanguage];
+                const icons = {
+                    free: '✅',
+                    freemium: '💰',
+                    paid: '💵'
+                };
+                const labels = {
+                    free: t.pricingFree,
+                    freemium: t.pricingFreemium,
+                    paid: t.pricingPaid
+                };
+                return `<span class="pricing-badge ${pricing}">${icons[pricing]} ${labels[pricing]}</span>`;
+            };
+
             const createGridCard = (tool, context, options = {}) => {
                 let editIconHTML = '';
                 // Check if user is logged in
@@ -8156,7 +8234,8 @@
                 }
 
                 const ratingHTML = featureSettings.isRatingsEnabled ? `<div class="rating-container" id="rating-${tool.id}"></div>` : '';
-                return `<div class="tool-card-grid" data-id="${tool.id}"><div class="logo-container"><img src="${tool.logoUrl}" class="tool-logo" alt="${tool.name}" loading="lazy">${editIconHTML}</div><div class="tool-name">${tool.name}</div>${ratingHTML}</div>`;
+                const pricingHTML = getPricingBadgeHTML(tool.pricing);
+                return `<div class="tool-card-grid" data-id="${tool.id}"><div class="logo-container"><img src="${tool.logoUrl}" class="tool-logo" alt="${tool.name}" loading="lazy">${editIconHTML}</div><div class="tool-name">${tool.name}</div>${pricingHTML}${ratingHTML}</div>`;
             };
 
             const createListCard = (tool, context) => {
@@ -8175,7 +8254,8 @@
                 }
 
                 const ratingHTML = featureSettings.isRatingsEnabled ? `<div class="rating-container" id="rating-${tool.id}"></div>` : '';
-                return `<div class="tool-card-list" data-id="${tool.id}"><div class="logo-container"><img src="${tool.logoUrl}" class="tool-logo" alt="${tool.name}" loading="lazy">${editIconHTML}</div><div class="info"><div class="tool-name">${tool.name}</div><div class="tool-subtext">${getTranslatedCategoryName(tool.category)}</div>${ratingHTML}</div>${favoriteIconHTML}</div>`;
+                const pricingHTML = getPricingBadgeHTML(tool.pricing);
+                return `<div class="tool-card-list" data-id="${tool.id}"><div class="logo-container"><img src="${tool.logoUrl}" class="tool-logo" alt="${tool.name}" loading="lazy">${editIconHTML}</div><div class="info"><div class="tool-name">${tool.name}</div><div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><div class="tool-subtext">${getTranslatedCategoryName(tool.category)}</div>${pricingHTML}</div>${ratingHTML}</div>${favoriteIconHTML}</div>`;
             };
 
             const createCategoryCard = (category) => {
@@ -8272,6 +8352,7 @@
                             <div class="detail-tags">
                                 <span class="tag">🌍 ${tool.country || 'N/A'}</span>
                                 <span class="tag">${getTranslatedCategoryName(tool.category || 'N/A')}</span>
+                                ${tool.pricing ? getPricingBadgeHTML(tool.pricing) : ''}
                             </div>
                             <div class="detail-actions">
                                 ${userToolActionsHTML}
@@ -8886,6 +8967,14 @@
                         <div class="user-profile-item" data-action="open-manage-alternatives-modal">
                             <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M16.01 11H4v2h12.01v3L20 12l-3.99-4v3z"/></svg>
                             <span data-translate="manageAlternatives">Gestisci Alternative</span>
+                        </div>
+                        <div class="user-profile-item" data-action="open-delete-multiple-tools-modal">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                            <span data-translate="deleteMultipleTools">Elimina AI Multiple</span>
+                        </div>
+                        <div class="user-profile-item" data-action="open-manage-pricing-modal">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+                            <span data-translate="managePricing">Gestisci Prezzi</span>
                         </div>
                         <div class="user-profile-item" data-action="open-feature-toggles-modal">
                              <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.08-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19-.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>
@@ -11647,7 +11736,18 @@
                                 <input type="text" id="edit-global-tool-country" value="${toolToEdit.country || ''}">
                             </div>
 
+                            <div class="input-group">
+                                <label for="edit-global-tool-pricing">${t.selectPricingType}</label>
+                                <select id="edit-global-tool-pricing">
+                                    <option value="">-</option>
+                                    <option value="free" ${toolToEdit.pricing === 'free' ? 'selected' : ''}>${t.pricingFree}</option>
+                                    <option value="freemium" ${toolToEdit.pricing === 'freemium' ? 'selected' : ''}>${t.pricingFreemium}</option>
+                                    <option value="paid" ${toolToEdit.pricing === 'paid' ? 'selected' : ''}>${t.pricingPaid}</option>
+                                </select>
+                            </div>
+
                             <button class="button" data-action="submit-edit-global-tool" data-id="${toolToEdit.id}">${t.saveChanges}</button>
+                            <button class="button" data-action="delete-global-tool" data-id="${toolToEdit.id}" style="background-color: #ff6b6b; margin-top: 12px;">${t.deleteButton || 'Elimina'}</button>
                         </div>
                     </div>
                 </div>`;
@@ -11942,14 +12042,14 @@
 
                 const modalHTML = `
                 <div id="manage-alternatives-modal" class="modal-overlay visible">
-                    <div class="modal-content add-ai-modal" style="text-align: left; max-width: 800px;">
+                    <div class="modal-content add-ai-modal" style="text-align: left; max-width: 100%; width: 100%; height: 100vh; margin: 0; border-radius: 0; max-height: 100vh;">
                         <button class="modal-close-btn" data-action="close-modal">×</button>
                         <h2>${t.manageAlternatives}</h2>
                         <div class="input-group" style="margin-top: 24px;">
                             <input type="text" id="alternative-main-search" class="chat-search-input" placeholder="${t.searchMainAI}">
                         </div>
                         ${categoryFiltersHTML}
-                        <div id="alternatives-tool-list" class="list-container" style="max-height: 55vh; overflow-y: auto; margin-top: 8px;">
+                        <div id="alternatives-tool-list" class="list-container" style="max-height: calc(100vh - 280px); overflow-y: auto; margin-top: 8px;">
                             ${aiToolsData.sort((a, b) => a.name.localeCompare(b.name)).map(generateAlternativeRowHTML).join('')}
                         </div>
                     </div>
@@ -12094,6 +12194,257 @@
                     showToast(`Errore: ${error.message}`);
                 }
             };
+
+            // NUOVA FUNZIONE: Apre il modale per eliminare AI multiple
+            const openDeleteMultipleToolsModal = () => {
+                if (currentUser.role !== 'admin') return;
+                const t = translations[currentLanguage];
+
+                const toolsListHTML = aiToolsData.sort((a, b) => a.name.localeCompare(b.name)).map(tool => `
+                    <div class="tool-list-item" style="padding: 12px; border-bottom: 1px solid rgba(128, 128, 128, 0.1);">
+                        <input type="checkbox" class="tool-delete-checkbox" data-id="${tool.id}" style="margin-right: 12px; width: 18px; height: 18px; cursor: pointer;">
+                        <img src="${tool.logoUrl}" alt="${tool.name}" style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover; margin-right: 12px;">
+                        <div class="info" style="flex-grow: 1;">
+                            <div class="tool-name">${tool.name}</div>
+                            <div class="tool-subtext">${getTranslatedCategoryName(tool.category)}</div>
+                        </div>
+                    </div>
+                `).join('');
+
+                const modalHTML = `
+                <div id="delete-multiple-tools-modal" class="modal-overlay visible">
+                    <div class="modal-content add-ai-modal" style="text-align: left; max-width: 100%; width: 100%; height: 100vh; margin: 0; border-radius: 0; max-height: 100vh;">
+                        <button class="modal-close-btn" data-action="close-modal">×</button>
+                        <h2>${t.selectToolsToDelete}</h2>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin: 24px 0 16px;">
+                            <div>
+                                <input type="checkbox" id="select-all-tools" style="margin-right: 8px; width: 18px; height: 18px; cursor: pointer;">
+                                <label for="select-all-tools" style="cursor: pointer; font-weight: 500;">Seleziona Tutto</label>
+                            </div>
+                            <div id="selected-count" style="color: var(--spotify-text-secondary); font-size: 14px;">0 ${t.toolsSelected}</div>
+                        </div>
+                        <div id="tools-delete-list" class="list-container" style="max-height: calc(100vh - 280px); overflow-y: auto; border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 8px;">
+                            ${toolsListHTML}
+                        </div>
+                        <button class="button" id="delete-selected-tools-btn" data-action="delete-selected-tools" style="margin-top: 24px; background-color: #ff6b6b;" disabled>${t.deleteSelected}</button>
+                    </div>
+                </div>`;
+                el.modalContainer.innerHTML = modalHTML;
+
+                // Add event listeners
+                const selectAllCheckbox = document.getElementById('select-all-tools');
+                const deleteBtn = document.getElementById('delete-selected-tools-btn');
+                const selectedCountEl = document.getElementById('selected-count');
+                const checkboxes = document.querySelectorAll('.tool-delete-checkbox');
+
+                const updateUI = () => {
+                    const selectedCount = document.querySelectorAll('.tool-delete-checkbox:checked').length;
+                    selectedCountEl.textContent = `${selectedCount} ${t.toolsSelected}`;
+                    deleteBtn.disabled = selectedCount === 0;
+                    selectAllCheckbox.checked = selectedCount === checkboxes.length && selectedCount > 0;
+                };
+
+                selectAllCheckbox.addEventListener('change', (e) => {
+                    checkboxes.forEach(cb => cb.checked = e.target.checked);
+                    updateUI();
+                });
+
+                checkboxes.forEach(cb => {
+                    cb.addEventListener('change', updateUI);
+                });
+            };
+
+            // NUOVA FUNZIONE: Elimina le AI selezionate
+            const handleDeleteSelectedTools = async () => {
+                if (currentUser.role !== 'admin') return;
+                const t = translations[currentLanguage];
+
+                const selectedCheckboxes = document.querySelectorAll('.tool-delete-checkbox:checked');
+                const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.dataset.id);
+
+                if (selectedIds.length === 0) return;
+
+                const confirmMsg = t.confirmDeleteMultiple.replace('%d', selectedIds.length);
+                if (!confirm(confirmMsg)) return;
+
+                try {
+                    // Delete all selected tools
+                    const deletePromises = selectedIds.map(id => deleteDoc(doc(db, "tools", id)));
+                    await Promise.all(deletePromises);
+
+                    const successMsg = t.toolsDeletedSuccess.replace('%d', selectedIds.length);
+                    showToast(successMsg);
+                    closeModal();
+
+                    // Reload data and view
+                    aiToolsData = await fetchToolsFromFirestore();
+                    renderView();
+
+                } catch (error) {
+                    console.error("Errore nell'eliminazione delle AI:", error);
+                    showToast(`Errore: ${error.message}`);
+                }
+            };
+
+            // NUOVA FUNZIONE: Apre il modale per gestire i prezzi delle AI
+            const openManagePricingModal = () => {
+                if (currentUser.role !== 'admin') return;
+                const t = translations[currentLanguage];
+
+                const getPricingBadge = (pricing) => {
+                    if (!pricing) return '<span style="color: var(--spotify-text-secondary); font-size: 12px;">-</span>';
+                    const badges = {
+                        free: `<span class="pricing-badge free">${t.pricingFree}</span>`,
+                        freemium: `<span class="pricing-badge freemium">${t.pricingFreemium}</span>`,
+                        paid: `<span class="pricing-badge paid">${t.pricingPaid}</span>`
+                    };
+                    return badges[pricing] || '-';
+                };
+
+                const generateToolRow = (tool) => `
+                    <div class="tool-list-item pricing-tool-row" data-category="${tool.category}" style="padding: 12px; border-bottom: 1px solid rgba(128, 128, 128, 0.1);">
+                        <input type="checkbox" class="tool-pricing-checkbox" data-id="${tool.id}" style="margin-right: 12px; width: 18px; height: 18px; cursor: pointer;">
+                        <img src="${tool.logoUrl}" alt="${tool.name}" style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover; margin-right: 12px;">
+                        <div class="info" style="flex-grow: 1;">
+                            <div class="tool-name">${tool.name}</div>
+                            <div style="margin-top: 4px; display: flex; align-items: center; gap: 8px;">
+                                <span class="tool-subtext">${getTranslatedCategoryName(tool.category)}</span>
+                                ${getPricingBadge(tool.pricing)}
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                const toolsListHTML = aiToolsData.sort((a, b) => a.name.localeCompare(b.name)).map(generateToolRow).join('');
+
+                const categoryFiltersHTML = `
+                <div class="filter-pills" id="pricing-category-filters" style="margin: 16px 0; padding-bottom: 8px; overflow-x: auto;">
+                    <button class="pill-btn active" data-action="filter-pricing-category" data-category="All">${t.filterAll}</button>
+                    ${categories.map(cat => `<button class="pill-btn" data-action="filter-pricing-category" data-category="${cat.id}">${getTranslatedCategoryName(cat.id)}</button>`).join('')}
+                </div>`;
+
+                const modalHTML = `
+                <div id="manage-pricing-modal" class="modal-overlay visible">
+                    <div class="modal-content add-ai-modal" style="text-align: left; max-width: 100%; width: 100%; height: 100vh; margin: 0; border-radius: 0; max-height: 100vh;">
+                        <button class="modal-close-btn" data-action="close-modal">×</button>
+                        <h2>${t.selectToolsForPricing}</h2>
+                        ${categoryFiltersHTML}
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin: 16px 0;">
+                            <div>
+                                <input type="checkbox" id="select-all-pricing-tools" style="margin-right: 8px; width: 18px; height: 18px; cursor: pointer;">
+                                <label for="select-all-pricing-tools" style="cursor: pointer; font-weight: 500;">Seleziona Tutto</label>
+                            </div>
+                            <div id="pricing-selected-count" style="color: var(--spotify-text-secondary); font-size: 14px;">0 ${t.toolsSelected}</div>
+                        </div>
+                        <div id="tools-pricing-list" class="list-container" style="max-height: calc(100vh - 450px); overflow-y: auto; border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 8px; margin-bottom: 16px;">
+                            ${toolsListHTML}
+                        </div>
+                        <div style="background: var(--spotify-card); padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 12px;">${t.selectPricingType}</label>
+                            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                                <button class="pill-btn" data-action="set-pricing-type" data-pricing="free" style="flex: 1; min-width: 120px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 0 24 24" width="16" fill="currentColor" style="margin-right: 4px;"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                                    ${t.pricingFree}
+                                </button>
+                                <button class="pill-btn" data-action="set-pricing-type" data-pricing="freemium" style="flex: 1; min-width: 120px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 0 24 24" width="16" fill="currentColor" style="margin-right: 4px;"><path d="M0 0h24v24H0z" fill="none"/><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+                                    ${t.pricingFreemium}
+                                </button>
+                                <button class="pill-btn" data-action="set-pricing-type" data-pricing="paid" style="flex: 1; min-width: 120px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 0 24 24" width="16" fill="currentColor" style="margin-right: 4px;"><path d="M0 0h24v24H0z" fill="none"/><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+                                    ${t.pricingPaid}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+                el.modalContainer.innerHTML = modalHTML;
+
+                // Add event listeners
+                const selectAllCheckbox = document.getElementById('select-all-pricing-tools');
+                const selectedCountEl = document.getElementById('pricing-selected-count');
+                const categoryFiltersContainer = document.getElementById('pricing-category-filters');
+                const toolsListContainer = document.getElementById('tools-pricing-list');
+                let currentCategoryFilter = 'All';
+
+                const updateUI = () => {
+                    const visibleCheckboxes = Array.from(document.querySelectorAll('.tool-pricing-checkbox')).filter(cb => {
+                        const row = cb.closest('.pricing-tool-row');
+                        return row && row.style.display !== 'none';
+                    });
+                    const selectedCount = visibleCheckboxes.filter(cb => cb.checked).length;
+                    selectedCountEl.textContent = `${selectedCount} ${t.toolsSelected}`;
+                    selectAllCheckbox.checked = selectedCount === visibleCheckboxes.length && selectedCount > 0;
+                };
+
+                const applyFilters = () => {
+                    toolsListContainer.querySelectorAll('.pricing-tool-row').forEach(row => {
+                        const matchesCategory = currentCategoryFilter === 'All' || row.dataset.category === currentCategoryFilter;
+                        row.style.display = matchesCategory ? 'flex' : 'none';
+                    });
+                    updateUI();
+                };
+
+                selectAllCheckbox.addEventListener('change', (e) => {
+                    const visibleCheckboxes = Array.from(document.querySelectorAll('.tool-pricing-checkbox')).filter(cb => {
+                        const row = cb.closest('.pricing-tool-row');
+                        return row && row.style.display !== 'none';
+                    });
+                    visibleCheckboxes.forEach(cb => cb.checked = e.target.checked);
+                    updateUI();
+                });
+
+                toolsListContainer.addEventListener('change', (e) => {
+                    if (e.target.classList.contains('tool-pricing-checkbox')) {
+                        updateUI();
+                    }
+                });
+
+                categoryFiltersContainer.addEventListener('click', (e) => {
+                    const filterBtn = e.target.closest('[data-action="filter-pricing-category"]');
+                    if (filterBtn) {
+                        currentCategoryFilter = filterBtn.dataset.category;
+                        categoryFiltersContainer.querySelectorAll('.pill-btn').forEach(btn => btn.classList.remove('active'));
+                        filterBtn.classList.add('active');
+                        applyFilters();
+                    }
+                });
+            };
+
+            // NUOVA FUNZIONE: Imposta il prezzo per le AI selezionate
+            const handleSetPricingType = async (pricingType) => {
+                if (currentUser.role !== 'admin') return;
+                const t = translations[currentLanguage];
+
+                const selectedCheckboxes = document.querySelectorAll('.tool-pricing-checkbox:checked');
+                const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.dataset.id);
+
+                if (selectedIds.length === 0) {
+                    showToast("Seleziona almeno una AI.");
+                    return;
+                }
+
+                try {
+                    // Update pricing for all selected tools
+                    const updatePromises = selectedIds.map(id => 
+                        updateDoc(doc(db, "tools", id), { pricing: pricingType })
+                    );
+                    await Promise.all(updatePromises);
+
+                    const successMsg = t.pricingUpdatedSuccess.replace('%d', selectedIds.length);
+                    showToast(successMsg);
+                    closeModal();
+
+                    // Reload data and view
+                    aiToolsData = await fetchToolsFromFirestore();
+                    renderView();
+
+                } catch (error) {
+                    console.error("Errore nell'aggiornamento dei prezzi:", error);
+                    showToast(`Errore: ${error.message}`);
+                }
+            };
+
             // Elimina una classifica
             const handleDeleteRanking = async (rankingId) => {
                 const t = translations[currentLanguage];
@@ -12137,6 +12488,7 @@
                     logoUrl: document.getElementById('edit-global-tool-logo').value.trim(),
                     category: document.getElementById('edit-global-tool-category').value,
                     country: document.getElementById('edit-global-tool-country').value.trim(),
+                    pricing: document.getElementById('edit-global-tool-pricing').value || null,
                     isFeatured: existingTool.isFeatured || false
                 };
 
@@ -12163,6 +12515,33 @@
                     showToast(`Errore: ${error.message}`);
                 }
             };
+
+            // NUOVA FUNZIONE: Elimina uno strumento globale da Firestore
+            const handleDeleteGlobalTool = async (toolId) => {
+                if (currentUser.role !== 'admin' || !toolId) return;
+
+                const t = translations[currentLanguage];
+                const confirmDelete = confirm(t.confirmDeleteTool || 'Sei sicuro di voler eliminare questo strumento AI?');
+                
+                if (!confirmDelete) return;
+
+                try {
+                    const toolDocRef = doc(db, "tools", toolId);
+                    await deleteDoc(toolDocRef);
+
+                    showToast(t.toolDeletedSuccess || "Strumento AI eliminato con successo!");
+                    closeModal();
+
+                    // Ricarica i dati e la vista
+                    aiToolsData = await fetchToolsFromFirestore();
+                    renderView();
+
+                } catch (error) {
+                    console.error("Errore nell'eliminazione dello strumento:", error);
+                    showToast(`Errore: ${error.message}`);
+                }
+            };
+
             // NUOVA FUNZIONE: Salva il nuovo strumento globale su Firestore
             const handleAddGlobalTool = async () => {
                 console.log('handleAddGlobalTool called');
@@ -12305,6 +12684,20 @@
                         case 'save-feature-toggles':
                             handleSaveFeatureToggles();
                             break;
+                        case 'open-delete-multiple-tools-modal':
+                            closeUserProfileDropdown();
+                            openDeleteMultipleToolsModal();
+                            break;
+                        case 'delete-selected-tools':
+                            handleDeleteSelectedTools();
+                            break;
+                        case 'open-manage-pricing-modal':
+                            closeUserProfileDropdown();
+                            openManagePricingModal();
+                            break;
+                        case 'set-pricing-type':
+                            handleSetPricingType(actionTarget.dataset.pricing);
+                            break;
                         // ADMIN: MANAGE ALTERNATIVES
                         case 'open-manage-alternatives-modal':
                             closeUserProfileDropdown();
@@ -12339,6 +12732,9 @@
                         case 'submit-edit-global-tool':
                             console.log('submit-edit-global-tool action triggered');
                             handleEditGlobalTool(actionTarget.dataset.id);
+                            break;
+                        case 'delete-global-tool':
+                            handleDeleteGlobalTool(actionTarget.dataset.id);
                             break;
                         case 'navigate-to-optimizer':
                             const optimizer = document.getElementById('optimizer-overlay');
