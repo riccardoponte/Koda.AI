@@ -7691,6 +7691,11 @@
                     videoDescPlaceholder: "Breve descrizione del video...",
                     videoLinkLabel: "Link Video YouTube",
                     videoLinkPlaceholder: "https://www.youtube.com/watch?v=...",
+                    videoCategoryLabel: "Categoria",
+                    categoryTutorial: "Tutorial",
+                    categoryEducation: "Istruzione",
+                    categoryDevelopment: "Sviluppo",
+                    categoryNews: "News",
                     addVideoButton: "Aggiungi Video",
                     videoAddedSuccess: "Video aggiunto con successo!",
                     invalidYoutubeUrl: "Per favore, inserisci un link YouTube valido.",
@@ -7925,6 +7930,11 @@
                     videoDescPlaceholder: "Brief description of the video...",
                     videoLinkLabel: "YouTube Video Link",
                     videoLinkPlaceholder: "https://www.youtube.com/watch?v=...",
+                    videoCategoryLabel: "Category",
+                    categoryTutorial: "Tutorial",
+                    categoryEducation: "Education",
+                    categoryDevelopment: "Development",
+                    categoryNews: "News",
                     addVideoButton: "Add Video",
                     videoAddedSuccess: "Video added successfully!",
                     invalidYoutubeUrl: "Please enter a valid YouTube link.",
@@ -11364,6 +11374,15 @@
                             <label for="video-link">${t.videoLinkLabel}</label>
                             <input type="url" id="video-link" placeholder="${t.videoLinkPlaceholder}">
                         </div>
+                        <div class="input-group">
+                            <label for="video-category">${t.videoCategoryLabel || 'Categoria'}</label>
+                            <select id="video-category" style="width: 100%; padding: 12px; border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 8px; background-color: var(--spotify-bg-light); color: var(--spotify-text); font-family: inherit; font-size: 14px;">
+                                <option value="tutorial">${t.categoryTutorial || 'Tutorial'}</option>
+                                <option value="education">${t.categoryEducation || 'Istruzione'}</option>
+                                <option value="development">${t.categoryDevelopment || 'Sviluppo'}</option>
+                                <option value="news">${t.categoryNews || 'News'}</option>
+                            </select>
+                        </div>
                         <button class="button" data-action="submit-video">${t.addVideoButton}</button>
                     </div>
                 </div>
@@ -11375,6 +11394,14 @@
                 if (currentUser.role !== 'admin') return;
                 const t = translations[currentLanguage];
 
+                const categoryValue = document.getElementById('video-category').value;
+                const categoryTranslations = {
+                    tutorial: { it: 'Tutorial', en: 'Tutorial' },
+                    education: { it: 'Istruzione', en: 'Education' },
+                    development: { it: 'Sviluppo', en: 'Development' },
+                    news: { it: 'News', en: 'News' }
+                };
+
                 const newVideoData = {
                     title: document.getElementById('video-title').value.trim(),
                     description: {
@@ -11382,6 +11409,8 @@
                         en: document.getElementById('video-desc-en').value.trim(),
                     },
                     youtubeUrl: document.getElementById('video-link').value.trim(),
+                    category: categoryValue,
+                    categoryLabel: categoryTranslations[categoryValue],
                     createdAt: serverTimestamp(),
                     order: Date.now() // Aggiunge un valore di ordine per posizionarlo alla fine
                 };
@@ -11441,6 +11470,15 @@
                                 <label for="edit-video-link">${t.videoLinkLabel}</label>
                                 <input type="url" id="edit-video-link" value="${videoToEdit.youtubeUrl}">
                             </div>
+                            <div class="input-group">
+                                <label for="edit-video-category">${t.videoCategoryLabel || 'Categoria'}</label>
+                                <select id="edit-video-category" style="width: 100%; padding: 12px; border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 8px; background-color: var(--spotify-bg-light); color: var(--spotify-text); font-family: inherit; font-size: 14px;">
+                                    <option value="tutorial" ${videoToEdit.category === 'tutorial' ? 'selected' : ''}>${t.categoryTutorial || 'Tutorial'}</option>
+                                    <option value="education" ${videoToEdit.category === 'education' ? 'selected' : ''}>${t.categoryEducation || 'Istruzione'}</option>
+                                    <option value="development" ${videoToEdit.category === 'development' ? 'selected' : ''}>${t.categoryDevelopment || 'Sviluppo'}</option>
+                                    <option value="news" ${videoToEdit.category === 'news' ? 'selected' : ''}>${t.categoryNews || 'News'}</option>
+                                </select>
+                            </div>
                             <button class="button" data-action="submit-video-edit" data-id="${videoId}">${t.saveChanges}</button>
                         </div>
                     </div>
@@ -11452,6 +11490,14 @@
                 if (currentUser.role !== 'admin') return;
                 const t = translations[currentLanguage];
 
+                const categoryValue = document.getElementById('edit-video-category').value;
+                const categoryTranslations = {
+                    tutorial: { it: 'Tutorial', en: 'Tutorial' },
+                    education: { it: 'Istruzione', en: 'Education' },
+                    development: { it: 'Sviluppo', en: 'Development' },
+                    news: { it: 'News', en: 'News' }
+                };
+
                 const updatedData = {
                     title: document.getElementById('edit-video-title').value.trim(),
                     description: {
@@ -11459,6 +11505,8 @@
                         en: document.getElementById('edit-video-desc-en').value.trim(),
                     },
                     youtubeUrl: document.getElementById('edit-video-link').value.trim(),
+                    category: categoryValue,
+                    categoryLabel: categoryTranslations[categoryValue],
                 };
 
                 if (!updatedData.title || !updatedData.youtubeUrl) {
