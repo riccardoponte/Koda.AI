@@ -11704,6 +11704,24 @@
                                 <input type="text" id="global-tool-country" placeholder="${t.countryPlaceholder}">
                             </div>
 
+                            <div class="input-group">
+                                <label for="global-tool-pricing">${t.setPricing}</label>
+                                <select id="global-tool-pricing">
+                                    <option value="">-</option>
+                                    <option value="free">${t.pricingFree}</option>
+                                    <option value="freemium">${t.pricingFreemium}</option>
+                                    <option value="paid">${t.pricingPaid}</option>
+                                </select>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="global-tool-alternative">${t.currentAlternative}</label>
+                                <select id="global-tool-alternative">
+                                    <option value="">${t.noAlternative}</option>
+                                    ${aiToolsData.sort((a, b) => a.name.localeCompare(b.name)).map(tool => `<option value="${tool.id}">${tool.name}</option>`).join('')}
+                                </select>
+                            </div>
+
                             <button class="button" data-action="submit-global-tool">${t.saveToDatabase}</button>
                         </div>
                     </div>
@@ -12587,6 +12605,9 @@
 
                 // Rimosso il tentativo di leggere un ID inesistente.
 
+                const pricingValue = document.getElementById('global-tool-pricing').value;
+                const alternativeValue = document.getElementById('global-tool-alternative').value;
+
                 const newToolData = {
                     // L'ID non viene più specificato qui. Verrà generato da Firestore.
                     name: document.getElementById('global-tool-name').value.trim(),
@@ -12598,8 +12619,14 @@
                     logoUrl: document.getElementById('global-tool-logo').value.trim(),
                     category: document.getElementById('global-tool-category').value,
                     country: document.getElementById('global-tool-country').value.trim(),
+                    pricing: pricingValue || null,
                     isFeatured: false // Valore di default per i nuovi strumenti
                 };
+
+                // Aggiungi recommendationId solo se è stato selezionato
+                if (alternativeValue) {
+                    newToolData.recommendationId = alternativeValue;
+                }
 
                 // Validazione base
                 if (!newToolData.name || !newToolData.website || !newToolData.logoUrl) {
