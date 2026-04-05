@@ -5496,12 +5496,7 @@
     </div>
     <nav id="bottom-nav">
         <!-- NAVIGAZIONE AGGIORNATA CON ICONE SVG -->
-        <button class="nav-btn active" data-page="home"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg"
-                    height="24" viewBox="0 0 24 24" width="24" fill="currentColor">
-                    <path d="M0 0h24v24H0z" fill="none" />
-                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
-                </svg></span><span data-translate="navHome">Home</span></button>
-        <button class="nav-btn" data-page="top-ai"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg"
+        <button class="nav-btn active" data-page="top-ai"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg"
                     height="24" viewBox="0 0 24 24" width="24" fill="currentColor">
                     <path d="M0 0h24v24H0z" fill="none" />
                     <path d="M5 9.2h3V19H5zM10.6 5h3v14h-3zm5.6 8H19v6h-2.8z" />
@@ -5512,23 +5507,6 @@
                     <path
                         d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
                 </svg></span><span data-translate="navSearch">Cerca</span></button>
-        <button class="nav-btn" data-page="user-chats" id="nav-btn-user-chats">
-            <span class="icon">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor">
-                    <path d="M0 0h24v24H0z" fill="none" />
-                    <path
-                        d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z" />
-                </svg>
-                <span id="chat-notification-badge" class="notification-badge" style="display: none;"></span>
-            </span>
-            <span data-translate="navUserChats">Chat</span>
-        </button>
-        <button class="nav-btn" data-page="favorites"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg"
-                    height="24" viewBox="0 0 24 24" width="24" fill="currentColor">
-                    <path d="M0 0h24v24H0z" fill="none" />
-                    <path
-                        d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" />
-                </svg></span><span data-translate="navLibrary">Libreria</span></button>
         <button class="nav-btn" data-page="news"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="24"
                     viewBox="0 0 24 24" width="24" fill="currentColor">
                     <path d="M0 0h24v24H0z" fill="none" />
@@ -8218,7 +8196,7 @@
             // currentUser will now include Firestore data (favorites, userTools, userFeaturedTools, userFeaturedReplacements)
             // and the privileged status loaded from Firestore
             let currentUser = {};
-            let currentView = 'home';
+            let currentView = 'top-ai';
             let activeFilter = 'All'; // Filter for Favorites page
             let exploreFilter = { type: null, value: null }; // Filter for Explore page
             let rankingFilter = 'All'; // Filter for Top AI page
@@ -8237,8 +8215,6 @@
             const K_BUTTON_CLICK_THRESHOLD = 5;
             const K_BUTTON_CLICK_RESET_DELAY = 500; // ms
 
-            const sunIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79zM1 10.5h3v2H1zM11 .55h2V3.5h-2zm8.04 1.49l1.79-1.8-1.41-1.41-1.8 1.79zM20 10.5h3v2h-3zm-9.24 10.96l1.8 1.79 1.41-1.41-1.79-1.79zm-6.36-1.8l-1.79 1.8 1.41 1.41 1.8-1.79zM12 5.5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/></svg>`;
-            const moonIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M9.37 5.51A7.35 7.35 0 009.1 7.5c0 4.08 3.32 7.4 7.4 7.4.68 0 1.35-.09 1.99-.27C17.45 17.19 14.93 19 12 19c-3.86 0-7-3.14-7-7 0-2.93 1.81-5.45 4.37-6.49z"/></svg>`;
             // Pencil icon SVG for editing
             const pencilIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M14.06 9.02l.92.92L5.92 18H5v-.92l9.06-9.06zm4.6-4.6l-1.39-1.39c-.2-.2-.51-.2-.71 0l-1.83 1.83 3.29 3.29 1.83-1.83c.2-.2.2-.51 0-.71zM3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"/></svg>`;
             const smallPencilIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>`;
@@ -9046,9 +9022,6 @@
             };
 
             const getGlobalControlsHTML = (options = {}) => {
-                const { includeLangToggle = true } = options;
-
-                const themeIcon = currentTheme === 'dark' ? sunIcon : moonIcon;
                 const isGuest = !currentUser.uid;
                 const userInitial = isGuest ? '?' : (currentUser.nickname ? currentUser.nickname.charAt(0).toUpperCase() : 'U');
 
@@ -9140,16 +9113,6 @@
     </button>
 `;
 
-                otherControlsHTML += `
-<button id="theme-toggle-btn" class="global-btn" data-action="toggle-theme">${themeIcon}</button>
-`;
-
-                if (includeLangToggle) {
-                    otherControlsHTML += `
-    <button id="lang-toggle-btn" class="global-btn" data-action="toggle-lang">${currentLanguage.toUpperCase()}</button>
-`;
-                }
-
                 // Return as an object to pass to React
                 return { avatar: avatarHTML, otherControls: otherControlsHTML };
             };
@@ -9178,59 +9141,20 @@
                 const isPrivileged = currentUser.uid && currentUser.isPrivileged;
                 const pageTitles = { home: t.pageTitleHome, 'top-ai': t.pageTitleTopAI, search: t.pageTitleSearch, 'search-users': t.pageTitleSearchUsers, 'user-chats': t.pageTitleUserChats, favorites: t.pageTitleLibrary };
 
-                // Top bar is only rendered for non-home views
-                if (currentView !== 'home') {
-                    const globalControls = getGlobalControlsHTML();
-                    const pageTitle = pageTitles[currentView] || currentView;
-                    // MODIFICATO: Usa la stessa struttura e classi della barra della chat per coerenza
-                    const topBarHTML = `<div class="user-chat-header">
+                // Render top bar for all views
+                const globalControls = getGlobalControlsHTML();
+                const pageTitle = pageTitles[currentView] || currentView;
+                const topBarHTML = `<div class="user-chat-header">
                     <div id="profile-avatar-menu" style="margin-left: 8px;">${globalControls.avatar}</div>
                     <div class="user-chat-info" style="flex-grow: 1;"><h3>${pageTitle}</h3></div>
                     <div id="global-controls">${globalControls.otherControls}</div>
                 </div>`;
-                    el.mainContent.insertAdjacentHTML('beforeend', topBarHTML);
-                }
+                el.mainContent.insertAdjacentHTML('beforeend', topBarHTML);
 
                 const contentArea = document.createElement('div');
                 contentArea.id = 'content-area';
 
-                if (currentView === 'home') {
-                    // Add the same header structure as other pages for consistency
-                    const globalControls = getGlobalControlsHTML();
-                    const pageTitle = pageTitles[currentView] || currentView;
-                    const topBarHTML = `<div class="user-chat-header">
-                    <button id="menu-toggle-btn" class="chat-header-btn" title="Chat History" data-action="toggle-menu">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
-                    </button>
-                    <div id="profile-avatar-menu" style="margin-left: 8px;">${globalControls.avatar}</div>
-                    <div class="user-chat-info" style="flex-grow: 1;"><h3>${pageTitle}</h3></div>
-                    <div id="global-controls">${globalControls.otherControls}</div>
-                </div>`;
-                    el.mainContent.insertAdjacentHTML('beforeend', topBarHTML);
-
-                    // Chatbot view handles its own header and global controls via React prop
-                    el.mainContent.innerHTML += `<div id="chatbot-container-wrapper"></div>`;
-                    const chatbotContainer = document.getElementById('chatbot-container-wrapper');
-                    if (window.mountChatbotApp) {
-                        reactRoot = window.mountChatbotApp(chatbotContainer, {
-                            tools: allTools, // Pass all tools to chatbot for recommendations
-                            initialConversations: conversations,
-                            initialActiveId: activeConversationId,
-                            onConversationsChange: (newConvos) => {
-                                saveConversations(newConvos);
-                                if (el.sideMenu.classList.contains('visible')) {
-                                    renderSideMenu();
-                                }
-                            },
-                            onOpenDetail: window.openDetailModal,
-                            lang: currentLanguage,
-                            pageTitle: pageTitles[currentView], // <-- RIGA AGGIUNTA
-                            globalControlsHTML: getGlobalControlsHTML() // Pass controls HTML to React app
-                        });
-                    } else {
-                        console.error("Chatbot mount function not found.");
-                    }
-                } else if (currentView === 'top-ai') {
+                if (currentView === 'top-ai') {
 
                     // Limita a 4 le AI In evidenza
                     const featuredTools = staticTools.filter(t => t.isFeatured).slice(0, 4); // Solo 4 AI In evidenza
@@ -9403,152 +9327,11 @@
                     `;
                     }
                     el.mainContent.appendChild(contentArea);
-                } else if (currentView === 'user-chats') {
-                    if (isGuest) {
-                        contentArea.innerHTML = `
-                        <div class="auth-prompt-card">
-                            <h3 data-translate="chatPromptTitle">${t.chatPromptTitle}</h3>
-                            <p data-translate="chatPromptText">${t.chatPromptText}</p>
-                            <div class="auth-prompt-actions">
-                                <button class="button" data-action="prompt-login" data-translate="loginButton">${t.loginButton}</button>
-                                <button class="pill-btn" data-action="prompt-register" data-translate="registerButton">${t.registerButton}</button>
-                            </div>
-                        </div>
-                    `;
-                        el.mainContent.appendChild(contentArea); // Aggiungi il prompt solo se l'utente è ospite
-                    } else {
-                        // Per l'utente loggato, monta l'app React direttamente senza aggiungere altro
-                        el.mainContent.innerHTML = `<div id="user-chat-container-wrapper"></div>`;
-                        const userChatContainer = document.getElementById('user-chat-container-wrapper');
-                        if (window.mountUserChatApp) {
-                            reactRoot = window.mountUserChatApp(userChatContainer, {
-                                currentUser: currentUser,
-                                onOpenDetail: window.openDetailModal,
-                                lang: currentLanguage,
-                                globalControlsHTML: getGlobalControlsHTML({ includeLangToggle: true })
-                            });
-                        } else {
-                            console.error("User chat mount function not found.");
-                        }
-                    }
-                } else if (currentView === 'favorites') { // NUOVO: Vista Libreria stile Spotify
-                    if (isGuest) {
-                        contentArea.innerHTML = `
-                        <div class="auth-prompt-card">
-                            <h3 data-translate="libraryPromptTitle">${t.libraryPromptTitle}</h3>
-                            <p data-translate="libraryPromptText">${t.libraryPromptText}</p>
-                            <div class="auth-prompt-actions">
-                                <button class="button" data-action="prompt-login" data-translate="loginButton">${t.loginButton}</button>
-                                <button class="pill-btn" data-action="prompt-register" data-translate="registerButton">${t.registerButton}</button>
-                            </div>
-                        </div>
-                    `;
-                    } else {
-                        // --- STRUTTURA LIBRERIA CON FILTRI ---
-                        const filtersHTML = `
-                        <div id="library-filters-container">
-                            <div class="filter-pills" id="library-filters">
-                                <button class="pill-btn ${libraryTab === 'favorites' ? 'active' : ''}" data-action="set-library-tab" data-tab="favorites">${t.libraryFavorites}</button>
-                                <button class="pill-btn ${libraryTab === 'custom' ? 'active' : ''}" data-action="set-library-tab" data-tab="custom">${t.libraryCustom}</button>
-                                <button class="pill-btn ${libraryTab === 'suggested' ? 'active' : ''}" data-action="set-library-tab" data-tab="suggested">${t.librarySuggested}</button>
-                            </div>
-                        </div>
-                    `;
-
-                        const contentListHTML = `<div id="library-content-list" class="list-container" style="padding: 0 16px;"></div>`;
-
-                        // FABs per aggiungere contenuti
-                        const actionButtonsHTML = `
-                        <button class="floating-action-btn" data-action="open-add-app-modal" title="${t.addCustomApp}" style="bottom: calc(var(--bottom-nav-height) + 16px);">
-                           <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"></path></svg>
-                        </button>
-                        <button class="floating-action-btn" data-action="add-ai-suggestion" title="${t.addAiSuggestionTitle}" style="bottom: calc(var(--bottom-nav-height) + 88px);">
-                             <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"></path></svg>
-                        </button>
-                    `;
-
-                        contentArea.innerHTML = filtersHTML + contentListHTML + actionButtonsHTML;
-
-                        // --- FUNZIONE PER RENDERIZZARE IL CONTENUTO DELLA SCHEDA ATTIVA ---
-                        const renderLibraryContent = async (tab) => {
-                            const listContainer = document.getElementById('library-content-list');
-                            if (!listContainer) return;
-                            listContainer.innerHTML = `<div class="chat-bubble loading" style="margin: 40px auto; background: transparent;"><span></span><span></span><span></span></div>`;
-
-                            let contentHTML = '';
-
-                            if (tab === 'favorites') {
-                                const favoriteIds = currentUser.favorites || [];
-                                if (favoriteIds.length > 0) {
-                                    // Logica asincrona per recuperare i dati completi dei preferiti
-                                    const localTools = getAllToolsForCurrentUser();
-                                    const fetchedUsersCache = new Map();
-                                    const favoriteToolsPromises = favoriteIds.map(async (toolId) => {
-                                        let tool = localTools.find(t => t.id === toolId);
-                                        if (tool) return tool;
-                                        if (toolId.startsWith('user-')) {
-                                            const creatorId = toolId.split('-')[1];
-                                            if (!creatorId) return null;
-                                            let creatorData = fetchedUsersCache.get(creatorId);
-                                            if (!creatorData) {
-                                                const userDocRef = doc(db, "users", creatorId);
-                                                const userDocSnap = await getDoc(userDocRef);
-                                                creatorData = userDocSnap.exists() ? userDocSnap.data() : null;
-                                                fetchedUsersCache.set(creatorId, creatorData);
-                                            }
-                                            if (creatorData) return (creatorData.userTools || []).find(t => t.id === toolId) || null;
-                                        }
-                                        return null;
-                                    });
-                                    const resolvedFavoriteTools = (await Promise.all(favoriteToolsPromises)).filter(Boolean);
-                                    contentHTML = resolvedFavoriteTools.map(tool => createListCard(tool, 'favorites')).join('');
-                                } else {
-                                    contentHTML = `<div id="empty-state">${t.emptyFavorites}</div>`;
-                                }
-                            } else if (tab === 'custom') {
-                                const userTools = currentUser.userTools || [];
-                                if (userTools.length > 0) {
-                                    contentHTML = userTools.map(tool => createListCard(tool, 'custom')).join('');
-                                } else {
-                                    contentHTML = `<div id="empty-state">${t.emptyUserTools}</div>`;
-                                }
-                            } else if (tab === 'suggested') {
-                                const suggestions = currentUser.aiSuggestions || [];
-                                if (suggestions.length > 0) {
-                                    contentHTML = suggestions.map(s => `
-                                    <div class="suggestion-list-item" data-id="${s.id}">
-                                        <div class="suggestion-list-info">
-                                            <div class="suggestion-list-app-name">${s.appName}</div>
-                                            <div class="suggestion-list-desc">${s.description}</div>
-                                        </div>
-                                        <div class="suggestion-list-actions">
-                                            <button class="remove-suggestion-btn" data-action="remove-ai-suggestion" data-id="${s.id}" title="${t.removeAiSuggestion}">
-                                                <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
-                                            </button>
-                                        </div>
-                                    </div>`).join('');
-                                } else {
-                                    contentHTML = `<div id="empty-state">${t.noSuggestions}</div>`;
-                                }
-                            }
-                            listContainer.innerHTML = contentHTML;
-                        };
-
-                        // Renderizza il contenuto della scheda iniziale, con un timeout per garantire che il DOM sia pronto
-                        setTimeout(() => renderLibraryContent(libraryTab), 0);
-                    }
-                    el.mainContent.appendChild(contentArea);
                 }
 
                 // NUOVO: Carica le valutazioni degli strumenti dopo aver renderizzato la vista (se abilitate)
                 if (featureSettings.isRatingsEnabled) {
                     setTimeout(() => loadToolRatings(), 500);
-                }
-
-                // NUOVO: Nascondi/mostra il pulsante della chat in base alle impostazioni
-                const chatNavBtn = document.getElementById('nav-btn-user-chats');
-                if (chatNavBtn) {
-                    chatNavBtn.style.display = featureSettings.isChatEnabled ? 'flex' : 'none';
                 }
 
                 updateNavActiveState();
@@ -11699,11 +11482,14 @@
                     <div class="sent-review-item" style="display:flex; justify-content:space-between; align-items:center;">
                         <div style="flex:1; overflow:hidden;">
                             <strong style="display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${news.title}</strong>
-                            <span style="font-size:12px; color:var(--Koda-text-secondary);">${news.timestamp ? new Date(news.timestamp.seconds * 1000).toLocaleDateString() : ''}</span>
+                            <span style="font-size:12px; color:var(--spotify-text-secondary);">${news.timestamp ? new Date(news.timestamp.seconds * 1000).toLocaleDateString() : ''}</span>
                         </div>
                         <div class="sent-review-actions">
+                            <button class="ranking-action-btn edit" data-action="edit-news" data-id="${news.id}" title="Modifica">
+                                ${smallPencilIcon}
+                            </button>
                             <button class="ranking-action-btn delete" data-action="delete-news" data-id="${news.id}" title="Elimina">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                                ${trashIcon}
                             </button>
                         </div>
                     </div>
@@ -11717,7 +11503,7 @@
                         <div style="margin-top: 24px; max-height: 40vh; overflow-y: auto;">${newsListHTML || '<p>Nessuna news presente.</p>'}</div>
                         
                         <hr style="border:0; border-top:1px solid rgba(128,128,128,0.2); margin:24px 0;">
-                        <h3>Aggiungi Nuova News</h3>
+                        <h3 id="news-form-title">Aggiungi Nuova News</h3>
                         <div class="add-ai-form">
                             <div class="input-group">
                                 <label>Titolo Notizia</label>
@@ -11728,18 +11514,55 @@
                                 <textarea id="news-content" placeholder="Scrivi il contenuto..."></textarea>
                             </div>
                             <div class="input-group">
-                                <label>Immagine (URL Verticale Consigliata)</label>
+                                <label>Immagine del post</label>
                                 <input type="url" id="news-image" placeholder="https://...">
                             </div>
-                            <div class="input-group">
-                                <label>Link Approfondimento (Opzionale)</label>
-                                <input type="url" id="news-source" placeholder="https://...">
+                            <div style="display: flex; gap: 12px; margin-top: 16px;">
+                                <button class="button" id="submit-news-btn" data-action="submit-news" style="flex: 2;">Pubblica Notizia</button>
+                                <button class="button" id="cancel-edit-news-btn" data-action="cancel-edit-news" style="flex: 1; background-color: var(--spotify-card); color: var(--spotify-text); display: none;">Annulla</button>
                             </div>
-                            <button class="button" data-action="submit-news">Pubblica Notizia</button>
                         </div>
                     </div>
                 </div>`;
                 el.modalContainer.innerHTML = modalHTML;
+            };
+
+            const handleEditNews = (newsId) => {
+                const newsToEdit = newsData.find(n => n.id === newsId);
+                if (!newsToEdit) return;
+
+                // Popola i campi
+                document.getElementById('news-title').value = newsToEdit.title || '';
+                document.getElementById('news-content').value = newsToEdit.content || '';
+                document.getElementById('news-image').value = newsToEdit.imageUrl || '';
+                document.getElementById('news-source').value = newsToEdit.sourceUrl || '';
+
+                // Modifica l'UI per lo stato di "Modifica"
+                document.getElementById('news-form-title').textContent = "Modifica Notizia";
+                const submitBtn = document.getElementById('submit-news-btn');
+                submitBtn.textContent = "Salva Modifiche";
+                submitBtn.dataset.editId = newsId; // Salviamo l'ID da modificare
+                
+                document.getElementById('cancel-edit-news-btn').style.display = "block";
+
+                // Scrolla verso il form
+                document.getElementById('news-form-title').scrollIntoView({ behavior: 'smooth' });
+            };
+
+            const cancelEditNews = () => {
+                // Svuota i campi
+                document.getElementById('news-title').value = '';
+                document.getElementById('news-content').value = '';
+                document.getElementById('news-image').value = '';
+                document.getElementById('news-source').value = '';
+
+                // Ripristina l'UI allo stato di "Aggiunta"
+                document.getElementById('news-form-title').textContent = "Aggiungi Nuova News";
+                const submitBtn = document.getElementById('submit-news-btn');
+                submitBtn.textContent = "Pubblica Notizia";
+                delete submitBtn.dataset.editId; // Rimuove l'ID
+
+                document.getElementById('cancel-edit-news-btn').style.display = "none";
             };
 
             const handleSubmitNews = async () => {
@@ -11749,6 +11572,8 @@
                 const content = document.getElementById('news-content').value.trim();
                 const imageUrl = document.getElementById('news-image').value.trim();
                 const sourceUrl = document.getElementById('news-source').value.trim();
+                const submitBtn = document.getElementById('submit-news-btn');
+                const editId = submitBtn.dataset.editId; // Controlla se siamo in modalità modifica
 
                 if (!title || !content || !imageUrl) {
                     showToast("Titolo, Contenuto e Immagine sono obbligatori.");
@@ -11756,19 +11581,33 @@
                 }
 
                 try {
-                    await addDoc(collection(db, "news"), {
-                        title,
-                        content,
-                        imageUrl,
-                        sourceUrl: sourceUrl || null,
-                        timestamp: serverTimestamp()
-                    });
-                    showToast("Notizia pubblicata!");
+                    if (editId) {
+                        // Modifica
+                        await updateDoc(doc(db, "news", editId), {
+                            title,
+                            content,
+                            imageUrl,
+                            sourceUrl: sourceUrl || null
+                            // Non aggiorniamo il timestamp per mantenere l'ordine originale
+                        });
+                        showToast("Notizia aggiornata con successo!");
+                    } else {
+                        // Creazione
+                        await addDoc(collection(db, "news"), {
+                            title,
+                            content,
+                            imageUrl,
+                            sourceUrl: sourceUrl || null,
+                            timestamp: serverTimestamp()
+                        });
+                        showToast("Notizia pubblicata!");
+                    }
+                    
                     newsData = await fetchNewsFromFirestore(); // Aggiorna dati locali
-                    openManageNewsModal(); // Ricarica il modale
+                    openManageNewsModal(); // Ricarica il modale (che resetta anche il form)
                 } catch (error) {
-                    console.error("Errore pubblicazione news:", error);
-                    showToast("Errore durante la pubblicazione.");
+                    console.error("Errore salvataggio news:", error);
+                    showToast("Errore durante il salvataggio.");
                 }
             };
 
@@ -12875,8 +12714,8 @@
                     currentView = event.state.page;
                     renderView();
                 } else {
-                    // If no state is found (e.g., initial page load), default to home
-                    currentView = 'home';
+                    // If no state is found (e.g., initial page load), default to top-ai
+                    currentView = 'top-ai';
                     renderView();
                 }
             });
@@ -12924,6 +12763,12 @@
                             break;
                         case 'submit-news':
                             handleSubmitNews();
+                            break;
+                        case 'edit-news':
+                            handleEditNews(actionTarget.dataset.id);
+                            break;
+                        case 'cancel-edit-news':
+                            cancelEditNews();
                             break;
                         case 'delete-news':
                             handleDeleteNews(actionTarget.dataset.id);
@@ -13084,41 +12929,6 @@
                             }
                             break;
                         // Global Controls
-                        case 'toggle-theme':
-                            // Cambia il tema
-                            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                            document.body.classList.toggle('light-mode', currentTheme === 'light');
-                            localStorage.setItem('koda-theme', currentTheme);
-
-                            // Aggiorna l'icona del tema manually senza ri-renderizzare tutto
-                            const themeBtn = document.getElementById('theme-toggle-btn');
-                            if (themeBtn) {
-                                themeBtn.innerHTML = currentTheme === 'dark' ? sunIcon : moonIcon;
-                            }
-                            break;
-                        case 'toggle-lang':
-                            // Cambia la lingua a livello globale
-                            currentLanguage = currentLanguage === 'it' ? 'en' : 'it';
-                            localStorage.setItem('koda-lang', currentLanguage);
-
-                            // Aggiorna il testo del pulsante stesso
-                            const langBtn = document.getElementById('lang-toggle-btn');
-                            if (langBtn) {
-                                langBtn.textContent = currentLanguage.toUpperCase();
-                            }
-
-                            // Applica le traduzioni agli elementi HTML non gestiti da React
-                            applyTranslations(currentLanguage);
-
-                            // **NUOVA LOGICA:** Se siamo nella vista chat e la funzione-ponte esiste,
-                            // la usiamo per aggiornare lo stato interno di React senza ricaricare.
-                            if (currentView === 'user-chats' && typeof window.updateUserChatLanguage === 'function') {
-                                window.updateUserChatLanguage(currentLanguage);
-                            } else {
-                                // Altrimenti, per tutte le altre pagine, eseguiamo un re-render completo
-                                renderView();
-                            }
-                            break;
                         case 'toggle-menu':
                             toggleSideMenu(true);
                             break;
@@ -13488,15 +13298,15 @@
                 // --- INSERT THIS CODE ---
                 // Check the URL hash to set the initial view
                 const initialHash = window.location.hash.substring(1); // e.g., 'explore' from '#explore'
-                const validPages = ['home', 'top-ai', 'explore', 'user-chats', 'favorites']; // Add any other valid page keys here
+                const validPages = ['top-ai', 'explore', 'search-users', 'news']; // Removed home, user-chats, favorites
 
                 if (initialHash && validPages.includes(initialHash)) {
                     currentView = initialHash;
                 } else {
-                    // Default to home view if hash is missing or invalid
-                    currentView = 'home';
+                    // Default to top-ai view if hash is missing or invalid
+                    currentView = 'top-ai';
                     // Use replaceState to set the initial history entry without creating a new one
-                    history.replaceState({ page: 'home' }, '', '#home');
+                    history.replaceState({ page: 'top-ai' }, '', '#top-ai');
                 }
                 // --- END OF INSERTION ---
                 // Carica tutti i dati da Firestore PRIMA di inizializzare l'app
