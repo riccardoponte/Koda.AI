@@ -5153,6 +5153,96 @@
             }
         }
 
+        /* --- STILI PER FEED NEWS (STILE TIKTOK/REELS) --- */
+        .news-feed-container {
+            height: calc(100vh - var(--bottom-nav-height) - 70px);
+            /* Sottrae navbar inferiore e superiore */
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            -ms-overflow-style: none;
+            /* IE and Edge */
+            scrollbar-width: none;
+            /* Firefox */
+            background-color: #000;
+        }
+
+        .news-feed-container::-webkit-scrollbar {
+            display: none;
+            /* Nasconde la scrollbar */
+        }
+
+        .news-item {
+            height: 100%;
+            width: 100%;
+            scroll-snap-align: start;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .news-overlay {
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.6) 40%, transparent 100%);
+            padding: 30px 20px;
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            color: #fff;
+        }
+
+        .news-date {
+            font-size: 12px;
+            color: var(--Koda-accent);
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .news-title {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            line-height: 1.2;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .news-content {
+            font-size: 15px;
+            line-height: 1.5;
+            color: #e0e0e0;
+            margin-bottom: 20px;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            /* Mostra massimo 4 righe */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .news-read-more-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .news-read-more-btn:hover {
+            background-color: var(--Koda-accent);
+            color: #000;
+            border-color: var(--Koda-accent);
+        }
+
+        /* --- STILI PER CATALOGO VIDEO (FULLSCREEN & RESPONSIVE) --- */
         /* --- NUOVI STILI PER CATALOGO VIDEO (FULLSCREEN) --- */
         #video-catalog-modal.modal-overlay {
             padding: 0 !important;
@@ -5439,6 +5529,12 @@
                     <path
                         d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" />
                 </svg></span><span data-translate="navLibrary">Libreria</span></button>
+        <button class="nav-btn" data-page="news"><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" height="24"
+                    viewBox="0 0 24 24" width="24" fill="currentColor">
+                    <path d="M0 0h24v24H0z" fill="none" />
+                    <path
+                        d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z" />
+                </svg></span><span data-translate="navNews">News</span></button>
     </nav>
     </div>
 
@@ -7994,6 +8090,7 @@
             let aiToolsData = []; // Questa variabile verrà popolata dinamicamente da Firestore
             let aiRankingsData = []; // NUOVO: Questa variabile conterrà i dati delle classifiche da Firestore
             let youtubeVideosData = []; // NUOVO: Conterrà i video da Firebase
+            let newsData = []; // NUOVO: Conterrà le news dal database
             let featureSettings = { isChatEnabled: true, isReviewsEnabled: true, isRatingsEnabled: true }; // NUOVO: Impostazioni per le funzionalità, con fallback
             // NUOVA FUNZIONE per caricare gli strumenti da Firestore
             const fetchToolsFromFirestore = async () => {
@@ -8064,6 +8161,23 @@
                     return firestoreVideos;
                 } catch (error) {
                     console.error("Error fetching videos from Firestore:", error);
+                    return [];
+                }
+            };
+
+            // NUOVA FUNZIONE: Carica le news da Firebase
+            const fetchNewsFromFirestore = async () => {
+                try {
+                    const newsRef = collection(db, "news");
+                    const q = query(newsRef, orderBy("timestamp", "desc"));
+                    const querySnapshot = await getDocs(q);
+                    const firestoreNews = [];
+                    querySnapshot.forEach((doc) => {
+                        firestoreNews.push({ ...doc.data(), id: doc.id });
+                    });
+                    return firestoreNews;
+                } catch (error) {
+                    console.error("Errore nel caricamento delle news:", error);
                     return [];
                 }
             };
@@ -9000,6 +9114,12 @@
             <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor">
                 <path d="M0 0h24v24H0V0z" fill="none"/>
                 <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+            </svg>
+        </button>
+        <button id="admin-manage-news-btn" class="global-btn" data-action="open-manage-news-modal" title="Gestione News">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor">
+                <path d="M0 0h24v24H0z" fill="none"/>
+                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
             </svg>
         </button>
     `;
@@ -11571,7 +11691,103 @@
                 }
             };
 
+            // --- GESTIONE NEWS (ADMIN) ---
+            const openManageNewsModal = () => {
+                if (currentUser.role !== 'admin') return;
 
+                const newsListHTML = newsData.map(news => `
+                    <div class="sent-review-item" style="display:flex; justify-content:space-between; align-items:center;">
+                        <div style="flex:1; overflow:hidden;">
+                            <strong style="display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${news.title}</strong>
+                            <span style="font-size:12px; color:var(--Koda-text-secondary);">${news.timestamp ? new Date(news.timestamp.seconds * 1000).toLocaleDateString() : ''}</span>
+                        </div>
+                        <div class="sent-review-actions">
+                            <button class="ranking-action-btn delete" data-action="delete-news" data-id="${news.id}" title="Elimina">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+
+                const modalHTML = `
+                <div id="manage-news-modal" class="modal-overlay visible">
+                    <div class="modal-content add-ai-modal" style="text-align: left; max-width: 100%; width: 100%; height: 100vh; margin: 0; border-radius: 0; max-height: 100vh; overflow-y: auto;">
+                        <button class="modal-close-btn" data-action="close-modal">×</button>
+                        <h2>Gestione AI News</h2>
+                        <div style="margin-top: 24px; max-height: 40vh; overflow-y: auto;">${newsListHTML || '<p>Nessuna news presente.</p>'}</div>
+                        
+                        <hr style="border:0; border-top:1px solid rgba(128,128,128,0.2); margin:24px 0;">
+                        <h3>Aggiungi Nuova News</h3>
+                        <div class="add-ai-form">
+                            <div class="input-group">
+                                <label>Titolo Notizia</label>
+                                <input type="text" id="news-title" placeholder="Es. Rilasciato GPT-5">
+                            </div>
+                            <div class="input-group">
+                                <label>Testo Notizia</label>
+                                <textarea id="news-content" placeholder="Scrivi il contenuto..."></textarea>
+                            </div>
+                            <div class="input-group">
+                                <label>Immagine (URL Verticale Consigliata)</label>
+                                <input type="url" id="news-image" placeholder="https://...">
+                            </div>
+                            <div class="input-group">
+                                <label>Link Approfondimento (Opzionale)</label>
+                                <input type="url" id="news-source" placeholder="https://...">
+                            </div>
+                            <button class="button" data-action="submit-news">Pubblica Notizia</button>
+                        </div>
+                    </div>
+                </div>`;
+                el.modalContainer.innerHTML = modalHTML;
+            };
+
+            const handleSubmitNews = async () => {
+                if (currentUser.role !== 'admin') return;
+
+                const title = document.getElementById('news-title').value.trim();
+                const content = document.getElementById('news-content').value.trim();
+                const imageUrl = document.getElementById('news-image').value.trim();
+                const sourceUrl = document.getElementById('news-source').value.trim();
+
+                if (!title || !content || !imageUrl) {
+                    showToast("Titolo, Contenuto e Immagine sono obbligatori.");
+                    return;
+                }
+
+                try {
+                    await addDoc(collection(db, "news"), {
+                        title,
+                        content,
+                        imageUrl,
+                        sourceUrl: sourceUrl || null,
+                        timestamp: serverTimestamp()
+                    });
+                    showToast("Notizia pubblicata!");
+                    newsData = await fetchNewsFromFirestore(); // Aggiorna dati locali
+                    openManageNewsModal(); // Ricarica il modale
+                } catch (error) {
+                    console.error("Errore pubblicazione news:", error);
+                    showToast("Errore durante la pubblicazione.");
+                }
+            };
+
+            const handleDeleteNews = async (newsId) => {
+                if (currentUser.role !== 'admin') return;
+                if (!confirm("Sicuro di voler eliminare questa notizia?")) return;
+
+                try {
+                    await deleteDoc(doc(db, "news", newsId));
+                    showToast("Notizia eliminata!");
+                    newsData = await fetchNewsFromFirestore(); // Aggiorna dati locali
+                    openManageNewsModal(); // Ricarica il modale
+                } catch (error) {
+                    console.error("Errore eliminazione news:", error);
+                    showToast("Errore durante l'eliminazione.");
+                }
+            };
+
+            // --- INITIALIZATION LOGIC ---
             // --- INITIALIZATION LOGIC ---
 
             const initializeAppForGuest = () => {
@@ -12703,6 +12919,15 @@
                         case 'open-add-global-tool-modal':
                             openAddGlobalToolModal();
                             break;
+                        case 'open-manage-news-modal':
+                            openManageNewsModal();
+                            break;
+                        case 'submit-news':
+                            handleSubmitNews();
+                            break;
+                        case 'delete-news':
+                            handleDeleteNews(actionTarget.dataset.id);
+                            break;
                         case 'open-manage-rankings-modal':
                             openManageRankingsModal();
                             break;
@@ -13274,12 +13499,12 @@
                     history.replaceState({ page: 'home' }, '', '#home');
                 }
                 // --- END OF INSERTION ---
-                // Carica tutti i dati di configurazione da Firestore PRIMA di inizializzare l'app
-                [aiToolsData, aiRankingsData, featureSettings, youtubeVideosData] = await Promise.all([
+                // Carica tutti i dati da Firestore PRIMA di inizializzare l'app
+                [aiToolsData, aiRankingsData, youtubeVideosData, newsData] = await Promise.all([
                     fetchToolsFromFirestore(),
                     fetchRankingsFromFirestore(),
-                    fetchFeatureSettings(),
-                    fetchVideosFromFirestore() // NUOVA CHIAMATA
+                    fetchVideosFromFirestore(),
+                    fetchNewsFromFirestore()
                 ]);
 
                 if (user) {
