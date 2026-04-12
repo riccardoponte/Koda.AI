@@ -12681,7 +12681,8 @@
                     category: document.getElementById('global-tool-category').value,
                     country: document.getElementById('global-tool-country').value.trim(),
                     pricing: pricingValue || null,
-                    isFeatured: false // Valore di default per i nuovi strumenti
+                    isFeatured: false, // Valore di default per i nuovi strumenti
+                    createdAt: serverTimestamp() // <-- FONDAMENTALE: Salva la data in Firebase
                 };
 
                 // Aggiungi recommendationId solo se è stato selezionato
