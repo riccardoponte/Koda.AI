@@ -1471,6 +1471,17 @@
             padding-top: 24px;
         }
 
+        .tool-features-editor-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .tool-features-language textarea {
+            min-height: 190px;
+            resize: vertical;
+        }
+
         /* Responsive design per il modal */
         @media (max-width: 768px) {
             .add-ai-modal {
@@ -1482,6 +1493,10 @@
 
             .add-ai-form {
                 padding-top: 16px;
+            }
+
+            .tool-features-editor-grid {
+                grid-template-columns: 1fr;
             }
 
             #add-global-tool-modal .input-group,
@@ -6081,32 +6096,71 @@
                 "'": '&#039;'
             })[char]);
 
-            const normalizeToolKeyFeatures = value => {
+            const normalizeToolKeyFeatureEntries = value => {
                 const items = Array.isArray(value)
                     ? value
                     : (typeof value === 'string' ? value.split(/\r?\n|,/) : []);
-                return [...new Set(items.map(item => {
-                    if (typeof item === 'string') return item.trim();
-                    if (!item || typeof item !== 'object') return '';
-                    const label = item.label;
-                    if (typeof label === 'string') return label.trim();
-                    if (label && typeof label === 'object') {
-                        return String(label[currentLanguage] || label.en || label.it || '').trim();
+                const entries = items.map(item => {
+                    if (typeof item === 'string') {
+                        const label = item.trim();
+                        return label ? { it: label, en: label } : null;
                     }
-                    return String(item.name || '').trim();
-                }).filter(Boolean))];
+                    if (!item || typeof item !== 'object') return null;
+                    const label = item.label ?? item.name ?? item;
+                    if (typeof label === 'string') {
+                        const text = label.trim();
+                        return text ? { it: text, en: text } : null;
+                    }
+                    if (!label || typeof label !== 'object') return null;
+                    const fallback = String(Object.values(label).find(value => typeof value === 'string') || '').trim();
+                    const it = String(label.it || label.en || fallback).trim();
+                    const en = String(label.en || label.it || fallback).trim();
+                    return it || en ? { it: it || en, en: en || it } : null;
+                }).filter(Boolean);
+                const seen = new Set();
+                return entries.filter(entry => {
+                    const key = `${entry.it}\u0000${entry.en}`;
+                    if (seen.has(key)) return false;
+                    seen.add(key);
+                    return true;
+                });
             };
 
-            const renderToolFeaturesEditor = (prefix, selected = []) => `
-                <div class="input-group">
-                    <label for="${prefix}-tool-features">Features</label>
-                    <p style="margin:0 0 10px;color:var(--spotify-text-secondary);font-size:12px;line-height:1.45;">${currentLanguage === 'it' ? 'Inserisci una feature verificata per riga.' : 'Enter one verified feature per line.'}</p>
-                    <textarea id="${prefix}-tool-features" rows="8" placeholder="Computer Use&#10;Projects&#10;Desktop app">${escapeToolFeatureHTML(normalizeToolKeyFeatures(selected).join('\n'))}</textarea>
-                </div>`;
+            const normalizeToolKeyFeatures = (value, lang = currentLanguage) => [...new Set(
+                normalizeToolKeyFeatureEntries(value).map(entry => entry[lang] || entry.en || entry.it).filter(Boolean)
+            )];
 
-            const collectToolKeyFeatures = prefix => normalizeToolKeyFeatures(
-                document.getElementById(`${prefix}-tool-features`)?.value || ''
-            );
+            const renderToolFeaturesEditor = (prefix, selected = []) => {
+                const entries = normalizeToolKeyFeatureEntries(selected);
+                return `
+                    <div class="input-group">
+                        <label>Features</label>
+                        <p style="margin:0 0 10px;color:var(--spotify-text-secondary);font-size:12px;line-height:1.45;">${currentLanguage === 'it' ? 'Inserisci una feature verificata per riga e allinea le traduzioni sulla stessa riga.' : 'Enter one verified feature per line and keep translations aligned on the same row.'}</p>
+                        <div class="tool-features-editor-grid">
+                            <div class="tool-features-language">
+                                <label for="${prefix}-tool-features-it">Italiano</label>
+                                <textarea id="${prefix}-tool-features-it" rows="8" placeholder="Uso del computer&#10;Progetti&#10;App desktop">${escapeToolFeatureHTML(entries.map(entry => entry.it).join('\n'))}</textarea>
+                            </div>
+                            <div class="tool-features-language">
+                                <label for="${prefix}-tool-features-en">English</label>
+                                <textarea id="${prefix}-tool-features-en" rows="8" placeholder="Computer use&#10;Projects&#10;Desktop app">${escapeToolFeatureHTML(entries.map(entry => entry.en).join('\n'))}</textarea>
+                            </div>
+                        </div>
+                    </div>`;
+            };
+
+            const collectToolKeyFeatures = prefix => {
+                const readRows = lang => (document.getElementById(`${prefix}-tool-features-${lang}`)?.value || '')
+                    .split(/\r?\n/)
+                    .map(value => value.trim());
+                const italian = readRows('it');
+                const english = readRows('en');
+                return Array.from({ length: Math.max(italian.length, english.length) }, (_, index) => {
+                    const it = italian[index] || english[index] || '';
+                    const en = english[index] || italian[index] || '';
+                    return it || en ? { label: { it, en } } : null;
+                }).filter(Boolean);
+            };
 
             const renderToolSpecializationEditor = (prefix, selected = []) => {
                 const selectedMap = new Map(normalizeToolSpecializations(selected).map(item => [item.type, item.capabilities]));
@@ -6146,7 +6200,10 @@
                     const enabledInput = row.querySelector('[data-specialization-enabled]');
                     const capabilityInputs = [...row.querySelectorAll('[data-specialization-capability]')];
                     enabledInput?.addEventListener('change', () => {
-                        capabilityInputs.forEach(input => { input.disabled = !enabledInput.checked; });
+                        capabilityInputs.forEach(input => {
+                            input.checked = enabledInput.checked;
+                            input.disabled = !enabledInput.checked;
+                        });
                     });
                 });
             };
