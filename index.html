@@ -1099,6 +1099,60 @@
             margin-top: 0;
         }
 
+        #detail-content .tool-features {
+            margin: 0 0 24px;
+            padding: 14px 0;
+            border-top: 1px solid rgba(128, 128, 128, 0.24);
+            border-bottom: 1px solid rgba(128, 128, 128, 0.24);
+            text-align: left;
+        }
+
+        #detail-content .tool-features summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            cursor: pointer;
+            list-style: none;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        #detail-content .tool-features summary::-webkit-details-marker {
+            display: none;
+        }
+
+        #detail-content .tool-features-count {
+            color: var(--spotify-text-secondary);
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        #detail-content .tool-features-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 14px 0 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        #detail-content .tool-features-list li {
+            padding: 7px 10px;
+            border: 1px solid rgba(128, 128, 128, 0.22);
+            border-radius: 6px;
+            background: var(--spotify-bg-light);
+            font-size: 12px;
+            line-height: 1.35;
+        }
+
+        #detail-content .tool-features-empty {
+            margin-top: 12px;
+            color: var(--spotify-text-secondary);
+            font-size: 12px;
+            line-height: 1.45;
+        }
+
         #detail-content .detail-actions {
             display: flex;
             flex-direction: column;
@@ -3990,6 +4044,18 @@
                 const isUserTool = tool.id.startsWith('user-');
                 const isMyUserTool = isUserTool && tool.id.includes(currentUser.uid); // Controlla se è la MIA app custom
                 const isUserFeatured = isMyUserTool && currentUser.userFeaturedTools?.includes(toolId);
+                const keyFeatures = normalizeToolKeyFeatures(tool.keyFeatures);
+                const featuresStatus = keyFeatures.length
+                    ? String(keyFeatures.length)
+                    : (currentLanguage === 'it' ? 'In verifica' : 'Under review');
+                const featuresContentHTML = keyFeatures.length
+                    ? `<ul class="tool-features-list">${keyFeatures.map(feature => `<li>${escapeToolFeatureHTML(feature)}</li>`).join('')}</ul>`
+                    : `<div class="tool-features-empty">${currentLanguage === 'it' ? 'Le feature di questo strumento sono in fase di verifica.' : 'This tool’s features are being verified.'}</div>`;
+                const featuresHTML = `
+                    <details class="tool-features">
+                        <summary><span>Features</span><span class="tool-features-count">${featuresStatus}</span></summary>
+                        ${featuresContentHTML}
+                    </details>`;
 
                 let recommendationHTML = '';
                 let recommendedTool = null;
@@ -4024,6 +4090,7 @@
                                 <span class="tag">${getTranslatedCategoryName(tool.category || 'N/A')}</span>
                                 ${tool.pricing ? getPricingBadgeHTML(tool.pricing) : ''}
                             </div>
+                            ${featuresHTML}
                             <div class="detail-actions">
                                 ${userToolActionsHTML}
                                 ${currentUser.uid ? `<button class="button" data-action="toggle-favorite" data-id="${tool.id}">${isFavorited ? t.detailModalRemoveFavorite : t.detailModalAddFavorite}</button>` : ''}
@@ -6006,6 +6073,41 @@
                 }).filter(Boolean);
             };
 
+            const escapeToolFeatureHTML = value => String(value ?? '').replace(/[&<>"']/g, char => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            })[char]);
+
+            const normalizeToolKeyFeatures = value => {
+                const items = Array.isArray(value)
+                    ? value
+                    : (typeof value === 'string' ? value.split(/\r?\n|,/) : []);
+                return [...new Set(items.map(item => {
+                    if (typeof item === 'string') return item.trim();
+                    if (!item || typeof item !== 'object') return '';
+                    const label = item.label;
+                    if (typeof label === 'string') return label.trim();
+                    if (label && typeof label === 'object') {
+                        return String(label[currentLanguage] || label.en || label.it || '').trim();
+                    }
+                    return String(item.name || '').trim();
+                }).filter(Boolean))];
+            };
+
+            const renderToolFeaturesEditor = (prefix, selected = []) => `
+                <div class="input-group">
+                    <label for="${prefix}-tool-features">Features</label>
+                    <p style="margin:0 0 10px;color:var(--spotify-text-secondary);font-size:12px;line-height:1.45;">${currentLanguage === 'it' ? 'Inserisci una feature verificata per riga.' : 'Enter one verified feature per line.'}</p>
+                    <textarea id="${prefix}-tool-features" rows="8" placeholder="Computer Use&#10;Projects&#10;Desktop app">${escapeToolFeatureHTML(normalizeToolKeyFeatures(selected).join('\n'))}</textarea>
+                </div>`;
+
+            const collectToolKeyFeatures = prefix => normalizeToolKeyFeatures(
+                document.getElementById(`${prefix}-tool-features`)?.value || ''
+            );
+
             const renderToolSpecializationEditor = (prefix, selected = []) => {
                 const selectedMap = new Map(normalizeToolSpecializations(selected).map(item => [item.type, item.capabilities]));
                 const capabilityLabels = currentLanguage === 'it'
@@ -6123,6 +6225,7 @@
                             </div>
 
                             ${renderToolSpecializationEditor('global')}
+                            ${renderToolFeaturesEditor('global')}
 
                             <div class="input-group">
                                 <label for="global-tool-alternative">${t.currentAlternative}</label>
@@ -6210,6 +6313,7 @@
                             </div>
 
                             ${renderToolSpecializationEditor('edit-global', toolToEdit.specializations)}
+                            ${renderToolFeaturesEditor('edit-global', toolToEdit.keyFeatures)}
 
                             <button class="button" data-action="submit-edit-global-tool" data-id="${toolToEdit.id}">${t.saveChanges}</button>
                             <button class="button" data-action="delete-global-tool" data-id="${toolToEdit.id}" style="background-color: #ff6b6b; margin-top: 12px;">${t.deleteButton || 'Elimina'}</button>
@@ -6919,6 +7023,7 @@
                     country: document.getElementById('edit-global-tool-country').value.trim(),
                     pricing: document.getElementById('edit-global-tool-pricing').value || null,
                     specializations: collectToolSpecializations('edit-global'),
+                    keyFeatures: collectToolKeyFeatures('edit-global'),
                     isFeatured: existingTool.isFeatured || false
                 };
 
@@ -6998,6 +7103,7 @@
                     country: document.getElementById('global-tool-country').value.trim(),
                     pricing: pricingValue || null,
                     specializations: collectToolSpecializations('global'),
+                    keyFeatures: collectToolKeyFeatures('global'),
                     isFeatured: false, // Valore di default per i nuovi strumenti
                     createdAt: serverTimestamp() // <-- FONDAMENTALE: Salva la data in Firebase
                 };
