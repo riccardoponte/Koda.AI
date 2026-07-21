@@ -3612,6 +3612,20 @@
             let aiRankingsData = []; // NUOVO: Questa variabile conterrà i dati delle classifiche da Firestore
             let youtubeVideosData = []; // NUOVO: Conterrà i video da Firebase
             let newsData = []; // NUOVO: Conterrà le news dal database
+            const getLocalizedNewsValue = (news, field, lang = currentLanguage) => {
+                const value = news?.[field];
+                if (typeof value === 'string') return value;
+                if (value && typeof value === 'object') return value[lang] || value.it || value.en || '';
+                return news?.[`${field}_${lang}`] || news?.[`${field}_it`] || news?.[`${field}_en`] || '';
+            };
+            const normalizeNewsHashtag = value => String(value || '')
+                .trim()
+                .replace(/^#+/, '')
+                .replace(/\s+/g, '')
+                .replace(/[^\p{L}\p{N}_]/gu, '');
+            const getNewsHashtags = news => Array.isArray(news?.hashtags)
+                ? news.hashtags.map(normalizeNewsHashtag).filter(Boolean).slice(0, 3)
+                : [];
             // NUOVA FUNZIONE per caricare gli strumenti da Firestore
             const fetchToolsFromFirestore = async () => {
                 try {
@@ -4515,12 +4529,19 @@
                             const readMoreBtn = news.sourceUrl
                                 ? `<a href="${escapeHtml(news.sourceUrl)}" target="_blank" rel="noopener noreferrer" class="news-read-more-btn">${readMoreLabel}</a>`
                                 : '';
+                            const localizedTitle = getLocalizedNewsValue(news, 'title');
+                            const localizedContent = getLocalizedNewsValue(news, 'content');
+                            const hashtags = getNewsHashtags(news);
+                            const hashtagHTML = hashtags.length
+                                ? `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;font-size:12px;font-weight:800;">${hashtags.map(tag => `<span>#${escapeHtml(tag)}</span>`).join('')}</div>`
+                                : '';
                             return `
                                 <div class="news-item" style="background-image: linear-gradient(rgba(0,0,0,0.15), rgba(0,0,0,0.45)), url('${safeImg}');">
                                     <div class="news-overlay">
                                         <div class="news-date">${escapeHtml(dateStr)}</div>
-                                        <h2 class="news-title">${escapeHtml(news.title)}</h2>
-                                        <p class="news-content">${escapeHtml(news.content)}</p>
+                                        <h2 class="news-title">${escapeHtml(localizedTitle)}</h2>
+                                        <p class="news-content">${escapeHtml(localizedContent)}</p>
+                                        ${hashtagHTML}
                                         ${readMoreBtn}
                                     </div>
                                 </div>`;
@@ -5705,7 +5726,7 @@
                 const newsListHTML = newsData.map(news => `
                     <div class="sent-review-item" style="display:flex; justify-content:space-between; align-items:center;">
                         <div style="flex:1; overflow:hidden;">
-                            <strong style="display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${news.title}</strong>
+                            <strong style="display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${getLocalizedNewsValue(news, 'title')}</strong>
                             <span style="font-size:12px; color:var(--spotify-text-secondary);">${news.timestamp ? new Date(news.timestamp.seconds * 1000).toLocaleDateString() : ''}</span>
                         </div>
                         <div class="sent-review-actions">
@@ -5730,12 +5751,28 @@
                         <h3 id="news-form-title">Aggiungi Nuova News</h3>
                         <div class="add-ai-form">
                             <div class="input-group">
-                                <label>Titolo Notizia</label>
-                                <input type="text" id="news-title" placeholder="Es. Rilasciato GPT-5">
+                                <label>Titolo Notizia (IT)</label>
+                                <input type="text" id="news-title-it" placeholder="Es. Rilasciato GPT-5">
                             </div>
                             <div class="input-group">
-                                <label>Testo Notizia</label>
-                                <textarea id="news-content" placeholder="Scrivi il contenuto..."></textarea>
+                                <label>News Title (EN)</label>
+                                <input type="text" id="news-title-en" placeholder="E.g. GPT-5 released">
+                            </div>
+                            <div class="input-group">
+                                <label>Testo Notizia (IT)</label>
+                                <textarea id="news-content-it" placeholder="Scrivi il contenuto in italiano..."></textarea>
+                            </div>
+                            <div class="input-group">
+                                <label>News Content (EN)</label>
+                                <textarea id="news-content-en" placeholder="Write the content in English..."></textarea>
+                            </div>
+                            <div class="input-group">
+                                <label>Hashtag (esattamente 3)</label>
+                                <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;">
+                                    <input type="text" id="news-hashtag-1" maxlength="40" placeholder="#AI">
+                                    <input type="text" id="news-hashtag-2" maxlength="40" placeholder="#News">
+                                    <input type="text" id="news-hashtag-3" maxlength="40" placeholder="#Tecnologia">
+                                </div>
                             </div>
                             <div class="input-group">
                                 <label>Immagine del post</label>
@@ -5760,8 +5797,14 @@
                 if (!newsToEdit) return;
 
                 // Popola i campi
-                document.getElementById('news-title').value = newsToEdit.title || '';
-                document.getElementById('news-content').value = newsToEdit.content || '';
+                document.getElementById('news-title-it').value = getLocalizedNewsValue(newsToEdit, 'title', 'it');
+                document.getElementById('news-title-en').value = getLocalizedNewsValue(newsToEdit, 'title', 'en');
+                document.getElementById('news-content-it').value = getLocalizedNewsValue(newsToEdit, 'content', 'it');
+                document.getElementById('news-content-en').value = getLocalizedNewsValue(newsToEdit, 'content', 'en');
+                const hashtags = getNewsHashtags(newsToEdit);
+                [1, 2, 3].forEach((position, index) => {
+                    document.getElementById(`news-hashtag-${position}`).value = hashtags[index] ? `#${hashtags[index]}` : '';
+                });
                 document.getElementById('news-image').value = newsToEdit.imageUrl || '';
                 document.getElementById('news-source').value = newsToEdit.sourceUrl || '';
 
@@ -5779,8 +5822,8 @@
 
             const cancelEditNews = () => {
                 // Svuota i campi
-                document.getElementById('news-title').value = '';
-                document.getElementById('news-content').value = '';
+                ['news-title-it', 'news-title-en', 'news-content-it', 'news-content-en', 'news-hashtag-1', 'news-hashtag-2', 'news-hashtag-3']
+                    .forEach(id => { document.getElementById(id).value = ''; });
                 document.getElementById('news-image').value = '';
                 document.getElementById('news-source').value = '';
 
@@ -5796,15 +5839,27 @@
             const handleSubmitNews = async () => {
                 if (currentUser.role !== 'admin') return;
 
-                const title = document.getElementById('news-title').value.trim();
-                const content = document.getElementById('news-content').value.trim();
+                const title = {
+                    it: document.getElementById('news-title-it').value.trim(),
+                    en: document.getElementById('news-title-en').value.trim()
+                };
+                const content = {
+                    it: document.getElementById('news-content-it').value.trim(),
+                    en: document.getElementById('news-content-en').value.trim()
+                };
+                const hashtags = [1, 2, 3]
+                    .map(position => normalizeNewsHashtag(document.getElementById(`news-hashtag-${position}`).value));
                 const imageUrl = document.getElementById('news-image').value.trim();
                 const sourceUrl = document.getElementById('news-source').value.trim();
                 const submitBtn = document.getElementById('submit-news-btn');
                 const editId = submitBtn.dataset.editId; // Controlla se siamo in modalità modifica
 
-                if (!title || !content || !imageUrl) {
-                    showToast("Titolo, Contenuto e Immagine sono obbligatori.");
+                if (!title.it || !title.en || !content.it || !content.en || !imageUrl) {
+                    showToast("Titolo e contenuto IT/EN e immagine sono obbligatori.");
+                    return;
+                }
+                if (hashtags.some(tag => !tag) || new Set(hashtags.map(tag => tag.toLocaleLowerCase())).size !== 3) {
+                    showToast("Inserisci esattamente 3 hashtag validi e diversi.");
                     return;
                 }
 
@@ -5814,6 +5869,7 @@
                         await updateDoc(doc(db, "news", editId), {
                             title,
                             content,
+                            hashtags,
                             imageUrl,
                             sourceUrl: sourceUrl || null
                             // Non aggiorniamo il timestamp per mantenere l'ordine originale
@@ -5824,6 +5880,7 @@
                         await addDoc(collection(db, "news"), {
                             title,
                             content,
+                            hashtags,
                             imageUrl,
                             sourceUrl: sourceUrl || null,
                             timestamp: serverTimestamp()
@@ -5919,6 +5976,93 @@
             // Apply theme on initial load
             document.body.classList.toggle('light-mode', currentTheme === 'light');
 
+            const TOOL_SPECIALIZATION_DEFINITIONS = Object.freeze([
+                { type: 'excel', mark: 'XLS', it: 'Excel e fogli di calcolo', en: 'Excel and spreadsheets' },
+                { type: 'word', mark: 'DOC', it: 'Word e documenti', en: 'Word and documents' },
+                { type: 'pptx', mark: 'PPT', it: 'PowerPoint e presentazioni', en: 'PowerPoint and presentations' },
+                { type: 'pdf', mark: 'PDF', it: 'PDF', en: 'PDF' },
+                { type: 'images', mark: 'IMG', it: 'Immagini', en: 'Images' },
+                { type: 'video', mark: 'VID', it: 'Video', en: 'Video' },
+                { type: 'audio', mark: 'AUD', it: 'Audio e voce', en: 'Audio and voice' },
+                { type: 'code', mark: '</>', it: 'Codice', en: 'Code' },
+                { type: 'data', mark: 'DB', it: 'Dati e database', en: 'Data and databases' },
+                { type: 'automation', mark: 'AUTO', it: 'Automazioni', en: 'Automation' }
+            ]);
+
+            const normalizeToolSpecializations = value => {
+                if (!Array.isArray(value)) return [];
+                return value.map(item => {
+                    const type = typeof item === 'string' ? item : item?.type;
+                    if (!TOOL_SPECIALIZATION_DEFINITIONS.some(definition => definition.type === type)) return null;
+                    const capabilities = typeof item === 'object' && item?.capabilities ? item.capabilities : {};
+                    return {
+                        type,
+                        capabilities: {
+                            create: capabilities.create === true,
+                            read: capabilities.read === true,
+                            edit: capabilities.edit === true
+                        }
+                    };
+                }).filter(Boolean);
+            };
+
+            const renderToolSpecializationEditor = (prefix, selected = []) => {
+                const selectedMap = new Map(normalizeToolSpecializations(selected).map(item => [item.type, item.capabilities]));
+                const capabilityLabels = currentLanguage === 'it'
+                    ? { create: 'Crea', read: 'Legge', edit: 'Modifica' }
+                    : { create: 'Create', read: 'Read', edit: 'Edit' };
+                const rows = TOOL_SPECIALIZATION_DEFINITIONS.map(definition => {
+                    const capabilities = selectedMap.get(definition.type) || {};
+                    const enabled = selectedMap.has(definition.type);
+                    const capabilityInputs = ['create', 'read', 'edit'].map(capability => `
+                        <label style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;white-space:nowrap;">
+                            <input type="checkbox" data-specialization-capability="${capability}" ${capabilities[capability] ? 'checked' : ''} ${enabled ? '' : 'disabled'}>
+                            ${capabilityLabels[capability]}
+                        </label>`).join('');
+                    return `
+                        <div data-specialization-row="${definition.type}" style="display:grid;grid-template-columns:minmax(170px,1fr) auto;align-items:center;gap:12px;padding:11px 12px;border:1px solid rgba(128,128,128,.22);border-radius:8px;background:rgba(128,128,128,.05);">
+                            <label style="display:flex;align-items:center;gap:9px;min-width:0;font-weight:800;cursor:pointer;">
+                                <input type="checkbox" data-specialization-enabled ${enabled ? 'checked' : ''}>
+                                <span aria-hidden="true" style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:28px;border:1px solid rgba(128,128,128,.3);border-radius:6px;font-size:10px;font-weight:900;color:var(--spotify-accent);">${definition.mark}</span>
+                                <span>${currentLanguage === 'it' ? definition.it : definition.en}</span>
+                            </label>
+                            <div style="display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap;">${capabilityInputs}</div>
+                        </div>`;
+                }).join('');
+                return `
+                    <div class="input-group" id="${prefix}-tool-specializations">
+                        <label>${currentLanguage === 'it' ? 'Specializzazioni e capacità' : 'Specializations and capabilities'}</label>
+                        <p style="margin:0 0 10px;color:var(--spotify-text-secondary);font-size:12px;line-height:1.45;">${currentLanguage === 'it' ? 'Seleziona gli ambiti supportati e indica se lo strumento può creare, leggere o modificare quel formato.' : 'Select supported areas and specify whether the tool can create, read, or edit each format.'}</p>
+                        <div style="display:flex;flex-direction:column;gap:8px;">${rows}</div>
+                    </div>`;
+            };
+
+            const setupToolSpecializationEditor = prefix => {
+                const container = document.getElementById(`${prefix}-tool-specializations`);
+                if (!container) return;
+                container.querySelectorAll('[data-specialization-row]').forEach(row => {
+                    const enabledInput = row.querySelector('[data-specialization-enabled]');
+                    const capabilityInputs = [...row.querySelectorAll('[data-specialization-capability]')];
+                    enabledInput?.addEventListener('change', () => {
+                        capabilityInputs.forEach(input => { input.disabled = !enabledInput.checked; });
+                    });
+                });
+            };
+
+            const collectToolSpecializations = prefix => {
+                const container = document.getElementById(`${prefix}-tool-specializations`);
+                if (!container) return [];
+                return [...container.querySelectorAll('[data-specialization-row]')]
+                    .filter(row => row.querySelector('[data-specialization-enabled]')?.checked)
+                    .map(row => ({
+                        type: row.dataset.specializationRow,
+                        capabilities: Object.fromEntries(['create', 'read', 'edit'].map(capability => [
+                            capability,
+                            row.querySelector(`[data-specialization-capability="${capability}"]`)?.checked === true
+                        ]))
+                    }));
+            };
+
             // NUOVA FUNZIONE: Apre il modale per aggiungere uno strumento globale (solo admin) - STILE MIGLIORATO
             const openAddGlobalToolModal = () => {
                 if (currentUser.role !== 'admin') return;
@@ -5978,6 +6122,8 @@
                                 </select>
                             </div>
 
+                            ${renderToolSpecializationEditor('global')}
+
                             <div class="input-group">
                                 <label for="global-tool-alternative">${t.currentAlternative}</label>
                                 <select id="global-tool-alternative">
@@ -5991,6 +6137,7 @@
                     </div>
                 </div>`;
                 el.modalContainer.innerHTML = modalHTML;
+                setupToolSpecializationEditor('global');
             };
 
             // NUOVA FUNZIONE: Apre il modale per MODIFICARE uno strumento globale (solo admin)
@@ -6062,12 +6209,15 @@
                                 </select>
                             </div>
 
+                            ${renderToolSpecializationEditor('edit-global', toolToEdit.specializations)}
+
                             <button class="button" data-action="submit-edit-global-tool" data-id="${toolToEdit.id}">${t.saveChanges}</button>
                             <button class="button" data-action="delete-global-tool" data-id="${toolToEdit.id}" style="background-color: #ff6b6b; margin-top: 12px;">${t.deleteButton || 'Elimina'}</button>
                         </div>
                     </div>
                 </div>`;
                 el.modalContainer.innerHTML = modalHTML;
+                setupToolSpecializationEditor('edit-global');
             };
 
             // --- NUOVA LOGICA DI GESTIONE CLASSIFICHE (CRUD COMPLETO) ---
@@ -6768,6 +6918,7 @@
                     category: document.getElementById('edit-global-tool-category').value,
                     country: document.getElementById('edit-global-tool-country').value.trim(),
                     pricing: document.getElementById('edit-global-tool-pricing').value || null,
+                    specializations: collectToolSpecializations('edit-global'),
                     isFeatured: existingTool.isFeatured || false
                 };
 
@@ -6846,6 +6997,7 @@
                     category: document.getElementById('global-tool-category').value,
                     country: document.getElementById('global-tool-country').value.trim(),
                     pricing: pricingValue || null,
+                    specializations: collectToolSpecializations('global'),
                     isFeatured: false, // Valore di default per i nuovi strumenti
                     createdAt: serverTimestamp() // <-- FONDAMENTALE: Salva la data in Firebase
                 };
